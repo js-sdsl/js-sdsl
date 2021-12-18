@@ -4,6 +4,7 @@
 
 ## Included data structures
 
+- Vector
 - LinkList
 - Deque
 
@@ -27,7 +28,7 @@ npm install js-sdsl
 
 ## Usage
 
-Please see API documents or see `test.ts` to find usage.
+Please see API documents or see `src/test.ts` to find usage.
 
 ## Build by source code
 
