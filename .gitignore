@@ -5,3 +5,4 @@ dist/
 .npmrc
 .yarnrc
 .husky
+.DS_Store

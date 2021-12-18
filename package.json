@@ -7,12 +7,12 @@
   "license": "MIT",
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
-    "build": "yarn lint && yarn build:cjs && yarn build:umd:min",
-    "build:cjs": "rm -rf dist/cjs && ./node_modules/.bin/tsc --module commonjs --target es5 --outDir dist/cjs",
-    "build:esm": "rm -rf dist/esm && ./node_modules/.bin/tsc --module es2015 --target es5 --outDir dist/esm",
+    "build": "yarn lint && rm -rf dist/test && yarn build:cjs && yarn build:umd:min",
+    "build:cjs": "rm -rf dist/cjs && tsc --module commonjs --target es5 --outDir dist/cjs && find dist/cjs -name \"test.js\" | xargs rm -rf",
+    "build:esm": "rm -rf dist/esm && tsc --module es2015 --target es5 --outDir dist/esm && find dist/esm -name \"test.js\" | xargs rm -rf",
     "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name sdsl -o dist/umd/js-sdsl.js",
-    "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js",
-    "test": "yarn build:cjs && node ./dist/cjs/test.js",
+    "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js && find dist/umd -name \"test.js\" | xargs rm -rf",
+    "test": "rm -rf dist/test && tsc src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
     "deploy": "yarn build && gh-pages -d dist"
   },
