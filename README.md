@@ -17,7 +17,7 @@
 Download directly
 
 - [js-sdsl.js](https://zly201.github.io/js-sdsl/js-sdsl.js) (for development)
-- [js-sdsl.min.js]((https://zly201.github.io/js-sdsl/js-sdsl.min.js)) (for production)
+- [js-sdsl.min.js](https://zly201.github.io/js-sdsl/js-sdsl.min.js) (for production)
 
 Or install js-sdsl using npm **(It will become soon)**
 
