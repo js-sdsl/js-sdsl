@@ -1,9 +1,7 @@
 import LinkList from "./LinkList/LinkList";
 import Deque from "./Deque/Deque";
 
-const STL = {
+export {
     LinkList,
     Deque
 };
-
-export default STL;
