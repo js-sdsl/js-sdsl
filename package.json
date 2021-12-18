@@ -1,17 +1,17 @@
 {
-  "name": "js-STL",
+  "name": "js-sdsl",
   "version": "1.0.0",
-  "description": "js STL library",
+  "description": "javascript standard data structure library",
   "main": "index.js",
-  "author": "ZLY201",
+  "author": "zly201",
   "license": "MIT",
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
     "build": "yarn lint && yarn build:cjs && yarn build:umd:min",
     "build:cjs": "rm -rf dist/cjs && ./node_modules/.bin/tsc --module commonjs --target es5 --outDir dist/cjs",
     "build:esm": "rm -rf dist/esm && ./node_modules/.bin/tsc --module es2015 --target es5 --outDir dist/esm",
-    "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name STL -o dist/umd/js-STL.js",
-    "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-STL.min.js -- js-STL.js",
+    "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name sdsl -o dist/umd/js-sdsl.js",
+    "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js",
     "test": "yarn build:cjs && node ./dist/cjs/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
     "deploy": "yarn build && gh-pages -d dist"
