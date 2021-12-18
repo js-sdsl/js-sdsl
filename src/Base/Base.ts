@@ -2,7 +2,7 @@ type BaseType = {
     size: () => number;
     empty: () => boolean;
     clear: () => void;
-} & (() => void) & Record<string, never>;
+} & Record<string, never>;
 
 export type SequentialContainerType<T> = {
     front: () => T | undefined;
