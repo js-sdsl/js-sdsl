@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.STL = factory());
-})(this, (function () { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sdsl = {}));
+})(this, (function (exports) { 'use strict';
 
     var LinkNode = /** @class */ (function () {
         function LinkNode(element) {
@@ -588,11 +588,9 @@
     }
     Object.freeze(Deque);
 
-    var STL = {
-        LinkList: LinkList,
-        Deque: Deque
-    };
+    exports.Deque = Deque;
+    exports.LinkList = LinkList;
 
-    return STL;
+    Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

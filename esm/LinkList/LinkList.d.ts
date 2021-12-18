@@ -1,0 +1,21 @@
+declare type LinkListType<T> = {
+    size: () => number;
+    empty: () => boolean;
+    clear: () => void;
+    forEach: (callback: (element: T, index: number) => void) => void;
+    front: () => T;
+    back: () => T;
+    push_front: (element: T) => void;
+    push_back: (element: T) => void;
+    pop_front: () => void;
+    pop_back: () => void;
+    insert: (pos: number, element: T, num?: number) => void;
+    eraseElementByPos: (pos: number) => void;
+    eraseElementByValue: (value: T) => void;
+    merge: (other: LinkListType<T>) => void;
+    reverse: () => void;
+    unique: () => void;
+    sort: (cmp?: (x: T, y: T) => number) => void;
+};
+declare const _default: new (arr: any[]) => LinkListType<any>;
+export default _default;
