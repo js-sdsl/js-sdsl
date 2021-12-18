@@ -1,208 +1,199 @@
+import { SequentialContainerType } from "./Base/Base";
+import Vector from "./Vector/Vector";
 import LinkList from "./LinkList/LinkList";
 import Deque from "./Deque/Deque";
 
-function testLink(arr: any[] = []) {
-    console.log("testLink");
+const arr: number[] = [];
+for (let i = 0 ; i < 1000; ++i) arr.push(Math.random() * 1000);
+Object.freeze(arr);
 
-    const myLink = new LinkList(arr);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
+function judge(funcName: string, container: SequentialContainerType<any>, myVector: SequentialContainerType<any>) {
+    let testResult = (container.size() === myVector.size());
+    container.forEach((element, index) => {
+        testResult = testResult && (element === myVector.getElementByPos(index));
     });
-
-    console.log('size =', myLink.size());
-    console.log(myLink.front());
-    console.log(myLink.back());
-
-    myLink.insert(myLink.size() - 2, 5, 10);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.push_front(88);
-    myLink.push_back(77);
-    console.log('size =', myLink.size());
-    console.log(myLink.front());
-    console.log(myLink.back());
-
-    myLink.pop_back();
-    myLink.pop_front();
-    console.log('size =', myLink.size());
-    console.log(myLink.front());
-    console.log(myLink.back());
-
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.eraseElementByPos(2);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.eraseElementByValue(5);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.merge(new LinkList([2, 5, 6, 7, 555]));
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    for (let i = 0; i < 10; ++i) {
-        myLink.push_front(Math.random() * 10);
+    if (!testResult) {
+        throw new Error(`${funcName} test failed!`);
     }
-    myLink.sort((x, y) => x - y);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.reverse();
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    for (let i = 0; i < 10; ++i) myLink.push_back(0);
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.unique();
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myLink.clear();
-    console.log('size =', myLink.size());
-    myLink.forEach((element, index) => {
-        console.log(index, element);
-    });
+    console.log(container.constructor.name, funcName, "test passed.");
 }
 
-function testDeque(arr: any[]) {
-    console.log("testDeque");
+function testSequentialContainer(container: SequentialContainerType<any>) {
+    const containerName = container.constructor.name;
+    console.log(containerName, "standard test start...");
+
+    const myVector = new Vector<any>(arr);
+
+    if (container.size() !== myVector.size()) {
+        throw new Error("size test failed.");
+    }
+    console.log(containerName, "size test passed.");
+
+    if (container.front() !== myVector.front()) {
+        throw new Error("front test failed!");
+    }
+    console.log(containerName, "front test passed.");
+
+    if (container.back() !== myVector.back()) {
+        throw new Error("back test failed!");
+    }
+    console.log(containerName, "back test passed.");
+
+    judge("forEach", container, myVector);
+    console.log(containerName, "forEach test passed.");
+
+    for (let i = 0; i < 5000; ++i) {
+        const random = Math.random();
+        container.push_back(random);
+        myVector.push_back(random);
+    }
+    judge("push_back", container, myVector);
+
+    for (let i = 0; i < 3000; ++i) {
+        container.pop_back();
+        myVector.pop_back();
+    }
+    judge("pop_back", container, myVector);
+
+    let testResult = true;
+    const len = container.size();
+    testResult = testResult && (container.size() === myVector.size());
+    for (let i = 0; i < len; ++i) {
+        testResult = testResult && (container.getElementByPos(i) === myVector.getElementByPos(i));
+    }
+    if (!testResult) {
+        console.error("getElementByPos test failed.");
+        return;
+    }
+    console.log(containerName, "getElementByPos test passed.");
+
+    for (let i = 0; i < len; ++i) {
+        myVector.setElementByPos(i, i);
+        container.setElementByPos(i, i);
+    }
+    judge("setElementByPos", container, myVector);
+
+    for (let i = 0; i < 100; ++i) {
+        const pos = Math.floor(Math.random() * myVector.size());
+        container.eraseElementByPos(pos);
+        myVector.eraseElementByPos(pos);
+    }
+    judge("eraseElementByPos", container, myVector);
+
+    for (let i = 0; i < 100; ++i) {
+        const pos = Math.floor(Math.random() * 10);
+        const num = Math.floor(Math.random() * 10);
+        container.insert(pos, 'q', num);
+        myVector.insert(pos, 'q', num);
+    }
+    judge("insert", container, myVector);
+
+    container.eraseElementByValue('q');
+    myVector.eraseElementByValue('q');
+    judge("eraseElementByValue", container, myVector);
+
+    container.reverse();
+    myVector.reverse();
+    judge("reverse", container, myVector);
+
+    for (let i = 0; i < 100; ++i) {
+        const pos = Math.floor(Math.random() * 10);
+        const num = Math.floor(Math.random() * 10);
+        container.insert(pos, 'w', num);
+        myVector.insert(pos, 'w', num);
+    }
+    container.unique();
+    myVector.unique();
+    judge("unique", container, myVector);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * 6;
+        container.push_back(random);
+        myVector.push_back(random);
+    }
+    container.sort((x, y) => x - y);
+    myVector.sort((x, y) => x - y);
+    judge("sort", container, myVector);
+
+    container.clear();
+    myVector.clear();
+    judge("clear", container, myVector);
+
+    console.log(containerName, `standard test end, all standard tests passed!`);
+}
+
+function testLink() {
+    console.log("LinkList test start...");
+
+    const myLinkList = new LinkList(arr);
+
+    testSequentialContainer(myLinkList);
+
+    const tmpArr = [];
+    for (let i = 0; i < 100; ++i) {
+        myLinkList.push_front(i);
+        tmpArr.unshift(i);
+    }
+    judge("push_front", myLinkList, new Vector(tmpArr));
+
+    for (let i = 0; i < 100; ++i) {
+        myLinkList.pop_front();
+        tmpArr.shift();
+    }
+    judge("pop_front", myLinkList, new Vector(tmpArr));
+
+    for (let i = 0; i < 1000; ++i) {
+        tmpArr.push(Math.random() * 1000);
+    }
+    const otherLinkList = new LinkList(tmpArr);
+    myLinkList.forEach(element => tmpArr.push(element));
+    myLinkList.sort((x, y) => x - y);
+    otherLinkList.sort((x, y) => x - y);
+    tmpArr.sort((x, y) => x - y);
+    myLinkList.merge(otherLinkList);
+    judge("merge", myLinkList, new Vector(tmpArr));
+
+    console.clear();
+    console.log("Deque test end, all tests passed!");
+}
+
+function testDeque() {
+    console.log("Deque test start...");
 
     const myDeque = new Deque(arr);
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
 
-    myDeque.pop_front();
-    myDeque.pop_back();
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
+    testSequentialContainer(myDeque);
 
-    // for (let i = 0; i < 3000; ++i) {
-    //     myDeque.push_front(i);
-    //     myDeque.push_back(i);
-    // }
-    // console.log('size =', myDeque.size());
-    // myDeque.forEach((element, index) => {
-    //     console.log(index, element);
-    // });
+    const tmpArr = [];
+    for (let i = 0; i < 100; ++i) {
+        myDeque.push_front(i);
+        tmpArr.unshift(i);
+    }
+    judge("push_front", myDeque, new Vector(tmpArr));
+
+    for (let i = 0; i < 100; ++i) {
+        myDeque.pop_front();
+        tmpArr.shift();
+    }
+    judge("pop_front", myDeque, new Vector(tmpArr));
 
     myDeque.shrinkToFit();
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
+    judge("shrinkToFit", myDeque, new Vector(tmpArr));
 
-    const len = myDeque.size();
-    console.log('size =', myDeque.size());
-    for (let i = 0; i < len; ++i) console.log(i, myDeque.getElementByPos(i));
-
-    console.log('size =', myDeque.size());
-    for (let i = 0; i < len; ++i) {
-        myDeque.setElementByPos(i, i);
-        console.log(i, myDeque.getElementByPos(i));
-    }
-
-    myDeque.insert(2, 'q', 5);
-    myDeque.insert(6, 'w', 3);
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myDeque.eraseElementByPos(1);
-    myDeque.eraseElementByPos(9);
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myDeque.eraseElementByValue('q');
-    myDeque.eraseElementByValue('w');
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    // const otherDeque = new Deque(arr);
-    // myDeque.swap(otherDeque);
-    // console.log('size =', myDeque.size());
-    // myDeque.forEach((element, index) => {
-    //     console.log(index, element);
-    // });
-    // console.log('size =', otherDeque.size());
-    // otherDeque.forEach((element, index) => {
-    //     console.log(index, element);
-    // });
-
-    myDeque.reverse();
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    for (let i = 0; i < 10; ++i) {
-        myDeque.push_front(0);
-        myDeque.push_back(1);
-    }
-    myDeque.unique();
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    for (let i = 0; i < 10; ++i) {
-        myDeque.push_back(Math.random() * 6);
-    }
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myDeque.sort((x, y) => x - y);
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
-
-    myDeque.clear();
-    console.log('size =', myDeque.size());
-    myDeque.forEach((element, index) => {
-        console.log(index, element);
-    });
+    console.clear();
+    console.log("Deque test end, all tests passed!");
 }
 
 function main() {
-    const arr: number[] = [1, 2, 3, 4, 5, 6];
-    testLink(arr);
-    testDeque(arr);
+    const testQueue = ["LinkList", "Deque"];
+
+    console.log("test start...");
+
+    if (testQueue.includes("LinkList")) testLink();
+    if (testQueue.includes("Deque")) testDeque();
+
+    console.clear();
+    console.log("test end, all tests passed!");
 }
 
 main();

@@ -1,3 +1,5 @@
+import { SequentialContainerType } from "../Base/Base";
+
 class LinkNode<T> {
     val: any = null;
     pre: LinkNode<T> | null = null;
@@ -9,24 +11,10 @@ class LinkNode<T> {
 }
 
 type LinkListType<T> = {
-    size: () => number;
-    empty: () => boolean;
-    clear: () => void;
-    forEach: (callback: (element: T, index: number) => void) => void;
-    front: () => T;
-    back: () => T;
     push_front: (element: T) => void;
-    push_back: (element: T) => void;
     pop_front: () => void;
-    pop_back: () => void;
-    insert: (pos: number, element: T, num?: number) => void;
-    eraseElementByPos: (pos: number) => void;
-    eraseElementByValue: (value: T) => void;
     merge: (other: LinkListType<T>) => void;
-    reverse: () => void;
-    unique: () => void;
-    sort: (cmp?: (x: T, y: T) => number) => void;
-};
+} & SequentialContainerType<T>;
 
 function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     let len = arr.length;
@@ -57,34 +45,12 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         len = 0;
     };
 
-    this.forEach = function (callback: (element: T, index: number) => void) {
-        if (typeof callback !== 'function') throw new Error("callback must be a function");
-        let curNode = head;
-        let index = 0;
-        while (curNode != null) {
-            callback(curNode.val, index++);
-            curNode = curNode.next;
-        }
-    };
-
     this.front = function () {
         return head?.val;
     };
 
     this.back = function () {
         return tail?.val;
-    };
-
-    this.push_front = function (element: T) {
-        ++len;
-        const newHead = new LinkNode(element);
-        if (!head) {
-            head = tail = newHead;
-        } else {
-            newHead.next = head;
-            head.pre = newHead;
-            head = newHead;
-        }
     };
 
     this.push_back = function (element: T) {
@@ -99,17 +65,6 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         }
     };
 
-    this.pop_front = function () {
-        if (len) --len;
-        if (!head) return;
-        if (head === tail) {
-            head = tail = null;
-        } else {
-            head = head.next;
-            if (head) head.pre = null;
-        }
-    };
-
     this.pop_back = function () {
         if (len) --len;
         if (!tail) return;
@@ -121,37 +76,34 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         }
     };
 
-    /**
-     * @param {number} pos insert element before pos, should in [0, list.size]
-     * @param {any} element the element you want to insert
-     * @param {number} [num = 1] the nums you want to insert
-     */
-    this.insert = function (pos: number, element: T, num = 1) {
-        if (pos < 0 || pos > len) throw new Error("insert pos must more then 0 and less then or equal to the list length");
-        if (num < 0) throw new Error("insert size must more then 0");
-        if (pos === 0) {
-            while (num--) this.push_front(element);
-        } else if (pos === len + 1) {
-            while (num--) this.push_back(element);
-        } else {
-            let curNode = head;
-            for (let i = 1; i < pos; ++i) {
-                if (!curNode?.next) break;
-                curNode = curNode?.next;
-            }
-            if (!curNode || !curNode?.pre) {
-                throw new Error("unknown error");
-            }
-            const next = curNode.next;
-            len += num;
-            while (num--) {
-                curNode.next = new LinkNode(element);
-                curNode.next.pre = curNode;
-                curNode = curNode.next;
-            }
-            curNode.next = next;
-            if (next) next.pre = curNode;
+    this.forEach = function (callback: (element: T, index: number) => void) {
+        if (typeof callback !== 'function') throw new Error("callback must be a function");
+        let curNode = head;
+        let index = 0;
+        while (curNode != null) {
+            callback(curNode.val, index++);
+            curNode = curNode.next;
         }
+    };
+
+    this.getElementByPos = function (pos: number) {
+        if (pos < 0 || pos >= len) throw new Error("pos must more then 0 and less then the list length");
+        let curNode = head;
+        while (pos--) {
+            if (!curNode) break;
+            curNode = curNode.next;
+        }
+        return curNode?.val;
+    };
+
+    this.setElementByPos = function (pos: number, element: T) {
+        if (pos < 0 || pos >= len) throw new Error("pos must more then 0 and less then the list length");
+        let curNode = head;
+        while (pos--) {
+            if (!curNode) break;
+            curNode = curNode.next;
+        }
+        if (curNode) curNode.val = element;
     };
 
     this.eraseElementByPos = function (pos: number) {
@@ -171,8 +123,8 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             const next = curNode.next;
             next.pre = pre;
             pre.next = next;
+            if (len) --len;
         }
-        if (len) --len;
     };
 
     this.eraseElementByValue = function (value: T) {
@@ -193,32 +145,36 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     };
 
     /**
-     * merge two sorted lists
-     * @param list other list
+     * @param {number} pos insert element before pos, should in [0, list.size]
+     * @param {any} element the element you want to insert
+     * @param {number} [num = 1] the nums you want to insert
      */
-    this.merge = function (list: LinkListType<T>) {
-        let curNode: LinkNode<T> | null = head;
-        list.forEach((element: T) => {
-            while (curNode && curNode.val <= element) {
-                curNode = curNode.next;
+    this.insert = function (pos: number, element: T, num = 1) {
+        if (pos < 0 || pos > len) throw new Error("insert pos must more then 0 and less then or equal to the list length");
+        if (num < 0) throw new Error("insert size must more then 0");
+        if (pos === 0) {
+            while (num--) this.push_front(element);
+        } else if (pos === len) {
+            while (num--) this.push_back(element);
+        } else {
+            let curNode = head;
+            for (let i = 1; i < pos; ++i) {
+                if (!curNode?.next) break;
+                curNode = curNode?.next;
             }
             if (!curNode) {
-                this.push_back(element);
-                curNode = tail;
-            } else if (curNode === head) {
-                this.push_front(element);
-                curNode = head;
-            } else {
-                ++len;
-                const pre = curNode.pre;
-                if (pre) {
-                    pre.next = new LinkNode(element);
-                    pre.next.pre = pre;
-                    pre.next.next = curNode;
-                    if (curNode) curNode.pre = pre.next;
-                }
+                throw new Error("unknown error");
             }
-        });
+            const next = curNode.next;
+            len += num;
+            while (num--) {
+                curNode.next = new LinkNode(element);
+                curNode.next.pre = curNode;
+                curNode = curNode.next;
+            }
+            curNode.next = next;
+            if (next) next.pre = curNode;
+        }
     };
 
     this.reverse = function () {
@@ -262,8 +218,60 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             }
         });
     };
+
+    this.push_front = function (element: T) {
+        ++len;
+        const newHead = new LinkNode(element);
+        if (!head) {
+            head = tail = newHead;
+        } else {
+            newHead.next = head;
+            head.pre = newHead;
+            head = newHead;
+        }
+    };
+
+    this.pop_front = function () {
+        if (len) --len;
+        if (!head) return;
+        if (head === tail) {
+            head = tail = null;
+        } else {
+            head = head.next;
+            if (head) head.pre = null;
+        }
+    };
+
+    /**
+     * merge two sorted lists
+     * @param list other list
+     */
+    this.merge = function (list: LinkListType<T>) {
+        let curNode: LinkNode<T> | null = head;
+        list.forEach((element: T) => {
+            while (curNode && curNode.val <= element) {
+                curNode = curNode.next;
+            }
+            if (!curNode) {
+                this.push_back(element);
+                curNode = tail;
+            } else if (curNode === head) {
+                this.push_front(element);
+                curNode = head;
+            } else {
+                ++len;
+                const pre = curNode.pre;
+                if (pre) {
+                    pre.next = new LinkNode(element);
+                    pre.next.pre = pre;
+                    pre.next.next = curNode;
+                    if (curNode) curNode.pre = pre.next;
+                }
+            }
+        });
+    };
 }
 
 Object.freeze(LinkList);
 
-export default (LinkList as any as { new(arr: any[]): LinkListType<any>; });
+export default (LinkList as any as { new<T>(arr?: T[]): LinkListType<T>; });
