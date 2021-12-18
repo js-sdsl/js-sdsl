@@ -38,33 +38,11 @@
             head = tail = null;
             len = 0;
         };
-        this.forEach = function (callback) {
-            if (typeof callback !== 'function')
-                throw new Error("callback must be a function");
-            var curNode = head;
-            var index = 0;
-            while (curNode != null) {
-                callback(curNode.val, index++);
-                curNode = curNode.next;
-            }
-        };
         this.front = function () {
             return head === null || head === void 0 ? void 0 : head.val;
         };
         this.back = function () {
             return tail === null || tail === void 0 ? void 0 : tail.val;
-        };
-        this.push_front = function (element) {
-            ++len;
-            var newHead = new LinkNode(element);
-            if (!head) {
-                head = tail = newHead;
-            }
-            else {
-                newHead.next = head;
-                head.pre = newHead;
-                head = newHead;
-            }
         };
         this.push_back = function (element) {
             ++len;
@@ -76,20 +54,6 @@
                 tail.next = newTail;
                 newTail.pre = tail;
                 tail = newTail;
-            }
-        };
-        this.pop_front = function () {
-            if (len)
-                --len;
-            if (!head)
-                return;
-            if (head === tail) {
-                head = tail = null;
-            }
-            else {
-                head = head.next;
-                if (head)
-                    head.pre = null;
             }
         };
         this.pop_back = function () {
@@ -106,46 +70,38 @@
                     tail.next = null;
             }
         };
-        /**
-         * @param {number} pos insert element before pos, should in [0, list.size]
-         * @param {any} element the element you want to insert
-         * @param {number} [num = 1] the nums you want to insert
-         */
-        this.insert = function (pos, element, num) {
-            if (num === void 0) { num = 1; }
-            if (pos < 0 || pos > len)
-                throw new Error("insert pos must more then 0 and less then or equal to the list length");
-            if (num < 0)
-                throw new Error("insert size must more then 0");
-            if (pos === 0) {
-                while (num--)
-                    this.push_front(element);
+        this.forEach = function (callback) {
+            if (typeof callback !== 'function')
+                throw new Error("callback must be a function");
+            var curNode = head;
+            var index = 0;
+            while (curNode != null) {
+                callback(curNode.val, index++);
+                curNode = curNode.next;
             }
-            else if (pos === len + 1) {
-                while (num--)
-                    this.push_back(element);
+        };
+        this.getElementByPos = function (pos) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos must more then 0 and less then the list length");
+            var curNode = head;
+            while (pos--) {
+                if (!curNode)
+                    break;
+                curNode = curNode.next;
             }
-            else {
-                var curNode = head;
-                for (var i = 1; i < pos; ++i) {
-                    if (!(curNode === null || curNode === void 0 ? void 0 : curNode.next))
-                        break;
-                    curNode = curNode === null || curNode === void 0 ? void 0 : curNode.next;
-                }
-                if (!curNode || !(curNode === null || curNode === void 0 ? void 0 : curNode.pre)) {
-                    throw new Error("unknown error");
-                }
-                var next = curNode.next;
-                len += num;
-                while (num--) {
-                    curNode.next = new LinkNode(element);
-                    curNode.next.pre = curNode;
-                    curNode = curNode.next;
-                }
-                curNode.next = next;
-                if (next)
-                    next.pre = curNode;
+            return curNode === null || curNode === void 0 ? void 0 : curNode.val;
+        };
+        this.setElementByPos = function (pos, element) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos must more then 0 and less then the list length");
+            var curNode = head;
+            while (pos--) {
+                if (!curNode)
+                    break;
+                curNode = curNode.next;
             }
+            if (curNode)
+                curNode.val = element;
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
@@ -168,9 +124,9 @@
                 var next = curNode.next;
                 next.pre = pre;
                 pre.next = next;
+                if (len)
+                    --len;
             }
-            if (len)
-                --len;
         };
         this.eraseElementByValue = function (value) {
             while (head && head.val === value)
@@ -195,36 +151,45 @@
             }
         };
         /**
-         * merge two sorted lists
-         * @param list other list
+         * @param {number} pos insert element before pos, should in [0, list.size]
+         * @param {any} element the element you want to insert
+         * @param {number} [num = 1] the nums you want to insert
          */
-        this.merge = function (list) {
-            var _this = this;
-            var curNode = head;
-            list.forEach(function (element) {
-                while (curNode && curNode.val <= element) {
-                    curNode = curNode.next;
+        this.insert = function (pos, element, num) {
+            if (num === void 0) { num = 1; }
+            if (pos < 0 || pos > len)
+                throw new Error("insert pos must more then 0 and less then or equal to the list length");
+            if (num < 0)
+                throw new Error("insert size must more then 0");
+            if (pos === 0) {
+                while (num--)
+                    this.push_front(element);
+            }
+            else if (pos === len) {
+                while (num--)
+                    this.push_back(element);
+            }
+            else {
+                var curNode = head;
+                for (var i = 1; i < pos; ++i) {
+                    if (!(curNode === null || curNode === void 0 ? void 0 : curNode.next))
+                        break;
+                    curNode = curNode === null || curNode === void 0 ? void 0 : curNode.next;
                 }
                 if (!curNode) {
-                    _this.push_back(element);
-                    curNode = tail;
+                    throw new Error("unknown error");
                 }
-                else if (curNode === head) {
-                    _this.push_front(element);
-                    curNode = head;
+                var next = curNode.next;
+                len += num;
+                while (num--) {
+                    curNode.next = new LinkNode(element);
+                    curNode.next.pre = curNode;
+                    curNode = curNode.next;
                 }
-                else {
-                    ++len;
-                    var pre = curNode.pre;
-                    if (pre) {
-                        pre.next = new LinkNode(element);
-                        pre.next.pre = pre;
-                        pre.next.next = curNode;
-                        if (curNode)
-                            curNode.pre = pre.next;
-                    }
-                }
-            });
+                curNode.next = next;
+                if (next)
+                    next.pre = curNode;
+            }
         };
         this.reverse = function () {
             var pHead = head;
@@ -262,6 +227,64 @@
                 if (curNode) {
                     curNode.val = element;
                     curNode = curNode.next;
+                }
+            });
+        };
+        this.push_front = function (element) {
+            ++len;
+            var newHead = new LinkNode(element);
+            if (!head) {
+                head = tail = newHead;
+            }
+            else {
+                newHead.next = head;
+                head.pre = newHead;
+                head = newHead;
+            }
+        };
+        this.pop_front = function () {
+            if (len)
+                --len;
+            if (!head)
+                return;
+            if (head === tail) {
+                head = tail = null;
+            }
+            else {
+                head = head.next;
+                if (head)
+                    head.pre = null;
+            }
+        };
+        /**
+         * merge two sorted lists
+         * @param list other list
+         */
+        this.merge = function (list) {
+            var _this = this;
+            var curNode = head;
+            list.forEach(function (element) {
+                while (curNode && curNode.val <= element) {
+                    curNode = curNode.next;
+                }
+                if (!curNode) {
+                    _this.push_back(element);
+                    curNode = tail;
+                }
+                else if (curNode === head) {
+                    _this.push_front(element);
+                    curNode = head;
+                }
+                else {
+                    ++len;
+                    var pre = curNode.pre;
+                    if (pre) {
+                        pre.next = new LinkNode(element);
+                        pre.next.pre = pre;
+                        pre.next.next = curNode;
+                        if (curNode)
+                            curNode.pre = pre.next;
+                    }
                 }
             });
         };
@@ -345,6 +368,42 @@
             bucketNum = newBucketNum;
             len = originalSize;
         };
+        this.front = function () {
+            return map[first][curFirst];
+        };
+        this.back = function () {
+            return map[last][curLast];
+        };
+        this.push_back = function (element) {
+            if (!this.empty()) {
+                if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
+                    reAllocate.call(this, this.size());
+                }
+                if (curLast < Deque.bucketSize - 1) {
+                    ++curLast;
+                }
+                else if (last < bucketNum - 1) {
+                    ++last;
+                    curLast = 0;
+                }
+            }
+            ++len;
+            map[last][curLast] = element;
+        };
+        this.pop_back = function () {
+            if (this.empty())
+                return;
+            if (this.size() !== 1) {
+                if (curLast > 0) {
+                    --curLast;
+                }
+                else if (first < last) {
+                    --last;
+                    curLast = Deque.bucketSize - 1;
+                }
+            }
+            --len;
+        };
         this.forEach = function (callback) {
             if (this.empty())
                 return;
@@ -367,72 +426,6 @@
                 callback(map[last][i], index++);
             }
         };
-        this.front = function () {
-            return map[first][curFirst];
-        };
-        this.back = function () {
-            return map[last][curLast];
-        };
-        this.push_front = function (element) {
-            if (!this.empty()) {
-                if (first === 0 && curFirst === 0) {
-                    reAllocate.call(this, this.size());
-                }
-                if (curFirst > 0) {
-                    --curFirst;
-                }
-                else if (first > 0) {
-                    --first;
-                    curFirst = Deque.bucketSize - 1;
-                }
-            }
-            ++len;
-            map[first][curFirst] = element;
-        };
-        this.push_back = function (element) {
-            if (!this.empty()) {
-                if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
-                    reAllocate.call(this, this.size());
-                }
-                if (curLast < Deque.bucketSize - 1) {
-                    ++curLast;
-                }
-                else if (last < bucketNum - 1) {
-                    ++last;
-                    curLast = 0;
-                }
-            }
-            ++len;
-            map[last][curLast] = element;
-        };
-        this.pop_front = function () {
-            if (this.empty())
-                return;
-            if (this.size() !== 1) {
-                if (curFirst < Deque.bucketSize - 1) {
-                    ++curFirst;
-                }
-                else if (first < last) {
-                    ++first;
-                    curFirst = 0;
-                }
-            }
-            --len;
-        };
-        this.pop_back = function () {
-            if (this.empty())
-                return;
-            if (this.size() !== 1) {
-                if (curLast > 0) {
-                    --curLast;
-                }
-                else if (first < last) {
-                    --last;
-                    curLast = Deque.bucketSize - 1;
-                }
-            }
-            --len;
-        };
         var getElementIndex = function (pos) {
             var curFirstIndex = first * Deque.bucketSize + curFirst;
             var curNodeIndex = curFirstIndex + pos;
@@ -454,33 +447,33 @@
             var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
             map[curNodeBucketIndex][curNodePointerIndex] = element;
         };
-        /**
-         * reduces memory usage by freeing unused memory
-         */
-        this.shrinkToFit = function () {
+        this.eraseElementByPos = function (pos) {
+            var _this = this;
+            if (pos === 0)
+                this.pop_front();
+            else if (pos === this.size())
+                this.pop_back();
+            else {
+                var arr_1 = [];
+                for (var i = pos + 1; i < len; ++i) {
+                    arr_1.push(this.getElementByPos(i));
+                }
+                this.cut(pos);
+                this.pop_back();
+                arr_1.forEach(function (element) { return _this.push_back(element); });
+            }
+        };
+        this.eraseElementByValue = function (value) {
             var arr = [];
             this.forEach(function (element) {
-                arr.push(element);
+                if (element != value) {
+                    arr.push(element);
+                }
             });
             var _len = arr.length;
-            map = [];
-            var bucketNum = Math.ceil(_len / Deque.bucketSize);
-            for (var i = 0; i < bucketNum; ++i) {
-                map.push(new Array(Deque.bucketSize));
-            }
-            this.clear();
-            var cnt = 0;
-            for (var i = 0; i < bucketNum; ++i) {
-                for (var j = 0; j < Deque.bucketSize; ++j) {
-                    map[i][j] = arr[cnt++];
-                    if (cnt >= _len) {
-                        last = i;
-                        curLast = j;
-                        break;
-                    }
-                }
-            }
-            len = _len;
+            for (var i = 0; i < _len; ++i)
+                this.setElementByPos(i, arr[i]);
+            this.cut(_len - 1);
         };
         /**
          * @param {number} pos insert element before pos, should in [0, queue.size]
@@ -500,9 +493,9 @@
             }
             else {
                 var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
-                var arr_1 = [];
+                var arr_2 = [];
                 for (var i = pos; i < len; ++i) {
-                    arr_1.push(this.getElementByPos(i));
+                    arr_2.push(this.getElementByPos(i));
                 }
                 last = curNodeBucketIndex;
                 curLast = curNodePointerIndex;
@@ -510,45 +503,8 @@
                 this.pop_back();
                 for (var i = 0; i < num; ++i)
                     this.push_back(element);
-                arr_1.forEach(function (element) { return _this.push_back(element); });
-            }
-        };
-        /**
-         * @param pos cut element after pos
-         */
-        this.cut = function (pos) {
-            var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
-            last = curNodeBucketIndex;
-            curLast = curNodePointerIndex;
-            len = pos + 1;
-        };
-        this.eraseElementByPos = function (pos) {
-            var _this = this;
-            if (pos === 0)
-                this.pop_front();
-            else if (pos === this.size())
-                this.pop_back();
-            else {
-                var arr_2 = [];
-                for (var i = pos + 1; i < len; ++i) {
-                    arr_2.push(this.getElementByPos(i));
-                }
-                this.cut(pos);
-                this.pop_back();
                 arr_2.forEach(function (element) { return _this.push_back(element); });
             }
-        };
-        this.eraseElementByValue = function (value) {
-            var arr = [];
-            this.forEach(function (element) {
-                if (element != value) {
-                    arr.push(element);
-                }
-            });
-            var _len = arr.length;
-            for (var i = 0; i < _len; ++i)
-                this.setElementByPos(i, arr[i]);
-            this.cut(_len - 1);
         };
         this.reverse = function () {
             var l = 0, r = len - 1;
@@ -584,6 +540,73 @@
             arr.sort(cmp);
             for (var i = 0; i < len; ++i)
                 this.setElementByPos(i, arr[i]);
+        };
+        this.push_front = function (element) {
+            if (!this.empty()) {
+                if (first === 0 && curFirst === 0) {
+                    reAllocate.call(this, this.size());
+                }
+                if (curFirst > 0) {
+                    --curFirst;
+                }
+                else if (first > 0) {
+                    --first;
+                    curFirst = Deque.bucketSize - 1;
+                }
+            }
+            ++len;
+            map[first][curFirst] = element;
+        };
+        this.pop_front = function () {
+            if (this.empty())
+                return;
+            if (this.size() !== 1) {
+                if (curFirst < Deque.bucketSize - 1) {
+                    ++curFirst;
+                }
+                else if (first < last) {
+                    ++first;
+                    curFirst = 0;
+                }
+            }
+            --len;
+        };
+        /**
+         * reduces memory usage by freeing unused memory
+         */
+        this.shrinkToFit = function () {
+            var arr = [];
+            this.forEach(function (element) {
+                arr.push(element);
+            });
+            var _len = arr.length;
+            map = [];
+            var bucketNum = Math.ceil(_len / Deque.bucketSize);
+            for (var i = 0; i < bucketNum; ++i) {
+                map.push(new Array(Deque.bucketSize));
+            }
+            this.clear();
+            var cnt = 0;
+            for (var i = 0; i < bucketNum; ++i) {
+                for (var j = 0; j < Deque.bucketSize; ++j) {
+                    map[i][j] = arr[cnt++];
+                    if (cnt >= _len) {
+                        last = i;
+                        curLast = j;
+                        break;
+                    }
+                }
+            }
+            len = _len;
+        };
+        /**
+         * @param pos cut element after pos
+         */
+        this.cut = function (pos) {
+            var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
+            last = curNodeBucketIndex;
+            curLast = curNodePointerIndex;
+            len = pos + 1;
         };
     }
     Object.freeze(Deque);
