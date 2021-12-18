@@ -9,16 +9,17 @@
 
 ## Supported platforms
 
-- node.js
-- browser
+- node.js (using commonjs)
+- react/vue (using es5)
+- browser (support most browsers including IE8+)
 
 ## Download
 Download directly
 
-- js-sdsl.js (for development)
-- js-sdsl.min.js (for production)
+- [js-sdsl.js](https://zly201.github.io/js-sdsl/js-sdsl.js) (for development)
+- [js-sdsl.min.js]((https://zly201.github.io/js-sdsl/js-sdsl.min.js)) (for production)
 
-Or install js-sdsl using npm
+Or install js-sdsl using npm **(It will become soon)**
 
 ```bash
 npm install js-sdsl

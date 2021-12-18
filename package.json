@@ -15,7 +15,7 @@
     "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js && find dist/umd -name \"test.js\" | xargs rm -rf",
     "test": "rm -rf dist/test && tsc src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
-    "deploy": "yarn build && gh-pages -d dist",
+    "deploy": "yarn build:umd:min && gh-pages -d dist/umd",
     "publish": "yarn build && npm publish"
   },
   "husky": {
