@@ -4,6 +4,151 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sdsl = {}));
 })(this, (function (exports) { 'use strict';
 
+    var __spreadArray$2 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+        if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+            if (ar || !(i in from)) {
+                if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+                ar[i] = from[i];
+            }
+        }
+        return to.concat(ar || Array.prototype.slice.call(from));
+    };
+    function Vector(arr) {
+        if (arr === void 0) { arr = []; }
+        var len = arr.length;
+        var vector = __spreadArray$2([], arr, true);
+        this.size = function () {
+            return len;
+        };
+        this.empty = function () {
+            return len === 0;
+        };
+        this.clear = function () {
+            len = 0;
+            vector.length = 0;
+        };
+        this.front = function () {
+            if (this.empty())
+                return undefined;
+            return vector[0];
+        };
+        this.back = function () {
+            if (this.empty())
+                return undefined;
+            return vector[len - 1];
+        };
+        this.push_back = function (element) {
+            vector.push(element);
+            ++len;
+        };
+        this.pop_back = function () {
+            vector.pop();
+            if (len > 0)
+                --len;
+        };
+        this.forEach = function (callback) {
+            vector.forEach(callback);
+        };
+        this.getElementByPos = function (pos) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos muse more than 0 and less than vector's size");
+            return vector[pos];
+        };
+        this.setElementByPos = function (pos, element) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos muse more than 0 and less than vector's size");
+            vector[pos] = element;
+        };
+        this.eraseElementByPos = function (pos) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos muse more than 0 and less than vector's size");
+            for (var i = pos; i < len - 1; ++i)
+                vector[i] = vector[i + 1];
+            this.pop_back();
+        };
+        this.eraseElementByValue = function (value) {
+            var newArr = [];
+            this.forEach(function (element) {
+                if (element != value)
+                    newArr.push(element);
+            });
+            newArr.forEach(function (element, index) {
+                vector[index] = element;
+            });
+            var newLen = newArr.length;
+            while (len > newLen)
+                this.pop_back();
+        };
+        this.insert = function (pos, element, num) {
+            if (num === void 0) { num = 1; }
+            if (pos < 0 || pos > len)
+                throw new Error("pos muse more than 0 and less than or equal to vector's size");
+            vector.splice.apply(vector, __spreadArray$2([pos, 0], new Array(num).fill(element), false));
+            len += num;
+        };
+        this.reverse = function () {
+            vector.reverse();
+        };
+        this.unique = function () {
+            var pre;
+            var newArr = [];
+            this.forEach(function (element, index) {
+                if (index === 0 || element !== pre) {
+                    newArr.push(element);
+                    pre = element;
+                }
+            });
+            newArr.forEach(function (element, index) {
+                vector[index] = element;
+            });
+            var newLen = newArr.length;
+            while (len > newLen)
+                this.pop_back();
+        };
+        this.sort = function (cmp) {
+            vector.sort(cmp);
+        };
+    }
+    Object.freeze(Vector);
+
+    var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+        if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+            if (ar || !(i in from)) {
+                if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+                ar[i] = from[i];
+            }
+        }
+        return to.concat(ar || Array.prototype.slice.call(from));
+    };
+    function Stack(arr) {
+        if (arr === void 0) { arr = []; }
+        var len = arr.length;
+        var stack = __spreadArray$1([], arr, true);
+        this.size = function () {
+            return len;
+        };
+        this.empty = function () {
+            return len === 0;
+        };
+        this.clear = function () {
+            len = 0;
+            stack.length = 0;
+        };
+        this.push = function (element) {
+            stack.push(element);
+            ++len;
+        };
+        this.pop = function () {
+            stack.pop();
+            if (len > 0)
+                --len;
+        };
+        this.top = function () {
+            return stack[len - 1];
+        };
+    }
+    Object.freeze(Stack);
+
     var LinkNode = /** @class */ (function () {
         function LinkNode(element) {
             this.val = null;
@@ -57,7 +202,7 @@
             }
         };
         this.pop_back = function () {
-            if (len)
+            if (len > 0)
                 --len;
             if (!tail)
                 return;
@@ -124,7 +269,7 @@
                 var next = curNode.next;
                 next.pre = pre;
                 pre.next = next;
-                if (len)
+                if (len > 0)
                     --len;
             }
         };
@@ -144,7 +289,7 @@
                         next.pre = pre;
                     if (pre)
                         pre.next = next;
-                    if (len)
+                    if (len > 0)
                         --len;
                 }
                 curNode = curNode.next;
@@ -210,7 +355,8 @@
                 var tmpNode = curNode;
                 while (tmpNode && tmpNode.next && tmpNode.val === tmpNode.next.val) {
                     tmpNode = tmpNode.next;
-                    --len;
+                    if (len > 0)
+                        --len;
                 }
                 curNode.next = tmpNode.next;
                 curNode = curNode.next;
@@ -243,7 +389,7 @@
             }
         };
         this.pop_front = function () {
-            if (len)
+            if (len > 0)
                 --len;
             if (!head)
                 return;
@@ -290,6 +436,30 @@
         };
     }
     Object.freeze(LinkList);
+
+    function Queue(arr) {
+        if (arr === void 0) { arr = []; }
+        var queue = new LinkList(arr);
+        this.size = function () {
+            return queue.size();
+        };
+        this.empty = function () {
+            return queue.empty();
+        };
+        this.clear = function () {
+            queue.clear();
+        };
+        this.push = function (element) {
+            queue.push_back(element);
+        };
+        this.pop = function () {
+            queue.pop_front();
+        };
+        this.front = function () {
+            return queue.front();
+        };
+    }
+    Object.freeze(Queue);
 
     Deque.sigma = 3; // growth factor
     Deque.bucketSize = 5000;
@@ -402,7 +572,8 @@
                     curLast = Deque.bucketSize - 1;
                 }
             }
-            --len;
+            if (len > 0)
+                --len;
         };
         this.forEach = function (callback) {
             if (this.empty())
@@ -569,7 +740,8 @@
                     curFirst = 0;
                 }
             }
-            --len;
+            if (len > 0)
+                --len;
         };
         /**
          * reduces memory usage by freeing unused memory
@@ -611,8 +783,127 @@
     }
     Object.freeze(Deque);
 
+    var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+        if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+            if (ar || !(i in from)) {
+                if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+                ar[i] = from[i];
+            }
+        }
+        return to.concat(ar || Array.prototype.slice.call(from));
+    };
+    /**
+     * @param arr
+     * @param cmp default cmp will generate a max heap
+     * @constructor
+     */
+    function PriorityQueue(arr, cmp) {
+        if (arr === void 0) { arr = []; }
+        cmp = cmp || (function (x, y) {
+            if (x > y)
+                return -1;
+            if (x < y)
+                return 1;
+            return 0;
+        });
+        var len = arr.length;
+        var priorityQueue = __spreadArray([], arr, true);
+        var swap = function (x, y) {
+            if (x < 0 || x >= len)
+                throw new Error("unknown error");
+            if (y < 0 || y >= len)
+                throw new Error("unknown error");
+            var tmp = priorityQueue[x];
+            priorityQueue[x] = priorityQueue[y];
+            priorityQueue[y] = tmp;
+        };
+        var adjust = function (parent) {
+            if (parent < 0 || parent >= len)
+                throw new Error("unknown error");
+            var leftChild = parent * 2 + 1;
+            var rightChild = parent * 2 + 2;
+            if (leftChild < len && cmp(priorityQueue[parent], priorityQueue[leftChild]) > 0)
+                swap(parent, leftChild);
+            if (rightChild < len && cmp(priorityQueue[parent], priorityQueue[rightChild]) > 0)
+                swap(parent, rightChild);
+        };
+        for (var parent_1 = Math.floor((len - 1) / 2); parent_1 >= 0; --parent_1) {
+            var curParent = parent_1;
+            var curChild = curParent * 2 + 1;
+            while (curChild < len) {
+                var leftChild = curChild;
+                var rightChild = leftChild + 1;
+                var minChild = leftChild;
+                if (rightChild < len && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0)
+                    minChild = rightChild;
+                if (cmp(priorityQueue[curParent], priorityQueue[minChild]) <= 0)
+                    break;
+                swap(curParent, minChild);
+                curParent = minChild;
+                curChild = curParent * 2 + 1;
+            }
+        }
+        this.size = function () {
+            return len;
+        };
+        this.empty = function () {
+            return len === 0;
+        };
+        this.clear = function () {
+            len = 0;
+            priorityQueue.length = 0;
+        };
+        this.push = function (element) {
+            priorityQueue.push(element);
+            ++len;
+            if (len === 1)
+                return;
+            var curNode = len - 1;
+            while (curNode > 0) {
+                var parent_2 = Math.floor((curNode - 1) / 2);
+                if (cmp(priorityQueue[parent_2], element) <= 0)
+                    break;
+                adjust(parent_2);
+                curNode = parent_2;
+            }
+        };
+        this.pop = function () {
+            if (this.empty())
+                return;
+            if (this.size() === 1) {
+                --len;
+                return;
+            }
+            var last = priorityQueue[len - 1];
+            --len;
+            var parent = 0;
+            while (parent < this.size()) {
+                var leftChild = parent * 2 + 1;
+                var rightChild = parent * 2 + 2;
+                if (leftChild >= this.size())
+                    break;
+                var minChild = leftChild;
+                if (rightChild < this.size() && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0)
+                    minChild = rightChild;
+                if (cmp(priorityQueue[minChild], last) >= 0)
+                    break;
+                priorityQueue[parent] = priorityQueue[minChild];
+                parent = minChild;
+            }
+            priorityQueue[parent] = last;
+        };
+        this.top = function () {
+            return priorityQueue[0];
+        };
+    }
+    Object.freeze(PriorityQueue);
+
     exports.Deque = Deque;
     exports.LinkList = LinkList;
+    exports.PriorityQueue = PriorityQueue;
+    exports.Queue = Queue;
+    exports.Stack = Stack;
+    exports.Vector = Vector;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
