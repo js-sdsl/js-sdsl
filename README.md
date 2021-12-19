@@ -9,6 +9,7 @@
 - Queue
 - LinkList
 - Deque
+- PriorityQueue
 
 ## Supported platforms
 

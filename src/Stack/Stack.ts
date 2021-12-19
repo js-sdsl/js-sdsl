@@ -3,7 +3,7 @@ import { BaseType } from "../Base/Base";
 export type StackType<T> = {
     push: (element: T) => void;
     pop: () => void;
-    top: () => void;
+    top: () => T | undefined;
 } & BaseType;
 
 function Stack<T>(this: StackType<T>, arr: T[] = []) {

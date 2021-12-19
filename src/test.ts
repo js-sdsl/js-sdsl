@@ -2,7 +2,7 @@ import { SequentialContainerType } from "./Base/Base";
 import { VectorType } from "./Vector/Vector";
 import { StackType } from "./Stack/Stack";
 import { QueueType } from "./Queue/Queue";
-import { Vector, Stack, Queue, LinkList, Deque } from "./index";
+import { Vector, Stack, Queue, LinkList, Deque, PriorityQueue } from "./index";
 
 const arr: number[] = [];
 for (let i = 0; i < 1000; ++i) arr.push(Math.random() * 1000);
@@ -103,7 +103,7 @@ function judge(funcName: string, container: SequentialContainerType<any>, myVect
 
 function testSequentialContainer(container: SequentialContainerType<any>) {
     const containerName = container.constructor.name;
-    console.log(containerName, "standard test start...");
+    console.log(containerName, "SequentialContainer standard test start...");
 
     const myVector = new Vector<any>(arr);
 
@@ -202,7 +202,8 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
     myVector.clear();
     judge("clear", container, myVector);
 
-    console.log(containerName, `standard test end, all standard tests passed!`);
+    console.clear();
+    console.log(containerName, `SequentialContainer standard test end, all standard tests passed!`);
 }
 
 function testLink() {
@@ -237,7 +238,7 @@ function testLink() {
     judge("merge", myLinkList, new Vector(tmpArr));
 
     console.clear();
-    console.log("Deque test end, all tests passed!");
+    console.log("LinkList test end, all tests passed!");
 }
 
 function testDeque() {
@@ -267,8 +268,38 @@ function testDeque() {
     console.log("Deque test end, all tests passed!");
 }
 
+function testPriorityQueue() {
+    console.log("PriorityQueue test start...");
+
+    const cmp = (x: number, y: number) => y - x;
+
+    const myPriority = new PriorityQueue(arr, cmp);
+    const myVector = new Vector(arr);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * i;
+        myPriority.push(random);
+        myVector.push_back(random);
+    }
+    myVector.sort(cmp);
+    while (!myPriority.empty()) {
+        if (myPriority.size() != myVector.size()) {
+            throw new Error("PriorityQueue size test failed!");
+        }
+        const u = myPriority.top();
+        if (u !== myVector.front()) {
+            throw new Error("PriorityQueue test failed!");
+        }
+        myPriority.pop();
+        myVector.eraseElementByPos(0);
+    }
+
+    console.clear();
+    console.log("PriorityQueue test end, all tests passed!");
+}
+
 function main() {
-    const taskQueue = ["Stack", "Queue", "LinkList", "Deque"];
+    const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue"];
 
     console.log("test start...");
 
@@ -276,6 +307,7 @@ function main() {
     if (taskQueue.includes("Queue")) testQueue();
     if (taskQueue.includes("LinkList")) testLink();
     if (taskQueue.includes("Deque")) testDeque();
+    if (taskQueue.includes("PriorityQueue")) testPriorityQueue();
 
     console.clear();
     console.log("test end, all tests passed!");

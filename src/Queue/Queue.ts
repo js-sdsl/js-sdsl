@@ -4,7 +4,7 @@ import LinkList from "../LinkList/LinkList";
 export type QueueType<T> = {
     push: (element: T) => void;
     pop: () => void;
-    front: () => void;
+    front: () => T | undefined;
 } & BaseType;
 
 function Queue<T>(this: QueueType<T>, arr: T[] = []) {
