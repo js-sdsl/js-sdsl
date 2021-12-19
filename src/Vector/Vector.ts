@@ -1,6 +1,6 @@
 import { SequentialContainerType } from "../Base/Base";
 
-type VectorType<T> = SequentialContainerType<T>;
+export type VectorType<T> = SequentialContainerType<T>;
 
 function Vector<T>(this: VectorType<T>, arr: T[] = []) {
     let len = arr.length;

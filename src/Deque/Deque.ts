@@ -1,6 +1,6 @@
 import { SequentialContainerType } from "../Base/Base";
 
-type DequeType<T> = {
+export type DequeType<T> = {
     push_front: (element: T) => void;
     pop_front: () => void;
     shrinkToFit: () => void;
@@ -120,7 +120,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
                 curLast = Deque.bucketSize - 1;
             }
         }
-        --len;
+        if (len > 0) --len;
     };
 
     this.forEach = function (callback: (element: T, index: number) => void) {
@@ -291,7 +291,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
                 curFirst = 0;
             }
         }
-        --len;
+        if (len > 0) --len;
     };
 
     /**

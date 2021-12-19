@@ -1,11 +1,94 @@
 import { SequentialContainerType } from "./Base/Base";
-import Vector from "./Vector/Vector";
-import LinkList from "./LinkList/LinkList";
-import Deque from "./Deque/Deque";
+import { VectorType } from "./Vector/Vector";
+import { StackType } from "./Stack/Stack";
+import { QueueType } from "./Queue/Queue";
+import { Vector, Stack, Queue, LinkList, Deque } from "./index";
 
 const arr: number[] = [];
-for (let i = 0 ; i < 1000; ++i) arr.push(Math.random() * 1000);
+for (let i = 0; i < 1000; ++i) arr.push(Math.random() * 1000);
 Object.freeze(arr);
+
+function testStack() {
+    function judgeStack(myStack: StackType<any>, myVector: VectorType<any>) {
+        while (!myStack.empty()) {
+            if (myStack.size() !== myVector.size()) {
+                throw new Error("Stack size test failed!");
+            }
+            const s = myStack.top();
+            const v = myVector.back();
+            if (s !== v) {
+                throw new Error("Stack test failed!");
+            }
+            myStack.pop();
+            myVector.pop_back();
+        }
+    }
+
+    console.log("Stack test start...");
+
+    const myStack = new Stack(arr);
+    const myVector = new Vector(arr);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * i;
+        myStack.push(random);
+        myVector.push_back(random);
+    }
+    judgeStack(myStack, myVector);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * i;
+        myStack.push(random);
+        myVector.push_back(random);
+    }
+    myStack.clear();
+    myVector.clear();
+    judgeStack(myStack, myVector);
+
+    console.clear();
+    console.log("Stack test end, all tests passed!");
+}
+
+function testQueue() {
+    function judgeQueue(myQueue: QueueType<any>, myVector: VectorType<any>) {
+        while (!myQueue.empty()) {
+            if (myQueue.size() !== myVector.size()) {
+                throw new Error("Stack size test failed!");
+            }
+            const s = myQueue.front();
+            const v = myVector.front();
+            if (s !== v) {
+                throw new Error("Stack test failed!");
+            }
+            myQueue.pop();
+            myVector.eraseElementByPos(0);
+        }
+    }
+
+    console.log("Queue test start...");
+
+    const myQueue = new Queue(arr);
+    const myVector = new Vector(arr);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * i;
+        myQueue.push(random);
+        myVector.push_back(random);
+    }
+    judgeQueue(myQueue, myVector);
+
+    for (let i = 0; i < 1000; ++i) {
+        const random = Math.random() * i;
+        myQueue.push(random);
+        myVector.push_back(random);
+    }
+    myQueue.clear();
+    myVector.clear();
+    judgeQueue(myQueue, myVector);
+
+    console.clear();
+    console.log("Queue test end, all tests passed!");
+}
 
 function judge(funcName: string, container: SequentialContainerType<any>, myVector: SequentialContainerType<any>) {
     let testResult = (container.size() === myVector.size());
@@ -185,12 +268,14 @@ function testDeque() {
 }
 
 function main() {
-    const testQueue = ["LinkList", "Deque"];
+    const taskQueue = ["Stack", "Queue", "LinkList", "Deque"];
 
     console.log("test start...");
 
-    if (testQueue.includes("LinkList")) testLink();
-    if (testQueue.includes("Deque")) testDeque();
+    if (taskQueue.includes("Stack")) testStack();
+    if (taskQueue.includes("Queue")) testQueue();
+    if (taskQueue.includes("LinkList")) testLink();
+    if (taskQueue.includes("Deque")) testDeque();
 
     console.clear();
     console.log("test end, all tests passed!");

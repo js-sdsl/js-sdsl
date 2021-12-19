@@ -10,7 +10,7 @@ class LinkNode<T> {
     }
 }
 
-type LinkListType<T> = {
+export type LinkListType<T> = {
     push_front: (element: T) => void;
     pop_front: () => void;
     merge: (other: LinkListType<T>) => void;
@@ -66,7 +66,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     };
 
     this.pop_back = function () {
-        if (len) --len;
+        if (len > 0) --len;
         if (!tail) return;
         if (head === tail) {
             head = tail = null;
@@ -123,7 +123,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             const next = curNode.next;
             next.pre = pre;
             pre.next = next;
-            if (len) --len;
+            if (len > 0) --len;
         }
     };
 
@@ -138,7 +138,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
                 const next = curNode.next;
                 if (next) next.pre = pre;
                 if (pre) pre.next = next;
-                if (len) --len;
+                if (len > 0) --len;
             }
             curNode = curNode.next;
         }
@@ -197,7 +197,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             let tmpNode = curNode;
             while (tmpNode && tmpNode.next && tmpNode.val === tmpNode.next.val) {
                 tmpNode = tmpNode.next;
-                --len;
+                if (len > 0) --len;
             }
             curNode.next = tmpNode.next;
             curNode = curNode.next;
@@ -232,7 +232,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     };
 
     this.pop_front = function () {
-        if (len) --len;
+        if (len > 0) --len;
         if (!head) return;
         if (head === tail) {
             head = tail = null;

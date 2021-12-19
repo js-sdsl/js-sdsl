@@ -5,6 +5,8 @@
 ## Included data structures
 
 - Vector
+- Stack
+- Queue
 - LinkList
 - Deque
 

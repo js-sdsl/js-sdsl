@@ -1,4 +1,4 @@
-type BaseType = {
+export type BaseType = {
     size: () => number;
     empty: () => boolean;
     clear: () => void;
