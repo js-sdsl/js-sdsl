@@ -1,11 +1,27 @@
 {
   "name": "js-sdsl",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "javascript standard data structure library",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "author": "zly201",
+  "author": {
+    "name": "ZLY201",
+    "email": "951711127@qq.com",
+    "url": "https://github.com/ZLY201/js-sdsl"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/ZLY201/js-sdsl.git"
+  },
   "license": "MIT",
+  "keywords": [
+    "javascript",
+    "data structure library"
+  ],
+  "bugs": {
+    "email": "951711127@qq.com",
+    "url": "https://github.com/ZLY201/js-sdsl/issues"
+  },
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
     "build": "yarn lint && rm -rf dist/test && yarn build:cjs && yarn build:umd:min",
