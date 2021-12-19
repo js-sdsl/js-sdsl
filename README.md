@@ -39,8 +39,8 @@ To help you have a better use, we provide this API document (**it will become so
 <script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
 <script>
     const { Vector } = SDSL;
-	const myVector = new Vector();
-	// you code here...
+    const myVector = new Vector();
+    // you code here...
 </script>
 ```
 
