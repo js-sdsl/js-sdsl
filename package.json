@@ -32,7 +32,8 @@
     "test": "rm -rf dist/test && tsc src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
     "deploy": "yarn build:umd:min && gh-pages -d dist/umd",
-    "publish": "yarn build && npm publish"
+    "publish": "yarn build && npm publish",
+    "publish:readme": "npm version patch && npm publish"
   },
   "husky": {
     "hooks": {
