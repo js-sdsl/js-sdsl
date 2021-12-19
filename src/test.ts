@@ -283,7 +283,7 @@ function testPriorityQueue() {
     }
     myVector.sort(cmp);
     while (!myPriority.empty()) {
-        if (myPriority.size() != myVector.size()) {
+        if (myPriority.size() !== myVector.size()) {
             throw new Error("PriorityQueue size test failed!");
         }
         const u = myPriority.top();
