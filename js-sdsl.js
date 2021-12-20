@@ -108,6 +108,7 @@
         this.sort = function (cmp) {
             vector.sort(cmp);
         };
+        Object.freeze(this);
     }
     Object.freeze(Vector);
 
@@ -146,6 +147,7 @@
         this.top = function () {
             return stack[len - 1];
         };
+        Object.freeze(this);
     }
     Object.freeze(Stack);
 
@@ -163,7 +165,7 @@
         var len = arr.length;
         var head = null;
         var tail = null;
-        if (len) {
+        if (len > 0) {
             head = new LinkNode(arr[0]);
             var curNode = head;
             for (var i = 1; i < len; ++i) {
@@ -434,6 +436,7 @@
                 }
             });
         };
+        Object.freeze(this);
     }
     Object.freeze(LinkList);
 
@@ -458,6 +461,7 @@
         this.front = function () {
             return queue.front();
         };
+        Object.freeze(this);
     }
     Object.freeze(Queue);
 
@@ -481,20 +485,20 @@
         var needBucketNum = Math.ceil(len / Deque.bucketSize);
         first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
         last = first;
-        if (len === 0)
-            return;
-        var cnt = 0;
-        for (var i = 0; i < needBucketNum; ++i) {
-            for (var j = 0; j < Deque.bucketSize; ++j) {
-                map[first + i][j] = arr[cnt++];
-                if (cnt >= len) {
-                    last = first + i;
-                    curLast = j;
-                    break;
+        if (len > 0) {
+            var cnt = 0;
+            for (var i = 0; i < needBucketNum; ++i) {
+                for (var j = 0; j < Deque.bucketSize; ++j) {
+                    map[first + i][j] = arr[cnt++];
+                    if (cnt >= len) {
+                        last = first + i;
+                        curLast = j;
+                        break;
+                    }
                 }
+                if (cnt >= len)
+                    break;
             }
-            if (cnt >= len)
-                break;
         }
         this.size = function () {
             return len;
@@ -780,6 +784,7 @@
             curLast = curNodePointerIndex;
             len = pos + 1;
         };
+        Object.freeze(this);
     }
     Object.freeze(Deque);
 
@@ -895,6 +900,7 @@
         this.top = function () {
             return priorityQueue[0];
         };
+        Object.freeze(this);
     }
     Object.freeze(PriorityQueue);
 
