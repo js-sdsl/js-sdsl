@@ -36,6 +36,8 @@ function Stack<T>(this: StackType<T>, arr: T[] = []) {
     this.top = function () {
         return stack[len - 1];
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(Stack);

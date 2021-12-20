@@ -103,6 +103,8 @@ function PriorityQueue<T>(this: PriorityQueue<T>, arr: T[] = [], cmp: (x: T, y: 
     this.top = function () {
         return priorityQueue[0];
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(PriorityQueue);

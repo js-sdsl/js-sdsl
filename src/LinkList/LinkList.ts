@@ -21,7 +21,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     let head: LinkNode<T> | null = null;
     let tail: LinkNode<T> | null = null;
 
-    if (len) {
+    if (len > 0) {
         head = new LinkNode<T>(arr[0]);
         let curNode: LinkNode<T> = head;
         for (let i = 1; i < len; ++i) {
@@ -270,6 +270,8 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             }
         });
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(LinkList);

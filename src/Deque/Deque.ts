@@ -27,18 +27,19 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
     const needBucketNum = Math.ceil(len / Deque.bucketSize);
     first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
     last = first;
-    if (len === 0) return;
-    let cnt = 0;
-    for (let i = 0; i < needBucketNum; ++i) {
-        for (let j = 0; j < Deque.bucketSize; ++j) {
-            map[first + i][j] = arr[cnt++];
-            if (cnt >= len) {
-                last = first + i;
-                curLast = j;
-                break;
+    if (len > 0) {
+        let cnt = 0;
+        for (let i = 0; i < needBucketNum; ++i) {
+            for (let j = 0; j < Deque.bucketSize; ++j) {
+                map[first + i][j] = arr[cnt++];
+                if (cnt >= len) {
+                    last = first + i;
+                    curLast = j;
+                    break;
+                }
             }
+            if (cnt >= len) break;
         }
-        if (cnt >= len) break;
     }
 
     this.size = function () {
@@ -335,6 +336,8 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         curLast = curNodePointerIndex;
         len = pos + 1;
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(Deque);

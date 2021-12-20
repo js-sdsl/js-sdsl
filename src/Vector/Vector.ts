@@ -100,6 +100,8 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
     this.sort = function (cmp?: (x: T, y: T) => number) {
         vector.sort(cmp);
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(Vector);

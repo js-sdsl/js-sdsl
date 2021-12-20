@@ -33,6 +33,8 @@ function Queue<T>(this: QueueType<T>, arr: T[] = []) {
     this.front = function () {
         return queue.front();
     };
+
+    Object.freeze(this);
 }
 
 Object.freeze(Queue);
