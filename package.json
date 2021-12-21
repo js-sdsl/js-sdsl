@@ -1,6 +1,6 @@
 {
   "name": "js-sdsl",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "javascript standard data structure library",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
