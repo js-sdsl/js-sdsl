@@ -10,6 +10,7 @@
 - LinkList
 - Deque
 - PriorityQueue
+- Set
 
 ## Supported platforms
 

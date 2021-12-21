@@ -16,7 +16,18 @@
   "license": "MIT",
   "keywords": [
     "javascript",
-    "data structure library"
+    "data",
+    "structure",
+    "library",
+    "LinkList",
+    "Vector",
+    "Stack",
+    "Queue",
+    "LinkList",
+    "Deque",
+    "PriorityQueue",
+    "Set",
+    "RBTree"
   ],
   "bugs": {
     "email": "951711127@qq.com",
