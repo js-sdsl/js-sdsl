@@ -2,10 +2,19 @@ import { SequentialContainerType } from "./Base/Base";
 import { VectorType } from "./Vector/Vector";
 import { StackType } from "./Stack/Stack";
 import { QueueType } from "./Queue/Queue";
-import { Vector, Stack, Queue, LinkList, Deque, PriorityQueue } from "./index";
+import {
+    Vector,
+    Stack,
+    Queue,
+    LinkList,
+    Deque,
+    PriorityQueue,
+    Set
+} from "./index";
+import { SetType } from "./Set/Set";
 
 const arr: number[] = [];
-for (let i = 0; i < 1000; ++i) arr.push(Math.random() * 1000);
+for (let i = 0; i < 1000; ++i) arr.push(Math.random() * 1000000);
 Object.freeze(arr);
 
 function testStack() {
@@ -298,9 +307,58 @@ function testPriorityQueue() {
     console.log("PriorityQueue test end, all tests passed!");
 }
 
+function testSet() {
+    function judgeSet(mySet: SetType<number>, myVector: VectorType<number>) {
+        if (mySet.getHeight() > Math.log2(mySet.size())) {
+            throw new Error("tree too high!");
+        }
+        myVector.sort((x, y) => x - y);
+        mySet.forEach((element, index) => {
+            if (myVector.getElementByPos(index) !== element) {
+                throw new Error("Set test failed!");
+            }
+        });
+    }
+
+    console.log("Set test start...");
+
+    const mySet = new Set(arr);
+    if (mySet.getHeight() > Math.log2(mySet.size())) {
+        throw new Error("tree too high!");
+    }
+
+    const myVector = new Vector(arr);
+
+    for (let i = 0; i < 100000; ++i) {
+        const random = Math.random() * 1000000;
+        mySet.insert(random);
+        myVector.push_back(random);
+    }
+    judgeSet(mySet, myVector);
+
+    for (let i = 0; i < 10000; ++i) {
+        const pos = Math.floor(Math.random() * myVector.size());
+        const eraseValue = myVector.getElementByPos(pos);
+        myVector.eraseElementByPos(pos);
+        mySet.erase(eraseValue);
+    }
+    judgeSet(mySet, myVector);
+
+    const otherSet = new Set<number>();
+    for (let i = 0; i < 10000; ++i) {
+        const random = Math.random() * 1000000;
+        otherSet.insert(random);
+        myVector.push_back(random);
+    }
+    mySet.union(otherSet);
+    judgeSet(mySet, myVector);
+
+    console.clear();
+    console.log("Set test end, all tests passed!");
+}
+
 function main() {
     const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue"];
-
     console.log("test start...");
 
     if (taskQueue.includes("Stack")) testStack();
@@ -308,6 +366,7 @@ function main() {
     if (taskQueue.includes("LinkList")) testLink();
     if (taskQueue.includes("Deque")) testDeque();
     if (taskQueue.includes("PriorityQueue")) testPriorityQueue();
+    if (taskQueue.includes("Set")) testSet();
 
     console.clear();
     console.log("test end, all tests passed!");

@@ -4,6 +4,7 @@ import Queue from "./Queue/Queue";
 import LinkList from "./LinkList/LinkList";
 import Deque from "./Deque/Deque";
 import PriorityQueue from "./PriorityQueue/PriorityQueue";
+import Set from "./Set/Set";
 
 export {
     Vector,
@@ -11,5 +12,6 @@ export {
     Queue,
     LinkList,
     Deque,
-    PriorityQueue
+    PriorityQueue,
+    Set
 };
