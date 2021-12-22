@@ -1,4 +1,4 @@
-import { BaseType } from "../Base/Base";
+import { AssociativeContainersType } from "../Base/Base";
 
 class TreeNode<T> {
     static TreeNodeColorType: { red: '0', black: '1' } = {
@@ -120,14 +120,7 @@ class TreeNode<T> {
 
 Object.freeze(TreeNode);
 
-export type SetType<T> = {
-    forEach: (callback: (element: T, index: number) => void) => void;
-    insert: (element: T) => void;
-    erase: (element: T) => void;
-    find: (element: T) => boolean;
-    union: (other: SetType<T>) => void;
-    getHeight: () => number;
-} & BaseType;
+export type SetType<T> = AssociativeContainersType<T>;
 
 function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
@@ -154,17 +147,178 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
+    const findSubTreeMinNode: (curNode: TreeNode<T>) => TreeNode<T> = function (curNode: TreeNode<T>) {
+        if (!curNode || curNode.value === null) throw new Error("unknown error");
+        return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
+    };
+
+    const findSubTreeMaxNode: (curNode: TreeNode<T>) => TreeNode<T> = function (curNode: TreeNode<T>) {
+        if (!curNode || curNode.value === null) throw new Error("unknown error");
+        return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
+    };
+
+    this.front = function () {
+        if (this.empty()) return undefined;
+        const minNode = findSubTreeMinNode(root);
+        if (minNode.value === null) return undefined;
+        return minNode.value;
+    };
+
+    this.back = function () {
+        if (this.empty()) return undefined;
+        const maxNode = findSubTreeMaxNode(root);
+        if (maxNode.value === null) return undefined;
+        return maxNode.value;
+    };
+
+    const inOrderTraversal: (curNode: TreeNode<T> | null, callback: (curNode: TreeNode<T>) => boolean) => boolean = function (curNode: TreeNode<T> | null, callback: (curNode: TreeNode<T>) => boolean) {
+        if (!curNode || curNode.value === null) return false;
+        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
+        if (ifReturn) return true;
+        if (callback(curNode)) return true;
+        return inOrderTraversal(curNode.rightChild, callback);
+    };
+
     this.forEach = function (callback: (element: T, index: number) => void) {
         let index = 0;
+        inOrderTraversal(root, curNode => {
+            if (curNode.value === null) throw new Error("unknown error");
+            callback(curNode.value, index++);
+            return false;
+        });
+    };
 
-        const inOrderTraversal = function (curNode: TreeNode<T> | null) {
-            if (!curNode) return;
-            inOrderTraversal(curNode.leftChild);
-            if (curNode.value !== null) callback(curNode.value, index++);
-            inOrderTraversal(curNode.rightChild);
-        };
+    this.getElementByPos = function (pos: number) {
+        if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
+        let index = 0;
+        let element = null;
+        inOrderTraversal(root, curNode => {
+            if (pos === index) {
+                element = curNode.value;
+                return true;
+            }
+            ++index;
+            return false;
+        });
+        if (element === null) throw new Error("unknown error");
+        return element;
+    };
 
-        inOrderTraversal(root);
+    const eraseNodeSelfBalance = function (curNode: TreeNode<T>) {
+        const parentNode = curNode.parent;
+        if (!parentNode) {
+            if (curNode === root) return;
+            throw new Error("unknown error");
+        }
+
+        if (curNode.color === TreeNode.TreeNodeColorType.red) {
+            curNode.color = TreeNode.TreeNodeColorType.black;
+            return;
+        }
+
+        const brotherNode = curNode.brother;
+        if (!brotherNode) throw new Error("unknown error");
+
+        if (curNode === parentNode.leftChild) {
+            if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
+                brotherNode.color = TreeNode.TreeNodeColorType.black;
+                parentNode.color = TreeNode.TreeNodeColorType.red;
+                const newRoot = parentNode.rotateLeft();
+                if (root === parentNode) root = newRoot;
+                eraseNodeSelfBalance(curNode);
+            } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
+                if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = parentNode.color;
+                    parentNode.color = TreeNode.TreeNodeColorType.black;
+                    if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                    const newRoot = parentNode.rotateLeft();
+                    if (root === parentNode) root = newRoot;
+                    curNode.color = TreeNode.TreeNodeColorType.black;
+                } else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.red;
+                    if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
+                    const newRoot = brotherNode.rotateRight();
+                    if (root === brotherNode) root = newRoot;
+                    eraseNodeSelfBalance(curNode);
+                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.red;
+                    eraseNodeSelfBalance(parentNode);
+                }
+            }
+        } else if (curNode === parentNode.rightChild) {
+            if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
+                brotherNode.color = TreeNode.TreeNodeColorType.black;
+                parentNode.color = TreeNode.TreeNodeColorType.red;
+                const newRoot = parentNode.rotateRight();
+                if (root === parentNode) root = newRoot;
+                eraseNodeSelfBalance(curNode);
+            } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
+                if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = parentNode.color;
+                    parentNode.color = TreeNode.TreeNodeColorType.black;
+                    if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
+                    const newRoot = parentNode.rotateRight();
+                    if (root === parentNode) root = newRoot;
+                    curNode.color = TreeNode.TreeNodeColorType.black;
+                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.red;
+                    if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                    const newRoot = brotherNode.rotateLeft();
+                    if (root === brotherNode) root = newRoot;
+                    eraseNodeSelfBalance(curNode);
+                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.red;
+                    eraseNodeSelfBalance(parentNode);
+                }
+            }
+        }
+    };
+
+    const eraseNode = function (curNode: TreeNode<T>) {
+        let swapNode: TreeNode<T> = curNode;
+        while (swapNode.leftChild || swapNode.rightChild) {
+            if (swapNode.rightChild) {
+                swapNode = findSubTreeMinNode(swapNode.rightChild);
+                const tmpValue = curNode.value;
+                curNode.value = swapNode.value;
+                swapNode.value = tmpValue;
+                curNode = swapNode;
+            }
+            if (swapNode.leftChild) {
+                swapNode = findSubTreeMaxNode(swapNode.leftChild);
+                const tmpValue = curNode.value;
+                curNode.value = swapNode.value;
+                swapNode.value = tmpValue;
+                curNode = swapNode;
+            }
+        }
+
+        eraseNodeSelfBalance(swapNode);
+        if (swapNode) swapNode.remove();
+        --len;
+        root.color = TreeNode.TreeNodeColorType.black;
+    };
+
+    this.eraseElementByPos = function (pos: number) {
+        if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than set's size");
+        let index = 0;
+        inOrderTraversal(root, curNode => {
+            if (pos === index) {
+                eraseNode(curNode);
+                return true;
+            }
+            ++index;
+            return false;
+        });
+    };
+
+    this.eraseElementByValue = function (element: T) {
+        if (this.empty()) return;
+
+        const curNode = findElementPos(root, element);
+        if (curNode === null || curNode.value === null || cmp(curNode.value, element) !== 0) return;
+
+        eraseNode(curNode);
     };
 
     const findInsertPos: (curNode: TreeNode<T>, element: T) => TreeNode<T> = function (curNode: TreeNode<T>, element: T) {
@@ -239,6 +393,10 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
     };
 
     this.insert = function (element: T) {
+        if (element === null || element === undefined) {
+            throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
+        }
+
         if (this.empty()) {
             ++len;
             root.value = element;
@@ -256,113 +414,6 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const eraseNodeSelfBalance = function (curNode: TreeNode<T>) {
-        const parentNode = curNode.parent;
-        if (!parentNode) {
-            if (curNode === root) return;
-            throw new Error("unknown error");
-        }
-
-        if (curNode.color === TreeNode.TreeNodeColorType.red) return;
-
-        const brotherNode = curNode.brother;
-        if (!brotherNode) {
-            throw new Error("unknown error");
-        }
-
-        if (curNode === parentNode.leftChild) {
-            if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
-                brotherNode.color = TreeNode.TreeNodeColorType.black;
-                parentNode.color = TreeNode.TreeNodeColorType.red;
-                const newRoot = parentNode.rotateLeft();
-                if (root === parentNode) root = newRoot;
-                eraseNodeSelfBalance(curNode);
-            } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = parentNode.color;
-                    parentNode.color = TreeNode.TreeNodeColorType.black;
-                    if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
-                    const newRoot = parentNode.rotateLeft();
-                    if (root === parentNode) root = newRoot;
-                } else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
-                    const newRoot = brotherNode.rotateRight();
-                    if (root === brotherNode) root = newRoot;
-                    eraseNodeSelfBalance(curNode);
-                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    parentNode.color = TreeNode.TreeNodeColorType.black;
-                }
-            }
-        } else if (curNode === parentNode.rightChild) {
-            if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
-                brotherNode.color = TreeNode.TreeNodeColorType.black;
-                parentNode.color = TreeNode.TreeNodeColorType.red;
-                const newRoot = parentNode.rotateRight();
-                if (root === parentNode) root = newRoot;
-                eraseNodeSelfBalance(curNode);
-            } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = parentNode.color;
-                    parentNode.color = TreeNode.TreeNodeColorType.black;
-                    if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
-                    const newRoot = parentNode.rotateRight();
-                    if (root === parentNode) root = newRoot;
-                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
-                    const newRoot = brotherNode.rotateLeft();
-                    if (root === brotherNode) root = newRoot;
-                    eraseNodeSelfBalance(curNode);
-                } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    parentNode.color = TreeNode.TreeNodeColorType.black;
-                }
-            }
-        }
-    };
-
-    const findSubTreeMinNode: (curNode: TreeNode<T>) => TreeNode<T> = function (curNode: TreeNode<T>) {
-        if (!curNode || curNode.value === null) throw new Error("unknown error");
-        return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
-    };
-
-    const findSubTreeMaxNode: (curNode: TreeNode<T>) => TreeNode<T> = function (curNode: TreeNode<T>) {
-        if (!curNode || curNode.value === null) throw new Error("unknown error");
-        return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
-    };
-
-    this.erase = function (element: T) {
-        if (this.empty()) return;
-
-        let curNode = findElementPos(root, element);
-        if (curNode === null || curNode.value === null || cmp(curNode.value, element) !== 0) return;
-
-        let swapNode: TreeNode<T> = curNode;
-        while (swapNode.leftChild || swapNode.rightChild) {
-            if (swapNode.rightChild) {
-                swapNode = findSubTreeMinNode(swapNode.rightChild);
-                const tmpValue = curNode.value;
-                curNode.value = swapNode.value;
-                swapNode.value = tmpValue;
-                curNode = swapNode;
-            }
-            if (swapNode.leftChild) {
-                swapNode = findSubTreeMaxNode(swapNode.leftChild);
-                const tmpValue = curNode.value;
-                curNode.value = swapNode.value;
-                swapNode.value = tmpValue;
-                curNode = swapNode;
-            }
-        }
-
-        eraseNodeSelfBalance(swapNode);
-        if (swapNode) swapNode.remove();
-        --len;
-        root.color = TreeNode.TreeNodeColorType.black;
-    };
-
     const findElementPos: (curNode: TreeNode<T> | null, element: T) => TreeNode<T> | null = function (curNode: TreeNode<T> | null, element: T) {
         if (!curNode || curNode.value === null) return null;
         const cmpResult = cmp(element, curNode.value);
@@ -376,7 +427,7 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return curNode !== null && curNode.value !== null && cmp(curNode.value, element) === 0;
     };
 
-    // waiting for optimization, this is O(mlogn) algorithm now, but we expect it be O(mlog(n/m+1)).
+    // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
     // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
     this.union = function (other: SetType<T>) {
         other.forEach(element => this.insert(element));

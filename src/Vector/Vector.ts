@@ -29,16 +29,6 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
         return vector[len - 1];
     };
 
-    this.push_back = function (element: T) {
-        vector.push(element);
-        ++len;
-    };
-
-    this.pop_back = function () {
-        vector.pop();
-        if (len > 0) --len;
-    };
-
     this.forEach = function (callback: (element: T, index: number) => void) {
         vector.forEach(callback);
     };
@@ -46,11 +36,6 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
     this.getElementByPos = function (pos: number) {
         if (pos < 0 || pos >= len) throw new Error("pos muse more than 0 and less than vector's size");
         return vector[pos];
-    };
-
-    this.setElementByPos = function (pos: number, element: T) {
-        if (pos < 0 || pos >= len) throw new Error("pos muse more than 0 and less than vector's size");
-        vector[pos] = element;
     };
 
     this.eraseElementByPos = function (pos: number) {
@@ -69,6 +54,21 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
         });
         const newLen = newArr.length;
         while (len > newLen) this.pop_back();
+    };
+
+    this.push_back = function (element: T) {
+        vector.push(element);
+        ++len;
+    };
+
+    this.pop_back = function () {
+        vector.pop();
+        if (len > 0) --len;
+    };
+
+    this.setElementByPos = function (pos: number, element: T) {
+        if (pos < 0 || pos >= len) throw new Error("pos muse more than 0 and less than vector's size");
+        vector[pos] = element;
     };
 
     this.insert = function (pos: number, element: T, num = 1) {

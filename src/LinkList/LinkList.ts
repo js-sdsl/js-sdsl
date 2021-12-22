@@ -53,29 +53,6 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         return tail?.val;
     };
 
-    this.push_back = function (element: T) {
-        ++len;
-        const newTail = new LinkNode(element);
-        if (!tail) {
-            head = tail = newTail;
-        } else {
-            tail.next = newTail;
-            newTail.pre = tail;
-            tail = newTail;
-        }
-    };
-
-    this.pop_back = function () {
-        if (len > 0) --len;
-        if (!tail) return;
-        if (head === tail) {
-            head = tail = null;
-        } else {
-            tail = tail.pre;
-            if (tail) tail.next = null;
-        }
-    };
-
     this.forEach = function (callback: (element: T, index: number) => void) {
         if (typeof callback !== 'function') throw new Error("callback must be a function");
         let curNode = head;
@@ -94,16 +71,6 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             curNode = curNode.next;
         }
         return curNode?.val;
-    };
-
-    this.setElementByPos = function (pos: number, element: T) {
-        if (pos < 0 || pos >= len) throw new Error("pos must more then 0 and less then the list length");
-        let curNode = head;
-        while (pos--) {
-            if (!curNode) break;
-            curNode = curNode.next;
-        }
-        if (curNode) curNode.val = element;
     };
 
     this.eraseElementByPos = function (pos: number) {
@@ -142,6 +109,39 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
             }
             curNode = curNode.next;
         }
+    };
+
+    this.push_back = function (element: T) {
+        ++len;
+        const newTail = new LinkNode(element);
+        if (!tail) {
+            head = tail = newTail;
+        } else {
+            tail.next = newTail;
+            newTail.pre = tail;
+            tail = newTail;
+        }
+    };
+
+    this.pop_back = function () {
+        if (len > 0) --len;
+        if (!tail) return;
+        if (head === tail) {
+            head = tail = null;
+        } else {
+            tail = tail.pre;
+            if (tail) tail.next = null;
+        }
+    };
+
+    this.setElementByPos = function (pos: number, element: T) {
+        if (pos < 0 || pos >= len) throw new Error("pos must more then 0 and less then the list length");
+        let curNode = head;
+        while (pos--) {
+            if (!curNode) break;
+            curNode = curNode.next;
+        }
+        if (curNode) curNode.val = element;
     };
 
     /**
