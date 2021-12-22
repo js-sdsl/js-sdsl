@@ -27,6 +27,7 @@
     "Deque",
     "PriorityQueue",
     "Set",
+    "Map",
     "RBTree",
     "c++",
     "STL"
