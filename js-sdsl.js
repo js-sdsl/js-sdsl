@@ -55,7 +55,7 @@
         this.eraseElementByValue = function (value) {
             var newArr = [];
             this.forEach(function (element) {
-                if (element != value)
+                if (element !== value)
                     newArr.push(element);
             });
             newArr.forEach(function (element, index) {
@@ -192,11 +192,9 @@
             return tail === null || tail === void 0 ? void 0 : tail.val;
         };
         this.forEach = function (callback) {
-            if (typeof callback !== 'function')
-                throw new Error("callback must be a function");
             var curNode = head;
             var index = 0;
-            while (curNode != null) {
+            while (curNode !== null) {
                 callback(curNode.val, index++);
                 curNode = curNode.next;
             }
@@ -573,7 +571,7 @@
         this.eraseElementByValue = function (value) {
             var arr = [];
             this.forEach(function (element) {
-                if (element != value) {
+                if (element !== value) {
                     arr.push(element);
                 }
             });
