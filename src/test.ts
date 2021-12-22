@@ -19,7 +19,17 @@ const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
 Object.freeze(arr);
 
-function testStack() {
+type testReportFormat = {
+    containerName: string,
+    reportList: {
+        testFunc: string,
+        containerSize: number,
+        testNum: number,
+        runTime: number
+    }[];
+}
+
+function testStack(testNum: number) {
     function judgeStack(myStack: StackType<any>, myVector: VectorType<any>) {
         while (!myStack.empty()) {
             if (myStack.size() !== myVector.size()) {
@@ -40,14 +50,14 @@ function testStack() {
     const myStack = new Stack(arr);
     const myVector = new Vector(arr);
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * i;
         myStack.push(random);
         myVector.push_back(random);
     }
     judgeStack(myStack, myVector);
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * i;
         myStack.push(random);
         myVector.push_back(random);
@@ -58,9 +68,37 @@ function testStack() {
 
     console.clear();
     console.log("Stack test end, all tests passed!");
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myStack.push(Math.random() * i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push",
+        testNum: testNum,
+        containerSize: myStack.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myStack.size();
+    myStack.clear();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "clear",
+        testNum: size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+    return {
+        containerName: "Stack",
+        reportList
+    };
 }
 
-function testQueue() {
+function testQueue(testNum: number) {
     function judgeQueue(myQueue: QueueType<any>, myVector: VectorType<any>) {
         while (!myQueue.empty()) {
             if (myQueue.size() !== myVector.size()) {
@@ -81,14 +119,14 @@ function testQueue() {
     const myQueue = new Queue(arr);
     const myVector = new Vector(arr);
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * i;
         myQueue.push(random);
         myVector.push_back(random);
     }
     judgeQueue(myQueue, myVector);
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * i;
         myQueue.push(random);
         myVector.push_back(random);
@@ -99,6 +137,35 @@ function testQueue() {
 
     console.clear();
     console.log("Queue test end, all tests passed!");
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myQueue.push(Math.random() * i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push",
+        testNum: testNum,
+        containerSize: myQueue.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myQueue.size();
+    myQueue.clear();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "clear",
+        testNum: size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "Queue",
+        reportList
+    };
 }
 
 function judgeSequentialContainer(funcName: string, container: SequentialContainerType<any>, myVector: SequentialContainerType<any>) {
@@ -106,13 +173,11 @@ function judgeSequentialContainer(funcName: string, container: SequentialContain
     container.forEach((element, index) => {
         testResult = testResult && (element === myVector.getElementByPos(index));
     });
-    if (!testResult) {
-        throw new Error(`${funcName} test failed!`);
-    }
+    if (!testResult) throw new Error(`${funcName} test failed!`);
     console.log(container.constructor.name, funcName, "test passed.");
 }
 
-function testSequentialContainer(container: SequentialContainerType<any>) {
+function testSequentialContainer(container: SequentialContainerType<any>, testNum: number) {
     const containerName = container.constructor.name;
     console.log(containerName, "SequentialContainer standard test start...");
 
@@ -134,16 +199,15 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
     console.log(containerName, "back test passed.");
 
     judgeSequentialContainer("forEach", container, myVector);
-    console.log(containerName, "forEach test passed.");
 
-    for (let i = 0; i < 5000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random();
         container.push_back(random);
         myVector.push_back(random);
     }
     judgeSequentialContainer("push_back", container, myVector);
 
-    for (let i = 0; i < 3000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         container.pop_back();
         myVector.pop_back();
     }
@@ -156,8 +220,7 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
         testResult = testResult && (container.getElementByPos(i) === myVector.getElementByPos(i));
     }
     if (!testResult) {
-        console.error("getElementByPos test failed.");
-        return;
+        throw new Error("getElementByPos test failed.");
     }
     console.log(containerName, "getElementByPos test passed.");
 
@@ -167,15 +230,20 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
     }
     judgeSequentialContainer("setElementByPos", container, myVector);
 
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * myVector.size());
         container.eraseElementByPos(pos);
         myVector.eraseElementByPos(pos);
     }
     judgeSequentialContainer("eraseElementByPos", container, myVector);
 
-    for (let i = 0; i < 100; ++i) {
-        const pos = Math.floor(Math.random() * 10);
+    for (let i = 0; i < 10000; ++i) {
+        const random = Math.random();
+        container.push_back(random);
+        myVector.push_back(random);
+    }
+    for (let i = 0; i < 10000; ++i) {
+        const pos = Math.floor(Math.random() * container.size());
         const num = Math.floor(Math.random() * 10);
         container.insert(pos, 'q', num);
         myVector.insert(pos, 'q', num);
@@ -190,8 +258,8 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
     myVector.reverse();
     judgeSequentialContainer("reverse", container, myVector);
 
-    for (let i = 0; i < 100; ++i) {
-        const pos = Math.floor(Math.random() * 10);
+    for (let i = 0; i < 10000; ++i) {
+        const pos = Math.floor(Math.random() * container.size());
         const num = Math.floor(Math.random() * 10);
         container.insert(pos, 'w', num);
         myVector.insert(pos, 'w', num);
@@ -200,8 +268,8 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
     myVector.unique();
     judgeSequentialContainer("unique", container, myVector);
 
-    for (let i = 0; i < 1000; ++i) {
-        const random = Math.random() * 6;
+    for (let i = 0; i < 10000; ++i) {
+        const random = Math.random() * 100000;
         container.push_back(random);
         myVector.push_back(random);
     }
@@ -215,29 +283,161 @@ function testSequentialContainer(container: SequentialContainerType<any>) {
 
     console.clear();
     console.log(containerName, `SequentialContainer standard test end, all standard tests passed!`);
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) container.push_back(Math.random());
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push_back",
+        testNum: testNum,
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    let size = container.size();
+    for (let i = 0; i < testNum; ++i) container.pop_back();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "pop_back",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    for (let i = 0; i < testNum; ++i) {
+        const random = Math.random();
+        container.push_back(random);
+        myVector.push_back(random);
+    }
+    startTime = Date.now();
+    for (let i = 0; i < 10000; ++i) container.getElementByPos(i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "getElementByPos",
+        testNum: 10000,
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    for (let i = 0; i < 10000; ++i) container.setElementByPos(i, i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "setElementByPos",
+        testNum: 10000,
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    size = container.size();
+    for (let i = 0; i < (container.constructor.name === "Deque" ? 10 : 10000); ++i) {
+        container.eraseElementByPos(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))));
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByPos",
+        testNum: 10000,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))), 'q', Math.floor(Math.random() * 10));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "insert",
+        testNum: 10000,
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    size = container.size();
+    container.eraseElementByValue('q');
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByValue",
+        testNum: size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    container.reverse();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverse",
+        testNum: container.size(),
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(container.size(), 10)), 'q', Math.floor(Math.random() * 10));
+    size = container.size();
+    startTime = Date.now();
+    container.unique();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "unique",
+        testNum: 10000,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    for (let i = 0; i < testNum; ++i) container.push_back(Math.random() * testNum);
+    startTime = Date.now();
+    container.sort((x, y) => x - y);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "sort",
+        testNum: container.size(),
+        containerSize: container.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    size = container.size();
+    container.clear();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "clear",
+        testNum: size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    return reportList;
 }
 
-function testLink() {
+function testLinkList(testNum: number) {
     console.log("LinkList test start...");
 
     const myLinkList = new LinkList(arr);
 
-    testSequentialContainer(myLinkList);
+    const reportList = testSequentialContainer(myLinkList, testNum);
 
     const tmpArr = [];
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         myLinkList.push_front(i);
-        tmpArr.unshift(i);
+        tmpArr.push(i);
     }
+    tmpArr.reverse();
     judgeSequentialContainer("push_front", myLinkList, new Vector(tmpArr));
 
-    for (let i = 0; i < 100; ++i) {
+    tmpArr.reverse();
+    for (let i = 0; i < 10000; ++i) {
         myLinkList.pop_front();
-        tmpArr.shift();
+        tmpArr.pop();
     }
+    tmpArr.reverse();
     judgeSequentialContainer("pop_front", myLinkList, new Vector(tmpArr));
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         tmpArr.push(Math.random() * 1000);
     }
     const otherLinkList = new LinkList(tmpArr);
@@ -250,23 +450,66 @@ function testLink() {
 
     console.clear();
     console.log("LinkList test end, all tests passed!");
+
+    let startTime, endTime;
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myLinkList.push_front(i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push_front",
+        testNum: testNum,
+        containerSize: myLinkList.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myLinkList.size();
+    for (let i = 0; i < testNum; ++i) myLinkList.pop_front();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push_front",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    const _otherLinkList = new LinkList<number>();
+    for (let i = 0; i < testNum; ++i) _otherLinkList.push_back(Math.random() * 1000);
+    myLinkList.forEach(element => tmpArr.push(element));
+    myLinkList.sort((x, y) => x - y);
+    _otherLinkList.sort((x, y) => x - y);
+    startTime = Date.now();
+    myLinkList.merge(_otherLinkList);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "merge",
+        testNum: testNum,
+        containerSize: myLinkList.size(),
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "LinkList",
+        reportList
+    };
 }
 
-function testDeque() {
+function testDeque(testNum: number) {
     console.log("Deque test start...");
 
     const myDeque = new Deque(arr);
 
-    testSequentialContainer(myDeque);
+    const reportList = testSequentialContainer(myDeque, testNum);
 
     const tmpArr = [];
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         myDeque.push_front(i);
         tmpArr.unshift(i);
     }
     judgeSequentialContainer("push_front", myDeque, new Vector(tmpArr));
 
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         myDeque.pop_front();
         tmpArr.shift();
     }
@@ -277,17 +520,67 @@ function testDeque() {
 
     console.clear();
     console.log("Deque test end, all tests passed!");
+
+    let startTime, endTime;
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myDeque.push_front(i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push_front",
+        testNum: testNum,
+        containerSize: myDeque.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myDeque.size();
+    for (let i = 0; i < testNum; ++i) myDeque.pop_front();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "pop_front",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    myDeque.shrinkToFit();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "shrinkToFit",
+        testNum: myDeque.size(),
+        containerSize: myDeque.size(),
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "Deque",
+        reportList
+    };
 }
 
-function testPriorityQueue() {
+function testPriorityQueue(testNum: number) {
     console.log("PriorityQueue test start...");
 
     const cmp = (x: number, y: number) => y - x;
 
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
     const myPriority = new PriorityQueue(arr, cmp);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "constructor",
+        testNum: myPriority.size(),
+        containerSize: myPriority.size(),
+        runTime: endTime - startTime
+    });
+
     const myVector = new Vector(arr);
 
-    for (let i = 0; i < 1000; ++i) {
+    for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * i;
         myPriority.push(random);
         myVector.push_back(random);
@@ -307,9 +600,35 @@ function testPriorityQueue() {
 
     console.clear();
     console.log("PriorityQueue test end, all tests passed!");
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myPriority.push(Math.random() * i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push",
+        testNum: testNum,
+        containerSize: myPriority.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myPriority.size();
+    while (!myPriority.empty()) myPriority.pop();
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "pop all",
+        testNum: size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "PriorityQueue",
+        reportList
+    };
 }
 
-function testSet() {
+function testSet(testNum: number) {
     function judgeSet(mySet: SetType<number>, myVector: VectorType<number>) {
         if (mySet.getHeight() > 2 * Math.log2(mySet.size() + 1)) {
             throw new Error("set tree too high!");
@@ -327,7 +646,19 @@ function testSet() {
 
     console.log("Set test start...");
 
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
     const mySet = new Set(arr);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "constructor",
+        testNum: mySet.size(),
+        containerSize: mySet.size(),
+        runTime: endTime - startTime
+    });
+
     const myVector = new Vector(arr);
     judgeSet(mySet, myVector);
 
@@ -382,9 +713,60 @@ function testSet() {
 
     console.clear();
     console.log("Set test end, all tests passed!");
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) mySet.insert(Math.random() * 1000000);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "push",
+        testNum: testNum,
+        containerSize: mySet.size(),
+        runTime: endTime - startTime
+    });
+
+    for (let i = 0; i < testNum; ++i) mySet.insert(Math.random() * 1000000);
+    const tmpArr: number[] = [];
+    mySet.forEach(element => tmpArr.push(element));
+    startTime = Date.now();
+    const size = mySet.size();
+    for (let i = 0; i < testNum; ++i) mySet.eraseElementByValue(tmpArr[i]);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByValue",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    for (let i = 0; i < 10; ++i) mySet.eraseElementByPos(Math.floor(Math.random() * mySet.size()));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByPos",
+        testNum: 10,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    const _otherSet = new Set<number>();
+    for (let i = 0; i < testNum; ++i) _otherSet.insert(Math.random() * 1000000);
+    startTime = Date.now();
+    mySet.union(_otherSet);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "union",
+        testNum: testNum,
+        containerSize: mySet.size(),
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "Set",
+        reportList
+    };
 }
 
-function testMap() {
+function testMap(testNum: number) {
     function judgeMap(myMap: MapType<number, number>, stdMap: Map<number, number>) {
         if (myMap.getHeight() > 2 * Math.log2(myMap.size() + 1)) {
             throw new Error("map tree too high!");
@@ -458,22 +840,70 @@ function testMap() {
 
     console.clear();
     console.log("map test end, all tests passed!");
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myMap.setElement(i, Math.random() * 1000000);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "setElement",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    const size = myMap.size();
+    for (let i = 0; i < 100; ++i) myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByPos",
+        testNum: 100,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    const _otherMap = new SdslMap<number, number>();
+    for (let i = testNum; i < testNum * 2; ++i) _otherMap.setElement(i, Math.random() * 1000000);
+    startTime = Date.now();
+    myMap.union(_otherMap);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "setElement",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    return {
+        containerName: "Map",
+        reportList
+    };
 }
 
 function main() {
     const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue", "Set", "Map"];
+    const testReport: testReportFormat[] = [];
+    const testNum = 1000000;
+
     console.log("test start...");
 
-    if (taskQueue.includes("Stack")) testStack();
-    if (taskQueue.includes("Queue")) testQueue();
-    if (taskQueue.includes("LinkList")) testLink();
-    if (taskQueue.includes("Deque")) testDeque();
-    if (taskQueue.includes("PriorityQueue")) testPriorityQueue();
-    if (taskQueue.includes("Set")) testSet();
-    if (taskQueue.includes("Map")) testMap();
+    if (taskQueue.includes("Stack")) testReport.push(testStack(testNum * 10));
+    if (taskQueue.includes("Queue")) testReport.push(testQueue(testNum * 10));
+    if (taskQueue.includes("LinkList")) testReport.push(testLinkList(testNum));
+    if (taskQueue.includes("Deque")) testReport.push(testDeque(testNum));
+    if (taskQueue.includes("PriorityQueue")) testReport.push(testPriorityQueue(testNum * 10));
+    if (taskQueue.includes("Set")) testReport.push(testSet(testNum));
+    if (taskQueue.includes("Map")) testReport.push(testMap(testNum));
 
     console.clear();
     console.log("test end, all tests passed!");
+    testReport.forEach(report => {
+        console.log("=".repeat(35), report.containerName, "=".repeat(35));
+        console.table(report.reportList);
+    });
 }
 
 main();

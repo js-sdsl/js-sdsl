@@ -20,6 +20,7 @@
 - browser (support most browsers including IE8+)
 
 ## Download
+
 Download directly
 
 - [js-sdsl.js](https://zly201.github.io/js-sdsl/js-sdsl.js) (for development)
@@ -36,6 +37,7 @@ npm install js-sdsl
 To help you have a better use, we provide this API document (**it will come soon**).
 
 ### For Browser
+
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
@@ -47,11 +49,19 @@ To help you have a better use, we provide this API document (**it will come soon
 ```
 
 ### Other
-Please see `src/test.ts` to find usage.
+
+Just like other packages.
+
+If you want to get more help, viewing `src/test.ts` may help.
 
 ## Build by source code
 
-You can pull this repository and run `yarn build` or run `yarn test` to test our library.
+You can pull this repository and run `yarn build` to rebuild this library.
+
+## Unit test
+
+Before publishing, we conducted strict unit tests on each function, you can see `testResult.txt` to find our test
+results or run `yarn test` to reproduce it.
 
 ## License
 

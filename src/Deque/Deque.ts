@@ -52,6 +52,8 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
 
     this.clear = function () {
         first = last = curFirst = curLast = bucketNum = len = 0;
+        reAllocate.call(this, Deque.bucketSize);
+        len = 0;
     };
 
     this.front = function () {
@@ -106,6 +108,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
     };
 
     this.eraseElementByPos = function (pos: number) {
+        if (pos < 0 || pos > len) throw new Error("pos should more than 0 and less than queue's size");
         if (pos === 0) this.pop_front();
         else if (pos === this.size()) this.pop_back();
         else {
@@ -120,6 +123,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
     };
 
     this.eraseElementByValue = function (value: T) {
+        if (this.empty()) return;
         const arr: T[] = [];
         this.forEach(element => {
             if (element !== value) {
@@ -212,18 +216,11 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         } else if (pos === this.size()) {
             while (num--) this.push_back(element);
         } else {
-            const {
-                curNodeBucketIndex,
-                curNodePointerIndex
-            } = getElementIndex(pos);
             const arr: T[] = [];
             for (let i = pos; i < len; ++i) {
                 arr.push(this.getElementByPos(i));
             }
-            last = curNodeBucketIndex;
-            curLast = curNodePointerIndex;
-            len = pos + 1;
-            this.pop_back();
+            this.cut(pos - 1);
             for (let i = 0; i < num; ++i) this.push_back(element);
             arr.forEach(element => this.push_back(element));
         }
@@ -327,6 +324,10 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
      * @param pos cut element after pos
      */
     this.cut = function (pos: number) {
+        if (pos < 0) {
+            this.clear();
+            return;
+        }
         const {
             curNodeBucketIndex,
             curNodePointerIndex

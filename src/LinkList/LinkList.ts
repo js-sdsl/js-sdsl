@@ -73,7 +73,7 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     };
 
     this.eraseElementByPos = function (pos: number) {
-        if (pos < 0 || pos >= len) throw new Error("insert pos must more then 0 and less then the list length");
+        if (pos < 0 || pos >= len) throw new Error("erase pos must more then 0 and less then the list length");
         if (pos === 0) this.pop_front();
         else if (pos === len - 1) this.pop_back();
         else {
