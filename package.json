@@ -1,6 +1,6 @@
 {
   "name": "js-sdsl",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "javascript standard data structure library， which benchmark against C++ STL",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
