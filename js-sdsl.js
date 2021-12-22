@@ -37,15 +37,6 @@
                 return undefined;
             return vector[len - 1];
         };
-        this.push_back = function (element) {
-            vector.push(element);
-            ++len;
-        };
-        this.pop_back = function () {
-            vector.pop();
-            if (len > 0)
-                --len;
-        };
         this.forEach = function (callback) {
             vector.forEach(callback);
         };
@@ -53,11 +44,6 @@
             if (pos < 0 || pos >= len)
                 throw new Error("pos muse more than 0 and less than vector's size");
             return vector[pos];
-        };
-        this.setElementByPos = function (pos, element) {
-            if (pos < 0 || pos >= len)
-                throw new Error("pos muse more than 0 and less than vector's size");
-            vector[pos] = element;
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
@@ -78,6 +64,20 @@
             var newLen = newArr.length;
             while (len > newLen)
                 this.pop_back();
+        };
+        this.push_back = function (element) {
+            vector.push(element);
+            ++len;
+        };
+        this.pop_back = function () {
+            vector.pop();
+            if (len > 0)
+                --len;
+        };
+        this.setElementByPos = function (pos, element) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos muse more than 0 and less than vector's size");
+            vector[pos] = element;
         };
         this.insert = function (pos, element, num) {
             if (num === void 0) { num = 1; }
@@ -191,32 +191,6 @@
         this.back = function () {
             return tail === null || tail === void 0 ? void 0 : tail.val;
         };
-        this.push_back = function (element) {
-            ++len;
-            var newTail = new LinkNode(element);
-            if (!tail) {
-                head = tail = newTail;
-            }
-            else {
-                tail.next = newTail;
-                newTail.pre = tail;
-                tail = newTail;
-            }
-        };
-        this.pop_back = function () {
-            if (len > 0)
-                --len;
-            if (!tail)
-                return;
-            if (head === tail) {
-                head = tail = null;
-            }
-            else {
-                tail = tail.pre;
-                if (tail)
-                    tail.next = null;
-            }
-        };
         this.forEach = function (callback) {
             if (typeof callback !== 'function')
                 throw new Error("callback must be a function");
@@ -237,18 +211,6 @@
                 curNode = curNode.next;
             }
             return curNode === null || curNode === void 0 ? void 0 : curNode.val;
-        };
-        this.setElementByPos = function (pos, element) {
-            if (pos < 0 || pos >= len)
-                throw new Error("pos must more then 0 and less then the list length");
-            var curNode = head;
-            while (pos--) {
-                if (!curNode)
-                    break;
-                curNode = curNode.next;
-            }
-            if (curNode)
-                curNode.val = element;
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
@@ -296,6 +258,44 @@
                 }
                 curNode = curNode.next;
             }
+        };
+        this.push_back = function (element) {
+            ++len;
+            var newTail = new LinkNode(element);
+            if (!tail) {
+                head = tail = newTail;
+            }
+            else {
+                tail.next = newTail;
+                newTail.pre = tail;
+                tail = newTail;
+            }
+        };
+        this.pop_back = function () {
+            if (len > 0)
+                --len;
+            if (!tail)
+                return;
+            if (head === tail) {
+                head = tail = null;
+            }
+            else {
+                tail = tail.pre;
+                if (tail)
+                    tail.next = null;
+            }
+        };
+        this.setElementByPos = function (pos, element) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos must more then 0 and less then the list length");
+            var curNode = head;
+            while (pos--) {
+                if (!curNode)
+                    break;
+                curNode = curNode.next;
+            }
+            if (curNode)
+                curNode.val = element;
         };
         /**
          * @param {number} pos insert element before pos, should in [0, list.size]
@@ -509,75 +509,11 @@
         this.clear = function () {
             first = last = curFirst = curLast = bucketNum = len = 0;
         };
-        var reAllocate = function (originalSize) {
-            var newMap = [];
-            var needSize = originalSize * Deque.sigma;
-            var newBucketNum = Math.max(Math.ceil(needSize / Deque.bucketSize), 2);
-            for (var i = 0; i < newBucketNum; ++i) {
-                newMap.push(new Array(Deque.bucketSize));
-            }
-            var needBucketNum = Math.ceil(originalSize / Deque.bucketSize);
-            var newFirst = Math.floor(newBucketNum / 2) - Math.floor(needBucketNum / 2);
-            var newLast = newFirst, newCurLast = 0;
-            if (this.size()) {
-                for (var i = 0; i < needBucketNum; ++i) {
-                    for (var j = 0; j < Deque.bucketSize; ++j) {
-                        newMap[newFirst + i][j] = this.front();
-                        this.pop_front();
-                        if (this.empty()) {
-                            newLast = newFirst + i;
-                            newCurLast = j;
-                            break;
-                        }
-                    }
-                    if (this.empty())
-                        break;
-                }
-            }
-            map = newMap;
-            first = newFirst;
-            curFirst = 0;
-            last = newLast;
-            curLast = newCurLast;
-            bucketNum = newBucketNum;
-            len = originalSize;
-        };
         this.front = function () {
             return map[first][curFirst];
         };
         this.back = function () {
             return map[last][curLast];
-        };
-        this.push_back = function (element) {
-            if (!this.empty()) {
-                if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
-                    reAllocate.call(this, this.size());
-                }
-                if (curLast < Deque.bucketSize - 1) {
-                    ++curLast;
-                }
-                else if (last < bucketNum - 1) {
-                    ++last;
-                    curLast = 0;
-                }
-            }
-            ++len;
-            map[last][curLast] = element;
-        };
-        this.pop_back = function () {
-            if (this.empty())
-                return;
-            if (this.size() !== 1) {
-                if (curLast > 0) {
-                    --curLast;
-                }
-                else if (first < last) {
-                    --last;
-                    curLast = Deque.bucketSize - 1;
-                }
-            }
-            if (len > 0)
-                --len;
         };
         this.forEach = function (callback) {
             if (this.empty())
@@ -618,10 +554,6 @@
             var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
             return map[curNodeBucketIndex][curNodePointerIndex];
         };
-        this.setElementByPos = function (pos, element) {
-            var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
-            map[curNodeBucketIndex][curNodePointerIndex] = element;
-        };
         this.eraseElementByPos = function (pos) {
             var _this = this;
             if (pos === 0)
@@ -649,6 +581,74 @@
             for (var i = 0; i < _len; ++i)
                 this.setElementByPos(i, arr[i]);
             this.cut(_len - 1);
+        };
+        var reAllocate = function (originalSize) {
+            var newMap = [];
+            var needSize = originalSize * Deque.sigma;
+            var newBucketNum = Math.max(Math.ceil(needSize / Deque.bucketSize), 2);
+            for (var i = 0; i < newBucketNum; ++i) {
+                newMap.push(new Array(Deque.bucketSize));
+            }
+            var needBucketNum = Math.ceil(originalSize / Deque.bucketSize);
+            var newFirst = Math.floor(newBucketNum / 2) - Math.floor(needBucketNum / 2);
+            var newLast = newFirst, newCurLast = 0;
+            if (this.size()) {
+                for (var i = 0; i < needBucketNum; ++i) {
+                    for (var j = 0; j < Deque.bucketSize; ++j) {
+                        newMap[newFirst + i][j] = this.front();
+                        this.pop_front();
+                        if (this.empty()) {
+                            newLast = newFirst + i;
+                            newCurLast = j;
+                            break;
+                        }
+                    }
+                    if (this.empty())
+                        break;
+                }
+            }
+            map = newMap;
+            first = newFirst;
+            curFirst = 0;
+            last = newLast;
+            curLast = newCurLast;
+            bucketNum = newBucketNum;
+            len = originalSize;
+        };
+        this.push_back = function (element) {
+            if (!this.empty()) {
+                if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
+                    reAllocate.call(this, this.size());
+                }
+                if (curLast < Deque.bucketSize - 1) {
+                    ++curLast;
+                }
+                else if (last < bucketNum - 1) {
+                    ++last;
+                    curLast = 0;
+                }
+            }
+            ++len;
+            map[last][curLast] = element;
+        };
+        this.pop_back = function () {
+            if (this.empty())
+                return;
+            if (this.size() !== 1) {
+                if (curLast > 0) {
+                    --curLast;
+                }
+                else if (first < last) {
+                    --last;
+                    curLast = Deque.bucketSize - 1;
+                }
+            }
+            if (len > 0)
+                --len;
+        };
+        this.setElementByPos = function (pos, element) {
+            var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
+            map[curNodeBucketIndex][curNodePointerIndex] = element;
         };
         /**
          * @param {number} pos insert element before pos, should in [0, queue.size]
@@ -1039,17 +1039,197 @@
             root = new TreeNode();
             root.color = TreeNode.TreeNodeColorType.black;
         };
+        var findSubTreeMinNode = function (curNode) {
+            if (!curNode || curNode.value === null)
+                throw new Error("unknown error");
+            return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
+        };
+        var findSubTreeMaxNode = function (curNode) {
+            if (!curNode || curNode.value === null)
+                throw new Error("unknown error");
+            return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
+        };
+        this.front = function () {
+            if (this.empty())
+                return undefined;
+            var minNode = findSubTreeMinNode(root);
+            if (minNode.value === null)
+                return undefined;
+            return minNode.value;
+        };
+        this.back = function () {
+            if (this.empty())
+                return undefined;
+            var maxNode = findSubTreeMaxNode(root);
+            if (maxNode.value === null)
+                return undefined;
+            return maxNode.value;
+        };
+        var inOrderTraversal = function (curNode, callback) {
+            if (!curNode || curNode.value === null)
+                return false;
+            var ifReturn = inOrderTraversal(curNode.leftChild, callback);
+            if (ifReturn)
+                return true;
+            if (callback(curNode))
+                return true;
+            return inOrderTraversal(curNode.rightChild, callback);
+        };
         this.forEach = function (callback) {
             var index = 0;
-            var inOrderTraversal = function (curNode) {
-                if (!curNode)
+            inOrderTraversal(root, function (curNode) {
+                if (curNode.value === null)
+                    throw new Error("unknown error");
+                callback(curNode.value, index++);
+                return false;
+            });
+        };
+        this.getElementByPos = function (pos) {
+            if (pos < 0 || pos >= this.size())
+                throw new Error("pos must more than 0 and less than set's size");
+            var index = 0;
+            var element = null;
+            inOrderTraversal(root, function (curNode) {
+                if (pos === index) {
+                    element = curNode.value;
+                    return true;
+                }
+                ++index;
+                return false;
+            });
+            if (element === null)
+                throw new Error("unknown error");
+            return element;
+        };
+        var eraseNodeSelfBalance = function (curNode) {
+            var parentNode = curNode.parent;
+            if (!parentNode) {
+                if (curNode === root)
                     return;
-                inOrderTraversal(curNode.leftChild);
-                if (curNode.value !== null)
-                    callback(curNode.value, index++);
-                inOrderTraversal(curNode.rightChild);
-            };
-            inOrderTraversal(root);
+                throw new Error("unknown error");
+            }
+            if (curNode.color === TreeNode.TreeNodeColorType.red) {
+                curNode.color = TreeNode.TreeNodeColorType.black;
+                return;
+            }
+            var brotherNode = curNode.brother;
+            if (!brotherNode)
+                throw new Error("unknown error");
+            if (curNode === parentNode.leftChild) {
+                if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.black;
+                    parentNode.color = TreeNode.TreeNodeColorType.red;
+                    var newRoot = parentNode.rotateLeft();
+                    if (root === parentNode)
+                        root = newRoot;
+                    eraseNodeSelfBalance(curNode);
+                }
+                else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
+                    if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                        brotherNode.color = parentNode.color;
+                        parentNode.color = TreeNode.TreeNodeColorType.black;
+                        if (brotherNode.rightChild)
+                            brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                        var newRoot = parentNode.rotateLeft();
+                        if (root === parentNode)
+                            root = newRoot;
+                        curNode.color = TreeNode.TreeNodeColorType.black;
+                    }
+                    else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                        brotherNode.color = TreeNode.TreeNodeColorType.red;
+                        if (brotherNode.leftChild)
+                            brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
+                        var newRoot = brotherNode.rotateRight();
+                        if (root === brotherNode)
+                            root = newRoot;
+                        eraseNodeSelfBalance(curNode);
+                    }
+                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                        brotherNode.color = TreeNode.TreeNodeColorType.red;
+                        eraseNodeSelfBalance(parentNode);
+                    }
+                }
+            }
+            else if (curNode === parentNode.rightChild) {
+                if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
+                    brotherNode.color = TreeNode.TreeNodeColorType.black;
+                    parentNode.color = TreeNode.TreeNodeColorType.red;
+                    var newRoot = parentNode.rotateRight();
+                    if (root === parentNode)
+                        root = newRoot;
+                    eraseNodeSelfBalance(curNode);
+                }
+                else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
+                    if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                        brotherNode.color = parentNode.color;
+                        parentNode.color = TreeNode.TreeNodeColorType.black;
+                        if (brotherNode.leftChild)
+                            brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
+                        var newRoot = parentNode.rotateRight();
+                        if (root === parentNode)
+                            root = newRoot;
+                        curNode.color = TreeNode.TreeNodeColorType.black;
+                    }
+                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                        brotherNode.color = TreeNode.TreeNodeColorType.red;
+                        if (brotherNode.rightChild)
+                            brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                        var newRoot = brotherNode.rotateLeft();
+                        if (root === brotherNode)
+                            root = newRoot;
+                        eraseNodeSelfBalance(curNode);
+                    }
+                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                        brotherNode.color = TreeNode.TreeNodeColorType.red;
+                        eraseNodeSelfBalance(parentNode);
+                    }
+                }
+            }
+        };
+        var eraseNode = function (curNode) {
+            var swapNode = curNode;
+            while (swapNode.leftChild || swapNode.rightChild) {
+                if (swapNode.rightChild) {
+                    swapNode = findSubTreeMinNode(swapNode.rightChild);
+                    var tmpValue = curNode.value;
+                    curNode.value = swapNode.value;
+                    swapNode.value = tmpValue;
+                    curNode = swapNode;
+                }
+                if (swapNode.leftChild) {
+                    swapNode = findSubTreeMaxNode(swapNode.leftChild);
+                    var tmpValue = curNode.value;
+                    curNode.value = swapNode.value;
+                    swapNode.value = tmpValue;
+                    curNode = swapNode;
+                }
+            }
+            eraseNodeSelfBalance(swapNode);
+            if (swapNode)
+                swapNode.remove();
+            --len;
+            root.color = TreeNode.TreeNodeColorType.black;
+        };
+        this.eraseElementByPos = function (pos) {
+            if (pos < 0 || pos >= len)
+                throw new Error("pos must more than 0 and less than set's size");
+            var index = 0;
+            inOrderTraversal(root, function (curNode) {
+                if (pos === index) {
+                    eraseNode(curNode);
+                    return true;
+                }
+                ++index;
+                return false;
+            });
+        };
+        this.eraseElementByValue = function (element) {
+            if (this.empty())
+                return;
+            var curNode = findElementPos(root, element);
+            if (curNode === null || curNode.value === null || cmp(curNode.value, element) !== 0)
+                return;
+            eraseNode(curNode);
         };
         var findInsertPos = function (curNode, element) {
             if (!curNode || curNode.value === null)
@@ -1133,6 +1313,9 @@
             }
         };
         this.insert = function (element) {
+            if (element === null || element === undefined) {
+                throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
+            }
             if (this.empty()) {
                 ++len;
                 root.value = element;
@@ -1145,127 +1328,6 @@
             ++len;
             curNode.value = element;
             insertNodeSelfBalance(curNode);
-            root.color = TreeNode.TreeNodeColorType.black;
-        };
-        var eraseNodeSelfBalance = function (curNode) {
-            var parentNode = curNode.parent;
-            if (!parentNode) {
-                if (curNode === root)
-                    return;
-                throw new Error("unknown error");
-            }
-            if (curNode.color === TreeNode.TreeNodeColorType.red)
-                return;
-            var brotherNode = curNode.brother;
-            if (!brotherNode) {
-                throw new Error("unknown error");
-            }
-            if (curNode === parentNode.leftChild) {
-                if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.black;
-                    parentNode.color = TreeNode.TreeNodeColorType.red;
-                    var newRoot = parentNode.rotateLeft();
-                    if (root === parentNode)
-                        root = newRoot;
-                    eraseNodeSelfBalance(curNode);
-                }
-                else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                    if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
-                        brotherNode.color = parentNode.color;
-                        parentNode.color = TreeNode.TreeNodeColorType.black;
-                        if (brotherNode.rightChild)
-                            brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
-                        var newRoot = parentNode.rotateLeft();
-                        if (root === parentNode)
-                            root = newRoot;
-                    }
-                    else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
-                        brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        if (brotherNode.leftChild)
-                            brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
-                        var newRoot = brotherNode.rotateRight();
-                        if (root === brotherNode)
-                            root = newRoot;
-                        eraseNodeSelfBalance(curNode);
-                    }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
-                        brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        parentNode.color = TreeNode.TreeNodeColorType.black;
-                    }
-                }
-            }
-            else if (curNode === parentNode.rightChild) {
-                if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
-                    brotherNode.color = TreeNode.TreeNodeColorType.black;
-                    parentNode.color = TreeNode.TreeNodeColorType.red;
-                    var newRoot = parentNode.rotateRight();
-                    if (root === parentNode)
-                        root = newRoot;
-                    eraseNodeSelfBalance(curNode);
-                }
-                else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                    if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
-                        brotherNode.color = parentNode.color;
-                        parentNode.color = TreeNode.TreeNodeColorType.black;
-                        if (brotherNode.leftChild)
-                            brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
-                        var newRoot = parentNode.rotateRight();
-                        if (root === parentNode)
-                            root = newRoot;
-                    }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
-                        brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        if (brotherNode.rightChild)
-                            brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
-                        var newRoot = brotherNode.rotateLeft();
-                        if (root === brotherNode)
-                            root = newRoot;
-                        eraseNodeSelfBalance(curNode);
-                    }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
-                        brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        parentNode.color = TreeNode.TreeNodeColorType.black;
-                    }
-                }
-            }
-        };
-        var findSubTreeMinNode = function (curNode) {
-            if (!curNode || curNode.value === null)
-                throw new Error("unknown error");
-            return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
-        };
-        var findSubTreeMaxNode = function (curNode) {
-            if (!curNode || curNode.value === null)
-                throw new Error("unknown error");
-            return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
-        };
-        this.erase = function (element) {
-            if (this.empty())
-                return;
-            var curNode = findElementPos(root, element);
-            if (curNode === null || curNode.value === null || cmp(curNode.value, element) !== 0)
-                return;
-            var swapNode = curNode;
-            while (swapNode.leftChild || swapNode.rightChild) {
-                if (swapNode.rightChild) {
-                    swapNode = findSubTreeMinNode(swapNode.rightChild);
-                    var tmpValue = curNode.value;
-                    curNode.value = swapNode.value;
-                    swapNode.value = tmpValue;
-                    curNode = swapNode;
-                }
-                if (swapNode.leftChild) {
-                    swapNode = findSubTreeMaxNode(swapNode.leftChild);
-                    var tmpValue = curNode.value;
-                    curNode.value = swapNode.value;
-                    swapNode.value = tmpValue;
-                    curNode = swapNode;
-                }
-            }
-            eraseNodeSelfBalance(swapNode);
-            if (swapNode)
-                swapNode.remove();
-            --len;
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var findElementPos = function (curNode, element) {
@@ -1282,7 +1344,7 @@
             var curNode = findElementPos(root, element);
             return curNode !== null && curNode.value !== null && cmp(curNode.value, element) === 0;
         };
-        // waiting for optimization, this is O(mlogn) algorithm now, but we expect it be O(mlog(n/m+1)).
+        // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
         this.union = function (other) {
             var _this = this;
