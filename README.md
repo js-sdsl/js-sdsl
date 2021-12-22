@@ -1,6 +1,6 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
-**A javascript standard data structure library**
+**A javascript standard data structure library which benchmark against C++ STL**
 
 ## Included data structures
 
@@ -10,8 +10,8 @@
 - LinkList
 - Deque
 - PriorityQueue
-- Set
-- Map
+- Set (using RBTree)
+- Map (using RBTree)
 
 ## Supported platforms
 
