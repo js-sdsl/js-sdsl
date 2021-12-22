@@ -14,6 +14,7 @@ export type ContainerType<T> = {
 } & BaseType;
 
 export type SequentialContainerType<T> = {
+    forEach: (callback: (element: T, index: number) => void) => void;
     push_back: (element: T) => void;
     pop_back: () => void;
     setElementByPos: (pos: number, element: T) => void;
@@ -21,11 +22,4 @@ export type SequentialContainerType<T> = {
     reverse: () => void;
     unique: () => void;
     sort: (cmp?: (x: T, y: T) => number) => void;
-} & ContainerType<T>;
-
-export type AssociativeContainersType<T> = {
-    insert: (element: T) => void;
-    find: (element: T) => boolean;
-    union: (other: AssociativeContainersType<T>) => void;
-    getHeight: () => number;
 } & ContainerType<T>;

@@ -1,14 +1,22 @@
 import TreeNode from "../Base/TreeNode";
-import { ContainerType } from "../Base/Base";
+import { BaseType } from "../Base/Base";
 
-export type SetType<T> = {
-    insert: (element: T) => void;
-    find: (element: T) => boolean;
-    union: (other: SetType<T>) => void;
+type Pair<T, K> = { key: T, value: K };
+
+export type MapType<T, K> = {
+    front: () => Pair<T, K> | undefined;
+    back: () => Pair<T, K> | undefined;
+    forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
+    getElementByPos: (pos: number) => Pair<T, K>;
+    getElementByKey: (key: T) => Pair<T, K> | undefined;
+    setElement: (key: T, value: K) => void;
+    eraseElementByPos: (pos: number) => void;
+    eraseElementByKey: (key: T) => void;
+    union: (other: MapType<T, K>) => void;
     getHeight: () => number;
-} & ContainerType<T>;
+} & BaseType;
 
-function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
+function Map<T, K>(this: MapType<T, K>, arr: Pair<T, K>[] = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x < y) return -1;
         if (x > y) return 1;
@@ -16,7 +24,7 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
     });
 
     let len = 0;
-    let root = new TreeNode<T, null>();
+    let root = new TreeNode<T, K>();
     root.color = TreeNode.TreeNodeColorType.black;
 
     this.size = function () {
@@ -29,16 +37,16 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
 
     this.clear = function () {
         len = 0;
-        root = new TreeNode<T, null>();
+        root = new TreeNode<T, K>();
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findSubTreeMinNode: (curNode: TreeNode<T, null>) => TreeNode<T, null> = function (curNode: TreeNode<T, null>) {
+    const findSubTreeMinNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
         if (!curNode || curNode.key === null) throw new Error("unknown error");
         return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
     };
 
-    const findSubTreeMaxNode: (curNode: TreeNode<T, null>) => TreeNode<T, null> = function (curNode: TreeNode<T, null>) {
+    const findSubTreeMaxNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
         if (!curNode || curNode.key === null) throw new Error("unknown error");
         return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
     };
@@ -46,18 +54,24 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
     this.front = function () {
         if (this.empty()) return undefined;
         const minNode = findSubTreeMinNode(root);
-        if (minNode.key === null) return undefined;
-        return minNode.key;
+        if (minNode.key === null || minNode.value === null) throw new Error("unknown error");
+        return {
+            key: minNode.key,
+            value: minNode.value
+        };
     };
 
     this.back = function () {
         if (this.empty()) return undefined;
         const maxNode = findSubTreeMaxNode(root);
-        if (maxNode.key === null) return undefined;
-        return maxNode.key;
+        if (maxNode.key === null || maxNode.value === null) throw new Error("unknown error");
+        return {
+            key: maxNode.key,
+            value: maxNode.value
+        };
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) => boolean = function (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) {
+    const inOrderTraversal: (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) {
         if (!curNode || curNode.key === null) return false;
         const ifReturn = inOrderTraversal(curNode.leftChild, callback);
         if (ifReturn) return true;
@@ -65,11 +79,14 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return inOrderTraversal(curNode.rightChild, callback);
     };
 
-    this.forEach = function (callback: (element: T, index: number) => void) {
+    this.forEach = function (callback: (element: Pair<T, K>, index: number) => void) {
         let index = 0;
         inOrderTraversal(root, curNode => {
-            if (curNode.key === null) throw new Error("unknown error");
-            callback(curNode.key, index++);
+            if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
+            callback({
+                key: curNode.key,
+                value: curNode.value
+            }, index++);
             return false;
         });
     };
@@ -77,10 +94,14 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
     this.getElementByPos = function (pos: number) {
         if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
         let index = 0;
-        let element = null;
+        let element: Pair<T, K> | null = null;
         inOrderTraversal(root, curNode => {
             if (pos === index) {
-                element = curNode.key;
+                if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
+                element = {
+                    key: curNode.key,
+                    value: curNode.value
+                };
                 return true;
             }
             ++index;
@@ -90,7 +111,7 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return element;
     };
 
-    const eraseNodeSelfBalance = function (curNode: TreeNode<T, null>) {
+    const eraseNodeSelfBalance = function (curNode: TreeNode<T, K>) {
         const parentNode = curNode.parent;
         if (!parentNode) {
             if (curNode === root) return;
@@ -160,14 +181,17 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         }
     };
 
-    const eraseNode = function (curNode: TreeNode<T, null>) {
-        let swapNode: TreeNode<T, null> = curNode;
+    const eraseNode = function (curNode: TreeNode<T, K>) {
+        let swapNode: TreeNode<T, K> = curNode;
         while (swapNode.leftChild || swapNode.rightChild) {
             if (swapNode.rightChild) {
                 swapNode = findSubTreeMinNode(swapNode.rightChild);
                 const tmpKey = curNode.key;
                 curNode.key = swapNode.key;
                 swapNode.key = tmpKey;
+                const tmpValue = curNode.value;
+                curNode.value = swapNode.value;
+                swapNode.value = tmpValue;
                 curNode = swapNode;
             }
             if (swapNode.leftChild) {
@@ -175,6 +199,9 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
                 const tmpKey = curNode.key;
                 curNode.key = swapNode.key;
                 swapNode.key = tmpKey;
+                const tmpValue = curNode.value;
+                curNode.value = swapNode.value;
+                swapNode.value = tmpValue;
                 curNode = swapNode;
             }
         }
@@ -198,21 +225,21 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         });
     };
 
-    this.eraseElementByValue = function (value: T) {
+    this.eraseElementByKey = function (key: T) {
         if (this.empty()) return;
 
-        const curNode = findElementPos(root, value);
-        if (curNode === null || curNode.key === null || cmp(curNode.key, value) !== 0) return;
+        const curNode = findElementPos(root, key);
+        if (curNode === null || curNode.key === null || cmp(curNode.key, key) !== 0) return;
 
         eraseNode(curNode);
     };
 
-    const findInsertPos: (curNode: TreeNode<T, null>, element: T) => TreeNode<T, null> = function (curNode: TreeNode<T, null>, element: T) {
+    const findInsertPos: (curNode: TreeNode<T, K>, element: T) => TreeNode<T, K> = function (curNode: TreeNode<T, K>, element: T) {
         if (!curNode || curNode.key === null) throw new Error("unknown error");
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) {
             if (!curNode.leftChild) {
-                curNode.leftChild = new TreeNode<T, null>();
+                curNode.leftChild = new TreeNode<T, K>();
                 curNode.leftChild.parent = curNode;
                 curNode.leftChild.brother = curNode.rightChild;
                 if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
@@ -221,7 +248,7 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
             return findInsertPos(curNode.leftChild, element);
         } else if (cmpResult > 0) {
             if (!curNode.rightChild) {
-                curNode.rightChild = new TreeNode<T, null>();
+                curNode.rightChild = new TreeNode<T, K>();
                 curNode.rightChild.parent = curNode;
                 curNode.rightChild.brother = curNode.leftChild;
                 if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
@@ -232,7 +259,7 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return curNode;
     };
 
-    const insertNodeSelfBalance = function (curNode: TreeNode<T, null>) {
+    const insertNodeSelfBalance = function (curNode: TreeNode<T, K>) {
         const parentNode = curNode.parent;
         if (!parentNode) {
             if (curNode === root) return;
@@ -278,29 +305,39 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         }
     };
 
-    this.insert = function (element: T) {
-        if (element === null || element === undefined) {
+    this.setElement = function (key: T, value: K) {
+        if (key === null || key === undefined) {
             throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
+        }
+
+        if (value === null || value === undefined) {
+            this.eraseElementByKey(key);
+            return;
         }
 
         if (this.empty()) {
             ++len;
-            root.key = element;
+            root.key = key;
+            root.value = value;
             root.color = TreeNode.TreeNodeColorType.black;
             return;
         }
 
-        const curNode = findInsertPos(root, element);
-        if (curNode.key && cmp(curNode.key, element) === 0) return;
+        const curNode = findInsertPos(root, key);
+        if (curNode.key && cmp(curNode.key, key) === 0) {
+            curNode.value = value;
+            return;
+        }
 
         ++len;
-        curNode.key = element;
+        curNode.key = key;
+        curNode.value = value;
 
         insertNodeSelfBalance(curNode);
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findElementPos: (curNode: TreeNode<T, null> | null, element: T) => TreeNode<T, null> | null = function (curNode: TreeNode<T, null> | null, element: T) {
+    const findElementPos: (curNode: TreeNode<T, K> | null, element: T) => TreeNode<T, K> | null = function (curNode: TreeNode<T, K> | null, element: T) {
         if (!curNode || curNode.key === null) return null;
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) return findElementPos(curNode.leftChild, element);
@@ -308,29 +345,34 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return curNode;
     };
 
-    this.find = function (element: T) {
+    this.getElementByKey = function (element: T) {
         const curNode = findElementPos(root, element);
-        return curNode !== null && curNode.key !== null && cmp(curNode.key, element) === 0;
+        if (curNode === null) return undefined;
+        if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
+        return {
+            key: curNode.key,
+            value: curNode.value
+        };
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
     // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
-    this.union = function (other: SetType<T>) {
-        other.forEach((element) => this.insert(element));
+    this.union = function (other: MapType<T, K>) {
+        other.forEach(({ key, value }) => this.setElement(key, value));
     };
 
     this.getHeight = function () {
         if (this.empty()) return 0;
-        const traversal: (curNode: TreeNode<T, null> | null) => number = function (curNode: TreeNode<T, null> | null) {
+        const traversal: (curNode: TreeNode<T, K> | null) => number = function (curNode: TreeNode<T, K> | null) {
             if (!curNode) return 1;
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
         return traversal(root);
     };
 
-    arr.forEach(element => this.insert(element));
+    arr.forEach(({ key, value }) => this.setElement(key, value));
 
     Object.freeze(this);
 }
 
-export default (Set as any as { new<T>(arr?: T[], cmp?: (x: T, y: T) => number): SetType<T> });
+export default (Map as any as { new<T, K>(arr?: Pair<T, K>[], cmp?: (x: T, y: T) => number): MapType<T, K> });

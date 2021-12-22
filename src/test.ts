@@ -2,6 +2,8 @@ import { SequentialContainerType } from "./Base/Base";
 import { VectorType } from "./Vector/Vector";
 import { StackType } from "./Stack/Stack";
 import { QueueType } from "./Queue/Queue";
+import { SetType } from "./Set/Set";
+import { MapType } from "./Map/Map";
 import {
     Vector,
     Stack,
@@ -9,9 +11,9 @@ import {
     LinkList,
     Deque,
     PriorityQueue,
-    Set
+    Set,
+    Map as SdslMap
 } from "./index";
-import { SetType } from "./Set/Set";
 
 const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
@@ -310,7 +312,6 @@ function testPriorityQueue() {
 function testSet() {
     function judgeSet(mySet: SetType<number>, myVector: VectorType<number>) {
         if (mySet.getHeight() > 2 * Math.log2(mySet.size() + 1)) {
-            console.log(mySet.getHeight(), 2 * Math.log2(mySet.size() + 1));
             throw new Error("set tree too high!");
         }
         if (mySet.size() !== myVector.size()) {
@@ -383,8 +384,84 @@ function testSet() {
     console.log("Set test end, all tests passed!");
 }
 
+function testMap() {
+    function judgeMap(myMap: MapType<number, number>, stdMap: Map<number, number>) {
+        if (myMap.getHeight() > 2 * Math.log2(myMap.size() + 1)) {
+            throw new Error("map tree too high!");
+        }
+        if (myMap.size() !== stdMap.size) {
+            throw new Error("map tree too high!");
+        }
+        stdMap.forEach((value, key) => {
+            const pair = myMap.getElementByKey(key);
+            if (!pair || pair.key !== key || pair.value !== value || value !== stdMap.get(key)) {
+                throw new Error("map test failed!");
+            }
+        });
+    }
+
+    console.log("map test start...");
+
+    const myMap = new SdslMap(arr.map((element, index) => {
+        return { key: element, value: index };
+    }));
+    const stdMap = new Map(arr.map((element, index) => {
+        return [element, index];
+    }));
+
+    stdMap.forEach((value, key) => {
+        const pair = myMap.getElementByKey(key);
+        if (!pair || pair.key !== key || pair.value !== value || value !== stdMap.get(key)) {
+            throw new Error("map test failed!");
+        }
+    });
+
+    const eraseArr: number[] = [];
+    myMap.forEach(({ key, value }) => {
+        const v = stdMap.get(key);
+        if (v !== value) {
+            throw new Error("map test failed!");
+        }
+        if (Math.random() > 0.5) {
+            eraseArr.push(key);
+        }
+    });
+    eraseArr.forEach(key => {
+        myMap.eraseElementByKey(key);
+        stdMap.delete(key);
+    });
+    judgeMap(myMap, stdMap);
+
+    for (let i = 10000; i < 20000; ++i) {
+        const random = Math.random() * 1000000;
+        myMap.setElement(i, random);
+        stdMap.set(i, random);
+    }
+    judgeMap(myMap, stdMap);
+
+    for (let i = 0; i < 10000; ++i) {
+        const pos = Math.floor(Math.random() * myMap.size());
+        const pair = myMap.getElementByPos(pos);
+        myMap.eraseElementByPos(pos);
+        stdMap.delete(pair.key);
+    }
+    judgeMap(myMap, stdMap);
+
+    const otherMap = new SdslMap<number, number>();
+    for (let i = 20000; i < 30000; ++i) {
+        const random = Math.random() * 1000000;
+        otherMap.setElement(i, random);
+        stdMap.set(i, random);
+    }
+    myMap.union(otherMap);
+    judgeMap(myMap, stdMap);
+
+    console.clear();
+    console.log("map test end, all tests passed!");
+}
+
 function main() {
-    const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue", "Set"];
+    const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue", "Set", "Map"];
     console.log("test start...");
 
     if (taskQueue.includes("Stack")) testStack();
@@ -393,6 +470,7 @@ function main() {
     if (taskQueue.includes("Deque")) testDeque();
     if (taskQueue.includes("PriorityQueue")) testPriorityQueue();
     if (taskQueue.includes("Set")) testSet();
+    if (taskQueue.includes("Map")) testMap();
 
     console.clear();
     console.log("test end, all tests passed!");

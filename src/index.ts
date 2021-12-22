@@ -5,6 +5,7 @@ import LinkList from "./LinkList/LinkList";
 import Deque from "./Deque/Deque";
 import PriorityQueue from "./PriorityQueue/PriorityQueue";
 import Set from "./Set/Set";
+import Map from "./Map/Map";
 
 export {
     Vector,
@@ -13,5 +14,6 @@ export {
     LinkList,
     Deque,
     PriorityQueue,
-    Set
+    Set,
+    Map
 };

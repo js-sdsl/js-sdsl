@@ -11,6 +11,7 @@
 - Deque
 - PriorityQueue
 - Set
+- Map
 
 ## Supported platforms
 
