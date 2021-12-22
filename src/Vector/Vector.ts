@@ -47,7 +47,7 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
     this.eraseElementByValue = function (value: T) {
         const newArr: T[] = [];
         this.forEach(element => {
-            if (element != value) newArr.push(element);
+            if (element !== value) newArr.push(element);
         });
         newArr.forEach((element, index) => {
             vector[index] = element;

@@ -122,7 +122,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
     this.eraseElementByValue = function (value: T) {
         const arr: T[] = [];
         this.forEach(element => {
-            if (element != value) {
+            if (element !== value) {
                 arr.push(element);
             }
         });

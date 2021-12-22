@@ -54,10 +54,9 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
     };
 
     this.forEach = function (callback: (element: T, index: number) => void) {
-        if (typeof callback !== 'function') throw new Error("callback must be a function");
         let curNode = head;
         let index = 0;
-        while (curNode != null) {
+        while (curNode !== null) {
             callback(curNode.val, index++);
             curNode = curNode.next;
         }

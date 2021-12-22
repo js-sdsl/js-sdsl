@@ -313,7 +313,7 @@ function testSet() {
             console.log(mySet.getHeight(), 2 * Math.log2(mySet.size() + 1));
             throw new Error("set tree too high!");
         }
-        if (mySet.size() != myVector.size()) {
+        if (mySet.size() !== myVector.size()) {
             throw new Error("set size test failed!");
         }
         myVector.sort((x, y) => x - y);
