@@ -4,7 +4,7 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sdsl = {}));
 })(this, (function (exports) { 'use strict';
 
-    var __spreadArray$2 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
+    var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
         if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
             if (ar || !(i in from)) {
                 if (!ar) ar = Array.prototype.slice.call(from, 0, i);
@@ -13,10 +13,11 @@
         }
         return to.concat(ar || Array.prototype.slice.call(from));
     };
-    function Vector(arr) {
-        if (arr === void 0) { arr = []; }
-        var len = arr.length;
-        var vector = __spreadArray$2([], arr, true);
+    function Vector(container) {
+        var _this = this;
+        if (container === void 0) { container = []; }
+        var len = 0;
+        var vector = [];
         this.size = function () {
             return len;
         };
@@ -83,8 +84,11 @@
             if (num === void 0) { num = 1; }
             if (pos < 0 || pos > len)
                 throw new Error("pos muse more than 0 and less than or equal to vector's size");
-            vector.splice.apply(vector, __spreadArray$2([pos, 0], new Array(num).fill(element), false));
+            vector.splice.apply(vector, __spreadArray([pos, 0], new Array(num).fill(element), false));
             len += num;
+        };
+        this.find = function (element) {
+            return vector.includes(element);
         };
         this.reverse = function () {
             vector.reverse();
@@ -108,23 +112,16 @@
         this.sort = function (cmp) {
             vector.sort(cmp);
         };
+        container.forEach(function (element) { return _this.push_back(element); });
         Object.freeze(this);
     }
     Object.freeze(Vector);
 
-    var __spreadArray$1 = (undefined && undefined.__spreadArray) || function (to, from, pack) {
-        if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-            if (ar || !(i in from)) {
-                if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-                ar[i] = from[i];
-            }
-        }
-        return to.concat(ar || Array.prototype.slice.call(from));
-    };
-    function Stack(arr) {
-        if (arr === void 0) { arr = []; }
-        var len = arr.length;
-        var stack = __spreadArray$1([], arr, true);
+    function Stack(container) {
+        var _this = this;
+        if (container === void 0) { container = []; }
+        var len = 0;
+        var stack = [];
         this.size = function () {
             return len;
         };
@@ -147,6 +144,7 @@
         this.top = function () {
             return stack[len - 1];
         };
+        container.forEach(function (element) { return _this.push(element); });
         Object.freeze(this);
     }
     Object.freeze(Stack);
@@ -160,21 +158,12 @@
         }
         return LinkNode;
     }());
-    function LinkList(arr) {
-        if (arr === void 0) { arr = []; }
-        var len = arr.length;
+    function LinkList(container) {
+        var _this = this;
+        if (container === void 0) { container = []; }
+        var len = 0;
         var head = null;
         var tail = null;
-        if (len > 0) {
-            head = new LinkNode(arr[0]);
-            var curNode = head;
-            for (var i = 1; i < len; ++i) {
-                curNode.next = new LinkNode(arr[i]);
-                curNode.next.pre = curNode;
-                curNode = curNode.next;
-            }
-            tail = curNode;
-        }
         this.size = function () {
             return len;
         };
@@ -336,6 +325,15 @@
                     next.pre = curNode;
             }
         };
+        this.find = function (element) {
+            var curNode = head;
+            while (curNode) {
+                if (curNode.val === element)
+                    return true;
+                curNode = curNode.next;
+            }
+            return false;
+        };
         this.reverse = function () {
             var pHead = head;
             var pTail = tail;
@@ -434,13 +432,14 @@
                 }
             });
         };
+        container.forEach(function (element) { return _this.push_back(element); });
         Object.freeze(this);
     }
     Object.freeze(LinkList);
 
-    function Queue(arr) {
-        if (arr === void 0) { arr = []; }
-        var queue = new LinkList(arr);
+    function Queue(container) {
+        if (container === void 0) { container = []; }
+        var queue = new LinkList(container);
         this.size = function () {
             return queue.size();
         };
@@ -681,6 +680,30 @@
                 arr_2.forEach(function (element) { return _this.push_back(element); });
             }
         };
+        this.find = function (element) {
+            if (first === last) {
+                for (var i = curFirst; i <= curLast; ++i) {
+                    if (map[first][i] === element)
+                        return true;
+                }
+                return false;
+            }
+            for (var i = curFirst; i < Deque.bucketSize; ++i) {
+                if (map[first][i] === element)
+                    return true;
+            }
+            for (var i = first + 1; i < last; ++i) {
+                for (var j = 0; j < Deque.bucketSize; ++j) {
+                    if (map[i][j] === element)
+                        return true;
+                }
+            }
+            for (var i = 0; i <= curLast; ++i) {
+                if (map[last][i] === element)
+                    return true;
+            }
+            return false;
+        };
         this.reverse = function () {
             var l = 0, r = len - 1;
             while (l < r) {
@@ -792,22 +815,13 @@
     }
     Object.freeze(Deque);
 
-    var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
-        if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-            if (ar || !(i in from)) {
-                if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-                ar[i] = from[i];
-            }
-        }
-        return to.concat(ar || Array.prototype.slice.call(from));
-    };
     /**
-     * @param arr
+     * @param container
      * @param cmp default cmp will generate a max heap
      * @constructor
      */
-    function PriorityQueue(arr, cmp) {
-        if (arr === void 0) { arr = []; }
+    function PriorityQueue(container, cmp) {
+        if (container === void 0) { container = []; }
         cmp = cmp || (function (x, y) {
             if (x > y)
                 return -1;
@@ -815,8 +829,9 @@
                 return 1;
             return 0;
         });
-        var len = arr.length;
-        var priorityQueue = __spreadArray([], arr, true);
+        var priorityQueue = [];
+        container.forEach(function (element) { return priorityQueue.push(element); });
+        var len = priorityQueue.length;
         var swap = function (x, y) {
             if (x < 0 || x >= len)
                 throw new Error("unknown error");
@@ -1024,9 +1039,9 @@
     }());
     Object.freeze(TreeNode);
 
-    function Set(arr, cmp) {
+    function Set(container, cmp) {
         var _this = this;
-        if (arr === void 0) { arr = []; }
+        if (container === void 0) { container = []; }
         cmp = cmp || (function (x, y) {
             if (x < y)
                 return -1;
@@ -1045,7 +1060,8 @@
         };
         this.clear = function () {
             len = 0;
-            root = new TreeNode();
+            root.leftChild = root.rightChild = root.brother = root.parent = null;
+            root.key = null;
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var findSubTreeMinNode = function (curNode) {
@@ -1369,13 +1385,14 @@
             };
             return traversal(root);
         };
-        arr.forEach(function (element) { return _this.insert(element); });
+        container.forEach(function (element) { return _this.insert(element); });
         Object.freeze(this);
     }
+    Object.freeze(Set);
 
-    function Map(arr, cmp) {
+    function Map(container, cmp) {
         var _this = this;
-        if (arr === void 0) { arr = []; }
+        if (container === void 0) { container = []; }
         cmp = cmp || (function (x, y) {
             if (x < y)
                 return -1;
@@ -1726,16 +1743,16 @@
                 return findElementPos(curNode.rightChild, element);
             return curNode;
         };
+        this.find = function (element) {
+            return !!findElementPos(root, element);
+        };
         this.getElementByKey = function (element) {
             var curNode = findElementPos(root, element);
             if (curNode === null)
                 return undefined;
             if (curNode.key === null || curNode.value === null)
                 throw new Error("unknown error");
-            return {
-                key: curNode.key,
-                value: curNode.value
-            };
+            return curNode.value;
         };
         // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
@@ -1756,14 +1773,403 @@
             };
             return traversal(root);
         };
-        arr.forEach(function (_a) {
+        container.forEach(function (_a) {
             var key = _a.key, value = _a.value;
             return _this.setElement(key, value);
         });
         Object.freeze(this);
     }
+    Object.freeze(Map);
+
+    HashSet.initSize = (1 << 4);
+    HashSet.maxSize = (1 << 30);
+    HashSet.sigma = 0.75; // default load factor
+    HashSet.treeifyThreshold = 8;
+    HashSet.untreeifyThreshold = 6;
+    HashSet.minTreeifySize = 64;
+    /**
+     * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
+     * @param container Initialize the container
+     * @param initBucketNum Initialize the bucket num
+     * @param hashFunc Function to map elements to numbers
+     * @constructor
+     */
+    function HashSet(container, initBucketNum, hashFunc) {
+        var _this = this;
+        if (container === void 0) { container = []; }
+        if (initBucketNum === void 0) { initBucketNum = HashSet.initSize; }
+        hashFunc = hashFunc || (function (x) {
+            var hashCode = 0;
+            var str = '';
+            if (typeof x === "number") {
+                hashCode = Math.floor(x);
+                hashCode = ((hashCode << 5) - hashCode);
+                hashCode = hashCode & hashCode;
+            }
+            else {
+                if (typeof x !== "string") {
+                    str = JSON.stringify(x);
+                }
+                else
+                    str = x;
+                for (var i = 0; i < str.length; i++) {
+                    var character = str.charCodeAt(i);
+                    hashCode = ((hashCode << 5) - hashCode) + character;
+                    hashCode = hashCode & hashCode;
+                }
+            }
+            hashCode ^= (hashCode >>> 16);
+            return hashCode;
+        });
+        var len = 0;
+        var bucketNum = initBucketNum;
+        var hashTable = [];
+        this.size = function () {
+            return len;
+        };
+        this.empty = function () {
+            return len === 0;
+        };
+        this.clear = function () {
+            len = 0;
+            bucketNum = initBucketNum;
+            hashTable = [];
+        };
+        this.forEach = function (callback) {
+            var index = 0;
+            hashTable.forEach(function (container) {
+                container.forEach(function (element) {
+                    callback(element, index++);
+                });
+            });
+        };
+        var reAllocate = function (originalBucketNum) {
+            if (originalBucketNum >= HashSet.maxSize)
+                return;
+            bucketNum = originalBucketNum * 2;
+            var newHashTable = [];
+            hashTable.forEach(function (container, index) {
+                if (container.empty())
+                    return;
+                if (container instanceof LinkList && container.size() === 1) {
+                    var element = container.front();
+                    if (element === undefined)
+                        throw new Error("unknown error");
+                    newHashTable[hashFunc(element) & (bucketNum - 1)] = new LinkList([element]);
+                }
+                else if (container instanceof Set) {
+                    var lowList_1 = new LinkList();
+                    var highList_1 = new LinkList();
+                    container.forEach(function (element) {
+                        var hashCode = hashFunc(element);
+                        if ((hashCode & originalBucketNum) === 0) {
+                            lowList_1.push_back(element);
+                        }
+                        else
+                            highList_1.push_back(element);
+                    });
+                    if (lowList_1.size() > HashSet.untreeifyThreshold)
+                        lowList_1 = new Set(lowList_1);
+                    if (highList_1.size() > HashSet.untreeifyThreshold)
+                        highList_1 = new Set(highList_1);
+                    if (lowList_1.size())
+                        newHashTable[index] = lowList_1;
+                    if (highList_1.size())
+                        newHashTable[index + originalBucketNum] = highList_1;
+                }
+                else {
+                    var lowList_2 = new LinkList();
+                    var highList_2 = new LinkList();
+                    container.forEach(function (element) {
+                        var hashCode = hashFunc(element);
+                        if ((hashCode & originalBucketNum) === 0) {
+                            lowList_2.push_back(element);
+                        }
+                        else
+                            highList_2.push_back(element);
+                    });
+                    if (lowList_2.size())
+                        newHashTable[index] = lowList_2;
+                    if (highList_2.size())
+                        newHashTable[index + originalBucketNum] = highList_2;
+                }
+                hashTable[index].clear();
+            });
+            hashTable = newHashTable;
+        };
+        this.insert = function (element) {
+            if (element === null || element === undefined) {
+                throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
+            }
+            var index = hashFunc(element) & (bucketNum - 1);
+            if (!hashTable[index]) {
+                hashTable[index] = new LinkList([element]);
+                ++len;
+            }
+            else {
+                var preSize = hashTable[index].size();
+                if (hashTable[index] instanceof LinkList) {
+                    if (hashTable[index].find(element))
+                        return;
+                    hashTable[index].push_back(element);
+                    if (hashTable[index].size() >= HashSet.treeifyThreshold) {
+                        hashTable[index] = new Set(hashTable[index]);
+                    }
+                }
+                else
+                    hashTable[index].insert(element);
+                var curSize = hashTable[index].size();
+                len += curSize - preSize;
+            }
+            if (len > bucketNum * HashSet.sigma) {
+                reAllocate.call(this, bucketNum);
+            }
+        };
+        this.eraseElementByValue = function (element) {
+            var index = hashFunc(element) & (bucketNum - 1);
+            if (!hashTable[index])
+                return;
+            var preSize = hashTable[index].size();
+            hashTable[index].eraseElementByValue(element);
+            if (hashTable[index] instanceof Set) {
+                if (hashTable[index].size() <= HashSet.untreeifyThreshold) {
+                    hashTable[index] = new LinkList(hashTable[index]);
+                }
+            }
+            var curSize = hashTable[index].size();
+            len += curSize - preSize;
+        };
+        this.find = function (element) {
+            var index = hashFunc(element) & (bucketNum - 1);
+            if (!hashTable[index])
+                return false;
+            return hashTable[index].find(element);
+        };
+        container.forEach(function (element) { return _this.insert(element); });
+        Object.freeze(this);
+    }
+    Object.freeze(HashSet);
+
+    HashMap.initSize = (1 << 4);
+    HashMap.maxSize = (1 << 30);
+    HashMap.sigma = 0.75; // default load factor
+    HashMap.treeifyThreshold = 8;
+    HashMap.untreeifyThreshold = 6;
+    HashMap.minTreeifySize = 64;
+    /**
+     * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
+     * @param container Initialize the container
+     * @param initBucketNum Initialize the bucket num
+     * @param hashFunc Function to map elements to numbers
+     * @constructor
+     */
+    function HashMap(container, initBucketNum, hashFunc) {
+        var _this = this;
+        if (container === void 0) { container = []; }
+        if (initBucketNum === void 0) { initBucketNum = HashMap.initSize; }
+        hashFunc = hashFunc || (function (x) {
+            var hashCode = 0;
+            var str = '';
+            if (typeof x === "number") {
+                hashCode = Math.floor(x);
+                hashCode = ((hashCode << 5) - hashCode);
+                hashCode = hashCode & hashCode;
+            }
+            else {
+                if (typeof x !== "string") {
+                    str = JSON.stringify(x);
+                }
+                else
+                    str = x;
+                for (var i = 0; i < str.length; i++) {
+                    var character = str.charCodeAt(i);
+                    hashCode = ((hashCode << 5) - hashCode) + character;
+                    hashCode = hashCode & hashCode;
+                }
+            }
+            hashCode ^= (hashCode >>> 16);
+            return hashCode;
+        });
+        var len = 0;
+        var bucketNum = initBucketNum;
+        var hashTable = [];
+        this.size = function () {
+            return len;
+        };
+        this.empty = function () {
+            return len === 0;
+        };
+        this.clear = function () {
+            len = 0;
+            bucketNum = initBucketNum;
+            hashTable = [];
+        };
+        this.forEach = function (callback) {
+            var index = 0;
+            hashTable.forEach(function (container) {
+                container.forEach(function (element) {
+                    callback(element, index++);
+                });
+            });
+        };
+        var reAllocate = function (originalBucketNum) {
+            if (originalBucketNum >= HashMap.maxSize)
+                return;
+            bucketNum = originalBucketNum * 2;
+            var newHashTable = [];
+            hashTable.forEach(function (container, index) {
+                if (container.empty())
+                    return;
+                if (container instanceof LinkList && container.size() === 1) {
+                    var _a = container.front(), key = _a.key, value = _a.value;
+                    newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList([{
+                            key: key,
+                            value: value
+                        }]);
+                }
+                else if (container instanceof Map) {
+                    var lowList_1 = new LinkList();
+                    var highList_1 = new LinkList();
+                    container.forEach(function (pair) {
+                        var hashCode = hashFunc(pair.key);
+                        if ((hashCode & originalBucketNum) === 0) {
+                            lowList_1.push_back(pair);
+                        }
+                        else
+                            highList_1.push_back(pair);
+                    });
+                    if (lowList_1.size() > HashMap.untreeifyThreshold)
+                        lowList_1 = new Map(lowList_1);
+                    if (highList_1.size() > HashMap.untreeifyThreshold)
+                        highList_1 = new Map(highList_1);
+                    if (lowList_1.size())
+                        newHashTable[index] = lowList_1;
+                    if (highList_1.size())
+                        newHashTable[index + originalBucketNum] = highList_1;
+                }
+                else {
+                    var lowList_2 = new LinkList();
+                    var highList_2 = new LinkList();
+                    container.forEach(function (pair) {
+                        var hashCode = hashFunc(pair.key);
+                        if ((hashCode & originalBucketNum) === 0) {
+                            lowList_2.push_back(pair);
+                        }
+                        else
+                            highList_2.push_back(pair);
+                    });
+                    if (lowList_2.size())
+                        newHashTable[index] = lowList_2;
+                    if (highList_2.size())
+                        newHashTable[index + originalBucketNum] = highList_2;
+                }
+                hashTable[index].clear();
+            });
+            hashTable = newHashTable;
+        };
+        this.setElement = function (key, value) {
+            if (key === null || key === undefined) {
+                throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
+            }
+            if (value === null || value === undefined) {
+                this.eraseElementByKey(key);
+                return;
+            }
+            var index = hashFunc(key) & (bucketNum - 1);
+            if (!hashTable[index]) {
+                ++len;
+                hashTable[index] = new LinkList([{ key: key, value: value }]);
+            }
+            else {
+                var preSize = hashTable[index].size();
+                if (hashTable[index] instanceof LinkList) {
+                    var flag_1 = false;
+                    hashTable[index].forEach(function (pair, pos) {
+                        if (pair.key === key) {
+                            flag_1 = true;
+                            hashTable[index].setElementByPos(pos, { key: key, value: value });
+                        }
+                    });
+                    if (flag_1)
+                        return;
+                    hashTable[index].push_back({
+                        key: key,
+                        value: value,
+                    });
+                    if (hashTable[index].size() >= HashMap.treeifyThreshold) {
+                        hashTable[index] = new Map(hashTable[index]);
+                    }
+                }
+                else
+                    hashTable[index].setElement(key, value);
+                var curSize = hashTable[index].size();
+                len += curSize - preSize;
+            }
+            if (len > bucketNum * HashMap.sigma) {
+                reAllocate.call(this, bucketNum);
+            }
+        };
+        this.getElementByKey = function (key) {
+            var index = hashFunc(key) & (bucketNum - 1);
+            if (!hashTable[index])
+                return undefined;
+            if (hashTable[index] instanceof Map)
+                return hashTable[index].getElementByKey(key);
+            else {
+                var value_1 = undefined;
+                hashTable[index].forEach(function (pair) {
+                    if (key === pair.key)
+                        value_1 = pair.value;
+                });
+                return value_1;
+            }
+        };
+        this.eraseElementByKey = function (key) {
+            var index = hashFunc(key) & (bucketNum - 1);
+            if (!hashTable[index])
+                return;
+            var preSize = hashTable[index].size();
+            if (hashTable[index] instanceof Map) {
+                hashTable[index].eraseElementByKey(key);
+                if (hashTable[index].size() <= HashMap.untreeifyThreshold) {
+                    hashTable[index] = new LinkList(hashTable[index]);
+                }
+            }
+            else {
+                var pos_1 = -1;
+                hashTable[index].forEach(function (pair, index) {
+                    if (key === pair.key)
+                        pos_1 = index;
+                });
+                if (pos_1 >= 0)
+                    hashTable[index].eraseElementByPos(pos_1);
+            }
+            var curSize = hashTable[index].size();
+            len += curSize - preSize;
+        };
+        this.find = function (key) {
+            var index = hashFunc(key) & (bucketNum - 1);
+            if (!hashTable[index])
+                return false;
+            if (hashTable[index] instanceof Map)
+                return hashTable[index].find(key);
+            var flag = false;
+            hashTable[index].forEach(function (pair) {
+                flag = flag || (key === pair.key);
+            });
+            return flag;
+        };
+        container.forEach(function (_a) {
+            var key = _a.key, value = _a.value;
+            return _this.setElement(key, value);
+        });
+        Object.freeze(this);
+    }
+    Object.freeze(HashMap);
 
     exports.Deque = Deque;
+    exports.HashMap = HashMap;
+    exports.HashSet = HashSet;
     exports.LinkList = LinkList;
     exports.Map = Map;
     exports.PriorityQueue = PriorityQueue;
