@@ -17,6 +17,13 @@ HashMap.treeifyThreshold = 8;
 HashMap.untreeifyThreshold = 6;
 HashMap.minTreeifySize = 64;
 
+/**
+ * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
+ * @param container Initialize the container
+ * @param initBucketNum Initialize the bucket num
+ * @param hashFunc Function to map elements to numbers
+ * @constructor
+ */
 function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback: (element: Pair<T, K>) => void) => void } = [], initBucketNum = HashMap.initSize, hashFunc: (x: T) => number) {
     hashFunc = hashFunc || ((x: T) => {
         let hashCode = 0;

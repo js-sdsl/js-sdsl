@@ -16,6 +16,13 @@ HashSet.treeifyThreshold = 8;
 HashSet.untreeifyThreshold = 6;
 HashSet.minTreeifySize = 64;
 
+/**
+ * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
+ * @param container Initialize the container
+ * @param initBucketNum Initialize the bucket num
+ * @param hashFunc Function to map elements to numbers
+ * @constructor
+ */
 function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], initBucketNum = HashSet.initSize, hashFunc: (x: T) => number) {
     hashFunc = hashFunc || ((x: T) => {
         let hashCode = 0;
