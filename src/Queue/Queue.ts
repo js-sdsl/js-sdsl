@@ -7,8 +7,8 @@ export type QueueType<T> = {
     front: () => T | undefined;
 } & BaseType;
 
-function Queue<T>(this: QueueType<T>, arr: T[] = []) {
-    const queue = new LinkList(arr);
+function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
+    const queue = new LinkList(container);
 
     this.size = function () {
         return queue.size();
@@ -39,4 +39,4 @@ function Queue<T>(this: QueueType<T>, arr: T[] = []) {
 
 Object.freeze(Queue);
 
-export default (Queue as any as { new<T>(arr?: T[]): QueueType<T> });
+export default (Queue as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });

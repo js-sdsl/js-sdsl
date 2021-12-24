@@ -7,19 +7,20 @@ type PriorityQueue<T> = {
 } & BaseType;
 
 /**
- * @param arr
+ * @param container
  * @param cmp default cmp will generate a max heap
  * @constructor
  */
-function PriorityQueue<T>(this: PriorityQueue<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
+function PriorityQueue<T>(this: PriorityQueue<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x > y) return -1;
         if (x < y) return 1;
         return 0;
     });
 
-    let len = arr.length;
-    const priorityQueue = [...arr];
+    const priorityQueue: T[] = [];
+    container.forEach(element => priorityQueue.push(element));
+    let len = priorityQueue.length;
 
     const swap = function (x: number, y: number) {
         if (x < 0 || x >= len) throw new Error("unknown error");
@@ -109,4 +110,4 @@ function PriorityQueue<T>(this: PriorityQueue<T>, arr: T[] = [], cmp: (x: T, y: 
 
 Object.freeze(PriorityQueue);
 
-export default (PriorityQueue as any as { new<T>(arr?: T[], cmp?: (x: T, y: T) => number): PriorityQueue<T> });
+export default (PriorityQueue as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueue<T> });

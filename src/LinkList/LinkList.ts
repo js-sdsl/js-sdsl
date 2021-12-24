@@ -16,21 +16,10 @@ export type LinkListType<T> = {
     merge: (other: LinkListType<T>) => void;
 } & SequentialContainerType<T>;
 
-function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
-    let len = arr.length;
+function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
+    let len = 0;
     let head: LinkNode<T> | null = null;
     let tail: LinkNode<T> | null = null;
-
-    if (len > 0) {
-        head = new LinkNode<T>(arr[0]);
-        let curNode: LinkNode<T> = head;
-        for (let i = 1; i < len; ++i) {
-            curNode.next = new LinkNode<T>(arr[i]);
-            curNode.next.pre = curNode;
-            curNode = curNode.next;
-        }
-        tail = curNode;
-    }
 
     this.size = function () {
         return len;
@@ -176,6 +165,15 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         }
     };
 
+    this.find = function (element: T) {
+        let curNode = head;
+        while (curNode) {
+            if (curNode.val === element) return true;
+            curNode = curNode.next;
+        }
+        return false;
+    };
+
     this.reverse = function () {
         let pHead = head;
         let pTail = tail;
@@ -270,9 +268,11 @@ function LinkList<T>(this: LinkListType<T>, arr: T[] = []) {
         });
     };
 
+    container.forEach(element => this.push_back(element));
+
     Object.freeze(this);
 }
 
 Object.freeze(LinkList);
 
-export default (LinkList as any as { new<T>(arr?: T[]): LinkListType<T>; });
+export default (LinkList as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });

@@ -2,9 +2,9 @@ import { SequentialContainerType } from "../Base/Base";
 
 export type VectorType<T> = SequentialContainerType<T>;
 
-function Vector<T>(this: VectorType<T>, arr: T[] = []) {
-    let len = arr.length;
-    const vector = [...arr];
+function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
+    let len = 0;
+    const vector: T[] = [];
 
     this.size = function () {
         return len;
@@ -77,6 +77,10 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
         len += num;
     };
 
+    this.find = function (element: T) {
+        return vector.includes(element);
+    };
+
     this.reverse = function () {
         vector.reverse();
     };
@@ -101,9 +105,11 @@ function Vector<T>(this: VectorType<T>, arr: T[] = []) {
         vector.sort(cmp);
     };
 
+    container.forEach(element => this.push_back(element));
+
     Object.freeze(this);
 }
 
 Object.freeze(Vector);
 
-export default (Vector as any as { new<T>(arr?: T[]): VectorType<T>; });
+export default (Vector as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });

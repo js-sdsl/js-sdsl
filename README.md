@@ -2,6 +2,11 @@
 
 **A javascript standard data structure library which benchmark against C++ STL**
 
+## Note
+
+**Note that our official version starts from 2.0.0. In order to avoid unnecessary trouble, please select the latest
+version when downloading (>= 2.0.0).**
+
 ## Included data structures
 
 - Vector
@@ -12,6 +17,8 @@
 - PriorityQueue
 - Set (using RBTree)
 - Map (using RBTree)
+- HashSet
+- HashMap
 
 ## Supported platforms
 

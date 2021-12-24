@@ -1,9 +1,3 @@
-import { SequentialContainerType } from "./Base/Base";
-import { VectorType } from "./Vector/Vector";
-import { StackType } from "./Stack/Stack";
-import { QueueType } from "./Queue/Queue";
-import { SetType } from "./Set/Set";
-import { MapType } from "./Map/Map";
 import {
     Vector,
     Stack,
@@ -11,9 +5,19 @@ import {
     LinkList,
     Deque,
     PriorityQueue,
-    Set,
-    Map as SdslMap
+    Set as SdslSet,
+    Map as SdslMap,
+    HashSet,
+    HashMap,
 } from "./index";
+import { SequentialContainerType } from "./Base/Base";
+import { VectorType } from "./Vector/Vector";
+import { StackType } from "./Stack/Stack";
+import { QueueType } from "./Queue/Queue";
+import { SetType } from "./Set/Set";
+import { MapType } from "./Map/Map";
+import { HashSetType } from "./HashSet/HashSet";
+import { HashMapType } from "./HashMap/HashMap";
 
 const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
@@ -51,14 +55,14 @@ function testStack(testNum: number) {
     const myVector = new Vector(arr);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * i;
+        const random = Math.random() * 1000000;
         myStack.push(random);
         myVector.push_back(random);
     }
     judgeStack(myStack, myVector);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * i;
+        const random = Math.random() * 1000000;
         myStack.push(random);
         myVector.push_back(random);
     }
@@ -69,11 +73,13 @@ function testStack(testNum: number) {
     console.clear();
     console.log("Stack test end, all tests passed!");
 
+    console.log("Stack test report generating...");
+
     let startTime, endTime;
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) myStack.push(Math.random() * i);
+    for (let i = 0; i < testNum; ++i) myStack.push(Math.random() * 1000000);
     endTime = Date.now();
     reportList.push({
         testFunc: "push",
@@ -88,10 +94,13 @@ function testStack(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "clear",
-        testNum: size,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
+
+    console.log("Stack test report done.");
+
     return {
         containerName: "Stack",
         reportList
@@ -120,14 +129,14 @@ function testQueue(testNum: number) {
     const myVector = new Vector(arr);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * i;
+        const random = Math.random() * 1000000;
         myQueue.push(random);
         myVector.push_back(random);
     }
     judgeQueue(myQueue, myVector);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * i;
+        const random = Math.random() * 1000000;
         myQueue.push(random);
         myVector.push_back(random);
     }
@@ -138,11 +147,13 @@ function testQueue(testNum: number) {
     console.clear();
     console.log("Queue test end, all tests passed!");
 
+    console.log("Queue test report generating...");
+
     let startTime, endTime;
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) myQueue.push(Math.random() * i);
+    for (let i = 0; i < testNum; ++i) myQueue.push(Math.random() * 1000000);
     endTime = Date.now();
     reportList.push({
         testFunc: "push",
@@ -157,10 +168,12 @@ function testQueue(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "clear",
-        testNum: size,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
+
+    console.log("Queue test report done.");
 
     return {
         containerName: "Queue",
@@ -269,7 +282,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     judgeSequentialContainer("unique", container, myVector);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * 100000;
+        const random = Math.random() * 1000000;
         container.push_back(random);
         myVector.push_back(random);
     }
@@ -362,7 +375,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByValue",
-        testNum: size,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
@@ -372,7 +385,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     endTime = Date.now();
     reportList.push({
         testFunc: "reverse",
-        testNum: container.size(),
+        testNum: 1,
         containerSize: container.size(),
         runTime: endTime - startTime
     });
@@ -384,7 +397,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     endTime = Date.now();
     reportList.push({
         testFunc: "unique",
-        testNum: 10000,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
@@ -395,7 +408,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     endTime = Date.now();
     reportList.push({
         testFunc: "sort",
-        testNum: container.size(),
+        testNum: 1,
         containerSize: container.size(),
         runTime: endTime - startTime
     });
@@ -406,7 +419,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     endTime = Date.now();
     reportList.push({
         testFunc: "clear",
-        testNum: size,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
@@ -438,7 +451,7 @@ function testLinkList(testNum: number) {
     judgeSequentialContainer("pop_front", myLinkList, new Vector(tmpArr));
 
     for (let i = 0; i < 10000; ++i) {
-        tmpArr.push(Math.random() * 1000);
+        tmpArr.push(Math.random() * 1000000);
     }
     const otherLinkList = new LinkList(tmpArr);
     myLinkList.forEach(element => tmpArr.push(element));
@@ -450,6 +463,8 @@ function testLinkList(testNum: number) {
 
     console.clear();
     console.log("LinkList test end, all tests passed!");
+
+    console.log("LinkList test report generating...");
 
     let startTime, endTime;
 
@@ -468,14 +483,14 @@ function testLinkList(testNum: number) {
     for (let i = 0; i < testNum; ++i) myLinkList.pop_front();
     endTime = Date.now();
     reportList.push({
-        testFunc: "push_front",
+        testFunc: "pop_front",
         testNum: testNum,
         containerSize: size,
         runTime: endTime - startTime
     });
 
     const _otherLinkList = new LinkList<number>();
-    for (let i = 0; i < testNum; ++i) _otherLinkList.push_back(Math.random() * 1000);
+    for (let i = 0; i < testNum; ++i) _otherLinkList.push_back(Math.random() * 1000000);
     myLinkList.forEach(element => tmpArr.push(element));
     myLinkList.sort((x, y) => x - y);
     _otherLinkList.sort((x, y) => x - y);
@@ -484,10 +499,12 @@ function testLinkList(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "merge",
-        testNum: testNum,
+        testNum: 1,
         containerSize: myLinkList.size(),
         runTime: endTime - startTime
     });
+
+    console.log("LinkList test report done.");
 
     return {
         containerName: "LinkList",
@@ -549,7 +566,7 @@ function testDeque(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "shrinkToFit",
-        testNum: myDeque.size(),
+        testNum: 1,
         containerSize: myDeque.size(),
         runTime: endTime - startTime
     });
@@ -573,7 +590,7 @@ function testPriorityQueue(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "constructor",
-        testNum: myPriority.size(),
+        testNum: 1,
         containerSize: myPriority.size(),
         runTime: endTime - startTime
     });
@@ -581,7 +598,7 @@ function testPriorityQueue(testNum: number) {
     const myVector = new Vector(arr);
 
     for (let i = 0; i < 10000; ++i) {
-        const random = Math.random() * i;
+        const random = Math.random() * 1000000;
         myPriority.push(random);
         myVector.push_back(random);
     }
@@ -601,8 +618,10 @@ function testPriorityQueue(testNum: number) {
     console.clear();
     console.log("PriorityQueue test end, all tests passed!");
 
+    console.log("PriorityQueue test report generating...");
+
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) myPriority.push(Math.random() * i);
+    for (let i = 0; i < testNum; ++i) myPriority.push(Math.random() * 1000000);
     endTime = Date.now();
     reportList.push({
         testFunc: "push",
@@ -617,10 +636,12 @@ function testPriorityQueue(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "pop all",
-        testNum: size,
+        testNum: 1,
         containerSize: size,
         runTime: endTime - startTime
     });
+
+    console.log("PriorityQueue test report done.");
 
     return {
         containerName: "PriorityQueue",
@@ -629,15 +650,15 @@ function testPriorityQueue(testNum: number) {
 }
 
 function testSet(testNum: number) {
-    function judgeSet(mySet: SetType<number>, myVector: VectorType<number>) {
-        if (mySet.getHeight() > 2 * Math.log2(mySet.size() + 1)) {
-            throw new Error("set tree too high!");
+    function judgeSet(mySdslSet: SetType<number>, myVector: VectorType<number>) {
+        if (mySdslSet.getHeight() > 2 * Math.log2(mySdslSet.size() + 1)) {
+            throw new Error("SdslSet tree too high!");
         }
-        if (mySet.size() !== myVector.size()) {
-            throw new Error("set size test failed!");
+        if (mySdslSet.size() !== myVector.size()) {
+            throw new Error("SdslSet size test failed!");
         }
         myVector.sort((x, y) => x - y);
-        mySet.forEach((element, index) => {
+        mySdslSet.forEach((element, index) => {
             if (myVector.getElementByPos(index) !== element) {
                 throw new Error("Set test failed!");
             }
@@ -650,86 +671,88 @@ function testSet(testNum: number) {
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const mySet = new Set(arr);
+    const mySdslSet = new SdslSet(arr);
     endTime = Date.now();
     reportList.push({
         testFunc: "constructor",
-        testNum: mySet.size(),
-        containerSize: mySet.size(),
+        testNum: 1,
+        containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
 
     const myVector = new Vector(arr);
-    judgeSet(mySet, myVector);
+    judgeSet(mySdslSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
-        mySet.insert(random);
+        mySdslSet.insert(random);
         myVector.push_back(random);
     }
-    judgeSet(mySet, myVector);
+    judgeSet(mySdslSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * myVector.size());
         const eraseValue = myVector.getElementByPos(pos);
         myVector.eraseElementByPos(pos);
-        mySet.eraseElementByValue(eraseValue);
+        mySdslSet.eraseElementByValue(eraseValue);
     }
-    judgeSet(mySet, myVector);
+    judgeSet(mySdslSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * myVector.size());
         myVector.eraseElementByPos(pos);
-        mySet.eraseElementByPos(pos);
+        mySdslSet.eraseElementByPos(pos);
     }
-    judgeSet(mySet, myVector);
+    judgeSet(mySdslSet, myVector);
 
-    const otherSet = new Set<number>();
+    const otherSdslSet = new SdslSet<number>();
     for (let i = 0; i < 20000; ++i) {
         const random = Math.random() * 1000000;
-        otherSet.insert(random);
+        otherSdslSet.insert(random);
         myVector.push_back(random);
     }
-    mySet.union(otherSet);
-    judgeSet(mySet, myVector);
+    mySdslSet.union(otherSdslSet);
+    judgeSet(mySdslSet, myVector);
 
     myVector.forEach(element => {
-        if (!mySet.find(element)) throw new Error("Set test failed!");
+        if (!mySdslSet.find(element)) throw new Error("Set test failed!");
     });
 
     for (let i = 0; i < 10000; ++i) {
-        mySet.eraseElementByPos(0);
+        mySdslSet.eraseElementByPos(0);
         myVector.eraseElementByPos(0);
-        if (mySet.front() !== myVector.front()) {
+        if (mySdslSet.front() !== myVector.front()) {
             throw new Error("Set test failed!");
         }
-        mySet.eraseElementByPos(mySet.size() - 1);
+        mySdslSet.eraseElementByPos(mySdslSet.size() - 1);
         myVector.eraseElementByPos(myVector.size() - 1);
-        if (mySet.back() !== myVector.back()) {
+        if (mySdslSet.back() !== myVector.back()) {
             throw new Error("Set test failed!");
         }
     }
-    judgeSet(mySet, myVector);
+    judgeSet(mySdslSet, myVector);
 
     console.clear();
     console.log("Set test end, all tests passed!");
 
+    console.log("Set test report generating...");
+
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) mySet.insert(Math.random() * 1000000);
+    for (let i = 0; i < testNum; ++i) mySdslSet.insert(Math.random() * 1000000);
     endTime = Date.now();
     reportList.push({
-        testFunc: "push",
+        testFunc: "insert",
         testNum: testNum,
-        containerSize: mySet.size(),
+        containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
 
-    for (let i = 0; i < testNum; ++i) mySet.insert(Math.random() * 1000000);
+    for (let i = 0; i < testNum; ++i) mySdslSet.insert(Math.random() * 1000000);
     const tmpArr: number[] = [];
-    mySet.forEach(element => tmpArr.push(element));
+    mySdslSet.forEach(element => tmpArr.push(element));
     startTime = Date.now();
-    const size = mySet.size();
-    for (let i = 0; i < testNum; ++i) mySet.eraseElementByValue(tmpArr[i]);
+    const size = mySdslSet.size();
+    for (let i = 0; i < testNum; ++i) mySdslSet.eraseElementByValue(tmpArr[i]);
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByValue",
@@ -739,7 +762,7 @@ function testSet(testNum: number) {
     });
 
     startTime = Date.now();
-    for (let i = 0; i < 10; ++i) mySet.eraseElementByPos(Math.floor(Math.random() * mySet.size()));
+    for (let i = 0; i < 10; ++i) mySdslSet.eraseElementByPos(Math.floor(Math.random() * mySdslSet.size()));
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByPos",
@@ -748,17 +771,19 @@ function testSet(testNum: number) {
         runTime: endTime - startTime
     });
 
-    const _otherSet = new Set<number>();
-    for (let i = 0; i < testNum; ++i) _otherSet.insert(Math.random() * 1000000);
+    const _otherSdslSet = new SdslSet<number>();
+    for (let i = 0; i < testNum; ++i) _otherSdslSet.insert(Math.random() * 1000000);
     startTime = Date.now();
-    mySet.union(_otherSet);
+    mySdslSet.union(_otherSdslSet);
     endTime = Date.now();
     reportList.push({
         testFunc: "union",
-        testNum: testNum,
-        containerSize: mySet.size(),
+        testNum: 1,
+        containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
+
+    console.log("Set test report done.");
 
     return {
         containerName: "Set",
@@ -769,40 +794,51 @@ function testSet(testNum: number) {
 function testMap(testNum: number) {
     function judgeMap(myMap: MapType<number, number>, stdMap: Map<number, number>) {
         if (myMap.getHeight() > 2 * Math.log2(myMap.size() + 1)) {
-            throw new Error("map tree too high!");
+            throw new Error("Map tree too high!");
         }
         if (myMap.size() !== stdMap.size) {
-            throw new Error("map tree too high!");
+            throw new Error("Map tree too high!");
         }
         stdMap.forEach((value, key) => {
-            const pair = myMap.getElementByKey(key);
-            if (!pair || pair.key !== key || pair.value !== value || value !== stdMap.get(key)) {
-                throw new Error("map test failed!");
+            const _value = myMap.getElementByKey(key);
+            if (_value !== stdMap.get(key)) {
+                throw new Error("Map test failed!");
+            }
+        });
+        myMap.forEach(({ key, value }) => {
+            const _value = stdMap.get(key);
+            if (_value !== value) {
+                throw new Error("Map test failed!");
             }
         });
     }
 
-    console.log("map test start...");
+    console.log("Map test start...");
 
-    const myMap = new SdslMap(arr.map((element, index) => {
-        return { key: element, value: index };
-    }));
-    const stdMap = new Map(arr.map((element, index) => {
-        return [element, index];
-    }));
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
 
-    stdMap.forEach((value, key) => {
-        const pair = myMap.getElementByKey(key);
-        if (!pair || pair.key !== key || pair.value !== value || value !== stdMap.get(key)) {
-            throw new Error("map test failed!");
-        }
+    startTime = Date.now();
+    const myMap = new SdslMap(arr.map((element, index) => ({
+        key: element,
+        value: index
+    })));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "constructor",
+        testNum: 1,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
     });
+
+    const stdMap = new Map(arr.map((element, index) => [element, index]));
+    judgeMap(myMap, stdMap);
 
     const eraseArr: number[] = [];
     myMap.forEach(({ key, value }) => {
         const v = stdMap.get(key);
         if (v !== value) {
-            throw new Error("map test failed!");
+            throw new Error("Map test failed!");
         }
         if (Math.random() > 0.5) {
             eraseArr.push(key);
@@ -814,10 +850,16 @@ function testMap(testNum: number) {
     });
     judgeMap(myMap, stdMap);
 
-    for (let i = 10000; i < 20000; ++i) {
+    for (let i = 10000; i < 30000; ++i) {
         const random = Math.random() * 1000000;
         myMap.setElement(i, random);
         stdMap.set(i, random);
+    }
+    judgeMap(myMap, stdMap);
+
+    for (let i = 20000; i < 30000; ++i) {
+        myMap.eraseElementByKey(i);
+        stdMap.delete(i);
     }
     judgeMap(myMap, stdMap);
 
@@ -839,10 +881,9 @@ function testMap(testNum: number) {
     judgeMap(myMap, stdMap);
 
     console.clear();
-    console.log("map test end, all tests passed!");
+    console.log("Map test end, all tests passed!");
 
-    let startTime, endTime;
-    const reportList: testReportFormat["reportList"] = [];
+    console.log("Map test report generating...");
 
     startTime = Date.now();
     for (let i = 0; i < testNum; ++i) myMap.setElement(i, Math.random() * 1000000);
@@ -855,8 +896,19 @@ function testMap(testNum: number) {
     });
 
     startTime = Date.now();
-    const size = myMap.size();
-    for (let i = 0; i < 100; ++i) myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
+    let size = myMap.size();
+    for (let i = 0; i < testNum; ++i) myMap.eraseElementByKey(i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByKey",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    size = myMap.size();
+    for (let i = testNum; i < testNum + 100; ++i) myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByPos",
@@ -871,11 +923,13 @@ function testMap(testNum: number) {
     myMap.union(_otherMap);
     endTime = Date.now();
     reportList.push({
-        testFunc: "setElement",
-        testNum: testNum,
+        testFunc: "union",
+        testNum: 1,
         containerSize: myMap.size(),
         runTime: endTime - startTime
     });
+
+    console.log("Map test report done.");
 
     return {
         containerName: "Map",
@@ -883,27 +937,239 @@ function testMap(testNum: number) {
     };
 }
 
-function main() {
-    const taskQueue = ["Stack", "Queue", "LinkList", "Deque", "PriorityQueue", "Set", "Map"];
+function testHashSet(testNum: number) {
+    function judgeHashSet(funcName: string, myHashSet: HashSetType<number>, stdSet: Set<number>) {
+        if (myHashSet.size() !== stdSet.size) {
+            throw new Error(`HashSet ${funcName} test failed!`);
+        }
+        stdSet.forEach((element) => {
+            if (!myHashSet.find(element)) {
+                throw new Error(`HashSet ${funcName} test failed!`);
+            }
+        });
+        myHashSet.forEach(element => {
+            if (!stdSet.has(element)) {
+                throw new Error(`HashSet ${funcName} test failed!`);
+            }
+        });
+        console.log("HashSet", funcName, "test passed.");
+    }
+
+    console.log("HashSet test start...");
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    const myHashSet = new HashSet(arr, testNum);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "constructor",
+        testNum: 1,
+        containerSize: myHashSet.size(),
+        runTime: endTime - startTime
+    });
+
+    const stdSet = new Set(arr);
+    judgeHashSet("constructor", myHashSet, stdSet);
+
+    for (let i = 0; i < 10000; ++i) {
+        const random = Math.random() * 1000000;
+        myHashSet.insert(random);
+        stdSet.add(random);
+    }
+    judgeHashSet("insert", myHashSet, stdSet);
+
+    for (let i = 0; i < 10000; ++i) {
+        myHashSet.eraseElementByValue(arr[i]);
+        stdSet.delete(arr[i]);
+        const random = Math.random() * 1000000;
+        myHashSet.eraseElementByValue(random);
+        stdSet.delete(random);
+    }
+    judgeHashSet("eraseElementByValue", myHashSet, stdSet);
+
+    myHashSet.clear();
+    stdSet.clear();
+    judgeHashSet("clear", myHashSet, stdSet);
+
+    console.clear();
+    console.log("HashSet test end, all tests passed!");
+
+    console.log("HashSet test report generating...");
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myHashSet.insert(Math.random() * 1000000);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "insert",
+        testNum: testNum,
+        containerSize: myHashSet.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    myHashSet.forEach(element => myHashSet.find(element));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "find",
+        testNum: myHashSet.size(),
+        containerSize: myHashSet.size(),
+        runTime: endTime - startTime
+    });
+
+    myHashSet.forEach(element => stdSet.add(element));
+    const size = myHashSet.size();
+    startTime = Date.now();
+    stdSet.forEach(element => myHashSet.eraseElementByValue(element));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByValue",
+        testNum: stdSet.size,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    console.log("HashSet test report done.");
+
+    return {
+        containerName: "HashSet",
+        reportList
+    };
+}
+
+function testHashMap(testNum: number) {
+    function judgeHashMap(funcName: string, myHashMap: HashMapType<number, number>, stdMap: Map<number, number>) {
+        if (myHashMap.size() !== stdMap.size) {
+            throw new Error(`HashMap ${funcName} test failed!`);
+        }
+        stdMap.forEach((value, key) => {
+            if (!myHashMap.find(key)) {
+                throw new Error(`HashMap ${funcName} test failed!`);
+            }
+            if (myHashMap.getElementByKey(key) !== value) {
+                throw new Error(`HashMap ${funcName} test failed!`);
+            }
+        });
+        myHashMap.forEach(({ key, value }) => {
+            if (myHashMap.getElementByKey(key) !== value) {
+                throw new Error(`HashMap ${funcName} test failed!`);
+            }
+        });
+        console.log("HashMap", funcName, "test passed.");
+    }
+
+    console.log("HashMap test start...");
+
+    let startTime, endTime;
+    const reportList: testReportFormat["reportList"] = [];
+
+    startTime = Date.now();
+    const myHashMap = new HashMap(arr.map((element, index) => ({
+        key: index,
+        value: element
+    })), testNum);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "constructor",
+        testNum: 1,
+        containerSize: myHashMap.size(),
+        runTime: endTime - startTime
+    });
+
+    const stdMap = new Map(arr.map((element, index) => [index, element]));
+    judgeHashMap("constructor", myHashMap, stdMap);
+
+    for (let i = 0; i <= 10000; ++i) {
+        myHashMap.setElement(i, i);
+        stdMap.set(i, i);
+    }
+    for (let i = 10000; i < 20000; ++i) {
+        const random = Math.random() * 1000000;
+        myHashMap.setElement(i, random);
+        stdMap.set(i, random);
+    }
+    judgeHashMap("setElement", myHashMap, stdMap);
+
+    for (let i = 0; i < 10000; ++i) {
+        myHashMap.eraseElementByKey(i);
+        stdMap.delete(i);
+    }
+    judgeHashMap("eraseElementByKey", myHashMap, stdMap);
+
+    myHashMap.clear();
+    stdMap.clear();
+    judgeHashMap("clear", myHashMap, stdMap);
+
+    console.clear();
+    console.log("HashMap test end, all tests passed!");
+
+    console.log("HashMap test report generating...");
+
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myHashMap.setElement(i, Math.random() * 1000000);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "setElement",
+        testNum: testNum,
+        containerSize: myHashMap.size(),
+        runTime: endTime - startTime
+    });
+
+    startTime = Date.now();
+    myHashMap.forEach(({ key }) => myHashMap.getElementByKey(key));
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "getElementByKey",
+        testNum: myHashMap.size(),
+        containerSize: myHashMap.size(),
+        runTime: endTime - startTime
+    });
+
+    const size = myHashMap.size();
+    startTime = Date.now();
+    for (let i = 0; i < testNum; ++i) myHashMap.eraseElementByKey(i);
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "eraseElementByKey",
+        testNum: testNum,
+        containerSize: size,
+        runTime: endTime - startTime
+    });
+
+    console.log("HashMap test report done.");
+
+    return {
+        containerName: "HashMap",
+        reportList
+    };
+}
+
+function main(taskQueue: string[]) {
     const testReport: testReportFormat[] = [];
     const testNum = 1000000;
 
     console.log("test start...");
 
-    if (taskQueue.includes("Stack")) testReport.push(testStack(testNum * 10));
-    if (taskQueue.includes("Queue")) testReport.push(testQueue(testNum * 10));
-    if (taskQueue.includes("LinkList")) testReport.push(testLinkList(testNum));
-    if (taskQueue.includes("Deque")) testReport.push(testDeque(testNum));
-    if (taskQueue.includes("PriorityQueue")) testReport.push(testPriorityQueue(testNum * 10));
-    if (taskQueue.includes("Set")) testReport.push(testSet(testNum));
-    if (taskQueue.includes("Map")) testReport.push(testMap(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("Stack")) testReport.push(testStack(testNum * 10));
+    if (taskQueue.length === 0 || taskQueue.includes("Queue")) testReport.push(testQueue(testNum * 10));
+    if (taskQueue.length === 0 || taskQueue.includes("LinkList")) testReport.push(testLinkList(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("Deque")) testReport.push(testDeque(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("PriorityQueue")) testReport.push(testPriorityQueue(testNum * 10));
+    if (taskQueue.length === 0 || taskQueue.includes("Set")) testReport.push(testSet(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("Map")) testReport.push(testMap(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("HashSet")) testReport.push(testHashSet(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("HashMap")) testReport.push(testHashMap(testNum));
 
     console.clear();
     console.log("test end, all tests passed!");
+
+    console.log("=".repeat(35), "Report", "=".repeat(35));
     testReport.forEach(report => {
         console.log("=".repeat(35), report.containerName, "=".repeat(35));
         console.table(report.reportList);
     });
+    console.log("=".repeat(35), "Report", "=".repeat(35));
 }
 
-main();
+main(process.argv.slice(2));

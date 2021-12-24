@@ -8,6 +8,7 @@ export type ContainerType<T> = {
     front: () => T | undefined;
     back: () => T | undefined;
     forEach: (callback: (element: T, index: number) => void) => void;
+    find: (element: T) => boolean;
     getElementByPos: (pos: number) => T;
     eraseElementByPos: (pos: number) => void;
     eraseElementByValue: (value: T) => void;
@@ -23,3 +24,5 @@ export type SequentialContainerType<T> = {
     unique: () => void;
     sort: (cmp?: (x: T, y: T) => number) => void;
 } & ContainerType<T>;
+
+export type Pair<T, K> = { key: T, value: K };

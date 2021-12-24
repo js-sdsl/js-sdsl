@@ -1,14 +1,13 @@
 import TreeNode from "../Base/TreeNode";
-import { BaseType } from "../Base/Base";
-
-type Pair<T, K> = { key: T, value: K };
+import { BaseType, Pair } from "../Base/Base";
 
 export type MapType<T, K> = {
     front: () => Pair<T, K> | undefined;
     back: () => Pair<T, K> | undefined;
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
+    find: (element: T) => boolean;
     getElementByPos: (pos: number) => Pair<T, K>;
-    getElementByKey: (key: T) => Pair<T, K> | undefined;
+    getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
     eraseElementByPos: (pos: number) => void;
     eraseElementByKey: (key: T) => void;
@@ -16,7 +15,7 @@ export type MapType<T, K> = {
     getHeight: () => number;
 } & BaseType;
 
-function Map<T, K>(this: MapType<T, K>, arr: Pair<T, K>[] = [], cmp: (x: T, y: T) => number) {
+function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (element: Pair<T, K>) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x < y) return -1;
         if (x > y) return 1;
@@ -345,14 +344,15 @@ function Map<T, K>(this: MapType<T, K>, arr: Pair<T, K>[] = [], cmp: (x: T, y: T
         return curNode;
     };
 
+    this.find = function (element: T) {
+        return !!findElementPos(root, element);
+    };
+
     this.getElementByKey = function (element: T) {
         const curNode = findElementPos(root, element);
         if (curNode === null) return undefined;
         if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
-        return {
-            key: curNode.key,
-            value: curNode.value
-        };
+        return curNode.value;
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
@@ -370,9 +370,11 @@ function Map<T, K>(this: MapType<T, K>, arr: Pair<T, K>[] = [], cmp: (x: T, y: T
         return traversal(root);
     };
 
-    arr.forEach(({ key, value }) => this.setElement(key, value));
+    container.forEach(({ key, value }) => this.setElement(key, value));
 
     Object.freeze(this);
 }
 
-export default (Map as any as { new<T, K>(arr?: Pair<T, K>[], cmp?: (x: T, y: T) => number): MapType<T, K> });
+Object.freeze(Map);
+
+export default (Map as any as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, cmp?: (x: T, y: T) => number): MapType<T, K> });

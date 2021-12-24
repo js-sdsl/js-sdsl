@@ -226,6 +226,27 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         }
     };
 
+    this.find = function (element: T) {
+        if (first === last) {
+            for (let i = curFirst; i <= curLast; ++i) {
+                if (map[first][i] === element) return true;
+            }
+            return false;
+        }
+        for (let i = curFirst; i < Deque.bucketSize; ++i) {
+            if (map[first][i] === element) return true;
+        }
+        for (let i = first + 1; i < last; ++i) {
+            for (let j = 0; j < Deque.bucketSize; ++j) {
+                if (map[i][j] === element) return true;
+            }
+        }
+        for (let i = 0; i <= curLast; ++i) {
+            if (map[last][i] === element) return true;
+        }
+        return false;
+    };
+
     this.reverse = function () {
         let l = 0, r = len - 1;
         while (l < r) {

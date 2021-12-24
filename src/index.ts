@@ -6,6 +6,8 @@ import Deque from "./Deque/Deque";
 import PriorityQueue from "./PriorityQueue/PriorityQueue";
 import Set from "./Set/Set";
 import Map from "./Map/Map";
+import HashSet from "./HashSet/HashSet";
+import HashMap from "./HashMap/HashMap";
 
 export {
     Vector,
@@ -15,5 +17,7 @@ export {
     Deque,
     PriorityQueue,
     Set,
-    Map
+    Map,
+    HashSet,
+    HashMap
 };

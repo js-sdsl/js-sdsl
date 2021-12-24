@@ -6,9 +6,9 @@ export type StackType<T> = {
     top: () => T | undefined;
 } & BaseType;
 
-function Stack<T>(this: StackType<T>, arr: T[] = []) {
-    let len = arr.length;
-    const stack = [...arr];
+function Stack<T>(this: StackType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
+    let len = 0;
+    const stack: T[] = [];
 
     this.size = function () {
         return len;
@@ -37,9 +37,11 @@ function Stack<T>(this: StackType<T>, arr: T[] = []) {
         return stack[len - 1];
     };
 
+    container.forEach(element => this.push(element));
+
     Object.freeze(this);
 }
 
 Object.freeze(Stack);
 
-export default (Stack as any as { new<T>(arr?: T[]): StackType<T> });
+export default (Stack as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): StackType<T> });

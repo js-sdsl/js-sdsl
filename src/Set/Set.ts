@@ -8,7 +8,7 @@ export type SetType<T> = {
     getHeight: () => number;
 } & ContainerType<T>;
 
-function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
+function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x < y) return -1;
         if (x > y) return 1;
@@ -29,7 +29,8 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
 
     this.clear = function () {
         len = 0;
-        root = new TreeNode<T, null>();
+        root.leftChild = root.rightChild = root.brother = root.parent = null;
+        root.key = null;
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
@@ -328,9 +329,11 @@ function Set<T>(this: SetType<T>, arr: T[] = [], cmp: (x: T, y: T) => number) {
         return traversal(root);
     };
 
-    arr.forEach(element => this.insert(element));
+    container.forEach(element => this.insert(element));
 
     Object.freeze(this);
 }
 
-export default (Set as any as { new<T>(arr?: T[], cmp?: (x: T, y: T) => number): SetType<T> });
+Object.freeze(Set);
+
+export default (Set as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): SetType<T> });
