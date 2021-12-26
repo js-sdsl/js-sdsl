@@ -268,6 +268,16 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         });
     };
 
+    this[Symbol.iterator] = function () {
+        return (function* () {
+            let curNode = head;
+            while (curNode !== null) {
+                yield curNode.val;
+                curNode = curNode.next;
+            }
+        })();
+    };
+
     container.forEach(element => this.push_back(element));
 
     Object.freeze(this);

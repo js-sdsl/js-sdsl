@@ -12,6 +12,7 @@ export type ContainerType<T> = {
     getElementByPos: (pos: number) => T;
     eraseElementByPos: (pos: number) => void;
     eraseElementByValue: (value: T) => void;
+    [Symbol.iterator]: () => Generator<T, void, undefined>;
 } & BaseType;
 
 export type SequentialContainerType<T> = {

@@ -8,6 +8,7 @@ export type HashMapType<T, K> = {
     getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
     eraseElementByKey: (key: T) => void;
+    [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
 } & BaseType;
 
 HashMap.initSize = (1 << 4);
@@ -36,8 +37,8 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
             if (typeof x !== "string") {
                 str = JSON.stringify(x);
             } else str = x;
-            for (let i = 0; i < str.length; i++) {
-                const character = str.charCodeAt(i);
+            for (const ch of str) {
+                const character = ch.charCodeAt(0);
                 hashCode = ((hashCode << 5) - hashCode) + character;
                 hashCode = hashCode & hashCode;
             }
@@ -130,14 +131,12 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         } else {
             const preSize = hashTable[index].size();
             if (hashTable[index] instanceof LinkList) {
-                let flag = false;
-                hashTable[index].forEach((pair, pos) => {
+                for (const pair of hashTable[index]) {
                     if (pair.key === key) {
-                        flag = true;
-                        hashTable[index].setElementByPos(pos, { key, value });
+                        pair.value = value;
+                        return;
                     }
-                });
-                if (flag) return;
+                }
                 hashTable[index].push_back({
                     key,
                     value,
@@ -159,11 +158,10 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         if (!hashTable[index]) return undefined;
         if (hashTable[index] instanceof Map) return hashTable[index].getElementByKey(key);
         else {
-            let value: K | undefined = undefined;
-            hashTable[index].forEach(pair => {
-                if (key === pair.key) value = pair.value;
-            });
-            return value;
+            for (const pair of hashTable[index]) {
+                if (pair.key === key) return pair.value;
+            }
+            return undefined;
         }
     };
 
@@ -178,10 +176,13 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
             }
         } else {
             let pos = -1;
-            hashTable[index].forEach((pair, index) => {
-                if (key === pair.key) pos = index;
-            });
-            if (pos >= 0) hashTable[index].eraseElementByPos(pos);
+            for (const pair of hashTable[index]) {
+                ++pos;
+                if (pair.key === key) {
+                    hashTable[index].eraseElementByPos(pos);
+                    break;
+                }
+            }
         }
         const curSize = hashTable[index].size();
         len += curSize - preSize;
@@ -191,11 +192,22 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         const index = hashFunc(key) & (bucketNum - 1);
         if (!hashTable[index]) return false;
         if (hashTable[index] instanceof Map) return (hashTable[index] as MapType<T, K>).find(key);
-        let flag = false;
-        hashTable[index].forEach(pair => {
-            flag = flag || (key === pair.key);
-        });
-        return flag;
+        for (const pair of hashTable[index]) {
+            if (pair.key === key) return true;
+        }
+        return false;
+    };
+
+    this[Symbol.iterator] = function () {
+        return (function* () {
+            let index = 0;
+            while (index < bucketNum) {
+                while (index < bucketNum && !hashTable[index]) ++index;
+                if (index >= bucketNum) break;
+                for (const pair of hashTable[index]) yield pair;
+                ++index;
+            }
+        })();
     };
 
     container.forEach(({ key, value }) => this.setElement(key, value));

@@ -105,6 +105,12 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
         vector.sort(cmp);
     };
 
+    this[Symbol.iterator] = function () {
+        return (function* () {
+            return yield* vector;
+        })();
+    };
+
     container.forEach(element => this.push_back(element));
 
     Object.freeze(this);

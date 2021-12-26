@@ -358,6 +358,29 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         len = pos + 1;
     };
 
+    this[Symbol.iterator] = function () {
+        return (function* () {
+            if (len === 0) return;
+            if (first === last) {
+                for (let i = curFirst; i <= curLast; ++i) {
+                    yield map[first][i];
+                }
+                return;
+            }
+            for (let i = curFirst; i < Deque.bucketSize; ++i) {
+                yield map[first][i];
+            }
+            for (let i = first + 1; i < last; ++i) {
+                for (let j = 0; j < Deque.bucketSize; ++j) {
+                    yield map[i][j];
+                }
+            }
+            for (let i = 0; i <= curLast; ++i) {
+                yield map[last][i];
+            }
+        })();
+    };
+
     Object.freeze(this);
 }
 

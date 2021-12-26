@@ -7,6 +7,7 @@ export type HashSetType<T> = {
     insert: (element: T) => void;
     eraseElementByValue: (value: T) => void;
     find: (element: T) => boolean;
+    [Symbol.iterator]: () => Generator<T, void, undefined>;
 } & BaseType;
 
 HashSet.initSize = (1 << 4);
@@ -155,6 +156,18 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
         const index = hashFunc(element) & (bucketNum - 1);
         if (!hashTable[index]) return false;
         return hashTable[index].find(element);
+    };
+
+    this[Symbol.iterator] = function () {
+        return (function* () {
+            let index = 0;
+            while (index < bucketNum) {
+                while (index < bucketNum && !hashTable[index]) ++index;
+                if (index >= bucketNum) break;
+                for (const element of hashTable[index]) yield element;
+                ++index;
+            }
+        })();
     };
 
     container.forEach(element => this.insert(element));

@@ -329,6 +329,17 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         return traversal(root);
     };
 
+    const iterationFunc: (curNode: TreeNode<T, null> | null) => Generator<T, void, undefined> = function* (curNode: TreeNode<T, null> | null) {
+        if (!curNode || curNode.key === null) return;
+        yield* iterationFunc(curNode.leftChild);
+        yield curNode.key;
+        yield* iterationFunc(curNode.rightChild);
+    };
+
+    this[Symbol.iterator] = function () {
+        return iterationFunc(root);
+    };
+
     container.forEach(element => this.insert(element));
 
     Object.freeze(this);

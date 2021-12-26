@@ -13,6 +13,7 @@ export type MapType<T, K> = {
     eraseElementByKey: (key: T) => void;
     union: (other: MapType<T, K>) => void;
     getHeight: () => number;
+    [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
 } & BaseType;
 
 function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (element: Pair<T, K>) => void) => void } = [], cmp: (x: T, y: T) => number) {
@@ -368,6 +369,17 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
         return traversal(root);
+    };
+
+    const iterationFunc: (curNode: TreeNode<T, K> | null) => Generator<Pair<T, K>, void, undefined> = function* (curNode: TreeNode<T, K> | null) {
+        if (!curNode || curNode.key === null || curNode.value === null) return;
+        yield* iterationFunc(curNode.leftChild);
+        yield { key: curNode.key, value: curNode.value };
+        yield* iterationFunc(curNode.rightChild);
+    };
+
+    this[Symbol.iterator] = function () {
+        return iterationFunc(root);
     };
 
     container.forEach(({ key, value }) => this.setElement(key, value));
