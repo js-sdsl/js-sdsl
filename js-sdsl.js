@@ -4,6 +4,49 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.sdsl = {}));
 })(this, (function (exports) { 'use strict';
 
+    var __generator$6 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
+    var __read = (undefined && undefined.__read) || function (o, n) {
+        var m = typeof Symbol === "function" && o[Symbol.iterator];
+        if (!m) return o;
+        var i = m.call(o), r, ar = [], e;
+        try {
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+        }
+        catch (error) { e = { error: error }; }
+        finally {
+            try {
+                if (r && !r.done && (m = i["return"])) m.call(i);
+            }
+            finally { if (e) throw e.error; }
+        }
+        return ar;
+    };
     var __spreadArray = (undefined && undefined.__spreadArray) || function (to, from, pack) {
         if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
             if (ar || !(i in from)) {
@@ -12,6 +55,17 @@
             }
         }
         return to.concat(ar || Array.prototype.slice.call(from));
+    };
+    var __values$4 = (undefined && undefined.__values) || function(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
     };
     function Vector(container) {
         var _this = this;
@@ -84,7 +138,7 @@
             if (num === void 0) { num = 1; }
             if (pos < 0 || pos > len)
                 throw new Error("pos muse more than 0 and less than or equal to vector's size");
-            vector.splice.apply(vector, __spreadArray([pos, 0], new Array(num).fill(element), false));
+            vector.splice.apply(vector, __spreadArray([pos, 0], __read(new Array(num).fill(element)), false));
             len += num;
         };
         this.find = function (element) {
@@ -111,6 +165,16 @@
         };
         this.sort = function (cmp) {
             vector.sort(cmp);
+        };
+        this[Symbol.iterator] = function () {
+            return (function () {
+                return __generator$6(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [5 /*yield**/, __values$4(vector)];
+                        case 1: return [2 /*return*/, _a.sent()];
+                    }
+                });
+            })();
         };
         container.forEach(function (element) { return _this.push_back(element); });
         Object.freeze(this);
@@ -149,6 +213,33 @@
     }
     Object.freeze(Stack);
 
+    var __generator$5 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
     var LinkNode = /** @class */ (function () {
         function LinkNode(element) {
             this.val = null;
@@ -432,6 +523,26 @@
                 }
             });
         };
+        this[Symbol.iterator] = function () {
+            return (function () {
+                var curNode;
+                return __generator$5(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            curNode = head;
+                            _a.label = 1;
+                        case 1:
+                            if (!(curNode !== null)) return [3 /*break*/, 3];
+                            return [4 /*yield*/, curNode.val];
+                        case 2:
+                            _a.sent();
+                            curNode = curNode.next;
+                            return [3 /*break*/, 1];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            })();
+        };
         container.forEach(function (element) { return _this.push_back(element); });
         Object.freeze(this);
     }
@@ -462,6 +573,33 @@
     }
     Object.freeze(Queue);
 
+    var __generator$4 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
     Deque.sigma = 3; // growth factor
     Deque.bucketSize = 5000;
     function Deque(arr) {
@@ -811,6 +949,75 @@
             curLast = curNodePointerIndex;
             len = pos + 1;
         };
+        this[Symbol.iterator] = function () {
+            return (function () {
+                var i, i, i, j, i;
+                return __generator$4(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (len === 0)
+                                return [2 /*return*/];
+                            if (!(first === last)) return [3 /*break*/, 5];
+                            i = curFirst;
+                            _a.label = 1;
+                        case 1:
+                            if (!(i <= curLast)) return [3 /*break*/, 4];
+                            return [4 /*yield*/, map[first][i]];
+                        case 2:
+                            _a.sent();
+                            _a.label = 3;
+                        case 3:
+                            ++i;
+                            return [3 /*break*/, 1];
+                        case 4: return [2 /*return*/];
+                        case 5:
+                            i = curFirst;
+                            _a.label = 6;
+                        case 6:
+                            if (!(i < Deque.bucketSize)) return [3 /*break*/, 9];
+                            return [4 /*yield*/, map[first][i]];
+                        case 7:
+                            _a.sent();
+                            _a.label = 8;
+                        case 8:
+                            ++i;
+                            return [3 /*break*/, 6];
+                        case 9:
+                            i = first + 1;
+                            _a.label = 10;
+                        case 10:
+                            if (!(i < last)) return [3 /*break*/, 15];
+                            j = 0;
+                            _a.label = 11;
+                        case 11:
+                            if (!(j < Deque.bucketSize)) return [3 /*break*/, 14];
+                            return [4 /*yield*/, map[i][j]];
+                        case 12:
+                            _a.sent();
+                            _a.label = 13;
+                        case 13:
+                            ++j;
+                            return [3 /*break*/, 11];
+                        case 14:
+                            ++i;
+                            return [3 /*break*/, 10];
+                        case 15:
+                            i = 0;
+                            _a.label = 16;
+                        case 16:
+                            if (!(i <= curLast)) return [3 /*break*/, 19];
+                            return [4 /*yield*/, map[last][i]];
+                        case 17:
+                            _a.sent();
+                            _a.label = 18;
+                        case 18:
+                            ++i;
+                            return [3 /*break*/, 16];
+                        case 19: return [2 /*return*/];
+                    }
+                });
+            })();
+        };
         Object.freeze(this);
     }
     Object.freeze(Deque);
@@ -1039,6 +1246,44 @@
     }());
     Object.freeze(TreeNode);
 
+    var __generator$3 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
+    var __values$3 = (undefined && undefined.__values) || function(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    };
     function Set(container, cmp) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -1385,11 +1630,71 @@
             };
             return traversal(root);
         };
+        var iterationFunc = function (curNode) {
+            return __generator$3(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!curNode || curNode.key === null)
+                            return [2 /*return*/];
+                        return [5 /*yield**/, __values$3(iterationFunc(curNode.leftChild))];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, curNode.key];
+                    case 2:
+                        _a.sent();
+                        return [5 /*yield**/, __values$3(iterationFunc(curNode.rightChild))];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        };
+        this[Symbol.iterator] = function () {
+            return iterationFunc(root);
+        };
         container.forEach(function (element) { return _this.insert(element); });
         Object.freeze(this);
     }
     Object.freeze(Set);
 
+    var __generator$2 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
+    var __values$2 = (undefined && undefined.__values) || function(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    };
     function Map(container, cmp) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -1773,6 +2078,28 @@
             };
             return traversal(root);
         };
+        var iterationFunc = function (curNode) {
+            return __generator$2(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!curNode || curNode.key === null || curNode.value === null)
+                            return [2 /*return*/];
+                        return [5 /*yield**/, __values$2(iterationFunc(curNode.leftChild))];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, { key: curNode.key, value: curNode.value }];
+                    case 2:
+                        _a.sent();
+                        return [5 /*yield**/, __values$2(iterationFunc(curNode.rightChild))];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        };
+        this[Symbol.iterator] = function () {
+            return iterationFunc(root);
+        };
         container.forEach(function (_a) {
             var key = _a.key, value = _a.value;
             return _this.setElement(key, value);
@@ -1781,6 +2108,44 @@
     }
     Object.freeze(Map);
 
+    var __generator$1 = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
+    var __values$1 = (undefined && undefined.__values) || function(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    };
     HashSet.initSize = (1 << 4);
     HashSet.maxSize = (1 << 30);
     HashSet.sigma = 0.75; // default load factor
@@ -1945,11 +2310,98 @@
                 return false;
             return hashTable[index].find(element);
         };
+        this[Symbol.iterator] = function () {
+            return (function () {
+                var index, _a, _b, element, e_1_1;
+                var e_1, _c;
+                return __generator$1(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            index = 0;
+                            _d.label = 1;
+                        case 1:
+                            if (!(index < bucketNum)) return [3 /*break*/, 10];
+                            while (index < bucketNum && !hashTable[index])
+                                ++index;
+                            if (index >= bucketNum)
+                                return [3 /*break*/, 10];
+                            _d.label = 2;
+                        case 2:
+                            _d.trys.push([2, 7, 8, 9]);
+                            _a = (e_1 = void 0, __values$1(hashTable[index])), _b = _a.next();
+                            _d.label = 3;
+                        case 3:
+                            if (!!_b.done) return [3 /*break*/, 6];
+                            element = _b.value;
+                            return [4 /*yield*/, element];
+                        case 4:
+                            _d.sent();
+                            _d.label = 5;
+                        case 5:
+                            _b = _a.next();
+                            return [3 /*break*/, 3];
+                        case 6: return [3 /*break*/, 9];
+                        case 7:
+                            e_1_1 = _d.sent();
+                            e_1 = { error: e_1_1 };
+                            return [3 /*break*/, 9];
+                        case 8:
+                            try {
+                                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                            }
+                            finally { if (e_1) throw e_1.error; }
+                            return [7 /*endfinally*/];
+                        case 9:
+                            ++index;
+                            return [3 /*break*/, 1];
+                        case 10: return [2 /*return*/];
+                    }
+                });
+            })();
+        };
         container.forEach(function (element) { return _this.insert(element); });
         Object.freeze(this);
     }
     Object.freeze(HashSet);
 
+    var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    };
+    var __values = (undefined && undefined.__values) || function(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m) return m.call(o);
+        if (o && typeof o.length === "number") return {
+            next: function () {
+                if (o && i >= o.length) o = void 0;
+                return { value: o && o[i++], done: !o };
+            }
+        };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    };
     HashMap.initSize = (1 << 4);
     HashMap.maxSize = (1 << 30);
     HashMap.sigma = 0.75; // default load factor
@@ -1968,6 +2420,7 @@
         if (container === void 0) { container = []; }
         if (initBucketNum === void 0) { initBucketNum = HashMap.initSize; }
         hashFunc = hashFunc || (function (x) {
+            var e_1, _a;
             var hashCode = 0;
             var str = '';
             if (typeof x === "number") {
@@ -1981,10 +2434,20 @@
                 }
                 else
                     str = x;
-                for (var i = 0; i < str.length; i++) {
-                    var character = str.charCodeAt(i);
-                    hashCode = ((hashCode << 5) - hashCode) + character;
-                    hashCode = hashCode & hashCode;
+                try {
+                    for (var str_1 = __values(str), str_1_1 = str_1.next(); !str_1_1.done; str_1_1 = str_1.next()) {
+                        var ch = str_1_1.value;
+                        var character = ch.charCodeAt(0);
+                        hashCode = ((hashCode << 5) - hashCode) + character;
+                        hashCode = hashCode & hashCode;
+                    }
+                }
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (str_1_1 && !str_1_1.done && (_a = str_1.return)) _a.call(str_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
                 }
             }
             hashCode ^= (hashCode >>> 16);
@@ -2068,6 +2531,7 @@
             hashTable = newHashTable;
         };
         this.setElement = function (key, value) {
+            var e_2, _a;
             if (key === null || key === undefined) {
                 throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
             }
@@ -2083,15 +2547,22 @@
             else {
                 var preSize = hashTable[index].size();
                 if (hashTable[index] instanceof LinkList) {
-                    var flag_1 = false;
-                    hashTable[index].forEach(function (pair, pos) {
-                        if (pair.key === key) {
-                            flag_1 = true;
-                            hashTable[index].setElementByPos(pos, { key: key, value: value });
+                    try {
+                        for (var _b = __values(hashTable[index]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                            var pair = _c.value;
+                            if (pair.key === key) {
+                                pair.value = value;
+                                return;
+                            }
                         }
-                    });
-                    if (flag_1)
-                        return;
+                    }
+                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                    finally {
+                        try {
+                            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                    }
                     hashTable[index].push_back({
                         key: key,
                         value: value,
@@ -2110,21 +2581,32 @@
             }
         };
         this.getElementByKey = function (key) {
+            var e_3, _a;
             var index = hashFunc(key) & (bucketNum - 1);
             if (!hashTable[index])
                 return undefined;
             if (hashTable[index] instanceof Map)
                 return hashTable[index].getElementByKey(key);
             else {
-                var value_1 = undefined;
-                hashTable[index].forEach(function (pair) {
-                    if (key === pair.key)
-                        value_1 = pair.value;
-                });
-                return value_1;
+                try {
+                    for (var _b = __values(hashTable[index]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                        var pair = _c.value;
+                        if (pair.key === key)
+                            return pair.value;
+                    }
+                }
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                finally {
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                }
+                return undefined;
             }
         };
         this.eraseElementByKey = function (key) {
+            var e_4, _a;
             var index = hashFunc(key) & (bucketNum - 1);
             if (!hashTable[index])
                 return;
@@ -2136,28 +2618,99 @@
                 }
             }
             else {
-                var pos_1 = -1;
-                hashTable[index].forEach(function (pair, index) {
-                    if (key === pair.key)
-                        pos_1 = index;
-                });
-                if (pos_1 >= 0)
-                    hashTable[index].eraseElementByPos(pos_1);
+                var pos = -1;
+                try {
+                    for (var _b = __values(hashTable[index]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                        var pair = _c.value;
+                        ++pos;
+                        if (pair.key === key) {
+                            hashTable[index].eraseElementByPos(pos);
+                            break;
+                        }
+                    }
+                }
+                catch (e_4_1) { e_4 = { error: e_4_1 }; }
+                finally {
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                    }
+                    finally { if (e_4) throw e_4.error; }
+                }
             }
             var curSize = hashTable[index].size();
             len += curSize - preSize;
         };
         this.find = function (key) {
+            var e_5, _a;
             var index = hashFunc(key) & (bucketNum - 1);
             if (!hashTable[index])
                 return false;
             if (hashTable[index] instanceof Map)
                 return hashTable[index].find(key);
-            var flag = false;
-            hashTable[index].forEach(function (pair) {
-                flag = flag || (key === pair.key);
-            });
-            return flag;
+            try {
+                for (var _b = __values(hashTable[index]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var pair = _c.value;
+                    if (pair.key === key)
+                        return true;
+                }
+            }
+            catch (e_5_1) { e_5 = { error: e_5_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_5) throw e_5.error; }
+            }
+            return false;
+        };
+        this[Symbol.iterator] = function () {
+            return (function () {
+                var index, _a, _b, pair, e_6_1;
+                var e_6, _c;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            index = 0;
+                            _d.label = 1;
+                        case 1:
+                            if (!(index < bucketNum)) return [3 /*break*/, 10];
+                            while (index < bucketNum && !hashTable[index])
+                                ++index;
+                            if (index >= bucketNum)
+                                return [3 /*break*/, 10];
+                            _d.label = 2;
+                        case 2:
+                            _d.trys.push([2, 7, 8, 9]);
+                            _a = (e_6 = void 0, __values(hashTable[index])), _b = _a.next();
+                            _d.label = 3;
+                        case 3:
+                            if (!!_b.done) return [3 /*break*/, 6];
+                            pair = _b.value;
+                            return [4 /*yield*/, pair];
+                        case 4:
+                            _d.sent();
+                            _d.label = 5;
+                        case 5:
+                            _b = _a.next();
+                            return [3 /*break*/, 3];
+                        case 6: return [3 /*break*/, 9];
+                        case 7:
+                            e_6_1 = _d.sent();
+                            e_6 = { error: e_6_1 };
+                            return [3 /*break*/, 9];
+                        case 8:
+                            try {
+                                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                            }
+                            finally { if (e_6) throw e_6.error; }
+                            return [7 /*endfinally*/];
+                        case 9:
+                            ++index;
+                            return [3 /*break*/, 1];
+                        case 10: return [2 /*return*/];
+                    }
+                });
+            })();
         };
         container.forEach(function (_a) {
             var key = _a.key, value = _a.value;
