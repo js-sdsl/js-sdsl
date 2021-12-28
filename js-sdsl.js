@@ -1593,7 +1593,7 @@
                 return;
             }
             var curNode = findInsertPos(root, element);
-            if (curNode.key && cmp(curNode.key, element) === 0)
+            if (curNode.key !== null && cmp(curNode.key, element) === 0)
                 return;
             ++len;
             curNode.key = element;
@@ -2028,7 +2028,7 @@
                 return;
             }
             var curNode = findInsertPos(root, key);
-            if (curNode.key && cmp(curNode.key, key) === 0) {
+            if (curNode.key !== null && cmp(curNode.key, key) === 0) {
                 curNode.value = value;
                 return;
             }
@@ -2186,9 +2186,12 @@
             hashCode ^= (hashCode >>> 16);
             return hashCode;
         });
+        if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+            throw new Error("initBucketNum must be 2 to the power of n");
+        }
         var len = 0;
-        var bucketNum = initBucketNum;
         var hashTable = [];
+        var bucketNum = Math.max(HashSet.initSize, Math.min(HashSet.maxSize, initBucketNum));
         this.size = function () {
             return len;
         };
@@ -2411,7 +2414,7 @@
     /**
      * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
      * @param container Initialize the container
-     * @param initBucketNum Initialize the bucket num
+     * @param initBucketNum Initialize the bucket num, must be 2 to the power of n
      * @param hashFunc Function to map elements to numbers
      * @constructor
      */
@@ -2453,9 +2456,12 @@
             hashCode ^= (hashCode >>> 16);
             return hashCode;
         });
+        if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+            throw new Error("initBucketNum must be 2 to the power of n");
+        }
         var len = 0;
-        var bucketNum = initBucketNum;
         var hashTable = [];
+        var bucketNum = Math.max(HashMap.initSize, Math.min(HashMap.maxSize, initBucketNum));
         this.size = function () {
             return len;
         };
