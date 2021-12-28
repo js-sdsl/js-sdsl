@@ -46,9 +46,13 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
         return hashCode;
     });
 
+    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+        throw new Error("initBucketNum must be 2 to the power of n");
+    }
+
     let len = 0;
-    let bucketNum = initBucketNum;
     let hashTable: (LinkListType<T> | SetType<T>)[] = [];
+    let bucketNum = Math.max(HashSet.initSize, Math.min(HashSet.maxSize, initBucketNum));
 
     this.size = function () {
         return len;

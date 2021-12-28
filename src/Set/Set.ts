@@ -292,7 +292,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         }
 
         const curNode = findInsertPos(root, element);
-        if (curNode.key && cmp(curNode.key, element) === 0) return;
+        if (curNode.key !== null && cmp(curNode.key, element) === 0) return;
 
         ++len;
         curNode.key = element;

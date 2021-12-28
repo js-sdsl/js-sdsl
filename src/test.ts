@@ -738,7 +738,7 @@ function testSet(testNum: number) {
     console.log("Set test report generating...");
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) mySdslSet.insert(Math.random() * 1000000);
+    for (let i = 0; i < testNum; ++i) mySdslSet.insert(i);
     endTime = Date.now();
     reportList.push({
         testFunc: "insert",
@@ -961,7 +961,7 @@ function testHashSet(testNum: number) {
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const myHashSet = new HashSet(arr, testNum);
+    const myHashSet = new HashSet(arr, (1 << 21));
     endTime = Date.now();
     reportList.push({
         testFunc: "constructor",
@@ -1068,7 +1068,7 @@ function testHashMap(testNum: number) {
     const myHashMap = new HashMap(arr.map((element, index) => ({
         key: index,
         value: element
-    })), testNum);
+    })), (1 << 21));
     endTime = Date.now();
     reportList.push({
         testFunc: "constructor",

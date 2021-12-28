@@ -324,7 +324,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         }
 
         const curNode = findInsertPos(root, key);
-        if (curNode.key && cmp(curNode.key, key) === 0) {
+        if (curNode.key !== null && cmp(curNode.key, key) === 0) {
             curNode.value = value;
             return;
         }

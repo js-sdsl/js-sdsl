@@ -21,7 +21,7 @@ HashMap.minTreeifySize = 64;
 /**
  * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
  * @param container Initialize the container
- * @param initBucketNum Initialize the bucket num
+ * @param initBucketNum Initialize the bucket num, must be 2 to the power of n
  * @param hashFunc Function to map elements to numbers
  * @constructor
  */
@@ -47,9 +47,13 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         return hashCode;
     });
 
+    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+        throw new Error("initBucketNum must be 2 to the power of n");
+    }
+
     let len = 0;
-    let bucketNum = initBucketNum;
     let hashTable: (LinkListType<Pair<T, K>> | MapType<T, K>)[] = [];
+    let bucketNum = Math.max(HashMap.initSize, Math.min(HashMap.maxSize, initBucketNum));
 
     this.size = function () {
         return len;
