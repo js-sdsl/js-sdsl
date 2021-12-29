@@ -6,6 +6,8 @@ export type MapType<T, K> = {
     back: () => Pair<T, K> | undefined;
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
     find: (element: T) => boolean;
+    lower_bound: (key: T) => Pair<T, K> | undefined;
+    upper_bound: (key: T) => Pair<T, K> | undefined;
     getElementByPos: (pos: number) => Pair<T, K>;
     getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
@@ -71,44 +73,48 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         };
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) {
-        if (!curNode || curNode.key === null) return false;
-        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
-        if (ifReturn) return true;
-        if (callback(curNode)) return true;
-        return inOrderTraversal(curNode.rightChild, callback);
-    };
-
     this.forEach = function (callback: (element: Pair<T, K>, index: number) => void) {
         let index = 0;
-        inOrderTraversal(root, curNode => {
-            if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
-            callback({
-                key: curNode.key,
-                value: curNode.value
-            }, index++);
-            return false;
-        });
+        for (const pair of this) callback(pair, index++);
     };
 
     this.getElementByPos = function (pos: number) {
         if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
         let index = 0;
-        let element: Pair<T, K> | null = null;
-        inOrderTraversal(root, curNode => {
-            if (pos === index) {
-                if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
-                element = {
-                    key: curNode.key,
-                    value: curNode.value
-                };
-                return true;
-            }
+        for (const pair of this) {
+            if (index === pos) return pair;
             ++index;
-            return false;
-        });
-        if (element === null) throw new Error("unknown error");
-        return element;
+        }
+        throw new Error("unknown Error");
+    };
+
+    const _lower_bound: (curNode: TreeNode<T, K> | null, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | null, key: T) {
+        if (!curNode || curNode.key === null || curNode.value === null) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult === 0) return { key: curNode.key, value: curNode.value };
+        if (cmpResult < 0) return _lower_bound(curNode.rightChild, key);
+        return _lower_bound(curNode.leftChild, key) || {
+            key: curNode.key,
+            value: curNode.value
+        };
+    };
+
+    this.lower_bound = function (key: T) {
+        return _lower_bound(root, key);
+    };
+
+    const _upper_bound: (curNode: TreeNode<T, K> | null, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | null, key: T) {
+        if (!curNode || curNode.key === null || curNode.value === null) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult <= 0) return _upper_bound(curNode.rightChild, key);
+        return _upper_bound(curNode.leftChild, key) || {
+            key: curNode.key,
+            value: curNode.value
+        };
+    };
+
+    this.upper_bound = function (key: T) {
+        return _upper_bound(root, key);
     };
 
     const eraseNodeSelfBalance = function (curNode: TreeNode<T, K>) {
@@ -210,6 +216,14 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         if (swapNode) swapNode.remove();
         --len;
         root.color = TreeNode.TreeNodeColorType.black;
+    };
+
+    const inOrderTraversal: (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) {
+        if (!curNode || curNode.key === null) return false;
+        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
+        if (ifReturn) return true;
+        if (callback(curNode)) return true;
+        return inOrderTraversal(curNode.rightChild, callback);
     };
 
     this.eraseElementByPos = function (pos: number) {

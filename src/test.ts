@@ -718,6 +718,17 @@ function testSet(testNum: number) {
         if (!mySdslSet.find(element)) throw new Error("Set test failed!");
     });
 
+    myVector.sort((x, y) => x - y);
+    for (let i = 0; i < myVector.size(); ++i) {
+        if (mySdslSet.lower_bound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+            throw new Error("Set lower_bound test failed!");
+        }
+        if (i !== myVector.size() - 1 && mySdslSet.upper_bound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
+            throw new Error("Set lower_bound test failed!");
+        }
+    }
+    console.log("Set lower_bound and upper_bound test passed.");
+
     for (let i = 0; i < 10000; ++i) {
         mySdslSet.eraseElementByPos(0);
         myVector.eraseElementByPos(0);
@@ -731,6 +742,7 @@ function testSet(testNum: number) {
         }
     }
     judgeSet(mySdslSet, myVector);
+
 
     console.clear();
     console.log("Set test end, all tests passed!");
@@ -779,6 +791,36 @@ function testSet(testNum: number) {
     reportList.push({
         testFunc: "union",
         testNum: 1,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
+    let num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.lower_bound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "lower_bound",
+        testNum: testNum,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.upper_bound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "upper_bound",
+        testNum: testNum,
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
@@ -863,7 +905,7 @@ function testMap(testNum: number) {
     }
     judgeMap(myMap, stdMap);
 
-    for (let i = 0; i < 10000; ++i) {
+    for (let i = 0; i < 100; ++i) {
         const pos = Math.floor(Math.random() * myMap.size());
         const pair = myMap.getElementByPos(pos);
         myMap.eraseElementByPos(pos);
@@ -879,6 +921,25 @@ function testMap(testNum: number) {
     }
     myMap.union(otherMap);
     judgeMap(myMap, stdMap);
+
+    const myVector = new Vector(myMap);
+    myVector.sort((x, y) => x.key - y.key);
+    for (let i = 0; i < myVector.size(); ++i) {
+        let vElement = myVector.getElementByPos(i);
+        let myElement = myMap.lower_bound(vElement.key);
+        if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+            throw new Error("Map lower_bound test failed!");
+        }
+        if (i !== myVector.size() - 1) {
+            vElement = myVector.getElementByPos(i);
+            myElement = myMap.upper_bound(vElement.key);
+            vElement = myVector.getElementByPos(i + 1);
+            if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+                throw new Error("Map upper_bound test failed!");
+            }
+        }
+    }
+    console.log("Map lower_bound and upper_bound test passed.");
 
     console.clear();
     console.log("Map test end, all tests passed!");
@@ -925,6 +986,36 @@ function testMap(testNum: number) {
     reportList.push({
         testFunc: "union",
         testNum: 1,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    let num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.lower_bound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "lower_bound",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.upper_bound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "upper_bound",
+        testNum: testNum,
         containerSize: myMap.size(),
         runTime: endTime - startTime
     });

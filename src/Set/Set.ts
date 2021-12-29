@@ -4,6 +4,8 @@ import { ContainerType } from "../Base/Base";
 export type SetType<T> = {
     insert: (element: T) => void;
     find: (element: T) => boolean;
+    lower_bound: (key: T) => T | undefined;
+    upper_bound: (key: T) => T | undefined;
     union: (other: SetType<T>) => void;
     getHeight: () => number;
 } & ContainerType<T>;
@@ -58,37 +60,19 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         return maxNode.key;
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) => boolean = function (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) {
-        if (!curNode || curNode.key === null) return false;
-        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
-        if (ifReturn) return true;
-        if (callback(curNode)) return true;
-        return inOrderTraversal(curNode.rightChild, callback);
-    };
-
     this.forEach = function (callback: (element: T, index: number) => void) {
         let index = 0;
-        inOrderTraversal(root, curNode => {
-            if (curNode.key === null) throw new Error("unknown error");
-            callback(curNode.key, index++);
-            return false;
-        });
+        for (const element of this) callback(element, index++);
     };
 
     this.getElementByPos = function (pos: number) {
         if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
         let index = 0;
-        let element = null;
-        inOrderTraversal(root, curNode => {
-            if (pos === index) {
-                element = curNode.key;
-                return true;
-            }
+        for (const element of this) {
+            if (index === pos) return element;
             ++index;
-            return false;
-        });
-        if (element === null) throw new Error("unknown error");
-        return element;
+        }
+        throw new Error("unknown error");
     };
 
     const eraseNodeSelfBalance = function (curNode: TreeNode<T, null>) {
@@ -184,6 +168,14 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         if (swapNode) swapNode.remove();
         --len;
         root.color = TreeNode.TreeNodeColorType.black;
+    };
+
+    const inOrderTraversal: (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) => boolean = function (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) {
+        if (!curNode || curNode.key === null) return false;
+        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
+        if (ifReturn) return true;
+        if (callback(curNode)) return true;
+        return inOrderTraversal(curNode.rightChild, callback);
     };
 
     this.eraseElementByPos = function (pos: number) {
@@ -312,6 +304,29 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
     this.find = function (element: T) {
         const curNode = findElementPos(root, element);
         return curNode !== null && curNode.key !== null && cmp(curNode.key, element) === 0;
+    };
+
+    const _lower_bound: (curNode: TreeNode<T, null> | null, key: T) => T | undefined = function (curNode: TreeNode<T, null> | null, key: T) {
+        if (!curNode || curNode.key === null) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult === 0) return curNode.key;
+        if (cmpResult < 0) return _lower_bound(curNode.rightChild, key);
+        return _lower_bound(curNode.leftChild, key) || curNode.key;
+    };
+
+    this.lower_bound = function (key: T) {
+        return _lower_bound(root, key);
+    };
+
+    const _upper_bound: (curNode: TreeNode<T, null> | null, key: T) => T | undefined = function (curNode: TreeNode<T, null> | null, key: T) {
+        if (!curNode || curNode.key === null) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult <= 0) return _upper_bound(curNode.rightChild, key);
+        return _upper_bound(curNode.leftChild, key) || curNode.key;
+    };
+
+    this.upper_bound = function (key: T) {
+        return _upper_bound(root, key);
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
