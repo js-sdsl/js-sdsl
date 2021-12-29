@@ -10,15 +10,14 @@ version when downloading (>= 2.0.0).**
 Unfortunately, I try my best to improve the performance of hash table but failed. Ideally, the hash table should be O(1)
 and in my project when the size of each bucket is 1, its time is much longer than Set and Map.
 
-After analysis, I find the Operator `new` takes cost nearly 2s when the size is 1e6, This seems to be the bottleneck of
-js.
+After analysis, I find the operator `new` costs nearly 2s when the size is 1e6, This seems to be the bottleneck of js.
 
 You can try the following code to verify my statement.
 
 ```javascript
 console.time("run");
 const arr = new Array(1000000);
-arr[1000000] = new Array();
+arr[100000] = new Array();
 console.timeEnd("run");
 ```
 
@@ -29,7 +28,7 @@ If you want to use hash container in js, please use set or map in ES6.
 The official Set and Map are implemented using hash table instead of RBTree.
 
 For more information about js hash table, please refer
-to https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent
+to https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent.
 
 ## Included data structures
 
