@@ -97,12 +97,12 @@
         };
         this.getElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
-                throw new Error("pos muse more than 0 and less than vector's size");
+                throw new Error("pos must more than 0 and less than vector's size");
             return vector[pos];
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
-                throw new Error("pos muse more than 0 and less than vector's size");
+                throw new Error("pos must more than 0 and less than vector's size");
             for (var i = pos; i < len - 1; ++i)
                 vector[i] = vector[i + 1];
             this.pop_back();
@@ -131,13 +131,13 @@
         };
         this.setElementByPos = function (pos, element) {
             if (pos < 0 || pos >= len)
-                throw new Error("pos muse more than 0 and less than vector's size");
+                throw new Error("pos must more than 0 and less than vector's size");
             vector[pos] = element;
         };
         this.insert = function (pos, element, num) {
             if (num === void 0) { num = 1; }
             if (pos < 0 || pos > len)
-                throw new Error("pos muse more than 0 and less than or equal to vector's size");
+                throw new Error("pos must more than 0 and less than or equal to vector's size");
             vector.splice.apply(vector, __spreadArray([pos, 0], __read(new Array(num).fill(element)), false));
             len += num;
         };
@@ -1335,41 +1335,44 @@
                 return undefined;
             return maxNode.key;
         };
-        var inOrderTraversal = function (curNode, callback) {
-            if (!curNode || curNode.key === null)
-                return false;
-            var ifReturn = inOrderTraversal(curNode.leftChild, callback);
-            if (ifReturn)
-                return true;
-            if (callback(curNode))
-                return true;
-            return inOrderTraversal(curNode.rightChild, callback);
-        };
         this.forEach = function (callback) {
+            var e_1, _a;
             var index = 0;
-            inOrderTraversal(root, function (curNode) {
-                if (curNode.key === null)
-                    throw new Error("unknown error");
-                callback(curNode.key, index++);
-                return false;
-            });
+            try {
+                for (var _b = __values$3(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var element = _c.value;
+                    callback(element, index++);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
         };
         this.getElementByPos = function (pos) {
+            var e_2, _a;
             if (pos < 0 || pos >= this.size())
                 throw new Error("pos must more than 0 and less than set's size");
             var index = 0;
-            var element = null;
-            inOrderTraversal(root, function (curNode) {
-                if (pos === index) {
-                    element = curNode.key;
-                    return true;
+            try {
+                for (var _b = __values$3(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var element = _c.value;
+                    if (index === pos)
+                        return element;
+                    ++index;
                 }
-                ++index;
-                return false;
-            });
-            if (element === null)
-                throw new Error("unknown error");
-            return element;
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            throw new Error("unknown error");
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
@@ -1479,6 +1482,16 @@
                 swapNode.remove();
             --len;
             root.color = TreeNode.TreeNodeColorType.black;
+        };
+        var inOrderTraversal = function (curNode, callback) {
+            if (!curNode || curNode.key === null)
+                return false;
+            var ifReturn = inOrderTraversal(curNode.leftChild, callback);
+            if (ifReturn)
+                return true;
+            if (callback(curNode))
+                return true;
+            return inOrderTraversal(curNode.rightChild, callback);
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
@@ -1613,6 +1626,30 @@
         this.find = function (element) {
             var curNode = findElementPos(root, element);
             return curNode !== null && curNode.key !== null && cmp(curNode.key, element) === 0;
+        };
+        var _lower_bound = function (curNode, key) {
+            if (!curNode || curNode.key === null)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult === 0)
+                return curNode.key;
+            if (cmpResult < 0)
+                return _lower_bound(curNode.rightChild, key);
+            return _lower_bound(curNode.leftChild, key) || curNode.key;
+        };
+        this.lower_bound = function (key) {
+            return _lower_bound(root, key);
+        };
+        var _upper_bound = function (curNode, key) {
+            if (!curNode || curNode.key === null)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult <= 0)
+                return _upper_bound(curNode.rightChild, key);
+            return _upper_bound(curNode.leftChild, key) || curNode.key;
+        };
+        this.upper_bound = function (key) {
+            return _upper_bound(root, key);
         };
         // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
@@ -1751,49 +1788,74 @@
                 value: maxNode.value
             };
         };
-        var inOrderTraversal = function (curNode, callback) {
-            if (!curNode || curNode.key === null)
-                return false;
-            var ifReturn = inOrderTraversal(curNode.leftChild, callback);
-            if (ifReturn)
-                return true;
-            if (callback(curNode))
-                return true;
-            return inOrderTraversal(curNode.rightChild, callback);
-        };
         this.forEach = function (callback) {
+            var e_1, _a;
             var index = 0;
-            inOrderTraversal(root, function (curNode) {
-                if (curNode.key === null || curNode.value === null)
-                    throw new Error("unknown error");
-                callback({
-                    key: curNode.key,
-                    value: curNode.value
-                }, index++);
-                return false;
-            });
+            try {
+                for (var _b = __values$2(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var pair = _c.value;
+                    callback(pair, index++);
+                }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
+            }
         };
         this.getElementByPos = function (pos) {
+            var e_2, _a;
             if (pos < 0 || pos >= this.size())
                 throw new Error("pos must more than 0 and less than set's size");
             var index = 0;
-            var element = null;
-            inOrderTraversal(root, function (curNode) {
-                if (pos === index) {
-                    if (curNode.key === null || curNode.value === null)
-                        throw new Error("unknown error");
-                    element = {
-                        key: curNode.key,
-                        value: curNode.value
-                    };
-                    return true;
+            try {
+                for (var _b = __values$2(this), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var pair = _c.value;
+                    if (index === pos)
+                        return pair;
+                    ++index;
                 }
-                ++index;
-                return false;
-            });
-            if (element === null)
-                throw new Error("unknown error");
-            return element;
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            throw new Error("unknown Error");
+        };
+        var _lower_bound = function (curNode, key) {
+            if (!curNode || curNode.key === null || curNode.value === null)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult === 0)
+                return { key: curNode.key, value: curNode.value };
+            if (cmpResult < 0)
+                return _lower_bound(curNode.rightChild, key);
+            return _lower_bound(curNode.leftChild, key) || {
+                key: curNode.key,
+                value: curNode.value
+            };
+        };
+        this.lower_bound = function (key) {
+            return _lower_bound(root, key);
+        };
+        var _upper_bound = function (curNode, key) {
+            if (!curNode || curNode.key === null || curNode.value === null)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult <= 0)
+                return _upper_bound(curNode.rightChild, key);
+            return _upper_bound(curNode.leftChild, key) || {
+                key: curNode.key,
+                value: curNode.value
+            };
+        };
+        this.upper_bound = function (key) {
+            return _upper_bound(root, key);
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
@@ -1909,6 +1971,16 @@
                 swapNode.remove();
             --len;
             root.color = TreeNode.TreeNodeColorType.black;
+        };
+        var inOrderTraversal = function (curNode, callback) {
+            if (!curNode || curNode.key === null)
+                return false;
+            var ifReturn = inOrderTraversal(curNode.leftChild, callback);
+            if (ifReturn)
+                return true;
+            if (callback(curNode))
+                return true;
+            return inOrderTraversal(curNode.rightChild, callback);
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
