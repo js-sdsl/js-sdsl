@@ -105,7 +105,7 @@
                 throw new Error("pos must more than 0 and less than vector's size");
             for (var i = pos; i < len - 1; ++i)
                 vector[i] = vector[i + 1];
-            this.pop_back();
+            this.popBack();
         };
         this.eraseElementByValue = function (value) {
             var newArr = [];
@@ -118,13 +118,13 @@
             });
             var newLen = newArr.length;
             while (len > newLen)
-                this.pop_back();
+                this.popBack();
         };
-        this.push_back = function (element) {
+        this.pushBack = function (element) {
             vector.push(element);
             ++len;
         };
-        this.pop_back = function () {
+        this.popBack = function () {
             vector.pop();
             if (len > 0)
                 --len;
@@ -161,7 +161,7 @@
             });
             var newLen = newArr.length;
             while (len > newLen)
-                this.pop_back();
+                this.popBack();
         };
         this.sort = function (cmp) {
             vector.sort(cmp);
@@ -176,7 +176,7 @@
                 });
             })();
         };
-        container.forEach(function (element) { return _this.push_back(element); });
+        container.forEach(function (element) { return _this.pushBack(element); });
         Object.freeze(this);
     }
     Object.freeze(Vector);
@@ -242,10 +242,10 @@
     };
     var LinkNode = /** @class */ (function () {
         function LinkNode(element) {
-            this.val = null;
-            this.pre = null;
-            this.next = null;
-            this.val = element;
+            this.value = undefined;
+            this.pre = undefined;
+            this.next = undefined;
+            this.value = element;
         }
         return LinkNode;
     }());
@@ -253,8 +253,8 @@
         var _this = this;
         if (container === void 0) { container = []; }
         var len = 0;
-        var head = null;
-        var tail = null;
+        var head = undefined;
+        var tail = undefined;
         this.size = function () {
             return len;
         };
@@ -262,20 +262,22 @@
             return len === 0;
         };
         this.clear = function () {
-            head = tail = null;
+            head = tail = undefined;
             len = 0;
         };
         this.front = function () {
-            return head === null || head === void 0 ? void 0 : head.val;
+            return head === null || head === void 0 ? void 0 : head.value;
         };
         this.back = function () {
-            return tail === null || tail === void 0 ? void 0 : tail.val;
+            return tail === null || tail === void 0 ? void 0 : tail.value;
         };
         this.forEach = function (callback) {
             var curNode = head;
             var index = 0;
-            while (curNode !== null) {
-                callback(curNode.val, index++);
+            while (curNode) {
+                if (curNode.value === undefined)
+                    throw new Error("unknown error");
+                callback(curNode.value, index++);
                 curNode = curNode.next;
             }
         };
@@ -288,20 +290,22 @@
                     break;
                 curNode = curNode.next;
             }
-            return curNode === null || curNode === void 0 ? void 0 : curNode.val;
+            if (!curNode || curNode.value === undefined)
+                throw new Error("unknown error");
+            return curNode.value;
         };
         this.eraseElementByPos = function (pos) {
             if (pos < 0 || pos >= len)
                 throw new Error("erase pos must more then 0 and less then the list length");
             if (pos === 0)
-                this.pop_front();
+                this.popFront();
             else if (pos === len - 1)
-                this.pop_back();
+                this.popBack();
             else {
                 var curNode = head;
                 while (pos--) {
                     if (!(curNode === null || curNode === void 0 ? void 0 : curNode.next))
-                        break;
+                        throw new Error("unknown error");
                     curNode = curNode.next;
                 }
                 if (!curNode || !curNode.pre || !curNode.next) {
@@ -316,15 +320,15 @@
             }
         };
         this.eraseElementByValue = function (value) {
-            while (head && head.val === value)
-                this.pop_front();
-            while (tail && tail.val === value)
-                this.pop_back();
+            while (head && head.value === value)
+                this.popFront();
+            while (tail && tail.value === value)
+                this.popBack();
             if (!head)
                 return;
-            var curNode = head.next;
+            var curNode = head;
             while (curNode) {
-                if (curNode.val === value) {
+                if (curNode.value === value) {
                     var pre = curNode.pre;
                     var next = curNode.next;
                     if (next)
@@ -337,7 +341,10 @@
                 curNode = curNode.next;
             }
         };
-        this.push_back = function (element) {
+        this.pushBack = function (element) {
+            if (element === null || element === undefined) {
+                throw new Error("you can't push null or undefined here");
+            }
             ++len;
             var newTail = new LinkNode(element);
             if (!tail) {
@@ -349,31 +356,36 @@
                 tail = newTail;
             }
         };
-        this.pop_back = function () {
+        this.popBack = function () {
+            if (!tail)
+                return;
             if (len > 0)
                 --len;
             if (!tail)
                 return;
             if (head === tail) {
-                head = tail = null;
+                head = tail = undefined;
             }
             else {
                 tail = tail.pre;
                 if (tail)
-                    tail.next = null;
+                    tail.next = undefined;
             }
         };
         this.setElementByPos = function (pos, element) {
+            if (element === null || element === undefined) {
+                throw new Error("you can't set null or undefined here");
+            }
             if (pos < 0 || pos >= len)
                 throw new Error("pos must more then 0 and less then the list length");
             var curNode = head;
             while (pos--) {
                 if (!curNode)
-                    break;
+                    throw new Error("unknown error");
                 curNode = curNode.next;
             }
             if (curNode)
-                curNode.val = element;
+                curNode.value = element;
         };
         /**
          * @param {number} pos insert element before pos, should in [0, list.size]
@@ -382,23 +394,26 @@
          */
         this.insert = function (pos, element, num) {
             if (num === void 0) { num = 1; }
+            if (element === null || element === undefined) {
+                throw new Error("you can't insert null or undefined here");
+            }
             if (pos < 0 || pos > len)
                 throw new Error("insert pos must more then 0 and less then or equal to the list length");
             if (num < 0)
-                throw new Error("insert size must more then 0");
+                throw new Error("insert size must more than 0");
             if (pos === 0) {
                 while (num--)
-                    this.push_front(element);
+                    this.pushFront(element);
             }
             else if (pos === len) {
                 while (num--)
-                    this.push_back(element);
+                    this.pushBack(element);
             }
             else {
                 var curNode = head;
                 for (var i = 1; i < pos; ++i) {
                     if (!(curNode === null || curNode === void 0 ? void 0 : curNode.next))
-                        break;
+                        throw new Error("unknown error");
                     curNode = curNode === null || curNode === void 0 ? void 0 : curNode.next;
                 }
                 if (!curNode) {
@@ -419,7 +434,7 @@
         this.find = function (element) {
             var curNode = head;
             while (curNode) {
-                if (curNode.val === element)
+                if (curNode.value === element)
                     return true;
                 curNode = curNode.next;
             }
@@ -430,9 +445,9 @@
             var pTail = tail;
             var cnt = 0;
             while (pHead && pTail && cnt * 2 < len) {
-                var tmp = pHead.val;
-                pHead.val = pTail.val;
-                pTail.val = tmp;
+                var tmp = pHead.value;
+                pHead.value = pTail.value;
+                pTail.value = tmp;
                 pHead = pHead.next;
                 pTail = pTail.pre;
                 ++cnt;
@@ -442,12 +457,14 @@
             var curNode = head;
             while (curNode) {
                 var tmpNode = curNode;
-                while (tmpNode && tmpNode.next && tmpNode.val === tmpNode.next.val) {
+                while (tmpNode && tmpNode.next && tmpNode.value === tmpNode.next.value) {
                     tmpNode = tmpNode.next;
                     if (len > 0)
                         --len;
                 }
                 curNode.next = tmpNode.next;
+                if (curNode.next)
+                    curNode.next.pre = curNode;
                 curNode = curNode.next;
             }
         };
@@ -460,12 +477,15 @@
             var curNode = head;
             arr.forEach(function (element) {
                 if (curNode) {
-                    curNode.val = element;
+                    curNode.value = element;
                     curNode = curNode.next;
                 }
             });
         };
-        this.push_front = function (element) {
+        this.pushFront = function (element) {
+            if (element === null || element === undefined) {
+                throw new Error("you can't push null or undefined here");
+            }
             ++len;
             var newHead = new LinkNode(element);
             if (!head) {
@@ -477,18 +497,20 @@
                 head = newHead;
             }
         };
-        this.pop_front = function () {
+        this.popFront = function () {
+            if (!head)
+                return;
             if (len > 0)
                 --len;
             if (!head)
                 return;
             if (head === tail) {
-                head = tail = null;
+                head = tail = undefined;
             }
             else {
                 head = head.next;
                 if (head)
-                    head.pre = null;
+                    head.pre = undefined;
             }
         };
         /**
@@ -499,15 +521,15 @@
             var _this = this;
             var curNode = head;
             list.forEach(function (element) {
-                while (curNode && curNode.val <= element) {
+                while (curNode && curNode.value !== undefined && curNode.value <= element) {
                     curNode = curNode.next;
                 }
-                if (!curNode) {
-                    _this.push_back(element);
+                if (curNode === undefined) {
+                    _this.pushBack(element);
                     curNode = tail;
                 }
                 else if (curNode === head) {
-                    _this.push_front(element);
+                    _this.pushFront(element);
                     curNode = head;
                 }
                 else {
@@ -532,8 +554,10 @@
                             curNode = head;
                             _a.label = 1;
                         case 1:
-                            if (!(curNode !== null)) return [3 /*break*/, 3];
-                            return [4 /*yield*/, curNode.val];
+                            if (!(curNode !== undefined)) return [3 /*break*/, 3];
+                            if (!curNode.value)
+                                throw new Error("unknown error");
+                            return [4 /*yield*/, curNode.value];
                         case 2:
                             _a.sent();
                             curNode = curNode.next;
@@ -543,7 +567,7 @@
                 });
             })();
         };
-        container.forEach(function (element) { return _this.push_back(element); });
+        container.forEach(function (element) { return _this.pushBack(element); });
         Object.freeze(this);
     }
     Object.freeze(LinkList);
@@ -561,10 +585,10 @@
             queue.clear();
         };
         this.push = function (element) {
-            queue.push_back(element);
+            queue.pushBack(element);
         };
         this.pop = function () {
-            queue.pop_front();
+            queue.popFront();
         };
         this.front = function () {
             return queue.front();
@@ -602,39 +626,16 @@
     };
     Deque.sigma = 3; // growth factor
     Deque.bucketSize = 5000;
-    function Deque(arr) {
-        if (arr === void 0) { arr = []; }
+    function Deque(container) {
+        var _this = this;
+        if (container === void 0) { container = []; }
         var map = [];
         var first = 0;
         var curFirst = 0;
         var last = 0;
         var curLast = 0;
         var bucketNum = 0;
-        var len = arr.length;
-        var needSize = len * Deque.sigma;
-        bucketNum = Math.ceil(needSize / Deque.bucketSize);
-        bucketNum = Math.max(bucketNum, 3);
-        for (var i = 0; i < bucketNum; ++i) {
-            map.push(new Array(Deque.bucketSize));
-        }
-        var needBucketNum = Math.ceil(len / Deque.bucketSize);
-        first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
-        last = first;
-        if (len > 0) {
-            var cnt = 0;
-            for (var i = 0; i < needBucketNum; ++i) {
-                for (var j = 0; j < Deque.bucketSize; ++j) {
-                    map[first + i][j] = arr[cnt++];
-                    if (cnt >= len) {
-                        last = first + i;
-                        curLast = j;
-                        break;
-                    }
-                }
-                if (cnt >= len)
-                    break;
-            }
-        }
+        var len = 0;
         this.size = function () {
             return len;
         };
@@ -696,17 +697,17 @@
             if (pos < 0 || pos > len)
                 throw new Error("pos should more than 0 and less than queue's size");
             if (pos === 0)
-                this.pop_front();
+                this.popFront();
             else if (pos === this.size())
-                this.pop_back();
+                this.popBack();
             else {
-                var arr_1 = [];
+                var arr = [];
                 for (var i = pos + 1; i < len; ++i) {
-                    arr_1.push(this.getElementByPos(i));
+                    arr.push(this.getElementByPos(i));
                 }
                 this.cut(pos);
-                this.pop_back();
-                arr_1.forEach(function (element) { return _this.push_back(element); });
+                this.popBack();
+                arr.forEach(function (element) { return _this.pushBack(element); });
             }
         };
         this.eraseElementByValue = function (value) {
@@ -737,7 +738,7 @@
                 for (var i = 0; i < needBucketNum; ++i) {
                     for (var j = 0; j < Deque.bucketSize; ++j) {
                         newMap[newFirst + i][j] = this.front();
-                        this.pop_front();
+                        this.popFront();
                         if (this.empty()) {
                             newLast = newFirst + i;
                             newCurLast = j;
@@ -756,7 +757,7 @@
             bucketNum = newBucketNum;
             len = originalSize;
         };
-        this.push_back = function (element) {
+        this.pushBack = function (element) {
             if (!this.empty()) {
                 if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
                     reAllocate.call(this, this.size());
@@ -772,7 +773,7 @@
             ++len;
             map[last][curLast] = element;
         };
-        this.pop_back = function () {
+        this.popBack = function () {
             if (this.empty())
                 return;
             if (this.size() !== 1) {
@@ -801,21 +802,21 @@
             if (num === void 0) { num = 1; }
             if (pos === 0) {
                 while (num--)
-                    this.push_front(element);
+                    this.pushFront(element);
             }
             else if (pos === this.size()) {
                 while (num--)
-                    this.push_back(element);
+                    this.pushBack(element);
             }
             else {
-                var arr_2 = [];
+                var arr = [];
                 for (var i = pos; i < len; ++i) {
-                    arr_2.push(this.getElementByPos(i));
+                    arr.push(this.getElementByPos(i));
                 }
                 this.cut(pos - 1);
                 for (var i = 0; i < num; ++i)
-                    this.push_back(element);
-                arr_2.forEach(function (element) { return _this.push_back(element); });
+                    this.pushBack(element);
+                arr.forEach(function (element) { return _this.pushBack(element); });
             }
         };
         this.find = function (element) {
@@ -877,7 +878,7 @@
             for (var i = 0; i < len; ++i)
                 this.setElementByPos(i, arr[i]);
         };
-        this.push_front = function (element) {
+        this.pushFront = function (element) {
             if (!this.empty()) {
                 if (first === 0 && curFirst === 0) {
                     reAllocate.call(this, this.size());
@@ -893,7 +894,7 @@
             ++len;
             map[first][curFirst] = element;
         };
-        this.pop_front = function () {
+        this.popFront = function () {
             if (this.empty())
                 return;
             if (this.size() !== 1) {
@@ -912,6 +913,7 @@
          * reduces memory usage by freeing unused memory
          */
         this.shrinkToFit = function () {
+            var _this = this;
             var arr = [];
             this.forEach(function (element) {
                 arr.push(element);
@@ -923,21 +925,10 @@
                 map.push(new Array(Deque.bucketSize));
             }
             this.clear();
-            var cnt = 0;
-            for (var i = 0; i < bucketNum; ++i) {
-                for (var j = 0; j < Deque.bucketSize; ++j) {
-                    map[i][j] = arr[cnt++];
-                    if (cnt >= _len) {
-                        last = i;
-                        curLast = j;
-                        break;
-                    }
-                }
-            }
-            len = _len;
+            arr.forEach(function (element) { return _this.pushBack(element); });
         };
         /**
-         * @param pos cut element after pos
+         * @param pos cut elements after pos
          */
         this.cut = function (pos) {
             if (pos < 0) {
@@ -1018,6 +1009,25 @@
                 });
             })();
         };
+        (function () {
+            var _len = Deque.bucketSize;
+            if (container.size) {
+                _len = container.size();
+            }
+            else if (container.length) {
+                _len = container.length;
+            }
+            var needSize = _len * Deque.sigma;
+            bucketNum = Math.ceil(needSize / Deque.bucketSize);
+            bucketNum = Math.max(bucketNum, 3);
+            for (var i = 0; i < bucketNum; ++i) {
+                map.push(new Array(Deque.bucketSize));
+            }
+            var needBucketNum = Math.ceil(_len / Deque.bucketSize);
+            first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
+            last = first;
+            container.forEach(function (element) { return _this.pushBack(element); });
+        })();
         Object.freeze(this);
     }
     Object.freeze(Deque);
@@ -1058,22 +1068,24 @@
             if (rightChild < len && cmp(priorityQueue[parent], priorityQueue[rightChild]) > 0)
                 swap(parent, rightChild);
         };
-        for (var parent_1 = Math.floor((len - 1) / 2); parent_1 >= 0; --parent_1) {
-            var curParent = parent_1;
-            var curChild = curParent * 2 + 1;
-            while (curChild < len) {
-                var leftChild = curChild;
-                var rightChild = leftChild + 1;
-                var minChild = leftChild;
-                if (rightChild < len && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0)
-                    minChild = rightChild;
-                if (cmp(priorityQueue[curParent], priorityQueue[minChild]) <= 0)
-                    break;
-                swap(curParent, minChild);
-                curParent = minChild;
-                curChild = curParent * 2 + 1;
+        (function () {
+            for (var parent_1 = Math.floor((len - 1) / 2); parent_1 >= 0; --parent_1) {
+                var curParent = parent_1;
+                var curChild = curParent * 2 + 1;
+                while (curChild < len) {
+                    var leftChild = curChild;
+                    var rightChild = leftChild + 1;
+                    var minChild = leftChild;
+                    if (rightChild < len && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0)
+                        minChild = rightChild;
+                    if (cmp(priorityQueue[curParent], priorityQueue[minChild]) <= 0)
+                        break;
+                    swap(curParent, minChild);
+                    curParent = minChild;
+                    curChild = curParent * 2 + 1;
+                }
             }
-        }
+        })();
         this.size = function () {
             return len;
         };
@@ -1133,16 +1145,14 @@
     var TreeNode = /** @class */ (function () {
         function TreeNode(key, value) {
             this.color = true;
-            this.key = null;
-            this.value = null;
-            this.parent = null;
-            this.brother = null;
-            this.leftChild = null;
-            this.rightChild = null;
-            if (key !== undefined && value !== undefined) {
-                this.key = key;
-                this.value = value;
-            }
+            this.key = undefined;
+            this.value = undefined;
+            this.parent = undefined;
+            this.brother = undefined;
+            this.leftChild = undefined;
+            this.rightChild = undefined;
+            this.key = key;
+            this.value = value;
         }
         TreeNode.prototype.rotateLeft = function () {
             var PP = this.parent;
@@ -1227,16 +1237,16 @@
                 throw new Error("can only remove leaf node");
             if (this.parent) {
                 if (this === this.parent.leftChild)
-                    this.parent.leftChild = null;
+                    this.parent.leftChild = undefined;
                 else if (this === this.parent.rightChild)
-                    this.parent.rightChild = null;
+                    this.parent.rightChild = undefined;
             }
             if (this.brother)
-                this.brother.brother = null;
-            this.key = null;
-            this.value = null;
-            this.parent = null;
-            this.brother = null;
+                this.brother.brother = undefined;
+            this.key = undefined;
+            this.value = undefined;
+            this.parent = undefined;
+            this.brother = undefined;
         };
         TreeNode.TreeNodeColorType = {
             red: true,
@@ -1305,17 +1315,17 @@
         };
         this.clear = function () {
             len = 0;
-            root.leftChild = root.rightChild = root.brother = root.parent = null;
-            root.key = null;
+            root.key = undefined;
+            root.leftChild = root.rightChild = root.brother = root.parent = undefined;
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var findSubTreeMinNode = function (curNode) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
         };
         var findSubTreeMaxNode = function (curNode) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
         };
@@ -1323,16 +1333,12 @@
             if (this.empty())
                 return undefined;
             var minNode = findSubTreeMinNode(root);
-            if (minNode.key === null)
-                return undefined;
             return minNode.key;
         };
         this.back = function () {
             if (this.empty())
                 return undefined;
             var maxNode = findSubTreeMaxNode(root);
-            if (maxNode.key === null)
-                return undefined;
             return maxNode.key;
         };
         this.forEach = function (callback) {
@@ -1484,7 +1490,7 @@
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var inOrderTraversal = function (curNode, callback) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 return false;
             var ifReturn = inOrderTraversal(curNode.leftChild, callback);
             if (ifReturn)
@@ -1510,12 +1516,12 @@
             if (this.empty())
                 return;
             var curNode = findElementPos(root, value);
-            if (curNode === null || curNode.key === null || cmp(curNode.key, value) !== 0)
+            if (curNode === undefined || curNode.key === undefined || cmp(curNode.key, value) !== 0)
                 return;
             eraseNode(curNode);
         };
         var findInsertPos = function (curNode, element) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             var cmpResult = cmp(element, curNode.key);
             if (cmpResult < 0) {
@@ -1606,7 +1612,7 @@
                 return;
             }
             var curNode = findInsertPos(root, element);
-            if (curNode.key !== null && cmp(curNode.key, element) === 0)
+            if (curNode.key !== undefined && cmp(curNode.key, element) === 0)
                 return;
             ++len;
             curNode.key = element;
@@ -1614,8 +1620,8 @@
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var findElementPos = function (curNode, element) {
-            if (!curNode || curNode.key === null)
-                return null;
+            if (!curNode || curNode.key === undefined)
+                return undefined;
             var cmpResult = cmp(element, curNode.key);
             if (cmpResult < 0)
                 return findElementPos(curNode.leftChild, element);
@@ -1625,31 +1631,31 @@
         };
         this.find = function (element) {
             var curNode = findElementPos(root, element);
-            return curNode !== null && curNode.key !== null && cmp(curNode.key, element) === 0;
+            return curNode !== undefined && curNode.key !== undefined && cmp(curNode.key, element) === 0;
         };
-        var _lower_bound = function (curNode, key) {
-            if (!curNode || curNode.key === null)
+        var _lowerBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
                 return curNode.key;
             if (cmpResult < 0)
-                return _lower_bound(curNode.rightChild, key);
-            return _lower_bound(curNode.leftChild, key) || curNode.key;
+                return _lowerBound(curNode.rightChild, key);
+            return _lowerBound(curNode.leftChild, key) || curNode.key;
         };
-        this.lower_bound = function (key) {
-            return _lower_bound(root, key);
+        this.lowerBound = function (key) {
+            return _lowerBound(root, key);
         };
-        var _upper_bound = function (curNode, key) {
-            if (!curNode || curNode.key === null)
+        var _upperBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult <= 0)
-                return _upper_bound(curNode.rightChild, key);
-            return _upper_bound(curNode.leftChild, key) || curNode.key;
+                return _upperBound(curNode.rightChild, key);
+            return _upperBound(curNode.leftChild, key) || curNode.key;
         };
-        this.upper_bound = function (key) {
-            return _upper_bound(root, key);
+        this.upperBound = function (key) {
+            return _upperBound(root, key);
         };
         // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
@@ -1671,7 +1677,7 @@
             return __generator$3(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!curNode || curNode.key === null)
+                        if (!curNode || curNode.key === undefined)
                             return [2 /*return*/];
                         return [5 /*yield**/, __values$3(iterationFunc(curNode.leftChild))];
                     case 1:
@@ -1753,16 +1759,16 @@
         };
         this.clear = function () {
             len = 0;
-            root = new TreeNode();
-            root.color = TreeNode.TreeNodeColorType.black;
+            root.key = root.value = undefined;
+            root.leftChild = root.rightChild = root.brother = undefined;
         };
         var findSubTreeMinNode = function (curNode) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
         };
         var findSubTreeMaxNode = function (curNode) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
         };
@@ -1770,7 +1776,7 @@
             if (this.empty())
                 return undefined;
             var minNode = findSubTreeMinNode(root);
-            if (minNode.key === null || minNode.value === null)
+            if (minNode.key === undefined || minNode.value === undefined)
                 throw new Error("unknown error");
             return {
                 key: minNode.key,
@@ -1781,7 +1787,7 @@
             if (this.empty())
                 return undefined;
             var maxNode = findSubTreeMaxNode(root);
-            if (maxNode.key === null || maxNode.value === null)
+            if (maxNode.key === undefined || maxNode.value === undefined)
                 throw new Error("unknown error");
             return {
                 key: maxNode.key,
@@ -1827,35 +1833,35 @@
             }
             throw new Error("unknown Error");
         };
-        var _lower_bound = function (curNode, key) {
-            if (!curNode || curNode.key === null || curNode.value === null)
+        var _lowerBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined || curNode.value === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
                 return { key: curNode.key, value: curNode.value };
             if (cmpResult < 0)
-                return _lower_bound(curNode.rightChild, key);
-            return _lower_bound(curNode.leftChild, key) || {
+                return _lowerBound(curNode.rightChild, key);
+            return _lowerBound(curNode.leftChild, key) || {
                 key: curNode.key,
                 value: curNode.value
             };
         };
-        this.lower_bound = function (key) {
-            return _lower_bound(root, key);
+        this.lowerBound = function (key) {
+            return _lowerBound(root, key);
         };
-        var _upper_bound = function (curNode, key) {
-            if (!curNode || curNode.key === null || curNode.value === null)
+        var _upperBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined || curNode.value === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult <= 0)
-                return _upper_bound(curNode.rightChild, key);
-            return _upper_bound(curNode.leftChild, key) || {
+                return _upperBound(curNode.rightChild, key);
+            return _upperBound(curNode.leftChild, key) || {
                 key: curNode.key,
                 value: curNode.value
             };
         };
-        this.upper_bound = function (key) {
-            return _upper_bound(root, key);
+        this.upperBound = function (key) {
+            return _upperBound(root, key);
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
@@ -1973,7 +1979,7 @@
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var inOrderTraversal = function (curNode, callback) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 return false;
             var ifReturn = inOrderTraversal(curNode.leftChild, callback);
             if (ifReturn)
@@ -1999,12 +2005,12 @@
             if (this.empty())
                 return;
             var curNode = findElementPos(root, key);
-            if (curNode === null || curNode.key === null || cmp(curNode.key, key) !== 0)
+            if (curNode === undefined || curNode.key === undefined || cmp(curNode.key, key) !== 0)
                 return;
             eraseNode(curNode);
         };
         var findInsertPos = function (curNode, element) {
-            if (!curNode || curNode.key === null)
+            if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
             var cmpResult = cmp(element, curNode.key);
             if (cmpResult < 0) {
@@ -2100,7 +2106,7 @@
                 return;
             }
             var curNode = findInsertPos(root, key);
-            if (curNode.key !== null && cmp(curNode.key, key) === 0) {
+            if (curNode.key !== undefined && cmp(curNode.key, key) === 0) {
                 curNode.value = value;
                 return;
             }
@@ -2111,8 +2117,8 @@
             root.color = TreeNode.TreeNodeColorType.black;
         };
         var findElementPos = function (curNode, element) {
-            if (!curNode || curNode.key === null)
-                return null;
+            if (!curNode || curNode.key === undefined)
+                return undefined;
             var cmpResult = cmp(element, curNode.key);
             if (cmpResult < 0)
                 return findElementPos(curNode.leftChild, element);
@@ -2125,9 +2131,7 @@
         };
         this.getElementByKey = function (element) {
             var curNode = findElementPos(root, element);
-            if (curNode === null)
-                return undefined;
-            if (curNode.key === null || curNode.value === null)
+            if ((curNode === null || curNode === void 0 ? void 0 : curNode.key) === undefined || (curNode === null || curNode === void 0 ? void 0 : curNode.value) === undefined)
                 throw new Error("unknown error");
             return curNode.value;
         };
@@ -2154,7 +2158,7 @@
             return __generator$2(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!curNode || curNode.key === null || curNode.value === null)
+                        if (!curNode || curNode.key === undefined || curNode.value === undefined)
                             return [2 /*return*/];
                         return [5 /*yield**/, __values$2(iterationFunc(curNode.leftChild))];
                     case 1:
@@ -2303,18 +2307,18 @@
                     container.forEach(function (element) {
                         var hashCode = hashFunc(element);
                         if ((hashCode & originalBucketNum) === 0) {
-                            lowList_1.push_back(element);
+                            lowList_1.pushBack(element);
                         }
                         else
-                            highList_1.push_back(element);
+                            highList_1.pushBack(element);
                     });
                     if (lowList_1.size() > HashSet.untreeifyThreshold)
-                        lowList_1 = new Set(lowList_1);
-                    if (highList_1.size() > HashSet.untreeifyThreshold)
-                        highList_1 = new Set(highList_1);
-                    if (lowList_1.size())
+                        newHashTable[index] = new Set(lowList_1);
+                    else if (lowList_1.size())
                         newHashTable[index] = lowList_1;
-                    if (highList_1.size())
+                    if (highList_1.size() > HashSet.untreeifyThreshold)
+                        newHashTable[index + originalBucketNum] = new Set(highList_1);
+                    else if (highList_1.size())
                         newHashTable[index + originalBucketNum] = highList_1;
                 }
                 else {
@@ -2323,10 +2327,10 @@
                     container.forEach(function (element) {
                         var hashCode = hashFunc(element);
                         if ((hashCode & originalBucketNum) === 0) {
-                            lowList_2.push_back(element);
+                            lowList_2.pushBack(element);
                         }
                         else
-                            highList_2.push_back(element);
+                            highList_2.pushBack(element);
                     });
                     if (lowList_2.size())
                         newHashTable[index] = lowList_2;
@@ -2351,7 +2355,7 @@
                 if (hashTable[index] instanceof LinkList) {
                     if (hashTable[index].find(element))
                         return;
-                    hashTable[index].push_back(element);
+                    hashTable[index].pushBack(element);
                     if (hashTable[index].size() >= HashSet.treeifyThreshold) {
                         hashTable[index] = new Set(hashTable[index]);
                     }
@@ -2574,18 +2578,18 @@
                     container.forEach(function (pair) {
                         var hashCode = hashFunc(pair.key);
                         if ((hashCode & originalBucketNum) === 0) {
-                            lowList_1.push_back(pair);
+                            lowList_1.pushBack(pair);
                         }
                         else
-                            highList_1.push_back(pair);
+                            highList_1.pushBack(pair);
                     });
                     if (lowList_1.size() > HashMap.untreeifyThreshold)
-                        lowList_1 = new Map(lowList_1);
-                    if (highList_1.size() > HashMap.untreeifyThreshold)
-                        highList_1 = new Map(highList_1);
-                    if (lowList_1.size())
+                        newHashTable[index] = new Map(lowList_1);
+                    else if (lowList_1.size())
                         newHashTable[index] = lowList_1;
-                    if (highList_1.size())
+                    if (highList_1.size() > HashMap.untreeifyThreshold)
+                        newHashTable[index + originalBucketNum] = new Map(highList_1);
+                    else if (highList_1.size())
                         newHashTable[index + originalBucketNum] = highList_1;
                 }
                 else {
@@ -2594,10 +2598,10 @@
                     container.forEach(function (pair) {
                         var hashCode = hashFunc(pair.key);
                         if ((hashCode & originalBucketNum) === 0) {
-                            lowList_2.push_back(pair);
+                            lowList_2.pushBack(pair);
                         }
                         else
-                            highList_2.push_back(pair);
+                            highList_2.pushBack(pair);
                     });
                     if (lowList_2.size())
                         newHashTable[index] = lowList_2;
@@ -2641,7 +2645,7 @@
                         }
                         finally { if (e_2) throw e_2.error; }
                     }
-                    hashTable[index].push_back({
+                    hashTable[index].pushBack({
                         key: key,
                         value: value,
                     });
