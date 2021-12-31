@@ -38,20 +38,22 @@ function PriorityQueue<T>(this: PriorityQueue<T>, container: { forEach: (callbac
         if (rightChild < len && cmp(priorityQueue[parent], priorityQueue[rightChild]) > 0) swap(parent, rightChild);
     };
 
-    for (let parent = Math.floor((len - 1) / 2); parent >= 0; --parent) {
-        let curParent = parent;
-        let curChild = curParent * 2 + 1;
-        while (curChild < len) {
-            const leftChild = curChild;
-            const rightChild = leftChild + 1;
-            let minChild = leftChild;
-            if (rightChild < len && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0) minChild = rightChild;
-            if (cmp(priorityQueue[curParent], priorityQueue[minChild]) <= 0) break;
-            swap(curParent, minChild);
-            curParent = minChild;
-            curChild = curParent * 2 + 1;
+    (() => {
+        for (let parent = Math.floor((len - 1) / 2); parent >= 0; --parent) {
+            let curParent = parent;
+            let curChild = curParent * 2 + 1;
+            while (curChild < len) {
+                const leftChild = curChild;
+                const rightChild = leftChild + 1;
+                let minChild = leftChild;
+                if (rightChild < len && cmp(priorityQueue[leftChild], priorityQueue[rightChild]) > 0) minChild = rightChild;
+                if (cmp(priorityQueue[curParent], priorityQueue[minChild]) <= 0) break;
+                swap(curParent, minChild);
+                curParent = minChild;
+                curChild = curParent * 2 + 1;
+            }
         }
-    }
+    })();
 
     this.size = function () {
         return len;
@@ -110,4 +112,4 @@ function PriorityQueue<T>(this: PriorityQueue<T>, container: { forEach: (callbac
 
 Object.freeze(PriorityQueue);
 
-export default (PriorityQueue as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueue<T> });
+export default (PriorityQueue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueue<T> });

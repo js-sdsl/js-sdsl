@@ -23,11 +23,11 @@ function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element:
     };
 
     this.push = function (element: T) {
-        queue.push_back(element);
+        queue.pushBack(element);
     };
 
     this.pop = function () {
-        queue.pop_front();
+        queue.popFront();
     };
 
     this.front = function () {
@@ -39,4 +39,4 @@ function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element:
 
 Object.freeze(Queue);
 
-export default (Queue as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });
+export default (Queue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });

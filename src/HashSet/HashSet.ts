@@ -93,8 +93,8 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
                 container.forEach(element => {
                     const hashCode = hashFunc(element);
                     if ((hashCode & originalBucketNum) === 0) {
-                        lowList.push_back(element);
-                    } else highList.push_back(element);
+                        lowList.pushBack(element);
+                    } else highList.pushBack(element);
                 });
                 if (lowList.size() > HashSet.untreeifyThreshold) lowList = new Set<T>(lowList);
                 if (highList.size() > HashSet.untreeifyThreshold) highList = new Set<T>(highList);
@@ -106,8 +106,8 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
                 container.forEach(element => {
                     const hashCode = hashFunc(element);
                     if ((hashCode & originalBucketNum) === 0) {
-                        lowList.push_back(element);
-                    } else highList.push_back(element);
+                        lowList.pushBack(element);
+                    } else highList.pushBack(element);
                 });
                 if (lowList.size()) newHashTable[index] = lowList;
                 if (highList.size()) newHashTable[index + originalBucketNum] = highList;
@@ -129,7 +129,7 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
             const preSize = hashTable[index].size();
             if (hashTable[index] instanceof LinkList) {
                 if (hashTable[index].find(element)) return;
-                hashTable[index].push_back(element);
+                hashTable[index].pushBack(element);
                 if (hashTable[index].size() >= HashSet.treeifyThreshold) {
                     hashTable[index] = new Set<T>(hashTable[index]);
                 }
@@ -181,4 +181,4 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
 
 Object.freeze(HashSet);
 
-export default (HashSet as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });
+export default (HashSet as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });

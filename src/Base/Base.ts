@@ -17,8 +17,8 @@ export type ContainerType<T> = {
 
 export type SequentialContainerType<T> = {
     forEach: (callback: (element: T, index: number) => void) => void;
-    push_back: (element: T) => void;
-    pop_back: () => void;
+    pushBack: (element: T) => void;
+    popBack: () => void;
     setElementByPos: (pos: number, element: T) => void;
     insert: (pos: number, element: T, num?: number) => void;
     reverse: () => void;

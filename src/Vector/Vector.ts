@@ -41,7 +41,7 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     this.eraseElementByPos = function (pos: number) {
         if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than vector's size");
         for (let i = pos; i < len - 1; ++i) vector[i] = vector[i + 1];
-        this.pop_back();
+        this.popBack();
     };
 
     this.eraseElementByValue = function (value: T) {
@@ -53,15 +53,15 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
             vector[index] = element;
         });
         const newLen = newArr.length;
-        while (len > newLen) this.pop_back();
+        while (len > newLen) this.popBack();
     };
 
-    this.push_back = function (element: T) {
+    this.pushBack = function (element: T) {
         vector.push(element);
         ++len;
     };
 
-    this.pop_back = function () {
+    this.popBack = function () {
         vector.pop();
         if (len > 0) --len;
     };
@@ -98,7 +98,7 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
             vector[index] = element;
         });
         const newLen = newArr.length;
-        while (len > newLen) this.pop_back();
+        while (len > newLen) this.popBack();
     };
 
     this.sort = function (cmp?: (x: T, y: T) => number) {
@@ -111,11 +111,11 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
         })();
     };
 
-    container.forEach(element => this.push_back(element));
+    container.forEach(element => this.pushBack(element));
 
     Object.freeze(this);
 }
 
 Object.freeze(Vector);
 
-export default (Vector as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });
+export default (Vector as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });

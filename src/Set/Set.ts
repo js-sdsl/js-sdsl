@@ -4,8 +4,8 @@ import { ContainerType } from "../Base/Base";
 export type SetType<T> = {
     insert: (element: T) => void;
     find: (element: T) => boolean;
-    lower_bound: (key: T) => T | undefined;
-    upper_bound: (key: T) => T | undefined;
+    lowerBound: (key: T) => T | undefined;
+    upperBound: (key: T) => T | undefined;
     union: (other: SetType<T>) => void;
     getHeight: () => number;
 } & ContainerType<T>;
@@ -18,7 +18,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
     });
 
     let len = 0;
-    let root = new TreeNode<T, null>();
+    let root = new TreeNode<T, undefined>();
     root.color = TreeNode.TreeNodeColorType.black;
 
     this.size = function () {
@@ -31,32 +31,30 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
     this.clear = function () {
         len = 0;
-        root.leftChild = root.rightChild = root.brother = root.parent = null;
-        root.key = null;
+        root.key = undefined;
+        root.leftChild = root.rightChild = root.brother = root.parent = undefined;
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findSubTreeMinNode: (curNode: TreeNode<T, null>) => TreeNode<T, null> = function (curNode: TreeNode<T, null>) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+    const findSubTreeMinNode: (curNode: TreeNode<T, undefined>) => TreeNode<T, undefined> = function (curNode: TreeNode<T, undefined>) {
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
     };
 
-    const findSubTreeMaxNode: (curNode: TreeNode<T, null>) => TreeNode<T, null> = function (curNode: TreeNode<T, null>) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+    const findSubTreeMaxNode: (curNode: TreeNode<T, undefined>) => TreeNode<T, undefined> = function (curNode: TreeNode<T, undefined>) {
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
     };
 
     this.front = function () {
         if (this.empty()) return undefined;
         const minNode = findSubTreeMinNode(root);
-        if (minNode.key === null) return undefined;
         return minNode.key;
     };
 
     this.back = function () {
         if (this.empty()) return undefined;
         const maxNode = findSubTreeMaxNode(root);
-        if (maxNode.key === null) return undefined;
         return maxNode.key;
     };
 
@@ -75,7 +73,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         throw new Error("unknown error");
     };
 
-    const eraseNodeSelfBalance = function (curNode: TreeNode<T, null>) {
+    const eraseNodeSelfBalance = function (curNode: TreeNode<T, undefined>) {
         const parentNode = curNode.parent;
         if (!parentNode) {
             if (curNode === root) return;
@@ -145,8 +143,8 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         }
     };
 
-    const eraseNode = function (curNode: TreeNode<T, null>) {
-        let swapNode: TreeNode<T, null> = curNode;
+    const eraseNode = function (curNode: TreeNode<T, undefined>) {
+        let swapNode: TreeNode<T, undefined> = curNode;
         while (swapNode.leftChild || swapNode.rightChild) {
             if (swapNode.rightChild) {
                 swapNode = findSubTreeMinNode(swapNode.rightChild);
@@ -170,8 +168,8 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) => boolean = function (curNode: TreeNode<T, null> | null, callback: (curNode: TreeNode<T, null>) => boolean) {
-        if (!curNode || curNode.key === null) return false;
+    const inOrderTraversal: (curNode: TreeNode<T, undefined> | undefined, callback: (curNode: TreeNode<T, undefined>) => boolean) => boolean = function (curNode: TreeNode<T, undefined> | undefined, callback: (curNode: TreeNode<T, undefined>) => boolean) {
+        if (!curNode || curNode.key === undefined) return false;
         const ifReturn = inOrderTraversal(curNode.leftChild, callback);
         if (ifReturn) return true;
         if (callback(curNode)) return true;
@@ -195,17 +193,17 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         if (this.empty()) return;
 
         const curNode = findElementPos(root, value);
-        if (curNode === null || curNode.key === null || cmp(curNode.key, value) !== 0) return;
+        if (curNode === undefined || curNode.key === undefined || cmp(curNode.key, value) !== 0) return;
 
         eraseNode(curNode);
     };
 
-    const findInsertPos: (curNode: TreeNode<T, null>, element: T) => TreeNode<T, null> = function (curNode: TreeNode<T, null>, element: T) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+    const findInsertPos: (curNode: TreeNode<T, undefined>, element: T) => TreeNode<T, undefined> = function (curNode: TreeNode<T, undefined>, element: T) {
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) {
             if (!curNode.leftChild) {
-                curNode.leftChild = new TreeNode<T, null>();
+                curNode.leftChild = new TreeNode<T, undefined>();
                 curNode.leftChild.parent = curNode;
                 curNode.leftChild.brother = curNode.rightChild;
                 if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
@@ -214,7 +212,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
             return findInsertPos(curNode.leftChild, element);
         } else if (cmpResult > 0) {
             if (!curNode.rightChild) {
-                curNode.rightChild = new TreeNode<T, null>();
+                curNode.rightChild = new TreeNode<T, undefined>();
                 curNode.rightChild.parent = curNode;
                 curNode.rightChild.brother = curNode.leftChild;
                 if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
@@ -225,7 +223,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         return curNode;
     };
 
-    const insertNodeSelfBalance = function (curNode: TreeNode<T, null>) {
+    const insertNodeSelfBalance = function (curNode: TreeNode<T, undefined>) {
         const parentNode = curNode.parent;
         if (!parentNode) {
             if (curNode === root) return;
@@ -284,7 +282,7 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         }
 
         const curNode = findInsertPos(root, element);
-        if (curNode.key !== null && cmp(curNode.key, element) === 0) return;
+        if (curNode.key !== undefined && cmp(curNode.key, element) === 0) return;
 
         ++len;
         curNode.key = element;
@@ -293,8 +291,8 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findElementPos: (curNode: TreeNode<T, null> | null, element: T) => TreeNode<T, null> | null = function (curNode: TreeNode<T, null> | null, element: T) {
-        if (!curNode || curNode.key === null) return null;
+    const findElementPos: (curNode: TreeNode<T, undefined> | undefined, element: T) => TreeNode<T, undefined> | undefined = function (curNode: TreeNode<T, undefined> | undefined, element: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) return findElementPos(curNode.leftChild, element);
         else if (cmpResult > 0) return findElementPos(curNode.rightChild, element);
@@ -303,30 +301,30 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
     this.find = function (element: T) {
         const curNode = findElementPos(root, element);
-        return curNode !== null && curNode.key !== null && cmp(curNode.key, element) === 0;
+        return curNode !== undefined && curNode.key !== undefined && cmp(curNode.key, element) === 0;
     };
 
-    const _lower_bound: (curNode: TreeNode<T, null> | null, key: T) => T | undefined = function (curNode: TreeNode<T, null> | null, key: T) {
-        if (!curNode || curNode.key === null) return undefined;
+    const _lowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return curNode.key;
-        if (cmpResult < 0) return _lower_bound(curNode.rightChild, key);
-        return _lower_bound(curNode.leftChild, key) || curNode.key;
+        if (cmpResult < 0) return _lowerBound(curNode.rightChild, key);
+        return _lowerBound(curNode.leftChild, key) || curNode.key;
     };
 
-    this.lower_bound = function (key: T) {
-        return _lower_bound(root, key);
+    this.lowerBound = function (key: T) {
+        return _lowerBound(root, key);
     };
 
-    const _upper_bound: (curNode: TreeNode<T, null> | null, key: T) => T | undefined = function (curNode: TreeNode<T, null> | null, key: T) {
-        if (!curNode || curNode.key === null) return undefined;
+    const _upperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
-        if (cmpResult <= 0) return _upper_bound(curNode.rightChild, key);
-        return _upper_bound(curNode.leftChild, key) || curNode.key;
+        if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
+        return _upperBound(curNode.leftChild, key) || curNode.key;
     };
 
-    this.upper_bound = function (key: T) {
-        return _upper_bound(root, key);
+    this.upperBound = function (key: T) {
+        return _upperBound(root, key);
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
@@ -337,15 +335,15 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
     this.getHeight = function () {
         if (this.empty()) return 0;
-        const traversal: (curNode: TreeNode<T, null> | null) => number = function (curNode: TreeNode<T, null> | null) {
+        const traversal: (curNode: TreeNode<T, undefined> | undefined) => number = function (curNode: TreeNode<T, undefined> | undefined) {
             if (!curNode) return 1;
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
         return traversal(root);
     };
 
-    const iterationFunc: (curNode: TreeNode<T, null> | null) => Generator<T, void, undefined> = function* (curNode: TreeNode<T, null> | null) {
-        if (!curNode || curNode.key === null) return;
+    const iterationFunc: (curNode: TreeNode<T, undefined> | undefined) => Generator<T, void, undefined> = function* (curNode: TreeNode<T, undefined> | undefined) {
+        if (!curNode || curNode.key === undefined) return;
         yield* iterationFunc(curNode.leftChild);
         yield curNode.key;
         yield* iterationFunc(curNode.rightChild);
@@ -362,4 +360,4 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
 Object.freeze(Set);
 
-export default (Set as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): SetType<T> });
+export default (Set as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): SetType<T> });

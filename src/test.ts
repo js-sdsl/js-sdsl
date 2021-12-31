@@ -34,7 +34,7 @@ type testReportFormat = {
 }
 
 function testStack(testNum: number) {
-    function judgeStack(myStack: StackType<any>, myVector: VectorType<any>) {
+    function judgeStack(myStack: StackType<number>, myVector: VectorType<number>) {
         while (!myStack.empty()) {
             if (myStack.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -45,7 +45,7 @@ function testStack(testNum: number) {
                 throw new Error("Stack test failed!");
             }
             myStack.pop();
-            myVector.pop_back();
+            myVector.popBack();
         }
     }
 
@@ -57,14 +57,14 @@ function testStack(testNum: number) {
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         myStack.push(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     judgeStack(myStack, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         myStack.push(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     myStack.clear();
     myVector.clear();
@@ -108,7 +108,7 @@ function testStack(testNum: number) {
 }
 
 function testQueue(testNum: number) {
-    function judgeQueue(myQueue: QueueType<any>, myVector: VectorType<any>) {
+    function judgeQueue(myQueue: QueueType<number>, myVector: VectorType<number>) {
         while (!myQueue.empty()) {
             if (myQueue.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -131,14 +131,14 @@ function testQueue(testNum: number) {
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         myQueue.push(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     judgeQueue(myQueue, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         myQueue.push(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     myQueue.clear();
     myVector.clear();
@@ -181,7 +181,7 @@ function testQueue(testNum: number) {
     };
 }
 
-function judgeSequentialContainer(funcName: string, container: SequentialContainerType<any>, myVector: SequentialContainerType<any>) {
+function judgeSequentialContainer(funcName: string, container: SequentialContainerType<number>, myVector: SequentialContainerType<number>) {
     let testResult = (container.size() === myVector.size());
     container.forEach((element, index) => {
         testResult = testResult && (element === myVector.getElementByPos(index));
@@ -190,11 +190,11 @@ function judgeSequentialContainer(funcName: string, container: SequentialContain
     console.log(container.constructor.name, funcName, "test passed.");
 }
 
-function testSequentialContainer(container: SequentialContainerType<any>, testNum: number) {
+function testSequentialContainer(container: SequentialContainerType<number>, testNum: number) {
     const containerName = container.constructor.name;
     console.log(containerName, "SequentialContainer standard test start...");
 
-    const myVector = new Vector<any>(arr);
+    const myVector = new Vector<number>(arr);
 
     if (container.size() !== myVector.size()) {
         throw new Error("size test failed.");
@@ -215,16 +215,16 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random();
-        container.push_back(random);
-        myVector.push_back(random);
+        container.pushBack(random);
+        myVector.pushBack(random);
     }
-    judgeSequentialContainer("push_back", container, myVector);
+    judgeSequentialContainer("pushBack", container, myVector);
 
     for (let i = 0; i < 10000; ++i) {
-        container.pop_back();
-        myVector.pop_back();
+        container.popBack();
+        myVector.popBack();
     }
-    judgeSequentialContainer("pop_back", container, myVector);
+    judgeSequentialContainer("popBack", container, myVector);
 
     let testResult = true;
     const len = container.size();
@@ -252,19 +252,19 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random();
-        container.push_back(random);
-        myVector.push_back(random);
+        container.pushBack(random);
+        myVector.pushBack(random);
     }
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * container.size());
         const num = Math.floor(Math.random() * 10);
-        container.insert(pos, 'q', num);
-        myVector.insert(pos, 'q', num);
+        container.insert(pos, -2, num);
+        myVector.insert(pos, -2, num);
     }
     judgeSequentialContainer("insert", container, myVector);
 
-    container.eraseElementByValue('q');
-    myVector.eraseElementByValue('q');
+    container.eraseElementByValue(-2);
+    myVector.eraseElementByValue(-2);
     judgeSequentialContainer("eraseElementByValue", container, myVector);
 
     container.reverse();
@@ -274,8 +274,8 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * container.size());
         const num = Math.floor(Math.random() * 10);
-        container.insert(pos, 'w', num);
-        myVector.insert(pos, 'w', num);
+        container.insert(pos, -1, num);
+        myVector.insert(pos, -1, num);
     }
     container.unique();
     myVector.unique();
@@ -283,11 +283,11 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
-        container.push_back(random);
-        myVector.push_back(random);
+        container.pushBack(random);
+        myVector.pushBack(random);
     }
     container.sort((x, y) => x - y);
-    myVector.sort((x, y) => x - y);
+    myVector.sort((x: number, y: number) => x - y);
     judgeSequentialContainer("sort", container, myVector);
 
     container.clear();
@@ -301,10 +301,10 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) container.push_back(Math.random());
+    for (let i = 0; i < testNum; ++i) container.pushBack(Math.random());
     endTime = Date.now();
     reportList.push({
-        testFunc: "push_back",
+        testFunc: "pushBack",
         testNum: testNum,
         containerSize: container.size(),
         runTime: endTime - startTime
@@ -312,10 +312,10 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     startTime = Date.now();
     let size = container.size();
-    for (let i = 0; i < testNum; ++i) container.pop_back();
+    for (let i = 0; i < testNum; ++i) container.popBack();
     endTime = Date.now();
     reportList.push({
-        testFunc: "pop_back",
+        testFunc: "popBack",
         testNum: testNum,
         containerSize: size,
         runTime: endTime - startTime
@@ -323,8 +323,8 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     for (let i = 0; i < testNum; ++i) {
         const random = Math.random();
-        container.push_back(random);
-        myVector.push_back(random);
+        container.pushBack(random);
+        myVector.pushBack(random);
     }
     startTime = Date.now();
     for (let i = 0; i < 10000; ++i) container.getElementByPos(i);
@@ -360,7 +360,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
     });
 
     startTime = Date.now();
-    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))), 'q', Math.floor(Math.random() * 10));
+    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))), -1, Math.floor(Math.random() * 10));
     endTime = Date.now();
     reportList.push({
         testFunc: "insert",
@@ -371,7 +371,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
 
     startTime = Date.now();
     size = container.size();
-    container.eraseElementByValue('q');
+    container.eraseElementByValue(-1);
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByValue",
@@ -390,7 +390,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
         runTime: endTime - startTime
     });
 
-    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(container.size(), 10)), 'q', Math.floor(Math.random() * 10));
+    for (let i = 0; i < (container.constructor.name === "Deque" ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(container.size(), 10)), -1, Math.floor(Math.random() * 10));
     size = container.size();
     startTime = Date.now();
     container.unique();
@@ -402,7 +402,7 @@ function testSequentialContainer(container: SequentialContainerType<any>, testNu
         runTime: endTime - startTime
     });
 
-    for (let i = 0; i < testNum; ++i) container.push_back(Math.random() * testNum);
+    for (let i = 0; i < testNum; ++i) container.pushBack(Math.random() * testNum);
     startTime = Date.now();
     container.sort((x, y) => x - y);
     endTime = Date.now();
@@ -436,19 +436,19 @@ function testLinkList(testNum: number) {
 
     const tmpArr = [];
     for (let i = 0; i < 10000; ++i) {
-        myLinkList.push_front(i);
+        myLinkList.pushFront(i);
         tmpArr.push(i);
     }
     tmpArr.reverse();
-    judgeSequentialContainer("push_front", myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer("pushFront", myLinkList, new Vector(tmpArr));
 
     tmpArr.reverse();
     for (let i = 0; i < 10000; ++i) {
-        myLinkList.pop_front();
+        myLinkList.popFront();
         tmpArr.pop();
     }
     tmpArr.reverse();
-    judgeSequentialContainer("pop_front", myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer("popFront", myLinkList, new Vector(tmpArr));
 
     for (let i = 0; i < 10000; ++i) {
         tmpArr.push(Math.random() * 1000000);
@@ -469,10 +469,10 @@ function testLinkList(testNum: number) {
     let startTime, endTime;
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) myLinkList.push_front(i);
+    for (let i = 0; i < testNum; ++i) myLinkList.pushFront(i);
     endTime = Date.now();
     reportList.push({
-        testFunc: "push_front",
+        testFunc: "pushFront",
         testNum: testNum,
         containerSize: myLinkList.size(),
         runTime: endTime - startTime
@@ -480,17 +480,17 @@ function testLinkList(testNum: number) {
 
     startTime = Date.now();
     const size = myLinkList.size();
-    for (let i = 0; i < testNum; ++i) myLinkList.pop_front();
+    for (let i = 0; i < testNum; ++i) myLinkList.popFront();
     endTime = Date.now();
     reportList.push({
-        testFunc: "pop_front",
+        testFunc: "popFront",
         testNum: testNum,
         containerSize: size,
         runTime: endTime - startTime
     });
 
     const _otherLinkList = new LinkList<number>();
-    for (let i = 0; i < testNum; ++i) _otherLinkList.push_back(Math.random() * 1000000);
+    for (let i = 0; i < testNum; ++i) _otherLinkList.pushBack(Math.random() * 1000000);
     myLinkList.forEach(element => tmpArr.push(element));
     myLinkList.sort((x, y) => x - y);
     _otherLinkList.sort((x, y) => x - y);
@@ -521,16 +521,16 @@ function testDeque(testNum: number) {
 
     const tmpArr = [];
     for (let i = 0; i < 10000; ++i) {
-        myDeque.push_front(i);
+        myDeque.pushFront(i);
         tmpArr.unshift(i);
     }
-    judgeSequentialContainer("push_front", myDeque, new Vector(tmpArr));
+    judgeSequentialContainer("pushFront", myDeque, new Vector(tmpArr));
 
     for (let i = 0; i < 10000; ++i) {
-        myDeque.pop_front();
+        myDeque.popFront();
         tmpArr.shift();
     }
-    judgeSequentialContainer("pop_front", myDeque, new Vector(tmpArr));
+    judgeSequentialContainer("popFront", myDeque, new Vector(tmpArr));
 
     myDeque.shrinkToFit();
     judgeSequentialContainer("shrinkToFit", myDeque, new Vector(tmpArr));
@@ -541,21 +541,21 @@ function testDeque(testNum: number) {
     let startTime, endTime;
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) myDeque.push_front(i);
+    for (let i = 0; i < testNum * 2; ++i) myDeque.pushFront(i);
     endTime = Date.now();
     reportList.push({
-        testFunc: "push_front",
-        testNum: testNum,
+        testFunc: "pushFront",
+        testNum: testNum * 2,
         containerSize: myDeque.size(),
         runTime: endTime - startTime
     });
 
     startTime = Date.now();
     const size = myDeque.size();
-    for (let i = 0; i < testNum; ++i) myDeque.pop_front();
+    for (let i = 0; i < testNum; ++i) myDeque.popFront();
     endTime = Date.now();
     reportList.push({
-        testFunc: "pop_front",
+        testFunc: "popFront",
         testNum: testNum,
         containerSize: size,
         runTime: endTime - startTime
@@ -600,7 +600,7 @@ function testPriorityQueue(testNum: number) {
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         myPriority.push(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     myVector.sort(cmp);
     while (!myPriority.empty()) {
@@ -652,10 +652,10 @@ function testPriorityQueue(testNum: number) {
 function testSet(testNum: number) {
     function judgeSet(mySdslSet: SetType<number>, myVector: VectorType<number>) {
         if (mySdslSet.getHeight() > 2 * Math.log2(mySdslSet.size() + 1)) {
-            throw new Error("SdslSet tree too high!");
+            throw new Error("Set tree too high!");
         }
         if (mySdslSet.size() !== myVector.size()) {
-            throw new Error("SdslSet size test failed!");
+            throw new Error("Set size test failed!");
         }
         myVector.sort((x, y) => x - y);
         mySdslSet.forEach((element, index) => {
@@ -686,7 +686,7 @@ function testSet(testNum: number) {
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
         mySdslSet.insert(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     judgeSet(mySdslSet, myVector);
 
@@ -709,25 +709,25 @@ function testSet(testNum: number) {
     for (let i = 0; i < 20000; ++i) {
         const random = Math.random() * 1000000;
         otherSdslSet.insert(random);
-        myVector.push_back(random);
+        myVector.pushBack(random);
     }
     mySdslSet.union(otherSdslSet);
     judgeSet(mySdslSet, myVector);
 
-    myVector.forEach(element => {
+    myVector.forEach((element: number) => {
         if (!mySdslSet.find(element)) throw new Error("Set test failed!");
     });
 
-    myVector.sort((x, y) => x - y);
+    myVector.sort((x: number, y: number) => x - y);
     for (let i = 0; i < myVector.size(); ++i) {
-        if (mySdslSet.lower_bound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
-            throw new Error("Set lower_bound test failed!");
+        if (mySdslSet.lowerBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+            throw new Error("Set lowerBound test failed!");
         }
-        if (i !== myVector.size() - 1 && mySdslSet.upper_bound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
-            throw new Error("Set lower_bound test failed!");
+        if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
+            throw new Error("Set lowerBound test failed!");
         }
     }
-    console.log("Set lower_bound and upper_bound test passed.");
+    console.log("Set lowerBound and upperBound test passed.");
 
     for (let i = 0; i < 10000; ++i) {
         mySdslSet.eraseElementByPos(0);
@@ -761,7 +761,7 @@ function testSet(testNum: number) {
 
     for (let i = 0; i < testNum; ++i) mySdslSet.insert(Math.random() * 1000000);
     const tmpArr: number[] = [];
-    mySdslSet.forEach(element => tmpArr.push(element));
+    mySdslSet.forEach((element: number) => tmpArr.push(element));
     startTime = Date.now();
     const size = mySdslSet.size();
     for (let i = 0; i < testNum; ++i) mySdslSet.eraseElementByValue(tmpArr[i]);
@@ -800,11 +800,11 @@ function testSet(testNum: number) {
     for (const element of mySdslSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.lower_bound(element);
+        mySdslSet.lowerBound(element);
     }
     endTime = Date.now();
     reportList.push({
-        testFunc: "lower_bound",
+        testFunc: "lowerBound",
         testNum: testNum,
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
@@ -815,11 +815,11 @@ function testSet(testNum: number) {
     for (const element of mySdslSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.upper_bound(element);
+        mySdslSet.upperBound(element);
     }
     endTime = Date.now();
     reportList.push({
-        testFunc: "upper_bound",
+        testFunc: "upperBound",
         testNum: testNum,
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
@@ -926,20 +926,20 @@ function testMap(testNum: number) {
     myVector.sort((x, y) => x.key - y.key);
     for (let i = 0; i < myVector.size(); ++i) {
         let vElement = myVector.getElementByPos(i);
-        let myElement = myMap.lower_bound(vElement.key);
+        let myElement = myMap.lowerBound(vElement.key);
         if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-            throw new Error("Map lower_bound test failed!");
+            throw new Error("Map lowerBound test failed!");
         }
         if (i !== myVector.size() - 1) {
             vElement = myVector.getElementByPos(i);
-            myElement = myMap.upper_bound(vElement.key);
+            myElement = myMap.upperBound(vElement.key);
             vElement = myVector.getElementByPos(i + 1);
             if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-                throw new Error("Map upper_bound test failed!");
+                throw new Error("Map upperBound test failed!");
             }
         }
     }
-    console.log("Map lower_bound and upper_bound test passed.");
+    console.log("Map lowerBound and upperBound test passed.");
 
     console.clear();
     console.log("Map test end, all tests passed!");
@@ -995,11 +995,11 @@ function testMap(testNum: number) {
     for (const pair of myMap) {
         ++num;
         if (num >= testNum) break;
-        myMap.lower_bound(pair.key);
+        myMap.lowerBound(pair.key);
     }
     endTime = Date.now();
     reportList.push({
-        testFunc: "lower_bound",
+        testFunc: "lowerBound",
         testNum: testNum,
         containerSize: myMap.size(),
         runTime: endTime - startTime
@@ -1010,11 +1010,11 @@ function testMap(testNum: number) {
     for (const pair of myMap) {
         ++num;
         if (num >= testNum) break;
-        myMap.upper_bound(pair.key);
+        myMap.upperBound(pair.key);
     }
     endTime = Date.now();
     reportList.push({
-        testFunc: "upper_bound",
+        testFunc: "upperBound",
         testNum: testNum,
         containerSize: myMap.size(),
         runTime: endTime - startTime

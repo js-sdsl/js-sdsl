@@ -7,18 +7,16 @@ class TreeNode<T, K> {
         black: false
     };
     color = true;
-    key: T | null = null;
-    value: K | null = null;
-    parent: TreeNode<T, K> | null = null;
-    brother: TreeNode<T, K> | null = null;
-    leftChild: TreeNode<T, K> | null = null;
-    rightChild: TreeNode<T, K> | null = null;
+    key: T | undefined = undefined;
+    value: K | undefined = undefined;
+    parent: TreeNode<T, K> | undefined = undefined;
+    brother: TreeNode<T, K> | undefined = undefined;
+    leftChild: TreeNode<T, K> | undefined = undefined;
+    rightChild: TreeNode<T, K> | undefined = undefined;
 
     constructor(key?: T, value?: K) {
-        if (key !== undefined && value !== undefined) {
-            this.key = key;
-            this.value = value;
-        }
+        this.key = key;
+        this.value = value;
     }
 
     rotateLeft() {
@@ -112,14 +110,14 @@ class TreeNode<T, K> {
     remove() {
         if (this.leftChild || this.rightChild) throw new Error("can only remove leaf node");
         if (this.parent) {
-            if (this === this.parent.leftChild) this.parent.leftChild = null;
-            else if (this === this.parent.rightChild) this.parent.rightChild = null;
+            if (this === this.parent.leftChild) this.parent.leftChild = undefined;
+            else if (this === this.parent.rightChild) this.parent.rightChild = undefined;
         }
-        if (this.brother) this.brother.brother = null;
-        this.key = null;
-        this.value = null;
-        this.parent = null;
-        this.brother = null;
+        if (this.brother) this.brother.brother = undefined;
+        this.key = undefined;
+        this.value = undefined;
+        this.parent = undefined;
+        this.brother = undefined;
     }
 }
 
