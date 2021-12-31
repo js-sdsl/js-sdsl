@@ -1,6 +1,6 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
-**A javascript standard data structure library which benchmark against C++ STL**
+**A javascript standard data structure library which benchmark against C++ STL.**
 
 ## Note
 
