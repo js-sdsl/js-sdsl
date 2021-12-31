@@ -1,25 +1,66 @@
-import { SequentialContainerType } from "../Base/Base";
+import { Iterator, SequentialContainerType } from "../Base/Base";
 
 class LinkNode<T> {
-    val: any = null;
-    pre: LinkNode<T> | null = null;
-    next: LinkNode<T> | null = null;
+    value: T | undefined = undefined;
+    pre: LinkNode<T> | undefined = undefined;
+    next: LinkNode<T> | undefined = undefined;
 
-    constructor(element: T) {
-        this.val = element;
+    constructor(element?: T) {
+        this.value = element;
     }
 }
 
 export type LinkListType<T> = {
-    push_front: (element: T) => void;
-    pop_front: () => void;
+    pushFront: (element: T) => void;
+    popFront: () => void;
     merge: (other: LinkListType<T>) => void;
 } & SequentialContainerType<T>;
 
+const LinkListIterator = function <T>(this: Iterator<T>, _node: LinkNode<T>) {
+    Object.defineProperties(this, {
+        node: {
+            get() {
+                return _node;
+            }
+        },
+        value: {
+            get() {
+                return _node.value;
+            },
+            set(newValue) {
+                if (newValue === null || newValue === undefined) {
+                    throw new Error("you can't push undefined or null here");
+                }
+                _node.value = newValue;
+            },
+            enumerable: true
+        }
+    });
+
+    this.equals = function (obj: Iterator<T>) {
+        // @ts-ignore
+        return _node === obj.node;
+    };
+
+    this.pre = function () {
+        return new LinkListIterator(_node.pre || _node);
+    };
+
+    this.next = function () {
+        return new LinkListIterator(_node.next || _node);
+    };
+
+    Object.freeze(this);
+
+} as unknown as { new<T>(_node: LinkNode<T>): Iterator<T> };
+
+Object.freeze(LinkListIterator);
+
 function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
-    let head: LinkNode<T> | null = null;
-    let tail: LinkNode<T> | null = null;
+    let head: LinkNode<T> | undefined = undefined;
+    let tail: LinkNode<T> | undefined = undefined;
+    const header = new LinkNode<T>();
 
     this.size = function () {
         return len;
@@ -30,23 +71,41 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     this.clear = function () {
-        head = tail = null;
         len = 0;
+        head = tail = undefined;
+        header.pre = header.next = undefined;
+    };
+
+    this.begin = function () {
+        return new LinkListIterator(head || header);
+    };
+
+    this.end = function () {
+        return new LinkListIterator(header);
+    };
+
+    this.rBegin = function () {
+        return new LinkListIterator(tail || header);
+    };
+
+    this.rEnd = function () {
+        return new LinkListIterator(header);
     };
 
     this.front = function () {
-        return head?.val;
+        return head?.value;
     };
 
     this.back = function () {
-        return tail?.val;
+        return tail?.value;
     };
 
     this.forEach = function (callback: (element: T, index: number) => void) {
         let curNode = head;
         let index = 0;
-        while (curNode !== null) {
-            callback(curNode.val, index++);
+        while (curNode && curNode !== header) {
+            if (curNode.value === undefined) throw new Error("unknown error");
+            callback(curNode.value, index++);
             curNode = curNode.next;
         }
     };
@@ -58,17 +117,18 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
             if (!curNode) break;
             curNode = curNode.next;
         }
-        return curNode?.val;
+        if (!curNode || curNode.value === undefined) throw new Error("unknown error");
+        return curNode.value;
     };
 
     this.eraseElementByPos = function (pos: number) {
         if (pos < 0 || pos >= len) throw new Error("erase pos must more then 0 and less then the list length");
-        if (pos === 0) this.pop_front();
-        else if (pos === len - 1) this.pop_back();
+        if (pos === 0) this.popFront();
+        else if (pos === len - 1) this.popBack();
         else {
             let curNode = head;
             while (pos--) {
-                if (!curNode?.next) break;
+                if (!curNode?.next) throw new Error("unknown error");
                 curNode = curNode.next;
             }
             if (!curNode || !curNode.pre || !curNode.next) {
@@ -83,12 +143,12 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     this.eraseElementByValue = function (value: T) {
-        while (head && head.val === value) this.pop_front();
-        while (tail && tail.val === value) this.pop_back();
+        while (head && head.value === value) this.popFront();
+        while (tail && tail.value === value) this.popBack();
         if (!head) return;
-        let curNode = head.next;
-        while (curNode) {
-            if (curNode.val === value) {
+        let curNode: LinkNode<T> | undefined = head;
+        while (curNode && curNode !== header) {
+            if (curNode.value === value) {
                 const pre = curNode.pre;
                 const next = curNode.next;
                 if (next) next.pre = pre;
@@ -99,37 +159,50 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         }
     };
 
-    this.push_back = function (element: T) {
+    this.pushBack = function (element: T) {
+        if (element === null || element === undefined) {
+            throw new Error("you can't push null or undefined here");
+        }
         ++len;
         const newTail = new LinkNode(element);
         if (!tail) {
             head = tail = newTail;
+            header.next = head;
+            head.pre = header;
         } else {
             tail.next = newTail;
             newTail.pre = tail;
             tail = newTail;
         }
+        tail.next = header;
+        header.pre = tail;
     };
 
-    this.pop_back = function () {
-        if (len > 0) --len;
+    this.popBack = function () {
         if (!tail) return;
+        if (len > 0) --len;
         if (head === tail) {
-            head = tail = null;
+            head = tail = undefined;
+            header.next = undefined;
         } else {
             tail = tail.pre;
-            if (tail) tail.next = null;
+            if (tail) tail.next = undefined;
         }
+        header.pre = tail;
+        if (tail) tail.next = header;
     };
 
     this.setElementByPos = function (pos: number, element: T) {
+        if (element === null || element === undefined) {
+            throw new Error("you can't set null or undefined here");
+        }
         if (pos < 0 || pos >= len) throw new Error("pos must more then 0 and less then the list length");
         let curNode = head;
         while (pos--) {
-            if (!curNode) break;
+            if (!curNode) throw new Error("unknown error");
             curNode = curNode.next;
         }
-        if (curNode) curNode.val = element;
+        if (curNode) curNode.value = element;
     };
 
     /**
@@ -138,16 +211,19 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
      * @param {number} [num = 1] the nums you want to insert
      */
     this.insert = function (pos: number, element: T, num = 1) {
+        if (element === null || element === undefined) {
+            throw new Error("you can't insert null or undefined here");
+        }
         if (pos < 0 || pos > len) throw new Error("insert pos must more then 0 and less then or equal to the list length");
-        if (num < 0) throw new Error("insert size must more then 0");
+        if (num < 0) throw new Error("insert size must more than 0");
         if (pos === 0) {
-            while (num--) this.push_front(element);
+            while (num--) this.pushFront(element);
         } else if (pos === len) {
-            while (num--) this.push_back(element);
+            while (num--) this.pushBack(element);
         } else {
             let curNode = head;
             for (let i = 1; i < pos; ++i) {
-                if (!curNode?.next) break;
+                if (!curNode?.next) throw new Error("unknown error");
                 curNode = curNode?.next;
             }
             if (!curNode) {
@@ -167,8 +243,8 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
 
     this.find = function (element: T) {
         let curNode = head;
-        while (curNode) {
-            if (curNode.val === element) return true;
+        while (curNode && curNode !== header) {
+            if (curNode.value === element) return true;
             curNode = curNode.next;
         }
         return false;
@@ -179,9 +255,9 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         let pTail = tail;
         let cnt = 0;
         while (pHead && pTail && cnt * 2 < len) {
-            const tmp = pHead.val;
-            pHead.val = pTail.val;
-            pTail.val = tmp;
+            const tmp = pHead.value;
+            pHead.value = pTail.value;
+            pTail.value = tmp;
             pHead = pHead.next;
             pTail = pTail.pre;
             ++cnt;
@@ -190,13 +266,14 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
 
     this.unique = function () {
         let curNode = head;
-        while (curNode) {
+        while (curNode && curNode !== header) {
             let tmpNode = curNode;
-            while (tmpNode && tmpNode.next && tmpNode.val === tmpNode.next.val) {
+            while (tmpNode && tmpNode.next && tmpNode.value === tmpNode.next.value) {
                 tmpNode = tmpNode.next;
                 if (len > 0) --len;
             }
             curNode.next = tmpNode.next;
+            if (curNode.next) curNode.next.pre = curNode;
             curNode = curNode.next;
         }
     };
@@ -207,36 +284,45 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
             arr.push(element);
         });
         arr.sort(cmp);
-        let curNode: LinkNode<T> | null = head;
+        let curNode: LinkNode<T> | undefined = head;
         arr.forEach((element) => {
             if (curNode) {
-                curNode.val = element;
+                curNode.value = element;
                 curNode = curNode.next;
             }
         });
     };
 
-    this.push_front = function (element: T) {
+    this.pushFront = function (element: T) {
+        if (element === undefined || element === undefined) {
+            throw new Error("you can't push null or undefined here");
+        }
         ++len;
         const newHead = new LinkNode(element);
         if (!head) {
             head = tail = newHead;
+            tail.next = header;
+            header.pre = tail;
         } else {
             newHead.next = head;
             head.pre = newHead;
             head = newHead;
         }
+        header.next = head;
+        head.pre = header;
     };
 
-    this.pop_front = function () {
-        if (len > 0) --len;
+    this.popFront = function () {
         if (!head) return;
+        if (len > 0) --len;
         if (head === tail) {
-            head = tail = null;
+            head = tail = undefined;
+            header.pre = tail;
         } else {
             head = head.next;
-            if (head) head.pre = null;
+            if (head) head.pre = header;
         }
+        header.next = head;
     };
 
     /**
@@ -244,18 +330,19 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
      * @param list other list
      */
     this.merge = function (list: LinkListType<T>) {
-        let curNode: LinkNode<T> | null = head;
+        let curNode: LinkNode<T> | undefined = head;
         list.forEach((element: T) => {
-            while (curNode && curNode.val <= element) {
+            while (curNode && curNode !== header && curNode.value !== undefined && curNode.value <= element) {
                 curNode = curNode.next;
             }
-            if (!curNode) {
-                this.push_back(element);
+            if (curNode === header) {
+                this.pushBack(element);
                 curNode = tail;
             } else if (curNode === head) {
-                this.push_front(element);
+                this.pushFront(element);
                 curNode = head;
             } else {
+                if (!curNode) throw new Error("unknown error");
                 ++len;
                 const pre = curNode.pre;
                 if (pre) {
@@ -271,18 +358,19 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     this[Symbol.iterator] = function () {
         return (function* () {
             let curNode = head;
-            while (curNode !== null) {
-                yield curNode.val;
+            while (curNode && curNode !== header) {
+                if (!curNode.value) throw new Error("unknown error");
+                yield curNode.value;
                 curNode = curNode.next;
             }
         })();
     };
 
-    container.forEach(element => this.push_back(element));
+    container.forEach(element => this.pushBack(element));
 
     Object.freeze(this);
 }
 
 Object.freeze(LinkList);
 
-export default (LinkList as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });
+export default (LinkList as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });

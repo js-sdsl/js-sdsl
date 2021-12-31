@@ -44,4 +44,4 @@ function Stack<T>(this: StackType<T>, container: { forEach: (callback: (element:
 
 Object.freeze(Stack);
 
-export default (Stack as any as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): StackType<T> });
+export default (Stack as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): StackType<T> });

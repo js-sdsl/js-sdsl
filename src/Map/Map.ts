@@ -1,13 +1,17 @@
-import TreeNode from "../Base/TreeNode";
-import { BaseType, Pair } from "../Base/Base";
+import { TreeNode, MapIterator } from "../Base/Tree";
+import { BaseType, MapIteratorType, Pair } from "../Base/Base";
 
 export type MapType<T, K> = {
+    begin: () => MapIteratorType<T, K>;
+    end: () => MapIteratorType<T, K>;
+    rBegin: () => MapIteratorType<T, K>;
+    rEnd: () => MapIteratorType<T, K>;
     front: () => Pair<T, K> | undefined;
     back: () => Pair<T, K> | undefined;
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
     find: (element: T) => boolean;
-    lower_bound: (key: T) => Pair<T, K> | undefined;
-    upper_bound: (key: T) => Pair<T, K> | undefined;
+    lowerBound: (key: T) => Pair<T, K> | undefined;
+    upperBound: (key: T) => Pair<T, K> | undefined;
     getElementByPos: (pos: number) => Pair<T, K>;
     getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
@@ -28,6 +32,9 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
     let len = 0;
     let root = new TreeNode<T, K>();
     root.color = TreeNode.TreeNodeColorType.black;
+    const header = new TreeNode<T, K>();
+    header.parent = root;
+    root.parent = header;
 
     this.size = function () {
         return len;
@@ -39,24 +46,41 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     this.clear = function () {
         len = 0;
-        root = new TreeNode<T, K>();
-        root.color = TreeNode.TreeNodeColorType.black;
+        root.key = root.value = undefined;
+        root.leftChild = root.rightChild = root.brother = undefined;
+        header.leftChild = header.rightChild = undefined;
     };
 
+    this.begin = function () {
+        return new MapIterator(header.leftChild || header);
+    }
+
+    this.end = function () {
+        return new MapIterator(header);
+    }
+
+    this.rBegin = function () {
+        return new MapIterator(header.rightChild || header);
+    }
+
+    this.rEnd = function () {
+        return new MapIterator(header);
+    }
+
     const findSubTreeMinNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
     };
 
     const findSubTreeMaxNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
     };
 
     this.front = function () {
         if (this.empty()) return undefined;
-        const minNode = findSubTreeMinNode(root);
-        if (minNode.key === null || minNode.value === null) throw new Error("unknown error");
+        const minNode = header.leftChild;
+        if (!minNode || minNode.key === undefined || minNode.value === undefined) throw new Error("unknown error");
         return {
             key: minNode.key,
             value: minNode.value
@@ -65,8 +89,8 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     this.back = function () {
         if (this.empty()) return undefined;
-        const maxNode = findSubTreeMaxNode(root);
-        if (maxNode.key === null || maxNode.value === null) throw new Error("unknown error");
+        const maxNode = header.rightChild;
+        if (!maxNode || maxNode.key === undefined || maxNode.value === undefined) throw new Error("unknown error");
         return {
             key: maxNode.key,
             value: maxNode.value
@@ -88,38 +112,38 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         throw new Error("unknown Error");
     };
 
-    const _lower_bound: (curNode: TreeNode<T, K> | null, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | null, key: T) {
-        if (!curNode || curNode.key === null || curNode.value === null) return undefined;
+    const _lowerBound: (curNode: TreeNode<T, K> | undefined, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return { key: curNode.key, value: curNode.value };
-        if (cmpResult < 0) return _lower_bound(curNode.rightChild, key);
-        return _lower_bound(curNode.leftChild, key) || {
+        if (cmpResult < 0) return _lowerBound(curNode.rightChild, key);
+        return _lowerBound(curNode.leftChild, key) || {
             key: curNode.key,
             value: curNode.value
         };
     };
 
-    this.lower_bound = function (key: T) {
-        return _lower_bound(root, key);
+    this.lowerBound = function (key: T) {
+        return _lowerBound(root, key);
     };
 
-    const _upper_bound: (curNode: TreeNode<T, K> | null, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | null, key: T) {
-        if (!curNode || curNode.key === null || curNode.value === null) return undefined;
+    const _upperBound: (curNode: TreeNode<T, K> | undefined, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
-        if (cmpResult <= 0) return _upper_bound(curNode.rightChild, key);
-        return _upper_bound(curNode.leftChild, key) || {
+        if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
+        return _upperBound(curNode.leftChild, key) || {
             key: curNode.key,
             value: curNode.value
         };
     };
 
-    this.upper_bound = function (key: T) {
-        return _upper_bound(root, key);
+    this.upperBound = function (key: T) {
+        return _upperBound(root, key);
     };
 
     const eraseNodeSelfBalance = function (curNode: TreeNode<T, K>) {
         const parentNode = curNode.parent;
-        if (!parentNode) {
+        if (!parentNode || parentNode === header) {
             if (curNode === root) return;
             throw new Error("unknown error");
         }
@@ -137,7 +161,11 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
                 brotherNode.color = TreeNode.TreeNodeColorType.black;
                 parentNode.color = TreeNode.TreeNodeColorType.red;
                 const newRoot = parentNode.rotateLeft();
-                if (root === parentNode) root = newRoot;
+                if (root === parentNode) {
+                    root = newRoot;
+                    header.parent = root;
+                    root.parent = header;
+                }
                 eraseNodeSelfBalance(curNode);
             } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
                 if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
@@ -145,13 +173,21 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
                     parentNode.color = TreeNode.TreeNodeColorType.black;
                     if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = parentNode.rotateLeft();
-                    if (root === parentNode) root = newRoot;
+                    if (root === parentNode) {
+                        root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     curNode.color = TreeNode.TreeNodeColorType.black;
                 } else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
                     if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = brotherNode.rotateRight();
-                    if (root === brotherNode) root = newRoot;
+                    if (root === brotherNode) {
+                        root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
@@ -163,7 +199,11 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
                 brotherNode.color = TreeNode.TreeNodeColorType.black;
                 parentNode.color = TreeNode.TreeNodeColorType.red;
                 const newRoot = parentNode.rotateRight();
-                if (root === parentNode) root = newRoot;
+                if (root === parentNode) {
+                    root = newRoot;
+                    header.parent = root;
+                    root.parent = header;
+                }
                 eraseNodeSelfBalance(curNode);
             } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
                 if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
@@ -171,13 +211,21 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
                     parentNode.color = TreeNode.TreeNodeColorType.black;
                     if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = parentNode.rotateRight();
-                    if (root === parentNode) root = newRoot;
+                    if (root === parentNode) {
+                        root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     curNode.color = TreeNode.TreeNodeColorType.black;
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
                     if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = brotherNode.rotateLeft();
-                    if (root === brotherNode) root = newRoot;
+                    if (root === brotherNode) {
+                        root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
@@ -212,14 +260,26 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
             }
         }
 
+        if (swapNode.key === undefined) throw new Error("unknown error");
+        if (header.leftChild && header.leftChild.key !== undefined && cmp(header.leftChild.key, swapNode.key) === 0) {
+            if (header.leftChild !== root) header.leftChild = header.leftChild?.parent;
+            else if (header.leftChild?.rightChild) header.leftChild = header.leftChild?.rightChild;
+            else header.leftChild = undefined;
+        }
+        if (header.rightChild && header.rightChild.key !== undefined && cmp(header.rightChild.key, swapNode.key) === 0) {
+            if (header.rightChild !== root) header.rightChild = header.rightChild?.parent;
+            else if (header.rightChild?.leftChild) header.rightChild = header.rightChild?.leftChild;
+            else header.rightChild = undefined;
+        }
+
         eraseNodeSelfBalance(swapNode);
         if (swapNode) swapNode.remove();
         --len;
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | null, callback: (curNode: TreeNode<T, K>) => boolean) {
-        if (!curNode || curNode.key === null) return false;
+    const inOrderTraversal: (curNode: TreeNode<T, K> | undefined, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | undefined, callback: (curNode: TreeNode<T, K>) => boolean) {
+        if (!curNode || curNode.key === undefined) return false;
         const ifReturn = inOrderTraversal(curNode.leftChild, callback);
         if (ifReturn) return true;
         if (callback(curNode)) return true;
@@ -243,13 +303,13 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         if (this.empty()) return;
 
         const curNode = findElementPos(root, key);
-        if (curNode === null || curNode.key === null || cmp(curNode.key, key) !== 0) return;
+        if (curNode === undefined || curNode.key === undefined || cmp(curNode.key, key) !== 0) return;
 
         eraseNode(curNode);
     };
 
     const findInsertPos: (curNode: TreeNode<T, K>, element: T) => TreeNode<T, K> = function (curNode: TreeNode<T, K>, element: T) {
-        if (!curNode || curNode.key === null) throw new Error("unknown error");
+        if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) {
             if (!curNode.leftChild) {
@@ -275,7 +335,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     const insertNodeSelfBalance = function (curNode: TreeNode<T, K>) {
         const parentNode = curNode.parent;
-        if (!parentNode) {
+        if (!parentNode || parentNode === header) {
             if (curNode === root) return;
             throw new Error("unknown error");
         }
@@ -297,22 +357,38 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
                         parentNode.color = TreeNode.TreeNodeColorType.black;
                         grandParent.color = TreeNode.TreeNodeColorType.red;
                         const newRoot = grandParent.rotateRight();
-                        if (grandParent === root) root = newRoot;
+                        if (grandParent === root) {
+                            root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                     } else if (curNode === parentNode.rightChild) {
                         const newRoot = parentNode.rotateLeft();
-                        if (grandParent === root) root = newRoot;
+                        if (parentNode === root) {
+                            root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         insertNodeSelfBalance(parentNode);
                     }
                 } else if (parentNode === grandParent.rightChild) {
                     if (curNode === parentNode.leftChild) {
                         const newRoot = parentNode.rotateRight();
-                        if (grandParent === root) root = newRoot;
+                        if (parentNode === root) {
+                            root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         insertNodeSelfBalance(parentNode);
                     } else if (curNode === parentNode.rightChild) {
                         parentNode.color = TreeNode.TreeNodeColorType.black;
                         grandParent.color = TreeNode.TreeNodeColorType.red;
                         const newRoot = grandParent.rotateLeft();
-                        if (grandParent === root) root = newRoot;
+                        if (grandParent === root) {
+                            root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                     }
                 }
             }
@@ -334,11 +410,13 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
             root.key = key;
             root.value = value;
             root.color = TreeNode.TreeNodeColorType.black;
+            header.leftChild = root;
+            header.rightChild = root;
             return;
         }
 
         const curNode = findInsertPos(root, key);
-        if (curNode.key !== null && cmp(curNode.key, key) === 0) {
+        if (curNode.key !== undefined && cmp(curNode.key, key) === 0) {
             curNode.value = value;
             return;
         }
@@ -347,12 +425,19 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         curNode.key = key;
         curNode.value = value;
 
+        if (header.leftChild === undefined || header.leftChild.key === undefined || cmp(header.leftChild.key, key) > 0) {
+            header.leftChild = curNode;
+        }
+        if (header.rightChild === undefined || header.rightChild.key === undefined || cmp(header.rightChild.key, key) < 0) {
+            header.rightChild = curNode;
+        }
+
         insertNodeSelfBalance(curNode);
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findElementPos: (curNode: TreeNode<T, K> | null, element: T) => TreeNode<T, K> | null = function (curNode: TreeNode<T, K> | null, element: T) {
-        if (!curNode || curNode.key === null) return null;
+    const findElementPos: (curNode: TreeNode<T, K> | undefined, element: T) => TreeNode<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, element: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(element, curNode.key);
         if (cmpResult < 0) return findElementPos(curNode.leftChild, element);
         else if (cmpResult > 0) return findElementPos(curNode.rightChild, element);
@@ -365,8 +450,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     this.getElementByKey = function (element: T) {
         const curNode = findElementPos(root, element);
-        if (curNode === null) return undefined;
-        if (curNode.key === null || curNode.value === null) throw new Error("unknown error");
+        if (curNode?.key === undefined || curNode?.value === undefined) throw new Error("unknown error");
         return curNode.value;
     };
 
@@ -378,15 +462,15 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     this.getHeight = function () {
         if (this.empty()) return 0;
-        const traversal: (curNode: TreeNode<T, K> | null) => number = function (curNode: TreeNode<T, K> | null) {
+        const traversal: (curNode: TreeNode<T, K> | undefined) => number = function (curNode: TreeNode<T, K> | undefined) {
             if (!curNode) return 1;
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
         return traversal(root);
     };
 
-    const iterationFunc: (curNode: TreeNode<T, K> | null) => Generator<Pair<T, K>, void, undefined> = function* (curNode: TreeNode<T, K> | null) {
-        if (!curNode || curNode.key === null || curNode.value === null) return;
+    const iterationFunc: (curNode: TreeNode<T, K> | undefined) => Generator<Pair<T, K>, void, undefined> = function* (curNode: TreeNode<T, K> | undefined) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
         yield* iterationFunc(curNode.leftChild);
         yield { key: curNode.key, value: curNode.value };
         yield* iterationFunc(curNode.rightChild);
@@ -403,4 +487,4 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
 Object.freeze(Map);
 
-export default (Map as any as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, cmp?: (x: T, y: T) => number): MapType<T, K> });
+export default (Map as unknown as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, cmp?: (x: T, y: T) => number): MapType<T, K> });

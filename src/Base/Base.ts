@@ -1,3 +1,18 @@
+export type Iterator<T> = {
+    value: T;
+    pre: () => Iterator<T>;
+    next: () => Iterator<T>;
+    equals: (obj: Iterator<T>) => boolean;
+}
+
+export type MapIteratorType<T, K> = {
+    key: T;
+    value: K;
+    pre: () => MapIteratorType<T, K>;
+    next: () => MapIteratorType<T, K>;
+    equals: (obj: MapIteratorType<T, K>) => boolean;
+}
+
 export type BaseType = {
     size: () => number;
     empty: () => boolean;
@@ -5,6 +20,10 @@ export type BaseType = {
 } & Record<string, never>;
 
 export type ContainerType<T> = {
+    begin: () => Iterator<T>;
+    end: () => Iterator<T>;
+    rBegin: () => Iterator<T>;
+    rEnd: () => Iterator<T>;
     front: () => T | undefined;
     back: () => T | undefined;
     forEach: (callback: (element: T, index: number) => void) => void;
@@ -17,8 +36,8 @@ export type ContainerType<T> = {
 
 export type SequentialContainerType<T> = {
     forEach: (callback: (element: T, index: number) => void) => void;
-    push_back: (element: T) => void;
-    pop_back: () => void;
+    pushBack: (element: T) => void;
+    popBack: () => void;
     setElementByPos: (pos: number, element: T) => void;
     insert: (pos: number, element: T, num?: number) => void;
     reverse: () => void;

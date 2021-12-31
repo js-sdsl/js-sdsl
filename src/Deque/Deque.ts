@@ -1,46 +1,60 @@
-import { SequentialContainerType } from "../Base/Base";
+import { Iterator, SequentialContainerType } from "../Base/Base";
 
 export type DequeType<T> = {
-    push_front: (element: T) => void;
-    pop_front: () => void;
+    pushFront: (element: T) => void;
+    popFront: () => void;
     shrinkToFit: () => void;
     cut: (pos: number) => void;
 } & SequentialContainerType<T>;
 
+const DequeIterator = function <T>(this: Iterator<T>, pos: number, getElementByPos: (pos: number) => T) {
+    Object.defineProperties(this, {
+        node: {
+            get() {
+                return pos;
+            }
+        },
+        value: {
+            get() {
+                try {
+                    return getElementByPos(pos);
+                } catch (err) {
+                    return undefined;
+                }
+            },
+            enumerable: true
+        }
+    });
+
+    this.equals = function (obj: Iterator<T>) {
+        // @ts-ignore
+        return this.node === obj.node;
+    }
+
+    this.pre = function () {
+        return new DequeIterator(pos - 1, getElementByPos);
+    };
+
+    this.next = function () {
+        return new DequeIterator(pos + 1, getElementByPos);
+    };
+
+    Object.freeze(this);
+} as unknown as { new<T>(pos: number, getElementByPos: (pos: number) => T): Iterator<T> };
+
+Object.freeze(DequeIterator);
+
 Deque.sigma = 3;    // growth factor
 Deque.bucketSize = 5000;
 
-function Deque<T>(this: DequeType<T>, arr: T[] = []) {
+function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element: T) => void) => void, size?: () => number, length?: number } = []) {
     let map: (T[])[] = [];
     let first = 0;
     let curFirst = 0;
     let last = 0;
     let curLast = 0;
     let bucketNum = 0;
-    let len = arr.length;
-    const needSize = len * Deque.sigma;
-    bucketNum = Math.ceil(needSize / Deque.bucketSize);
-    bucketNum = Math.max(bucketNum, 3);
-    for (let i = 0; i < bucketNum; ++i) {
-        map.push(new Array(Deque.bucketSize));
-    }
-    const needBucketNum = Math.ceil(len / Deque.bucketSize);
-    first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
-    last = first;
-    if (len > 0) {
-        let cnt = 0;
-        for (let i = 0; i < needBucketNum; ++i) {
-            for (let j = 0; j < Deque.bucketSize; ++j) {
-                map[first + i][j] = arr[cnt++];
-                if (cnt >= len) {
-                    last = first + i;
-                    curLast = j;
-                    break;
-                }
-            }
-            if (cnt >= len) break;
-        }
-    }
+    let len = 0;
 
     this.size = function () {
         return len;
@@ -55,6 +69,22 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         reAllocate.call(this, Deque.bucketSize);
         len = 0;
     };
+
+    this.begin = function () {
+        return new DequeIterator(0, this.getElementByPos);
+    }
+
+    this.end = function () {
+        return new DequeIterator(len, this.getElementByPos);
+    }
+
+    this.rBegin = function () {
+        return new DequeIterator(len - 1, this.getElementByPos);
+    }
+
+    this.rEnd = function () {
+        return new DequeIterator(-1, this.getElementByPos);
+    }
 
     this.front = function () {
         return map[first][curFirst];
@@ -109,16 +139,16 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
 
     this.eraseElementByPos = function (pos: number) {
         if (pos < 0 || pos > len) throw new Error("pos should more than 0 and less than queue's size");
-        if (pos === 0) this.pop_front();
-        else if (pos === this.size()) this.pop_back();
+        if (pos === 0) this.popFront();
+        else if (pos === this.size()) this.popBack();
         else {
             const arr = [];
             for (let i = pos + 1; i < len; ++i) {
                 arr.push(this.getElementByPos(i));
             }
             this.cut(pos);
-            this.pop_back();
-            arr.forEach(element => this.push_back(element));
+            this.popBack();
+            arr.forEach(element => this.pushBack(element));
         }
     };
 
@@ -149,7 +179,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
             for (let i = 0; i < needBucketNum; ++i) {
                 for (let j = 0; j < Deque.bucketSize; ++j) {
                     newMap[newFirst + i][j] = this.front();
-                    this.pop_front();
+                    this.popFront();
                     if (this.empty()) {
                         newLast = newFirst + i;
                         newCurLast = j;
@@ -168,7 +198,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         len = originalSize;
     };
 
-    this.push_back = function (element: T) {
+    this.pushBack = function (element: T) {
         if (!this.empty()) {
             if (last === bucketNum - 1 && curLast === Deque.bucketSize - 1) {
                 reAllocate.call(this, this.size());
@@ -184,7 +214,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         map[last][curLast] = element;
     };
 
-    this.pop_back = function () {
+    this.popBack = function () {
         if (this.empty()) return;
         if (this.size() !== 1) {
             if (curLast > 0) {
@@ -212,17 +242,17 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
      */
     this.insert = function (pos: number, element: T, num = 1) {
         if (pos === 0) {
-            while (num--) this.push_front(element);
+            while (num--) this.pushFront(element);
         } else if (pos === this.size()) {
-            while (num--) this.push_back(element);
+            while (num--) this.pushBack(element);
         } else {
             const arr: T[] = [];
             for (let i = pos; i < len; ++i) {
                 arr.push(this.getElementByPos(i));
             }
             this.cut(pos - 1);
-            for (let i = 0; i < num; ++i) this.push_back(element);
-            arr.forEach(element => this.push_back(element));
+            for (let i = 0; i < num; ++i) this.pushBack(element);
+            arr.forEach(element => this.pushBack(element));
         }
     };
 
@@ -283,7 +313,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         for (let i = 0; i < len; ++i) this.setElementByPos(i, arr[i]);
     };
 
-    this.push_front = function (element: T) {
+    this.pushFront = function (element: T) {
         if (!this.empty()) {
             if (first === 0 && curFirst === 0) {
                 reAllocate.call(this, this.size());
@@ -299,7 +329,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         map[first][curFirst] = element;
     };
 
-    this.pop_front = function () {
+    this.popFront = function () {
         if (this.empty()) return;
         if (this.size() !== 1) {
             if (curFirst < Deque.bucketSize - 1) {
@@ -327,18 +357,7 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
             map.push(new Array(Deque.bucketSize));
         }
         this.clear();
-        let cnt = 0;
-        for (let i = 0; i < bucketNum; ++i) {
-            for (let j = 0; j < Deque.bucketSize; ++j) {
-                map[i][j] = arr[cnt++];
-                if (cnt >= _len) {
-                    last = i;
-                    curLast = j;
-                    break;
-                }
-            }
-        }
-        len = _len;
+        arr.forEach(element => this.pushBack(element));
     };
 
     /**
@@ -381,9 +400,28 @@ function Deque<T>(this: DequeType<T>, arr: T[] = []) {
         })();
     };
 
+    (() => {
+        let _len = Deque.bucketSize;
+        if (container.size) {
+            _len = container.size();
+        } else if (container.length) {
+            _len = container.length;
+        }
+        const needSize = _len * Deque.sigma;
+        bucketNum = Math.ceil(needSize / Deque.bucketSize);
+        bucketNum = Math.max(bucketNum, 3);
+        for (let i = 0; i < bucketNum; ++i) {
+            map.push(new Array(Deque.bucketSize));
+        }
+        const needBucketNum = Math.ceil(_len / Deque.bucketSize);
+        first = Math.floor(bucketNum / 2) - Math.floor(needBucketNum / 2);
+        last = first;
+        container.forEach(element => this.pushBack(element));
+    })();
+
     Object.freeze(this);
 }
 
 Object.freeze(Deque);
 
-export default (Deque as any as { new<T>(arr: T[]): DequeType<T>; });
+export default (Deque as unknown as { new<T>(arr: T[]): DequeType<T>; });

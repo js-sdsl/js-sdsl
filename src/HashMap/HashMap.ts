@@ -96,8 +96,8 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
                 container.forEach((pair) => {
                     const hashCode = hashFunc(pair.key);
                     if ((hashCode & originalBucketNum) === 0) {
-                        lowList.push_back(pair);
-                    } else highList.push_back(pair);
+                        lowList.pushBack(pair);
+                    } else highList.pushBack(pair);
                 });
                 if (lowList.size() > HashMap.untreeifyThreshold) lowList = new Map<T, K>(lowList);
                 if (highList.size() > HashMap.untreeifyThreshold) highList = new Map<T, K>(highList);
@@ -109,8 +109,8 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
                 container.forEach(pair => {
                     const hashCode = hashFunc(pair.key);
                     if ((hashCode & originalBucketNum) === 0) {
-                        lowList.push_back(pair);
-                    } else highList.push_back(pair);
+                        lowList.pushBack(pair);
+                    } else highList.pushBack(pair);
                 });
                 if (lowList.size()) newHashTable[index] = lowList;
                 if (highList.size()) newHashTable[index + originalBucketNum] = highList;
@@ -141,7 +141,7 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
                         return;
                     }
                 }
-                hashTable[index].push_back({
+                hashTable[index].pushBack({
                     key,
                     value,
                 });
@@ -221,4 +221,4 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
 
 Object.freeze(HashMap);
 
-export default (HashMap as any as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashMapType<T, K> });
+export default (HashMap as unknown as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashMapType<T, K> });
