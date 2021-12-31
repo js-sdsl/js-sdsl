@@ -1,0 +1,93 @@
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>js-sdsl</title><meta name="description" content="Documentation for js-sdsl"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">js-sdsl</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>js-sdsl</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#js-sdsl" id="js-sdsl" style="color: inherit; text-decoration: none;">
+  <h1><a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a></h1>
+</a>
+<p><strong>A javascript standard data structure library which benchmark against C++ STL</strong></p>
+
+<a href="#note" id="note" style="color: inherit; text-decoration: none;">
+  <h2>Note</h2>
+</a>
+<p><strong>Note that our official version starts from 2.0.0. In order to avoid unnecessary trouble, please select the latest
+version when downloading (&gt;= 2.0.0).</strong></p>
+<p>Unfortunately, I try my best to improve the performance of hash table but failed. Ideally, the hash table should be O(1)
+and in my project when the size of each bucket is 1, its time is much longer than Set and Map.</p>
+<p>After analysis, I find the operator <code>new</code> costs nearly 2s when the size is 1e6, This seems to be the bottleneck of js.</p>
+<p>You can try the following code to verify my statement.</p>
+<pre><code class="language-javascript"><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-2">time</span><span class="hl-1">(</span><span class="hl-3">&quot;run&quot;</span><span class="hl-1">);</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">arr</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Array</span><span class="hl-1">(</span><span class="hl-7">1000000</span><span class="hl-1">);</span><br/><span class="hl-0">arr</span><span class="hl-1">[</span><span class="hl-7">100000</span><span class="hl-1">] = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Array</span><span class="hl-1">();</span><br/><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-2">timeEnd</span><span class="hl-1">(</span><span class="hl-3">&quot;run&quot;</span><span class="hl-1">);</span>
+</code></pre>
+<p>You can imagine what happens when I repeat the above operation many times.</p>
+<p>If you want to use hash container in js, please use set or map in ES6.</p>
+<p>The official Set and Map are implemented using hash table instead of RBTree.</p>
+<p>For more information about js hash table, please refer
+to <a href="https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent">https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent</a>.</p>
+
+<a href="#included-data-structures" id="included-data-structures" style="color: inherit; text-decoration: none;">
+  <h2>Included data structures</h2>
+</a>
+<ul>
+<li>Vector</li>
+<li>Stack</li>
+<li>Queue</li>
+<li>LinkList</li>
+<li>Deque</li>
+<li>PriorityQueue</li>
+<li>Set (using RBTree)</li>
+<li>Map (using RBTree)</li>
+<li>HashSet (for reference only)</li>
+<li>HashMap (for reference only)</li>
+</ul>
+
+<a href="#supported-platforms" id="supported-platforms" style="color: inherit; text-decoration: none;">
+  <h2>Supported platforms</h2>
+</a>
+<ul>
+<li>node.js (using commonjs)</li>
+<li>react/vue (using es5)</li>
+<li>browser (support most browsers including IE8+)</li>
+</ul>
+
+<a href="#download" id="download" style="color: inherit; text-decoration: none;">
+  <h2>Download</h2>
+</a>
+<p>Download directly</p>
+<ul>
+<li><a href="https://zly201.github.io/js-sdsl/js-sdsl.js">js-sdsl.js</a> (for development)</li>
+<li><a href="https://zly201.github.io/js-sdsl/js-sdsl.min.js">js-sdsl.min.js</a> (for production)</li>
+</ul>
+<p>Or install js-sdsl using npm</p>
+<pre><code class="language-bash"><span class="hl-1">npm install js-sdsl</span>
+</code></pre>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
+</a>
+<p>To help you have a better use, we provide this <a href="https://zly201.github.io/js-sdsl/index.html">API document</a>.</p>
+
+<a href="#for-browser" id="for-browser" style="color: inherit; text-decoration: none;">
+  <h3>For Browser</h3>
+</a>
+<pre><code class="language-html"><span class="hl-8">&lt;!-- you can download the file locally and import it or import it dynamically by using url. --&gt;</span><br/><span class="hl-9">&lt;</span><span class="hl-10">script</span><span class="hl-11"> </span><span class="hl-12">src</span><span class="hl-11">=</span><span class="hl-13">&quot;https://zly201.github.io/js-sdsl/js-sdsl.min.js&quot;</span><span class="hl-9">&gt;&lt;/</span><span class="hl-10">script</span><span class="hl-9">&gt;</span><br/><span class="hl-9">&lt;</span><span class="hl-10">script</span><span class="hl-9">&gt;</span><br/><span class="hl-11">    </span><span class="hl-4">const</span><span class="hl-11"> { </span><span class="hl-5">Vector</span><span class="hl-11"> } </span><span class="hl-1">=</span><span class="hl-11"> </span><span class="hl-0">sdsl</span><span class="hl-11">;</span><br/><span class="hl-11">    </span><span class="hl-4">const</span><span class="hl-11"> </span><span class="hl-5">myVector</span><span class="hl-11"> </span><span class="hl-1">=</span><span class="hl-11"> </span><span class="hl-4">new</span><span class="hl-11"> </span><span class="hl-2">Vector</span><span class="hl-11">();</span><br/><span class="hl-11">    </span><span class="hl-8">// you code here...</span><br/><span class="hl-9">&lt;/</span><span class="hl-10">script</span><span class="hl-9">&gt;</span>
+</code></pre>
+
+<a href="#other" id="other" style="color: inherit; text-decoration: none;">
+  <h3>Other</h3>
+</a>
+<p>Just like other packages.</p>
+<p>If you want to get more help, viewing <code>src/test.ts</code> may help.</p>
+
+<a href="#build-by-source-code" id="build-by-source-code" style="color: inherit; text-decoration: none;">
+  <h2>Build by source code</h2>
+</a>
+<p>You can pull this repository and run <code>yarn build</code> to rebuild this library.</p>
+
+<a href="#unit-test" id="unit-test" style="color: inherit; text-decoration: none;">
+  <h2>Unit test</h2>
+</a>
+<p>Before publishing, we conducted strict unit tests on each function, you can see <code>testResult.txt</code> to find our test
+results or run <code>yarn test</code> to reproduce it.</p>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h2>License</h2>
+</a>
+<p>This project is <a href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE">MIT licensed</a>.</p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Deque.html" class="tsd-kind-icon">Deque</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/HashMap.html" class="tsd-kind-icon">Hash<wbr/>Map</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/HashSet.html" class="tsd-kind-icon">Hash<wbr/>Set</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/LinkList.html" class="tsd-kind-icon">Link<wbr/>List</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Map.html" class="tsd-kind-icon">Map</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/PriorityQueue.html" class="tsd-kind-icon">Priority<wbr/>Queue</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Queue.html" class="tsd-kind-icon">Queue</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Set.html" class="tsd-kind-icon">Set</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Stack.html" class="tsd-kind-icon">Stack</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Vector.html" class="tsd-kind-icon">Vector</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
