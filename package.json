@@ -18,7 +18,7 @@
     "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js && find dist/umd -name \"test.*\" | xargs rm -rf",
     "test": "rm -rf dist/test && tsc --downlevelIteration --declaration src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
-    "deploy": "yarn build:umd:min && gh-pages -d dist/umd"
+    "deploy": "yarn build:umd:min && gh-pages -d dist/umd docs"
   },
   "husky": {
     "hooks": {
@@ -40,6 +40,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^12.1.0",
     "rollup": "^2.61.1",
+    "typedoc": "^0.22.10",
     "typescript": "^4.5.4",
     "uglify-js": "^3.14.5"
   },
@@ -71,5 +72,6 @@
   "bugs": {
     "email": "951711127@qq.com",
     "url": "https://github.com/ZLY201/js-sdsl/issues"
-  }
+  },
+  "dependencies": {}
 }

@@ -2,7 +2,7 @@ export type BaseType = {
     size: () => number;
     empty: () => boolean;
     clear: () => void;
-} & Record<string, never>;
+};
 
 export type ContainerType<T> = {
     front: () => T | undefined;

@@ -64,7 +64,7 @@ npm install js-sdsl
 
 ## Usage
 
-To help you have a better use, we provide this API document (**it will come soon**).
+To help you have a better use, we provide this [API document](https://zly201.github.io/js-sdsl/index.html).
 
 ### For Browser
 

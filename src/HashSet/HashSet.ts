@@ -88,18 +88,18 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
                 if (element === undefined) throw new Error("unknown error");
                 newHashTable[hashFunc(element) & (bucketNum - 1)] = new LinkList<T>([element]);
             } else if (container instanceof Set) {
-                let lowList: (LinkListType<T> | SetType<T>) = new LinkList<T>();
-                let highList: (LinkListType<T> | SetType<T>) = new LinkList<T>();
+                const lowList: LinkListType<T> = new LinkList<T>();
+                const highList: LinkListType<T> = new LinkList<T>();
                 container.forEach(element => {
                     const hashCode = hashFunc(element);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(element);
                     } else highList.pushBack(element);
                 });
-                if (lowList.size() > HashSet.untreeifyThreshold) lowList = new Set<T>(lowList);
-                if (highList.size() > HashSet.untreeifyThreshold) highList = new Set<T>(highList);
-                if (lowList.size()) newHashTable[index] = lowList;
-                if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+                if (lowList.size() > HashSet.untreeifyThreshold) newHashTable[index] = new Set<T>(lowList);
+                else if (lowList.size()) newHashTable[index] = lowList;
+                if (highList.size() > HashSet.untreeifyThreshold) newHashTable[index + originalBucketNum] = new Set<T>(highList);
+                else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
             } else {
                 const lowList = new LinkList<T>();
                 const highList = new LinkList<T>();
@@ -129,7 +129,7 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
             const preSize = hashTable[index].size();
             if (hashTable[index] instanceof LinkList) {
                 if (hashTable[index].find(element)) return;
-                hashTable[index].pushBack(element);
+                (hashTable[index] as LinkListType<T>).pushBack(element);
                 if (hashTable[index].size() >= HashSet.treeifyThreshold) {
                     hashTable[index] = new Set<T>(hashTable[index]);
                 }
