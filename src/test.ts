@@ -858,7 +858,7 @@ function testSet(testNum: number) {
     }
     endTime = Date.now();
     reportList.push({
-        testFunc: "reverseUupperBound",
+        testFunc: "reverseUpperBound",
         testNum: testNum,
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
