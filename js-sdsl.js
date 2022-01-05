@@ -1657,6 +1657,30 @@
         this.upperBound = function (key) {
             return _upperBound(root, key);
         };
+        var _reverseLowerBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult === 0)
+                return curNode.key;
+            if (cmpResult > 0)
+                return _reverseLowerBound(curNode.leftChild, key);
+            return _reverseLowerBound(curNode.rightChild, key) || curNode.key;
+        };
+        this.reverseLowerBound = function (key) {
+            return _reverseLowerBound(root, key);
+        };
+        var _reverseUpperBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult >= 0)
+                return _reverseUpperBound(curNode.leftChild, key);
+            return _reverseUpperBound(curNode.rightChild, key) || curNode.key;
+        };
+        this.reverseUpperBound = function (key) {
+            return _reverseUpperBound(root, key);
+        };
         // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
         this.union = function (other) {
@@ -1862,6 +1886,36 @@
         };
         this.upperBound = function (key) {
             return _upperBound(root, key);
+        };
+        var _reverseLowerBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult === 0)
+                return { key: curNode.key, value: curNode.value };
+            if (cmpResult > 0)
+                return _reverseLowerBound(curNode.leftChild, key);
+            return _reverseLowerBound(curNode.rightChild, key) || {
+                key: curNode.key,
+                value: curNode.value
+            };
+        };
+        this.reverseLowerBound = function (key) {
+            return _reverseLowerBound(root, key);
+        };
+        var _reverseUpperBound = function (curNode, key) {
+            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+                return undefined;
+            var cmpResult = cmp(curNode.key, key);
+            if (cmpResult >= 0)
+                return _reverseUpperBound(curNode.leftChild, key);
+            return _reverseUpperBound(curNode.rightChild, key) || {
+                key: curNode.key,
+                value: curNode.value
+            };
+        };
+        this.reverseUpperBound = function (key) {
+            return _reverseUpperBound(root, key);
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
