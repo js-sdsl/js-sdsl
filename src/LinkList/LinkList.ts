@@ -294,7 +294,7 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     this.pushFront = function (element: T) {
-        if (element === undefined || element === undefined) {
+        if (element === null || element === undefined) {
             throw new Error("you can't push null or undefined here");
         }
         ++len;

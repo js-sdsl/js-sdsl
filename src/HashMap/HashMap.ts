@@ -91,18 +91,18 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
                     value
                 }]);
             } else if (container instanceof Map) {
-                let lowList: (LinkListType<Pair<T, K>> | MapType<T, K>) = new LinkList<Pair<T, K>>();
-                let highList: (LinkListType<Pair<T, K>> | MapType<T, K>) = new LinkList<Pair<T, K>>();
+                const lowList: (LinkListType<Pair<T, K>>) = new LinkList<Pair<T, K>>();
+                const highList: (LinkListType<Pair<T, K>>) = new LinkList<Pair<T, K>>();
                 container.forEach((pair) => {
                     const hashCode = hashFunc(pair.key);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(pair);
                     } else highList.pushBack(pair);
                 });
-                if (lowList.size() > HashMap.untreeifyThreshold) lowList = new Map<T, K>(lowList);
-                if (highList.size() > HashMap.untreeifyThreshold) highList = new Map<T, K>(highList);
-                if (lowList.size()) newHashTable[index] = lowList;
-                if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+                if (lowList.size() > HashMap.untreeifyThreshold) newHashTable[index] = new Map<T, K>(lowList);
+                else if (lowList.size()) newHashTable[index] = lowList;
+                if (highList.size() > HashMap.untreeifyThreshold) newHashTable[index + originalBucketNum] = new Map<T, K>(highList);
+                else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
             } else {
                 const lowList = new LinkList<Pair<T, K>>();
                 const highList = new LinkList<Pair<T, K>>();
@@ -141,14 +141,14 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
                         return;
                     }
                 }
-                hashTable[index].pushBack({
+                (hashTable[index] as LinkListType<Pair<T, K>>).pushBack({
                     key,
                     value,
                 });
                 if (hashTable[index].size() >= HashMap.treeifyThreshold) {
                     hashTable[index] = new Map<T, K>(hashTable[index]);
                 }
-            } else hashTable[index].setElement(key, value);
+            } else (hashTable[index] as MapType<T, K>).setElement(key, value);
             const curSize = hashTable[index].size();
             len += curSize - preSize;
         }
@@ -160,7 +160,7 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
     this.getElementByKey = function (key: T) {
         const index = hashFunc(key) & (bucketNum - 1);
         if (!hashTable[index]) return undefined;
-        if (hashTable[index] instanceof Map) return hashTable[index].getElementByKey(key);
+        if (hashTable[index] instanceof Map) return (hashTable[index] as MapType<T, K>).getElementByKey(key);
         else {
             for (const pair of hashTable[index]) {
                 if (pair.key === key) return pair.value;
@@ -174,7 +174,7 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         if (!hashTable[index]) return;
         const preSize = hashTable[index].size();
         if (hashTable[index] instanceof Map) {
-            hashTable[index].eraseElementByKey(key);
+            (hashTable[index] as MapType<T, K>).eraseElementByKey(key);
             if (hashTable[index].size() <= HashMap.untreeifyThreshold) {
                 hashTable[index] = new LinkList<Pair<T, K>>(hashTable[index]);
             }

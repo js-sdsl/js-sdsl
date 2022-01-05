@@ -361,7 +361,7 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
     };
 
     /**
-     * @param pos cut element after pos
+     * @param pos cut elements after pos
      */
     this.cut = function (pos: number) {
         if (pos < 0) {

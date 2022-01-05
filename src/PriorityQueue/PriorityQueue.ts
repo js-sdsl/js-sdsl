@@ -1,6 +1,6 @@
 import { BaseType } from "../Base/Base";
 
-type PriorityQueue<T> = {
+export type PriorityQueueType<T> = {
     push: (element: T) => void;
     pop: () => void;
     top: () => T;
@@ -11,7 +11,7 @@ type PriorityQueue<T> = {
  * @param cmp default cmp will generate a max heap
  * @constructor
  */
-function PriorityQueue<T>(this: PriorityQueue<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
+function PriorityQueue<T>(this: PriorityQueueType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x > y) return -1;
         if (x < y) return 1;
@@ -112,4 +112,4 @@ function PriorityQueue<T>(this: PriorityQueue<T>, container: { forEach: (callbac
 
 Object.freeze(PriorityQueue);
 
-export default (PriorityQueue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueue<T> });
+export default (PriorityQueue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueueType<T> });

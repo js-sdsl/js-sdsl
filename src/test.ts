@@ -183,20 +183,6 @@ function testQueue(testNum: number) {
 
 function judgeSequentialContainer(funcName: string, container: SequentialContainerType<number>, myVector: SequentialContainerType<number>) {
     let testResult = (container.size() === myVector.size());
-    if (typeof container.begin === 'function') {
-        let pos = 0;
-        for (let it = container.begin(); !it.equals(container.end()); it = it.next()) {
-            testResult = testResult && (it.value === myVector.getElementByPos(pos));
-            ++pos;
-        }
-        testResult = testResult && (pos === myVector.size());
-        --pos;
-        for (let it = container.rBegin(); !it.equals(container.rEnd()); it = it.pre()) {
-            testResult = testResult && (it.value === myVector.getElementByPos(pos));
-            --pos;
-        }
-        testResult = testResult && (pos === -1);
-    }
     container.forEach((element, index) => {
         testResult = testResult && (element === myVector.getElementByPos(index));
     });
@@ -666,28 +652,17 @@ function testPriorityQueue(testNum: number) {
 function testSet(testNum: number) {
     function judgeSet(mySdslSet: SetType<number>, myVector: VectorType<number>) {
         if (mySdslSet.getHeight() > 2 * Math.log2(mySdslSet.size() + 1)) {
-            throw new Error("SdslSet tree too high!");
+            throw new Error("Set tree too high!");
         }
         if (mySdslSet.size() !== myVector.size()) {
-            throw new Error("SdslSet size test failed!");
+            throw new Error("Set size test failed!");
         }
-        myVector.sort((x: number, y: number) => x - y);
-        let num = 0;
-        for (let it = mySdslSet.begin(); !it.equals(mySdslSet.end()); it = it.next()) {
-            if (it.value !== myVector.getElementByPos(num)) throw new Error("Map test failed!");
-            ++num;
-        }
-        if (num !== mySdslSet.size()) {
-            throw new Error("SdslSet test failed!");
-        }
-        --num;
-        for (let it = mySdslSet.rBegin(); !it.equals(mySdslSet.rEnd()); it = it.pre()) {
-            if (it.value !== myVector.getElementByPos(num)) throw new Error("Map test failed!");
-            --num;
-        }
-        if (num !== -1) {
-            throw new Error("SdslSet test failed!");
-        }
+        myVector.sort((x, y) => x - y);
+        mySdslSet.forEach((element, index) => {
+            if (myVector.getElementByPos(index) !== element) {
+                throw new Error("Set test failed!");
+            }
+        });
     }
 
     console.log("Set test start...");
@@ -749,10 +724,20 @@ function testSet(testNum: number) {
             throw new Error("Set lowerBound test failed!");
         }
         if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
-            throw new Error("Set lowerBound test failed!");
+            throw new Error("Set upperBound test failed!");
         }
     }
     console.log("Set lowerBound and upperBound test passed.");
+
+    for (let i = 0; i < myVector.size(); ++i) {
+        if (mySdslSet.reverseLowerBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+            throw new Error("Set reverseLowerBound test failed!");
+        }
+        if (i !== 0 && mySdslSet.reverseUpperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i - 1)) {
+            throw new Error("Set reverseUpperBound test failed!");
+        }
+    }
+    console.log("Set reverseLowerBound and reverseUpperBound test passed.");
 
     for (let i = 0; i < 10000; ++i) {
         mySdslSet.eraseElementByPos(0);
@@ -849,6 +834,36 @@ function testSet(testNum: number) {
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
+    num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.reverseLowerBound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseLowerBound",
+        testNum: testNum,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.reverseUpperBound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseUpperBound",
+        testNum: testNum,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
 
     console.log("Set test report done.");
 
@@ -868,30 +883,16 @@ function testMap(testNum: number) {
         }
         stdMap.forEach((value, key) => {
             const _value = myMap.getElementByKey(key);
+            if (_value !== stdMap.get(key)) {
+                throw new Error("Map test failed!");
+            }
+        });
+        myMap.forEach(({ key, value }) => {
+            const _value = stdMap.get(key);
             if (_value !== value) {
                 throw new Error("Map test failed!");
             }
         });
-        let num = 0;
-        for (let it = myMap.begin(); !it.equals(myMap.end()); it = it.next()) {
-            const _value = stdMap.get(it.key);
-            if (it.value !== _value) {
-                throw new Error("Map test failed!");
-            }
-            ++num;
-        }
-        if (num !== myMap.size()) {
-            throw new Error("Map test failed!");
-        }
-        --num;
-        for (let it = myMap.rBegin(); !it.equals(myMap.rEnd()); it = it.pre()) {
-            const _value = stdMap.get(it.key);
-            if (it.value !== _value) throw new Error("Map test failed!");
-            --num;
-        }
-        if (num !== -1) {
-            throw new Error("Map test failed!");
-        }
     }
 
     console.log("Map test start...");
@@ -980,6 +981,23 @@ function testMap(testNum: number) {
     }
     console.log("Map lowerBound and upperBound test passed.");
 
+    for (let i = 0; i < myVector.size(); ++i) {
+        let vElement = myVector.getElementByPos(i);
+        let myElement = myMap.reverseLowerBound(vElement.key);
+        if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+            throw new Error("Map reverseLowerBound test failed!");
+        }
+        if (i !== 0) {
+            vElement = myVector.getElementByPos(i);
+            myElement = myMap.reverseUpperBound(vElement.key);
+            vElement = myVector.getElementByPos(i - 1);
+            if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+                throw new Error("Map reverseUpperBound test failed!");
+            }
+        }
+    }
+    console.log("Map reverseLowerBound and reverseUpperBound test passed.");
+
     console.clear();
     console.log("Map test end, all tests passed!");
 
@@ -1054,6 +1072,36 @@ function testMap(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "upperBound",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.reverseLowerBound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseLowerBound",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.reverseUpperBound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseUpperBound",
         testNum: testNum,
         containerSize: myMap.size(),
         runTime: endTime - startTime

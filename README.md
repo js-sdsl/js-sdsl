@@ -1,6 +1,6 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
-**A javascript standard data structure library which benchmark against C++ STL**
+**A javascript standard data structure library which benchmark against C++ STL.**
 
 ## Note
 
@@ -64,7 +64,7 @@ npm install js-sdsl
 
 ## Usage
 
-To help you have a better use, we provide this API document (**it will come soon**).
+To help you have a better use, we provide this [API document](https://zly201.github.io/js-sdsl/index.html).
 
 ### For Browser
 
