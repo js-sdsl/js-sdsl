@@ -724,10 +724,20 @@ function testSet(testNum: number) {
             throw new Error("Set lowerBound test failed!");
         }
         if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
-            throw new Error("Set lowerBound test failed!");
+            throw new Error("Set upperBound test failed!");
         }
     }
     console.log("Set lowerBound and upperBound test passed.");
+
+    for (let i = 0; i < myVector.size(); ++i) {
+        if (mySdslSet.reverseLowerBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+            throw new Error("Set reverseLowerBound test failed!");
+        }
+        if (i !== 0 && mySdslSet.reverseUpperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i - 1)) {
+            throw new Error("Set reverseUpperBound test failed!");
+        }
+    }
+    console.log("Set reverseLowerBound and reverseUpperBound test passed.");
 
     for (let i = 0; i < 10000; ++i) {
         mySdslSet.eraseElementByPos(0);
@@ -824,6 +834,36 @@ function testSet(testNum: number) {
         containerSize: mySdslSet.size(),
         runTime: endTime - startTime
     });
+    num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.reverseLowerBound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseLowerBound",
+        testNum: testNum,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const element of mySdslSet) {
+        ++num;
+        if (num >= testNum) break;
+        mySdslSet.reverseUpperBound(element);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseUupperBound",
+        testNum: testNum,
+        containerSize: mySdslSet.size(),
+        runTime: endTime - startTime
+    });
+
 
     console.log("Set test report done.");
 
@@ -941,6 +981,23 @@ function testMap(testNum: number) {
     }
     console.log("Map lowerBound and upperBound test passed.");
 
+    for (let i = 0; i < myVector.size(); ++i) {
+        let vElement = myVector.getElementByPos(i);
+        let myElement = myMap.reverseLowerBound(vElement.key);
+        if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+            throw new Error("Map reverseLowerBound test failed!");
+        }
+        if (i !== 0) {
+            vElement = myVector.getElementByPos(i);
+            myElement = myMap.reverseUpperBound(vElement.key);
+            vElement = myVector.getElementByPos(i - 1);
+            if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
+                throw new Error("Map reverseUpperBound test failed!");
+            }
+        }
+    }
+    console.log("Map reverseLowerBound and reverseUpperBound test passed.");
+
     console.clear();
     console.log("Map test end, all tests passed!");
 
@@ -1015,6 +1072,36 @@ function testMap(testNum: number) {
     endTime = Date.now();
     reportList.push({
         testFunc: "upperBound",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.reverseLowerBound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseLowerBound",
+        testNum: testNum,
+        containerSize: myMap.size(),
+        runTime: endTime - startTime
+    });
+
+    num = 0;
+    startTime = Date.now();
+    for (const pair of myMap) {
+        ++num;
+        if (num >= testNum) break;
+        myMap.reverseUpperBound(pair.key);
+    }
+    endTime = Date.now();
+    reportList.push({
+        testFunc: "reverseUpperBound",
         testNum: testNum,
         containerSize: myMap.size(),
         runTime: endTime - startTime
