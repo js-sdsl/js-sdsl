@@ -6,6 +6,8 @@ export type SetType<T> = {
     find: (element: T) => boolean;
     lowerBound: (key: T) => T | undefined;
     upperBound: (key: T) => T | undefined;
+    reverseLowerBound: (key: T) => T | undefined;
+    reverseUpperBound: (key: T) => T | undefined;
     union: (other: SetType<T>) => void;
     getHeight: () => number;
 } & ContainerType<T>;
@@ -325,6 +327,29 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
     this.upperBound = function (key: T) {
         return _upperBound(root, key);
+    };
+
+    const _reverseLowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult === 0) return curNode.key;
+        if (cmpResult > 0) return _reverseLowerBound(curNode.leftChild, key);
+        return _reverseLowerBound(curNode.rightChild, key) || curNode.key;
+    };
+
+    this.reverseLowerBound = function (key: T) {
+        return _reverseLowerBound(root, key);
+    };
+
+    const _reverseUpperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
+        return _reverseUpperBound(curNode.rightChild, key) || curNode.key;
+    };
+
+    this.reverseUpperBound = function (key: T) {
+        return _reverseUpperBound(root, key);
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).

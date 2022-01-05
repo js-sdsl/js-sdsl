@@ -8,6 +8,8 @@ export type MapType<T, K> = {
     find: (element: T) => boolean;
     lowerBound: (key: T) => Pair<T, K> | undefined;
     upperBound: (key: T) => Pair<T, K> | undefined;
+    reverseLowerBound: (key: T) => Pair<T, K> | undefined;
+    reverseUpperBound: (key: T) => Pair<T, K> | undefined;
     getElementByPos: (pos: number) => Pair<T, K>;
     getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
@@ -115,6 +117,35 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
 
     this.upperBound = function (key: T) {
         return _upperBound(root, key);
+    };
+
+    const _reverseLowerBound: (curNode: TreeNode<T, K> | undefined, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult === 0) return { key: curNode.key, value: curNode.value };
+        if (cmpResult > 0) return _reverseLowerBound(curNode.leftChild, key);
+        return _reverseLowerBound(curNode.rightChild, key) || {
+            key: curNode.key,
+            value: curNode.value
+        };
+    };
+
+    this.reverseLowerBound = function (key: T) {
+        return _reverseLowerBound(root, key);
+    };
+
+    const _reverseUpperBound: (curNode: TreeNode<T, K> | undefined, key: T) => Pair<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, key: T) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return undefined;
+        const cmpResult = cmp(curNode.key, key);
+        if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
+        return _reverseUpperBound(curNode.rightChild, key) || {
+            key: curNode.key,
+            value: curNode.value
+        };
+    };
+
+    this.reverseUpperBound = function (key: T) {
+        return _reverseUpperBound(root, key);
     };
 
     const eraseNodeSelfBalance = function (curNode: TreeNode<T, K>) {
