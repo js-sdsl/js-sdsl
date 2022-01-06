@@ -1,6 +1,6 @@
 {
   "name": "js-sdsl",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "javascript standard data structure library which benchmark against C++ STL",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -18,7 +18,8 @@
     "build:umd:min": "yarn build:umd && cd dist/umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o js-sdsl.min.js -- js-sdsl.js",
     "test": "rm -rf dist/test && tsc --downlevelIteration --declaration src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
     "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
-    "deploy": "yarn build:umd:min && typedoc type --disableSources && mv dist/umd/* docs && gh-pages -d docs"
+    "deploy": "yarn build:umd:min && typedoc type --disableSources && mv dist/umd/* docs && gh-pages -d docs",
+    "pub": "yarn build && yarn publish"
   },
   "husky": {
     "hooks": {
