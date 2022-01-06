@@ -311,7 +311,9 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return curNode.key;
         if (cmpResult < 0) return _lowerBound(curNode.rightChild, key);
-        return _lowerBound(curNode.leftChild, key) || curNode.key;
+        const res = _lowerBound(curNode.leftChild, key);
+        if (res !== undefined) return res;
+        return curNode.key;
     };
 
     this.lowerBound = function (key: T) {
@@ -322,7 +324,9 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
-        return _upperBound(curNode.leftChild, key) || curNode.key;
+        const res = _upperBound(curNode.leftChild, key);
+        if (res !== undefined) return res;
+        return curNode.key;
     };
 
     this.upperBound = function (key: T) {
@@ -334,7 +338,9 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return curNode.key;
         if (cmpResult > 0) return _reverseLowerBound(curNode.leftChild, key);
-        return _reverseLowerBound(curNode.rightChild, key) || curNode.key;
+        const res = _reverseLowerBound(curNode.rightChild, key);
+        if (res !== undefined) return res;
+        return curNode.key;
     };
 
     this.reverseLowerBound = function (key: T) {
@@ -345,7 +351,9 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
-        return _reverseUpperBound(curNode.rightChild, key) || curNode.key;
+        const res = _reverseUpperBound(curNode.rightChild, key);
+        if (res !== undefined) return res;
+        return curNode.key;
     };
 
     this.reverseUpperBound = function (key: T) {
