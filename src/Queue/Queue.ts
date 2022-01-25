@@ -33,10 +33,6 @@ function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element:
     this.front = function () {
         return queue.front();
     };
-
-    Object.freeze(this);
 }
-
-Object.freeze(Queue);
 
 export default (Queue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });

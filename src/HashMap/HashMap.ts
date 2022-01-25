@@ -215,10 +215,6 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
     };
 
     container.forEach(({ key, value }) => this.setElement(key, value));
-
-    Object.freeze(this);
 }
-
-Object.freeze(HashMap);
 
 export default (HashMap as unknown as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashMapType<T, K> });

@@ -512,10 +512,6 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
     };
 
     container.forEach(({ key, value }) => this.setElement(key, value));
-
-    Object.freeze(this);
 }
-
-Object.freeze(Map);
 
 export default (Map as unknown as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, cmp?: (x: T, y: T) => number): MapType<T, K> });

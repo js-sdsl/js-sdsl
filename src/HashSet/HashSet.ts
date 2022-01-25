@@ -175,10 +175,6 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
     };
 
     container.forEach(element => this.insert(element));
-
-    Object.freeze(this);
 }
-
-Object.freeze(HashSet);
 
 export default (HashSet as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });

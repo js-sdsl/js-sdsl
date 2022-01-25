@@ -455,10 +455,6 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
     };
 
     container.forEach(element => this.insert(element));
-
-    Object.freeze(this);
 }
-
-Object.freeze(Set);
 
 export default (Set as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): SetType<T> });

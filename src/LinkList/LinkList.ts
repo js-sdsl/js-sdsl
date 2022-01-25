@@ -50,11 +50,7 @@ const LinkListIterator = function <T>(this: Iterator<T>, _node: LinkNode<T>) {
         return new LinkListIterator(_node.next || _node);
     };
 
-    Object.freeze(this);
-
 } as unknown as { new<T>(_node: LinkNode<T>): Iterator<T> };
-
-Object.freeze(LinkListIterator);
 
 function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -367,10 +363,6 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     container.forEach(element => this.pushBack(element));
-
-    Object.freeze(this);
 }
-
-Object.freeze(LinkList);
 
 export default (LinkList as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });

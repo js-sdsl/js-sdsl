@@ -38,11 +38,7 @@ const DequeIterator = function <T>(this: Iterator<T>, pos: number, getElementByP
     this.next = function () {
         return new DequeIterator(pos + 1, getElementByPos);
     };
-
-    Object.freeze(this);
 } as unknown as { new<T>(pos: number, getElementByPos: (pos: number) => T): Iterator<T> };
-
-Object.freeze(DequeIterator);
 
 Deque.sigma = 3;    // growth factor
 Deque.bucketSize = 5000;
@@ -418,10 +414,6 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         last = first;
         container.forEach(element => this.pushBack(element));
     })();
-
-    Object.freeze(this);
 }
-
-Object.freeze(Deque);
 
 export default (Deque as unknown as { new<T>(arr: T[]): DequeType<T>; });

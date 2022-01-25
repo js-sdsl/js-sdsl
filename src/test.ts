@@ -21,7 +21,6 @@ import { HashMapType } from "./HashMap/HashMap";
 
 const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
-Object.freeze(arr);
 
 type testReportFormat = {
     containerName: string,

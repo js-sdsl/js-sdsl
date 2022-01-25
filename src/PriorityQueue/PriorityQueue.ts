@@ -106,10 +106,6 @@ function PriorityQueue<T>(this: PriorityQueueType<T>, container: { forEach: (cal
     this.top = function () {
         return priorityQueue[0];
     };
-
-    Object.freeze(this);
 }
-
-Object.freeze(PriorityQueue);
 
 export default (PriorityQueue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, cmp?: (x: T, y: T) => number): PriorityQueueType<T> });

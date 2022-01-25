@@ -33,11 +33,7 @@ const VectorIterator = function <T>(this: Iterator<T>, pos: number, getElementBy
     this.next = function () {
         return new VectorIterator(pos + 1, getElementByPos);
     };
-
-    Object.freeze(this);
 } as unknown as { new<T>(pos: number, getElementByPos: (pos: number) => T): Iterator<T> };
-
-Object.freeze(VectorIterator);
 
 function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -165,10 +161,6 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     };
 
     container.forEach(element => this.pushBack(element));
-
-    Object.freeze(this);
 }
-
-Object.freeze(Vector);
 
 export default (Vector as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });

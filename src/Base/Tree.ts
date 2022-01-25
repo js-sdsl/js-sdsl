@@ -125,8 +125,6 @@ class TreeNode<T, K> {
     }
 }
 
-Object.freeze(TreeNode);
-
 const TreeIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>, IteratorFunc: { new<T, K>(_node: TreeNode<T, K>): Iterator<T> }) {
     Object.defineProperties(this, {
         node: {
@@ -187,12 +185,9 @@ const TreeIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>, I
     };
 } as unknown as { new<T, K>(_node: TreeNode<T, K>): Iterator<T>; };
 
-Object.freeze(TreeIterator);
-
 const SetIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>) {
     // @ts-ignore
     TreeIterator.call(this, _node, SetIterator);
-    Object.freeze(this);
 } as unknown as { new<T, K>(_node: TreeNode<T, K>): Iterator<T>; };
 const MapIterator = function <T, K>(this: MapIteratorType<T, K>, _node: TreeNode<T, K>) {
     // @ts-ignore
@@ -203,10 +198,6 @@ const MapIterator = function <T, K>(this: MapIteratorType<T, K>, _node: TreeNode
         },
         enumerable: true
     });
-    Object.freeze(this);
 } as unknown as { new<T, K>(_node: TreeNode<T, K>): MapIteratorType<T, K>; };
-
-Object.freeze(SetIterator);
-Object.freeze(MapIterator);
 
 export { TreeNode, SetIterator, MapIterator };

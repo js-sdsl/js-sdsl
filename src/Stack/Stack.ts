@@ -38,10 +38,6 @@ function Stack<T>(this: StackType<T>, container: { forEach: (callback: (element:
     };
 
     container.forEach(element => this.push(element));
-
-    Object.freeze(this);
 }
-
-Object.freeze(Stack);
 
 export default (Stack as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): StackType<T> });
