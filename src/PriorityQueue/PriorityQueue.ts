@@ -6,11 +6,6 @@ export type PriorityQueueType<T> = {
     top: () => T;
 } & BaseType;
 
-/**
- * @param container
- * @param cmp default cmp will generate a max heap
- * @constructor
- */
 function PriorityQueue<T>(this: PriorityQueueType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {
         if (x > y) return -1;

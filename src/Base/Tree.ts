@@ -1,6 +1,7 @@
-import { Iterator, MapIteratorType } from "./Base";
+import { Pair } from "./Base";
+import { ContainerIterator } from "./Base";
 
-class TreeNode<T, K> {
+export class TreeNode<T, K> {
     static TreeNodeColorType: {
         red: true,
         black: false
@@ -125,29 +126,31 @@ class TreeNode<T, K> {
     }
 }
 
-const TreeIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>, IteratorFunc: { new<T, K>(_node: TreeNode<T, K>): Iterator<T> }) {
+function _TreeIterator<T, K>(this: ContainerIterator<unknown>, _node: TreeNode<T, K>, position: 'begin' | 'end' | 'mid' = 'mid') {
     Object.defineProperties(this, {
         node: {
-            get() {
-                return _node;
-            }
+            value: _node
         },
-        value: {
-            get() {
-                if (_node.value === undefined) return _node.key;
-                return _node.value;
+        position: {
+            value: position
+        },
+        pointer: {
+            value: _node.value === undefined ? _node.key : {
+                key: _node.key,
+                value: _node.value
             },
             enumerable: true
         }
     });
 
-    this.equals = function (obj: Iterator<T>) {
+    this.equals = function (obj: ContainerIterator<unknown>) {
         // @ts-ignore
-        return _node === obj.node;
+        return _node === obj.node && this.position === obj.position;
     };
 
     this.pre = function () {
-        let preNode: TreeNode<T, K> | undefined = _node;
+        if (position === 'begin') throw new Error("Iterator access denied!");
+        let preNode: TreeNode<T, K | undefined> | undefined = _node;
         if (preNode.color === TreeNode.TreeNodeColorType.red && preNode.parent?.parent === preNode) {
             preNode = preNode.rightChild;
         } else if (preNode.leftChild) {
@@ -162,11 +165,12 @@ const TreeIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>, I
             preNode = pre;
         }
         if (preNode === undefined) throw new Error("unknown error");
-        return new IteratorFunc(preNode);
+        return new TreeIterator(preNode as TreeNode<unknown, undefined>, preNode.key === undefined ? 'begin' : 'mid');
     };
 
     this.next = function () {
-        let nextNode: TreeNode<T, K> | undefined = _node;
+        if (position === 'end') throw new Error("Iterator access denied!");
+        let nextNode: TreeNode<T, K | undefined> | undefined = _node;
         if (nextNode?.rightChild) {
             nextNode = nextNode.rightChild;
             while (nextNode.leftChild) nextNode = nextNode?.leftChild;
@@ -181,23 +185,11 @@ const TreeIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>, I
             }
         }
         if (nextNode === undefined) throw new Error("unknown error");
-        return new IteratorFunc(nextNode);
+        return new TreeIterator(nextNode as TreeNode<unknown, undefined>, nextNode.key === undefined ? 'end' : 'mid');
     };
-} as unknown as { new<T, K>(_node: TreeNode<T, K>): Iterator<T>; };
+}
 
-const SetIterator = function <T, K>(this: Iterator<T>, _node: TreeNode<T, K>) {
-    // @ts-ignore
-    TreeIterator.call(this, _node, SetIterator);
-} as unknown as { new<T, K>(_node: TreeNode<T, K>): Iterator<T>; };
-const MapIterator = function <T, K>(this: MapIteratorType<T, K>, _node: TreeNode<T, K>) {
-    // @ts-ignore
-    TreeIterator.call(this, _node, MapIterator);
-    Object.defineProperty(this, 'key', {
-        get() {
-            return _node.key;
-        },
-        enumerable: true
-    });
-} as unknown as { new<T, K>(_node: TreeNode<T, K>): MapIteratorType<T, K>; };
-
-export { TreeNode, SetIterator, MapIterator };
+export const TreeIterator = _TreeIterator as unknown as {
+    new<T>(_node: TreeNode<T, undefined>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T>;
+    new<T, K>(_node: TreeNode<T, K>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<Pair<T, K>>;
+};

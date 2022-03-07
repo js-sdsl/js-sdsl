@@ -1,4 +1,4 @@
-import { Iterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
 class LinkNode<T> {
     value: T | undefined = undefined;
@@ -16,17 +16,16 @@ export type LinkListType<T> = {
     merge: (other: LinkListType<T>) => void;
 } & SequentialContainerType<T>;
 
-const LinkListIterator = function <T>(this: Iterator<T>, _node: LinkNode<T>) {
+const LinkListIterator = function <T>(this: ContainerIterator<T>, _node: LinkNode<T>, position: 'begin' | 'end' | 'mid' = 'mid') {
     Object.defineProperties(this, {
         node: {
-            get() {
-                return _node;
-            }
+            value: _node
         },
-        value: {
-            get() {
-                return _node.value;
-            },
+        position: {
+            value: position
+        },
+        pointer: {
+            value: _node.value,
             set(newValue) {
                 if (newValue === null || newValue === undefined) {
                     throw new Error("you can't push undefined or null here");
@@ -37,20 +36,21 @@ const LinkListIterator = function <T>(this: Iterator<T>, _node: LinkNode<T>) {
         }
     });
 
-    this.equals = function (obj: Iterator<T>) {
+    this.equals = function (obj: ContainerIterator<T>) {
         // @ts-ignore
-        return _node === obj.node;
+        return _node === obj.node && this.position === obj.position;
     };
 
     this.pre = function () {
+        if (position === 'begin') throw new Error("Iterator access denied!");
         return new LinkListIterator(_node.pre || _node);
     };
 
     this.next = function () {
+        if (position === 'end') throw new Error("Iterator access denied!");
         return new LinkListIterator(_node.next || _node);
     };
-
-} as unknown as { new<T>(_node: LinkNode<T>): Iterator<T> };
+} as unknown as { new<T>(_node: LinkNode<T>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T> };
 
 function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -73,19 +73,11 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     this.begin = function () {
-        return new LinkListIterator(head || header);
+        return new LinkListIterator(header, 'begin');
     };
 
     this.end = function () {
-        return new LinkListIterator(header);
-    };
-
-    this.rBegin = function () {
-        return new LinkListIterator(tail || header);
-    };
-
-    this.rEnd = function () {
-        return new LinkListIterator(header);
+        return new LinkListIterator(header, 'end');
     };
 
     this.front = function () {
@@ -201,11 +193,6 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         if (curNode) curNode.value = element;
     };
 
-    /**
-     * @param {number} pos insert element before pos, should in [0, list.size]
-     * @param {any} element the element you want to insert
-     * @param {number} [num = 1] the nums you want to insert
-     */
     this.insert = function (pos: number, element: T, num = 1) {
         if (element === null || element === undefined) {
             throw new Error("you can't insert null or undefined here");
@@ -240,10 +227,10 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     this.find = function (element: T) {
         let curNode = head;
         while (curNode && curNode !== header) {
-            if (curNode.value === element) return true;
+            if (curNode.value === element) return new LinkListIterator(curNode);
             curNode = curNode.next;
         }
-        return false;
+        return this.end();
     };
 
     this.reverse = function () {
@@ -321,10 +308,6 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         header.next = head;
     };
 
-    /**
-     * merge two sorted lists
-     * @param list other list
-     */
     this.merge = function (list: LinkListType<T>) {
         let curNode: LinkNode<T> | undefined = head;
         list.forEach((element: T) => {

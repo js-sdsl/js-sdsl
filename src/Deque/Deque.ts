@@ -1,4 +1,4 @@
-import { Iterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
 export type DequeType<T> = {
     pushFront: (element: T) => void;
@@ -7,38 +7,35 @@ export type DequeType<T> = {
     cut: (pos: number) => void;
 } & SequentialContainerType<T>;
 
-const DequeIterator = function <T>(this: Iterator<T>, pos: number, getElementByPos: (pos: number) => T) {
+const DequeIterator = function <T>(this: ContainerIterator<T>, index: number, getElementByPos: (pos: number) => T, position: 'begin' | 'end' | 'mid' = 'mid') {
     Object.defineProperties(this, {
         node: {
-            get() {
-                return pos;
-            }
+            value: index
         },
-        value: {
-            get() {
-                try {
-                    return getElementByPos(pos);
-                } catch (err) {
-                    return undefined;
-                }
-            },
+        position: {
+            value: position
+        },
+        pointer: {
+            value: position !== 'mid' ? undefined : getElementByPos(index),
             enumerable: true
         }
     });
 
-    this.equals = function (obj: Iterator<T>) {
+    this.equals = function (obj: ContainerIterator<T>) {
         // @ts-ignore
-        return this.node === obj.node;
-    }
+        return this.node === obj.node && this.position === obj.position;
+    };
 
     this.pre = function () {
-        return new DequeIterator(pos - 1, getElementByPos);
+        if (position === 'begin') throw new Error("Iterator access denied!");
+        return new DequeIterator(index - 1, getElementByPos);
     };
 
     this.next = function () {
-        return new DequeIterator(pos + 1, getElementByPos);
+        if (position === 'end') throw new Error("Iterator access denied!");
+        return new DequeIterator(index + 1, getElementByPos);
     };
-} as unknown as { new<T>(pos: number, getElementByPos: (pos: number) => T): Iterator<T> };
+} as unknown as { new<T>(pos: number, getElementByPos: (index: number) => T, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T> };
 
 Deque.sigma = 3;    // growth factor
 Deque.bucketSize = 5000;
@@ -67,20 +64,12 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
     };
 
     this.begin = function () {
-        return new DequeIterator(0, this.getElementByPos);
-    }
+        return new DequeIterator(-1, this.getElementByPos, 'begin');
+    };
 
     this.end = function () {
-        return new DequeIterator(len, this.getElementByPos);
-    }
-
-    this.rBegin = function () {
-        return new DequeIterator(len - 1, this.getElementByPos);
-    }
-
-    this.rEnd = function () {
-        return new DequeIterator(-1, this.getElementByPos);
-    }
+        return new DequeIterator(len, this.getElementByPos, 'end');
+    };
 
     this.front = function () {
         return map[first][curFirst];
@@ -122,9 +111,6 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         return { curNodeBucketIndex, curNodePointerIndex };
     };
 
-    /**
-     * @param pos index from 0 to size - 1
-     */
     this.getElementByPos = function (pos: number) {
         const {
             curNodeBucketIndex,
@@ -159,6 +145,14 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         const _len = arr.length;
         for (let i = 0; i < _len; ++i) this.setElementByPos(i, arr[i]);
         this.cut(_len - 1);
+    };
+
+    this.eraseElementByIterator = function (iter: ContainerIterator<T>) {
+        const nextIter = iter.next();
+        // @ts-ignore
+        this.eraseElementByPos(iter.node);
+        iter = nextIter;
+        return iter;
     };
 
     const reAllocate = function (this: DequeType<T>, originalSize: number) {
@@ -231,11 +225,6 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         map[curNodeBucketIndex][curNodePointerIndex] = element;
     };
 
-    /**
-     * @param {number} pos insert element before pos, should in [0, queue.size]
-     * @param {any} element the element you want to insert
-     * @param {number} [num = 1] the nums you want to insert
-     */
     this.insert = function (pos: number, element: T, num = 1) {
         if (pos === 0) {
             while (num--) this.pushFront(element);
@@ -253,24 +242,30 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
     };
 
     this.find = function (element: T) {
+        function getIndex(curNodeBucketIndex: number, curNodePointerIndex: number) {
+            if (curNodeBucketIndex === first) return curNodePointerIndex - curFirst;
+            if (curNodeBucketIndex === last) return len - (curLast - curNodePointerIndex) - 1;
+            return (Deque.bucketSize - first) + (curNodeBucketIndex - 2) * Deque.bucketSize + curNodePointerIndex;
+        }
+
         if (first === last) {
             for (let i = curFirst; i <= curLast; ++i) {
-                if (map[first][i] === element) return true;
+                if (map[first][i] === element) return new DequeIterator(getIndex(first, i), this.getElementByPos);
             }
-            return false;
+            return this.end();
         }
         for (let i = curFirst; i < Deque.bucketSize; ++i) {
-            if (map[first][i] === element) return true;
+            if (map[first][i] === element) return new DequeIterator(getIndex(first, i), this.getElementByPos);
         }
         for (let i = first + 1; i < last; ++i) {
             for (let j = 0; j < Deque.bucketSize; ++j) {
-                if (map[i][j] === element) return true;
+                if (map[i][j] === element) return new DequeIterator(getIndex(i, j), this.getElementByPos);
             }
         }
         for (let i = 0; i <= curLast; ++i) {
-            if (map[last][i] === element) return true;
+            if (map[last][i] === element) return new DequeIterator(getIndex(last, i), this.getElementByPos);
         }
-        return false;
+        return this.end();
     };
 
     this.reverse = function () {
@@ -338,9 +333,6 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         if (len > 0) --len;
     };
 
-    /**
-     * reduces memory usage by freeing unused memory
-     */
     this.shrinkToFit = function () {
         const arr: T[] = [];
         this.forEach((element) => {
@@ -356,9 +348,6 @@ function Deque<T>(this: DequeType<T>, container: { forEach: (callback: (element:
         arr.forEach(element => this.pushBack(element));
     };
 
-    /**
-     * @param pos cut elements after pos
-     */
     this.cut = function (pos: number) {
         if (pos < 0) {
             this.clear();

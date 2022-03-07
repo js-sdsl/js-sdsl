@@ -1,39 +1,36 @@
-import { Iterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
 export type VectorType<T> = SequentialContainerType<T>;
 
-const VectorIterator = function <T>(this: Iterator<T>, pos: number, getElementByPos: (pos: number) => T) {
+const VectorIterator = function <T>(this: ContainerIterator<T>, index: number, getElementByPos: (pos: number) => T, position: 'begin' | 'end' | 'mid' = 'mid') {
     Object.defineProperties(this, {
         node: {
-            get() {
-                return pos;
-            }
+            value: index
         },
-        value: {
-            get() {
-                try {
-                    return getElementByPos(pos);
-                } catch (err) {
-                    return undefined;
-                }
-            },
+        position: {
+            value: position
+        },
+        pointer: {
+            value: position === 'end' ? undefined : getElementByPos(index),
             enumerable: true
         }
     });
 
-    this.equals = function (obj: Iterator<T>) {
+    this.equals = function (obj: ContainerIterator<T>) {
         // @ts-ignore
-        return this.node === obj.node;
+        return this.node === obj.node && this.position === obj.position;
     }
 
     this.pre = function () {
-        return new VectorIterator(pos - 1, getElementByPos);
+        if (position === 'begin') throw new Error("Iterator access denied!");
+        return new VectorIterator(index - 1, getElementByPos);
     };
 
     this.next = function () {
-        return new VectorIterator(pos + 1, getElementByPos);
+        if (position === 'end') throw new Error("Iterator access denied!");
+        return new VectorIterator(index + 1, getElementByPos);
     };
-} as unknown as { new<T>(pos: number, getElementByPos: (pos: number) => T): Iterator<T> };
+} as unknown as { new<T>(pos: number, getElementByPos: (index: number) => T, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T> };
 
 function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -53,19 +50,19 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     };
 
     this.begin = function () {
-        return new VectorIterator(0, this.getElementByPos);
+        return new VectorIterator(0, this.getElementByPos, 'begin');
     };
 
     this.end = function () {
-        return new VectorIterator(len, this.getElementByPos);
+        return new VectorIterator(len, this.getElementByPos, 'end');
     }
 
     this.rBegin = function () {
-        return new VectorIterator(len - 1, this.getElementByPos);
+        return new VectorIterator(len - 1, this.getElementByPos, 'begin');
     }
 
     this.rEnd = function () {
-        return new VectorIterator(-1, this.getElementByPos);
+        return new VectorIterator(-1, this.getElementByPos, 'end');
     }
 
     this.front = function () {
@@ -127,7 +124,10 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     };
 
     this.find = function (element: T) {
-        return vector.includes(element);
+        for (let i = 0; i < len; ++i) {
+            if (vector[i] === element) return new VectorIterator(i, this.getElementByPos);
+        }
+        return this.end();
     };
 
     this.reverse = function () {

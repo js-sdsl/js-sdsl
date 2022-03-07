@@ -1,13 +1,12 @@
-import { TreeNode, SetIterator } from "../Base/Tree";
-import { ContainerType } from "../Base/Base";
+import { TreeNode, TreeIterator } from "../Base/Tree";
+import { ContainerIterator, ContainerType } from "../Base/Base";
 
 export type SetType<T> = {
     insert: (element: T) => void;
-    find: (element: T) => boolean;
-    lowerBound: (key: T) => T | undefined;
-    upperBound: (key: T) => T | undefined;
-    reverseLowerBound: (key: T) => T | undefined;
-    reverseUpperBound: (key: T) => T | undefined;
+    lowerBound: (key: T) => ContainerIterator<T>;
+    upperBound: (key: T) => ContainerIterator<T>;
+    reverseLowerBound: (key: T) => ContainerIterator<T>;
+    reverseUpperBound: (key: T) => ContainerIterator<T>;
     union: (other: SetType<T>) => void;
     getHeight: () => number;
 } & ContainerType<T>;
@@ -42,19 +41,11 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
     };
 
     this.begin = function () {
-        return new SetIterator(header.leftChild || header);
+        return new TreeIterator(header, 'begin');
     };
 
     this.end = function () {
-        return new SetIterator(header);
-    };
-
-    this.rBegin = function () {
-        return new SetIterator(header.rightChild || header);
-    };
-
-    this.rEnd = function () {
-        return new SetIterator(header);
+        return new TreeIterator(header, 'end');
     };
 
     const findSubTreeMinNode: (curNode: TreeNode<T, undefined>) => TreeNode<T, undefined> = function (curNode: TreeNode<T, undefined>) {
@@ -379,49 +370,58 @@ function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) 
 
     this.find = function (element: T) {
         const curNode = findElementPos(root, element);
-        return curNode !== undefined && curNode.key !== undefined && cmp(curNode.key, element) === 0;
+        if (curNode !== undefined && curNode.key !== undefined) return new TreeIterator(curNode);
+        return this.end();
     };
 
-    const _lowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
-        if (!curNode || curNode.key === undefined) return undefined;
+    const _lowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => ContainerIterator<T> = (curNode: TreeNode<T, undefined> | undefined, key: T) => {
+        if (!curNode || curNode.key === undefined) return this.end();
         const cmpResult = cmp(curNode.key, key);
-        if (cmpResult === 0) return curNode.key;
+        if (cmpResult === 0) return new TreeIterator(curNode);
         if (cmpResult < 0) return _lowerBound(curNode.rightChild, key);
-        return _lowerBound(curNode.leftChild, key) || curNode.key;
+        const iter = _lowerBound(curNode.leftChild, key);
+        if (iter.equals(this.end())) return new TreeIterator(curNode);
+        return iter;
     };
 
     this.lowerBound = function (key: T) {
         return _lowerBound(root, key);
     };
 
-    const _upperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
-        if (!curNode || curNode.key === undefined) return undefined;
+    const _upperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => ContainerIterator<T> = (curNode: TreeNode<T, undefined> | undefined, key: T) => {
+        if (!curNode || curNode.key === undefined) return this.end();
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
-        return _upperBound(curNode.leftChild, key) || curNode.key;
+        const iter = _upperBound(curNode.leftChild, key);
+        if (iter.equals(this.end())) return new TreeIterator(curNode);
+        return iter;
     };
 
     this.upperBound = function (key: T) {
         return _upperBound(root, key);
     };
 
-    const _reverseLowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
-        if (!curNode || curNode.key === undefined) return undefined;
+    const _reverseLowerBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => ContainerIterator<T> = (curNode: TreeNode<T, undefined> | undefined, key: T) => {
+        if (!curNode || curNode.key === undefined) return this.end();
         const cmpResult = cmp(curNode.key, key);
-        if (cmpResult === 0) return curNode.key;
+        if (cmpResult === 0) return new TreeIterator(curNode);
         if (cmpResult > 0) return _reverseLowerBound(curNode.leftChild, key);
-        return _reverseLowerBound(curNode.rightChild, key) || curNode.key;
+        const iter = _reverseLowerBound(curNode.rightChild, key);
+        if (iter.equals(this.end())) return new TreeIterator(curNode);
+        return iter;
     };
 
     this.reverseLowerBound = function (key: T) {
         return _reverseLowerBound(root, key);
     };
 
-    const _reverseUpperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => T | undefined = function (curNode: TreeNode<T, undefined> | undefined, key: T) {
-        if (!curNode || curNode.key === undefined) return undefined;
+    const _reverseUpperBound: (curNode: TreeNode<T, undefined> | undefined, key: T) => ContainerIterator<T> = (curNode: TreeNode<T, undefined> | undefined, key: T) => {
+        if (!curNode || curNode.key === undefined) return this.end();
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
-        return _reverseUpperBound(curNode.rightChild, key) || curNode.key;
+        const iter = _reverseUpperBound(curNode.rightChild, key);
+        if (iter.equals(this.end())) return new TreeIterator(curNode);
+        return iter;
     };
 
     this.reverseUpperBound = function (key: T) {
