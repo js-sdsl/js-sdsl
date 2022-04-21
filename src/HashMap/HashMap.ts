@@ -188,26 +188,28 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
     this.find = function (key: T) {
         const index = hashFunc(key) & (bucketNum - 1);
         if (!hashTable[index]) return false;
-        if (hashTable[index] instanceof Map) return (hashTable[index] as MapType<T, K>).find(key);
+        if (hashTable[index] instanceof Map) return !(hashTable[index] as MapType<T, K>).find(key).equals(hashTable[index].end());
         for (const pair of hashTable[index]) {
             if (pair.key === key) return true;
         }
         return false;
     };
 
-    this[Symbol.iterator] = function () {
-        return (function* () {
-            let index = 0;
-            while (index < bucketNum) {
-                while (index < bucketNum && !hashTable[index]) ++index;
-                if (index >= bucketNum) break;
-                for (const pair of hashTable[index]) yield pair;
-                ++index;
-            }
-        })();
-    };
+    if (typeof Symbol.iterator === 'symbol') {
+        this[Symbol.iterator] = function () {
+            return (function* () {
+                let index = 0;
+                while (index < bucketNum) {
+                    while (index < bucketNum && !hashTable[index]) ++index;
+                    if (index >= bucketNum) break;
+                    for (const pair of hashTable[index]) yield pair;
+                    ++index;
+                }
+            })();
+        };
+    }
 
     container.forEach(({ key, value }) => this.setElement(key, value));
 }
 
-export default (HashMap as unknown as { new<T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashMapType<T, K> });
+export default (HashMap as unknown as { new <T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashMapType<T, K> });

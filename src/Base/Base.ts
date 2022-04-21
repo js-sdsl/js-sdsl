@@ -1,5 +1,6 @@
 export type ContainerIterator<T> = {
     pointer: T;
+    readonly iteratorType: 'normal' | 'reverse';
     pre: () => ContainerIterator<T>;
     next: () => ContainerIterator<T>;
     equals: (obj: ContainerIterator<T>) => boolean;

@@ -719,20 +719,20 @@ function testSet(testNum: number) {
 
     myVector.sort((x: number, y: number) => x - y);
     for (let i = 0; i < myVector.size(); ++i) {
-        if (mySdslSet.lowerBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+        if (mySdslSet.lowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
             throw new Error("Set lowerBound test failed!");
         }
-        if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i + 1)) {
+        if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i + 1)) {
             throw new Error("Set upperBound test failed!");
         }
     }
     console.log("Set lowerBound and upperBound test passed.");
 
     for (let i = 0; i < myVector.size(); ++i) {
-        if (mySdslSet.reverseLowerBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i)) {
+        if (mySdslSet.reverseLowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
             throw new Error("Set reverseLowerBound test failed!");
         }
-        if (i !== 0 && mySdslSet.reverseUpperBound(myVector.getElementByPos(i)) !== myVector.getElementByPos(i - 1)) {
+        if (i !== 0 && mySdslSet.reverseUpperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i - 1)) {
             throw new Error("Set reverseUpperBound test failed!");
         }
     }
@@ -965,13 +965,13 @@ function testMap(testNum: number) {
     myVector.sort((x, y) => x.key - y.key);
     for (let i = 0; i < myVector.size(); ++i) {
         let vElement = myVector.getElementByPos(i);
-        let myElement = myMap.lowerBound(vElement.key);
+        let myElement = myMap.lowerBound(vElement.key).pointer;
         if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
             throw new Error("Map lowerBound test failed!");
         }
         if (i !== myVector.size() - 1) {
             vElement = myVector.getElementByPos(i);
-            myElement = myMap.upperBound(vElement.key);
+            myElement = myMap.upperBound(vElement.key).pointer;
             vElement = myVector.getElementByPos(i + 1);
             if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
                 throw new Error("Map upperBound test failed!");
@@ -982,13 +982,13 @@ function testMap(testNum: number) {
 
     for (let i = 0; i < myVector.size(); ++i) {
         let vElement = myVector.getElementByPos(i);
-        let myElement = myMap.reverseLowerBound(vElement.key);
+        let myElement = myMap.reverseLowerBound(vElement.key).pointer;
         if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
             throw new Error("Map reverseLowerBound test failed!");
         }
         if (i !== 0) {
             vElement = myVector.getElementByPos(i);
-            myElement = myMap.reverseUpperBound(vElement.key);
+            myElement = myMap.reverseUpperBound(vElement.key).pointer;
             vElement = myVector.getElementByPos(i - 1);
             if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
                 throw new Error("Map reverseUpperBound test failed!");

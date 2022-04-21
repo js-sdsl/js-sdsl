@@ -121,7 +121,7 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
         } else {
             const preSize = hashTable[index].size();
             if (hashTable[index] instanceof LinkList) {
-                if (hashTable[index].find(element)) return;
+                if (!hashTable[index].find(element).equals(hashTable[index].end())) return;
                 (hashTable[index] as LinkListType<T>).pushBack(element);
                 if (hashTable[index].size() >= HashSet.treeifyThreshold) {
                     hashTable[index] = new Set<T>(hashTable[index]);
@@ -152,22 +152,24 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
     this.find = function (element: T) {
         const index = hashFunc(element) & (bucketNum - 1);
         if (!hashTable[index]) return false;
-        return hashTable[index].find(element);
+        return !hashTable[index].find(element).equals(hashTable[index].end());
     };
 
-    this[Symbol.iterator] = function () {
-        return (function* () {
-            let index = 0;
-            while (index < bucketNum) {
-                while (index < bucketNum && !hashTable[index]) ++index;
-                if (index >= bucketNum) break;
-                for (const element of hashTable[index]) yield element;
-                ++index;
-            }
-        })();
-    };
+    if (typeof Symbol.iterator === 'symbol') {
+        this[Symbol.iterator] = function () {
+            return (function* () {
+                let index = 0;
+                while (index < bucketNum) {
+                    while (index < bucketNum && !hashTable[index]) ++index;
+                    if (index >= bucketNum) break;
+                    for (const element of hashTable[index]) yield element;
+                    ++index;
+                }
+            })();
+        };
+    }
 
     container.forEach(element => this.insert(element));
 }
 
-export default (HashSet as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });
+export default (HashSet as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });

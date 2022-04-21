@@ -6,9 +6,9 @@ export class TreeNode<T, K> {
         red: true,
         black: false
     } = {
-        red: true,
-        black: false
-    };
+            red: true,
+            black: false
+        };
     color = true;
     key: T | undefined = undefined;
     value: K | undefined = undefined;
@@ -126,30 +126,45 @@ export class TreeNode<T, K> {
     }
 }
 
-function _TreeIterator<T, K>(this: ContainerIterator<unknown>, _node: TreeNode<T, K>, position: 'begin' | 'end' | 'mid' = 'mid') {
+function _TreeIterator<T, K>(
+    this: ContainerIterator<Pair<T, K | undefined>>,
+    _node: TreeNode<T, K>,
+    header: TreeNode<T, K>,
+    iteratorType: 'normal' | 'reverse' = 'normal'
+) {
     Object.defineProperties(this, {
+        iteratorType: {
+            value: iteratorType
+        },
         node: {
             value: _node
         },
-        position: {
-            value: position
-        },
         pointer: {
-            value: _node.value === undefined ? _node.key : {
-                key: _node.key,
-                value: _node.value
+            get() {
+                if (_node.key === undefined) {
+                    throw new Error("Tree iterator access denied!");
+                }
+                if (_node.value === undefined) {
+                    return _node.key
+                }
+                return {
+                    key: _node.key,
+                    value: _node.value
+                }
             },
             enumerable: true
         }
     });
 
-    this.equals = function (obj: ContainerIterator<unknown>) {
+    this.equals = function (obj: ContainerIterator<Pair<T, K | undefined>>) {
+        if (this.iteratorType !== obj.iteratorType) {
+            throw new Error("iterator type error!");
+        }
         // @ts-ignore
-        return _node === obj.node && this.position === obj.position;
+        return _node === obj.node;
     };
 
-    this.pre = function () {
-        if (position === 'begin') throw new Error("Iterator access denied!");
+    const _pre = function () {
         let preNode: TreeNode<T, K | undefined> | undefined = _node;
         if (preNode.color === TreeNode.TreeNodeColorType.red && preNode.parent?.parent === preNode) {
             preNode = preNode.rightChild;
@@ -165,11 +180,10 @@ function _TreeIterator<T, K>(this: ContainerIterator<unknown>, _node: TreeNode<T
             preNode = pre;
         }
         if (preNode === undefined) throw new Error("unknown error");
-        return new TreeIterator(preNode as TreeNode<unknown, undefined>, preNode.key === undefined ? 'begin' : 'mid');
+        return preNode;
     };
 
-    this.next = function () {
-        if (position === 'end') throw new Error("Iterator access denied!");
+    const _next = function () {
         let nextNode: TreeNode<T, K | undefined> | undefined = _node;
         if (nextNode?.rightChild) {
             nextNode = nextNode.rightChild;
@@ -185,11 +199,41 @@ function _TreeIterator<T, K>(this: ContainerIterator<unknown>, _node: TreeNode<T
             }
         }
         if (nextNode === undefined) throw new Error("unknown error");
-        return new TreeIterator(nextNode as TreeNode<unknown, undefined>, nextNode.key === undefined ? 'end' : 'mid');
+        return nextNode;
     };
+
+    this.pre = function () {
+        if (this.iteratorType === 'reverse') {
+            if (_node === header.rightChild) throw new Error("Tree iterator access denied!");
+            const preNode = _next();
+            return new TreeIterator(preNode, header, this.iteratorType);
+        }
+        if (_node === header.leftChild) throw new Error("Tree iterator access denied!");
+        const preNode = _pre();
+        return new TreeIterator(preNode, header);
+    }
+
+    this.next = function () {
+        if (this.iteratorType === 'reverse') {
+            if (_node === header) throw new Error("Tree iterator access denied!");
+            const nextNode = _pre();
+            return new TreeIterator(nextNode, header, this.iteratorType);
+        }
+        if (_node === header) throw new Error("Tree iterator access denied!");
+        const nextNode = _next();
+        return new TreeIterator(nextNode, header);
+    }
 }
 
 export const TreeIterator = _TreeIterator as unknown as {
-    new<T>(_node: TreeNode<T, undefined>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T>;
-    new<T, K>(_node: TreeNode<T, K>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<Pair<T, K>>;
+    new <T>(
+        _node: TreeNode<T, undefined>,
+        header: TreeNode<T, undefined>,
+        iteratorType?: 'normal' | 'reverse'
+    ): ContainerIterator<T>;
+    new <T, K>(
+        _node: TreeNode<T, K>,
+        header: TreeNode<T, K>,
+        iteratorType?: 'normal' | 'reverse'
+    ): ContainerIterator<Pair<T, K>>;
 };

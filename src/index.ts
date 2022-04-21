@@ -9,6 +9,10 @@ import Map from "./Map/Map";
 import HashSet from "./HashSet/HashSet";
 import HashMap from "./HashMap/HashMap";
 
+if (typeof Symbol.iterator !== 'symbol') {
+    console.warn("Your running environment does not support symbol type, you may can not use the 'for...of' syntax.");
+}
+
 export {
     Vector,
     Stack,

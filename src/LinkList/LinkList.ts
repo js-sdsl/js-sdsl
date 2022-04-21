@@ -1,6 +1,6 @@
 import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
-class LinkNode<T> {
+export class LinkNode<T> {
     value: T | undefined = undefined;
     pre: LinkNode<T> | undefined = undefined;
     next: LinkNode<T> | undefined = undefined;
@@ -16,17 +16,28 @@ export type LinkListType<T> = {
     merge: (other: LinkListType<T>) => void;
 } & SequentialContainerType<T>;
 
-const LinkListIterator = function <T>(this: ContainerIterator<T>, _node: LinkNode<T>, position: 'begin' | 'end' | 'mid' = 'mid') {
+const LinkListIterator = function <T>(
+    this: ContainerIterator<T>,
+    _node: LinkNode<T>,
+    head: LinkNode<T>,
+    tail: LinkNode<T>,
+    iteratorType: 'normal' | 'reverse' = 'normal',
+) {
     Object.defineProperties(this, {
+        iteratorType: {
+            value: iteratorType
+        },
         node: {
             value: _node
         },
-        position: {
-            value: position
-        },
         pointer: {
-            value: _node.value,
-            set(newValue) {
+            get() {
+                return _node.value;
+            },
+            set(newValue: T) {
+                if (_node.value === undefined) {
+                    throw new Error("LinkList iterator access denied!");
+                }
                 if (newValue === null || newValue === undefined) {
                     throw new Error("you can't push undefined or null here");
                 }
@@ -37,20 +48,38 @@ const LinkListIterator = function <T>(this: ContainerIterator<T>, _node: LinkNod
     });
 
     this.equals = function (obj: ContainerIterator<T>) {
+        if (this.iteratorType !== obj.iteratorType) {
+            throw new Error("iterator type error!");
+        }
         // @ts-ignore
-        return _node === obj.node && this.position === obj.position;
+        return _node === obj.node;
     };
 
     this.pre = function () {
-        if (position === 'begin') throw new Error("Iterator access denied!");
-        return new LinkListIterator(_node.pre || _node);
+        if (this.iteratorType === 'reverse') {
+            if (_node === tail) throw new Error("LinkList iterator access denied!");
+            return new LinkListIterator(_node.next || _node, head, tail, this.iteratorType);
+        }
+        if (_node === head) throw new Error("LinkList iterator access denied!");
+        return new LinkListIterator(_node.pre || _node, head, tail);
     };
 
     this.next = function () {
-        if (position === 'end') throw new Error("Iterator access denied!");
-        return new LinkListIterator(_node.next || _node);
+        if (this.iteratorType === 'reverse') {
+            if (_node.value === undefined) throw new Error("LinkList iterator access denied!");
+            return new LinkListIterator(_node.pre || _node, head, tail, this.iteratorType);
+        }
+        if (_node.value === undefined) throw new Error("LinkList iterator access denied!");
+        return new LinkListIterator(_node.next || _node, head, tail);
     };
-} as unknown as { new<T>(_node: LinkNode<T>, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T> };
+} as unknown as {
+    new <T>(
+        _node: LinkNode<T>,
+        head: LinkNode<T>,
+        tail: LinkNode<T>,
+        iteratorType?: 'normal' | 'reverse'
+    ): ContainerIterator<T>
+};
 
 function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -73,12 +102,20 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     };
 
     this.begin = function () {
-        return new LinkListIterator(header, 'begin');
+        return new LinkListIterator(head || header, head || header, tail || header);
     };
 
     this.end = function () {
-        return new LinkListIterator(header, 'end');
+        return new LinkListIterator(header, head || header, tail || header);
     };
+
+    this.rBegin = function () {
+        return new LinkListIterator(tail || header, head || header, tail || header);
+    }
+
+    this.rEnd = function () {
+        return new LinkListIterator(header, head || header, tail || header);
+    }
 
     this.front = function () {
         return head?.value;
@@ -227,7 +264,7 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
     this.find = function (element: T) {
         let curNode = head;
         while (curNode && curNode !== header) {
-            if (curNode.value === element) return new LinkListIterator(curNode);
+            if (curNode.value === element) return new LinkListIterator(curNode, head || header, tail || header);
             curNode = curNode.next;
         }
         return this.end();
@@ -334,18 +371,20 @@ function LinkList<T>(this: LinkListType<T>, container: { forEach: (callback: (el
         });
     };
 
-    this[Symbol.iterator] = function () {
-        return (function* () {
-            let curNode = head;
-            while (curNode && curNode !== header) {
-                if (!curNode.value) throw new Error("unknown error");
-                yield curNode.value;
-                curNode = curNode.next;
-            }
-        })();
-    };
+    if (typeof Symbol.iterator === 'symbol') {
+        this[Symbol.iterator] = function () {
+            return (function* () {
+                let curNode = head;
+                while (curNode && curNode !== header) {
+                    if (!curNode.value) throw new Error("unknown error");
+                    yield curNode.value;
+                    curNode = curNode.next;
+                }
+            })();
+        };
+    }
 
     container.forEach(element => this.pushBack(element));
 }
 
-export default (LinkList as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });
+export default (LinkList as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }): LinkListType<T>; });

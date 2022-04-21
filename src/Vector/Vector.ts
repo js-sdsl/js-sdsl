@@ -2,35 +2,69 @@ import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
 export type VectorType<T> = SequentialContainerType<T>;
 
-const VectorIterator = function <T>(this: ContainerIterator<T>, index: number, getElementByPos: (pos: number) => T, position: 'begin' | 'end' | 'mid' = 'mid') {
+const VectorIterator = function <T>(
+    this: ContainerIterator<T>,
+    index: number,
+    size: () => number,
+    getElementByPos: (pos: number) => T,
+    setElementByPos: (pos: number, element: T) => void,
+    iteratorType: 'normal' | 'reverse' = 'normal',
+) {
     Object.defineProperties(this, {
-        node: {
-            value: index
+        iteratorType: {
+            value: iteratorType
         },
-        position: {
-            value: position
+        node: {
+            value: index,
         },
         pointer: {
-            value: position === 'end' ? undefined : getElementByPos(index),
+            get: () => {
+                if (index < 0 || index >= size()) {
+                    throw new Error("Deque iterator access denied!");
+                }
+                return getElementByPos(index);
+            },
+            set: (newValue: T) => {
+                setElementByPos(index, newValue);
+            },
             enumerable: true
         }
     });
 
     this.equals = function (obj: ContainerIterator<T>) {
+        if (this.iteratorType !== obj.iteratorType) {
+            throw new Error("iterator type error!");
+        }
         // @ts-ignore
-        return this.node === obj.node && this.position === obj.position;
-    }
+        return _node === obj.node;
+    };
 
     this.pre = function () {
-        if (position === 'begin') throw new Error("Iterator access denied!");
-        return new VectorIterator(index - 1, getElementByPos);
+        if (this.iteratorType === 'reverse') {
+            if (index === size() - 1) throw new Error("Deque iterator access denied!");
+            return new VectorIterator(index + 1, size, getElementByPos, setElementByPos, this.iteratorType);
+        }
+        if (index === 0) throw new Error("Deque iterator access denied!");
+        return new VectorIterator(index - 1, size, getElementByPos, setElementByPos);
     };
 
     this.next = function () {
-        if (position === 'end') throw new Error("Iterator access denied!");
-        return new VectorIterator(index + 1, getElementByPos);
+        if (this.iteratorType === 'reverse') {
+            if (index === -1) throw new Error("Deque iterator access denied!");
+            return new VectorIterator(index - 1, size, getElementByPos, setElementByPos, this.iteratorType);
+        }
+        if (index === size()) throw new Error("Iterator access denied!");
+        return new VectorIterator(index + 1, size, getElementByPos, setElementByPos);
     };
-} as unknown as { new<T>(pos: number, getElementByPos: (index: number) => T, position?: 'begin' | 'end' | 'mid'): ContainerIterator<T> };
+} as unknown as {
+    new <T>(
+        pos: number,
+        size: () => number,
+        getElementByPos: (pos: number) => T,
+        setElementByPos: (pos: number, element: T) => void,
+        type?: 'normal' | 'reverse',
+    ): ContainerIterator<T>
+};
 
 function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;
@@ -50,19 +84,19 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     };
 
     this.begin = function () {
-        return new VectorIterator(0, this.getElementByPos, 'begin');
+        return new VectorIterator(0, this.size, this.getElementByPos, this.setElementByPos);
     };
 
     this.end = function () {
-        return new VectorIterator(len, this.getElementByPos, 'end');
-    }
+        return new VectorIterator(len, this.size, this.getElementByPos, this.setElementByPos);
+    };
 
     this.rBegin = function () {
-        return new VectorIterator(len - 1, this.getElementByPos, 'begin');
+        return new VectorIterator(len - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
     }
 
     this.rEnd = function () {
-        return new VectorIterator(-1, this.getElementByPos, 'end');
+        return new VectorIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
     }
 
     this.front = function () {
@@ -113,11 +147,18 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
     };
 
     this.setElementByPos = function (pos: number, element: T) {
+        if (element === undefined || element === null) {
+            this.eraseElementByPos(pos);
+            return;
+        }
         if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than vector's size");
         vector[pos] = element;
     };
 
     this.insert = function (pos: number, element: T, num = 1) {
+        if (element === undefined || element === null) {
+            throw new Error("you can't push undefined or null here");
+        }
         if (pos < 0 || pos > len) throw new Error("pos must more than 0 and less than or equal to vector's size");
         vector.splice(pos, 0, ...new Array<T>(num).fill(element));
         len += num;
@@ -125,7 +166,7 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
 
     this.find = function (element: T) {
         for (let i = 0; i < len; ++i) {
-            if (vector[i] === element) return new VectorIterator(i, this.getElementByPos);
+            if (vector[i] === element) return new VectorIterator(i, this.size, this.getElementByPos, this.getElementByPos);
         }
         return this.end();
     };
@@ -154,13 +195,15 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
         vector.sort(cmp);
     };
 
-    this[Symbol.iterator] = function () {
-        return (function* () {
-            return yield* vector;
-        })();
-    };
+    if (typeof Symbol.iterator === 'symbol') {
+        this[Symbol.iterator] = function () {
+            return (function* () {
+                return yield* vector;
+            })();
+        };
+    }
 
     container.forEach(element => this.pushBack(element));
 }
 
-export default (Vector as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });
+export default (Vector as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });
