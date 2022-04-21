@@ -36,7 +36,7 @@ const VectorIterator = function <T>(
             throw new Error("iterator type error!");
         }
         // @ts-ignore
-        return _node === obj.node;
+        return this.node === obj.node;
     };
 
     this.pre = function () {

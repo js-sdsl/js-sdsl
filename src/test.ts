@@ -10,7 +10,7 @@ import {
     HashSet,
     HashMap,
 } from "./index";
-import { SequentialContainerType } from "./Base/Base";
+import { ContainerIterator, SequentialContainerType, Pair } from "./Base/Base";
 import { VectorType } from "./Vector/Vector";
 import { StackType } from "./Stack/Stack";
 import { QueueType } from "./Queue/Queue";
@@ -1322,6 +1322,73 @@ function testHashMap(testNum: number) {
     };
 }
 
+function testIterator() {
+    const containerArr = [
+        new Vector(arr),
+        new LinkList(arr),
+        new Deque(arr),
+        new SdslSet(arr),
+        new SdslMap(arr.map((element, index) => ({
+            key: element,
+            value: index
+        }))),
+    ];
+
+    const sortedArr = [...arr];
+    sortedArr.sort((a, b) => a - b);
+
+    console.log("Iterator test started...");
+
+    console.log("Normal iterator test started...");
+    for (const container of containerArr) {
+        let index = 0;
+        for (let it = container.begin() as ContainerIterator<unknown>; !it.equals(container.end() as ContainerIterator<unknown>); it = it.next()) {
+            let testPassed = true;
+            if (container instanceof SdslSet) {
+                if (it.pointer !== sortedArr[index++]) {
+                    testPassed = false;
+                }
+            } else if (container instanceof SdslMap) {
+                if ((it as ContainerIterator<Pair<number, number>>).pointer.key !== arr[(it as ContainerIterator<Pair<number, number>>).pointer.value]) {
+                    testPassed = false;
+                }
+            } else {
+                if (it.pointer !== arr[index++]) {
+                    testPassed = false;
+                }
+            }
+            if (!testPassed) throw new Error(`${container.constructor.name}'s normal iterator error!`);
+        }
+    }
+    console.log("Normal iterator test end, all tests passed.");
+
+    console.log("Reverse iterator test started...");
+    for (const container of containerArr) {
+        let index = arr.length - 1;
+        for (let it = container.rBegin() as ContainerIterator<unknown>; !it.equals(container.rEnd() as ContainerIterator<unknown>); it = it.next()) {
+            let testPassed = true;
+            if (container instanceof SdslSet) {
+                if (it.pointer !== sortedArr[index--]) {
+                    testPassed = false;
+                }
+            } else if (container instanceof SdslMap) {
+                if ((it as ContainerIterator<Pair<number, number>>).pointer.key !== arr[(it as ContainerIterator<Pair<number, number>>).pointer.value]) {
+                    testPassed = false;
+                }
+            } else {
+                if (it.pointer !== arr[index--]) {
+                    testPassed = false;
+                }
+            }
+            if (!testPassed) throw new Error(`${container.constructor.name}'s reverse iterator error!`);
+        }
+    }
+    console.log("Reverse iterator test end, all tests passed.");
+
+    console.clear();
+    console.log("Iterator test end, all tests passed.");
+}
+
 function main(taskQueue: string[]) {
     const testReport: testReportFormat[] = [];
     const testNum = 1000000;
@@ -1337,16 +1404,19 @@ function main(taskQueue: string[]) {
     if (taskQueue.length === 0 || taskQueue.includes("Map")) testReport.push(testMap(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("HashSet")) testReport.push(testHashSet(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("HashMap")) testReport.push(testHashMap(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("Iterator")) testIterator();
 
     console.clear();
     console.log("test end, all tests passed!");
 
-    console.log("=".repeat(35), "Report", "=".repeat(35));
-    testReport.forEach(report => {
-        console.log("=".repeat(35), report.containerName, "=".repeat(35));
-        console.table(report.reportList);
-    });
-    console.log("=".repeat(35), "Report", "=".repeat(35));
+    if (testReport.length) {
+        console.log("=".repeat(35), "Report", "=".repeat(35));
+        testReport.forEach(report => {
+            console.log("=".repeat(35), report.containerName, "=".repeat(35));
+            console.table(report.reportList);
+        });
+        console.log("=".repeat(35), "Report", "=".repeat(35));
+    }
 }
 
 main(process.argv.slice(2));
