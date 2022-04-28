@@ -1,10 +1,19 @@
 import { BaseType } from "../Base/Base";
 
-export type PriorityQueueType<T> = {
+export interface PriorityQueueType<T> extends BaseType {
+    /**
+     * Inserts element and sorts the underlying container.
+     */
     push: (element: T) => void;
+    /**
+     * Removes the top element.
+     */
     pop: () => void;
+    /**
+     * Accesses the top element.
+     */
     top: () => T;
-} & BaseType;
+}
 
 function PriorityQueue<T>(this: PriorityQueueType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {

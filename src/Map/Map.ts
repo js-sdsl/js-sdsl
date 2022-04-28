@@ -1,7 +1,7 @@
 import { ContainerIterator, BaseType, Pair } from "../Base/Base";
 import { TreeIterator, TreeNode } from "../Base/Tree";
 
-export type MapType<T, K> = {
+export interface MapType<T, K> extends BaseType {
     begin: () => ContainerIterator<Pair<T, K>>;
     end: () => ContainerIterator<Pair<T, K>>;
     rBegin: () => ContainerIterator<Pair<T, K>>;
@@ -23,7 +23,7 @@ export type MapType<T, K> = {
     union: (other: MapType<T, K>) => void;
     getHeight: () => number;
     [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
-} & BaseType;
+}
 
 function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (element: Pair<T, K>) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {

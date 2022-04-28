@@ -4,7 +4,6 @@
 dist/
 docs/
 node_modules/
-type/
 .eslintcache
 .npmignore
 .npmrc

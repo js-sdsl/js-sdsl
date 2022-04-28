@@ -2,14 +2,14 @@ import { BaseType, Pair } from "../Base/Base";
 import LinkList, { LinkListType } from "../LinkList/LinkList";
 import Map, { MapType } from "../Map/Map";
 
-export type HashMapType<T, K> = {
+export interface HashMapType<T, K> extends BaseType {
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
     find: (element: T) => boolean;
     getElementByKey: (key: T) => K | undefined;
     setElement: (key: T, value: K) => void;
     eraseElementByKey: (key: T) => void;
     [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
-} & BaseType;
+}
 
 HashMap.initSize = (1 << 4);
 HashMap.maxSize = (1 << 30);
@@ -78,11 +78,14 @@ function HashMap<T, K>(this: HashMapType<T, K>, container: { forEach: (callback:
         hashTable.forEach((container, index) => {
             if (container.empty()) return;
             if (container instanceof LinkList && container.size() === 1) {
-                const { key, value } = container.front();
-                newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList<Pair<T, K>>([{
-                    key,
-                    value
-                }]);
+                const pair = container.front();
+                if (pair !== undefined) {
+                    const { key, value } = pair;
+                    newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList<Pair<T, K>>([{
+                        key,
+                        value
+                    }]);
+                }
             } else if (container instanceof Map) {
                 const lowList: (LinkListType<Pair<T, K>>) = new LinkList<Pair<T, K>>();
                 const highList: (LinkListType<Pair<T, K>>) = new LinkList<Pair<T, K>>();

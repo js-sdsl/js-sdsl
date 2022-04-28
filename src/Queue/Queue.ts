@@ -1,11 +1,20 @@
 import { BaseType } from "../Base/Base";
 import LinkList from "../LinkList/LinkList";
 
-export type QueueType<T> = {
+export interface QueueType<T> extends BaseType {
+    /**
+     * Inserts element at the end.
+     */
     push: (element: T) => void;
+    /**
+     * Removes the first element.
+     */
     pop: () => void;
+    /**
+     * Access the first element.
+     */
     front: () => T | undefined;
-} & BaseType;
+}
 
 function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     const queue = new LinkList(container);
@@ -35,4 +44,4 @@ function Queue<T>(this: QueueType<T>, container: { forEach: (callback: (element:
     };
 }
 
-export default (Queue as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });
+export default (Queue as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }): QueueType<T> });

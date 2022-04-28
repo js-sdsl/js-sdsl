@@ -1,11 +1,23 @@
 import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
-export type DequeType<T> = {
+export interface DequeType<T> extends SequentialContainerType<T> {
+    /**
+     * Push the element to the front.
+     */
     pushFront: (element: T) => void;
+    /**
+     * Remove the first element.
+     */
     popFront: () => void;
+    /**
+     * Remove useless space.
+     */
     shrinkToFit: () => void;
+    /**
+     * Remove all elements after the specified position (excluding the specified position).
+     */
     cut: (pos: number) => void;
-} & SequentialContainerType<T>;
+}
 
 const DequeIterator = function <T>(
     this: ContainerIterator<T>,

@@ -10,11 +10,20 @@ export class LinkNode<T> {
     }
 }
 
-export type LinkListType<T> = {
+export interface LinkListType<T> extends SequentialContainerType<T> {
+    /**
+     * Inserts an element to the beginning.
+     */
     pushFront: (element: T) => void;
+    /**
+     * Removes the last element.
+     */
     popFront: () => void;
+    /**
+     * Merges two sorted lists.
+     */
     merge: (other: LinkListType<T>) => void;
-} & SequentialContainerType<T>;
+}
 
 const LinkListIterator = function <T>(
     this: ContainerIterator<T>,

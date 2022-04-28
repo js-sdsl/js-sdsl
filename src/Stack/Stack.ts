@@ -1,10 +1,19 @@
 import { BaseType } from "../Base/Base";
 
-export type StackType<T> = {
+export interface StackType<T> extends BaseType {
+    /**
+     * Inserts element at the top.
+     */
     push: (element: T) => void;
+    /**
+     * Removes the top element.
+     */
     pop: () => void;
+    /**
+     * Accesses the top element.
+     */
     top: () => T | undefined;
-} & BaseType;
+}
 
 function Stack<T>(this: StackType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
     let len = 0;

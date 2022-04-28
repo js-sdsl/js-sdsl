@@ -1,7 +1,7 @@
 import { TreeNode, TreeIterator } from "../Base/Tree";
 import { ContainerIterator, ContainerType } from "../Base/Base";
 
-export type SetType<T> = {
+export interface SetType<T> extends ContainerType<T> {
     insert: (element: T) => void;
     lowerBound: (key: T) => ContainerIterator<T>;
     upperBound: (key: T) => ContainerIterator<T>;
@@ -9,7 +9,7 @@ export type SetType<T> = {
     reverseUpperBound: (key: T) => ContainerIterator<T>;
     union: (other: SetType<T>) => void;
     getHeight: () => number;
-} & ContainerType<T>;
+}
 
 function Set<T>(this: SetType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], cmp: (x: T, y: T) => number) {
     cmp = cmp || ((x, y) => {

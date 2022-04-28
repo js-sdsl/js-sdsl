@@ -2,13 +2,13 @@ import { BaseType } from "../Base/Base";
 import Set, { SetType } from "../Set/Set";
 import LinkList, { LinkListType } from "../LinkList/LinkList";
 
-export type HashSetType<T> = {
+export interface HashSetType<T> extends BaseType {
     forEach: (callback: (element: T, index: number) => void) => void;
     insert: (element: T) => void;
     eraseElementByValue: (value: T) => void;
     find: (element: T) => boolean;
     [Symbol.iterator]: () => Generator<T, void, undefined>;
-} & BaseType;
+}
 
 HashSet.initSize = (1 << 4);
 HashSet.maxSize = (1 << 30);
