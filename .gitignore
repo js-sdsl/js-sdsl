@@ -10,3 +10,4 @@ type/
 .npmrc
 .yarnrc
 .DS_Store
+.all-contributorsrc
