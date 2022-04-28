@@ -1,6 +1,13 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-0-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 **A javascript standard data structure library which benchmark against C++ STL.**
+
+[![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
+[![version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
+[![version](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
 
 ## Note
 
@@ -28,7 +35,7 @@ If you want to use hash container in js, please use set or map in ES6.
 The official Set and Map are implemented using hash table instead of RBTree.
 
 For more information about js hash table, please refer
-to https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent.
+to <https://stackoverflow.com/questions/368280/javascript-hashmap-equivalent>.
 
 ## Included data structures
 
@@ -93,6 +100,16 @@ You can pull this repository and run `yarn build` to rebuild this library.
 Before publishing, we conducted strict unit tests on each function, you can see `testResult.txt` to find our test
 results or run `yarn test` to reproduce it.
 
+## Maintainers
+
+[@ZLY201](https://github.com/ZLY201).
+
+## Contributing
+
+Feel free to dive in! Open an issue or submit PRs.
+
+### Contributors
+
 ## License
 
-This project is [MIT licensed](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE).
+[MIT](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE) © ZLY201
