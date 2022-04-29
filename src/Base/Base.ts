@@ -126,7 +126,7 @@ export interface SequentialContainerType<T> extends ContainerType<T> {
 }
 
 /** Key-value pair for map and set. */
-export interface Pair<T, K> {
-    key: T;
-    value: K;
+export interface Pair<K, V> {
+    key: K;
+    value: V;
 }

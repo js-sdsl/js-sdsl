@@ -1,65 +1,65 @@
 import { ContainerIterator, BaseType, Pair } from "../Base/Base";
 import { TreeIterator, TreeNode } from "../Base/Tree";
 
-export interface MapType<T, K> extends BaseType {
+export interface MapType<K, V> extends BaseType {
     /**
      * @return Iterator pointing to the begin element.
      */
-    begin: () => ContainerIterator<Pair<T, K>>;
+    begin: () => ContainerIterator<Pair<K, V>>;
     /**
      * @return Iterator pointing to the super end like c++.
      */
-    end: () => ContainerIterator<Pair<T, K>>;
+    end: () => ContainerIterator<Pair<K, V>>;
     /**
      * @return Iterator pointing to the end element.
      */
-    rBegin: () => ContainerIterator<Pair<T, K>>;
+    rBegin: () => ContainerIterator<Pair<K, V>>;
     /**
      * @return Iterator pointing to the super begin like c++.
      */
-    rEnd: () => ContainerIterator<Pair<T, K>>;
+    rEnd: () => ContainerIterator<Pair<K, V>>;
     /**
      * @return The first element.
      */
-    front: () => Pair<T, K> | undefined;
+    front: () => Pair<K, V> | undefined;
     /**
      * @return The last element.
      */
-    back: () => Pair<T, K> | undefined;
-    forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
+    back: () => Pair<K, V> | undefined;
+    forEach: (callback: (element: Pair<K, V>, index: number) => void) => void;
     /**
      * @param element The element you want to find.
      * @return Iterator pointing to the element if found, or super end if not found.
      */
-    find: (element: T) => ContainerIterator<Pair<T, K>>;
+    find: (key: K) => ContainerIterator<Pair<K, V>>;
     /**
      * @return An iterator to the first element not less than the given key.
      */
-    lowerBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    lowerBound: (key: K) => ContainerIterator<Pair<K, V>>;
     /**
      * @return An iterator to the first element greater than the given key.
      */
-    upperBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    upperBound: (key: K) => ContainerIterator<Pair<K, V>>;
     /**
      * @return An iterator to the first element not greater than the given key.
      */
-    reverseLowerBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    reverseLowerBound: (key: K) => ContainerIterator<Pair<K, V>>;
     /**
      * @return An iterator to the first element less than the given key.
      */
-    reverseUpperBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    reverseUpperBound: (key: K) => ContainerIterator<Pair<K, V>>;
     /**
      * Gets the key and value of the element at the specified position.
      */
-    getElementByPos: (pos: number) => Pair<T, K>;
+    getElementByPos: (pos: number) => Pair<K, V>;
     /**
      * Gets the value of the element of the specified key.
      */
-    getElementByKey: (key: T) => K | undefined;
+    getElementByKey: (key: K) => V | undefined;
     /**
      * Insert a new key-value pair or set value by key.
      */
-    setElement: (key: T, value: K) => void;
+    setElement: (key: K, value: V) => void;
     /**
      * Removes the elements at the specified position.
      */
@@ -67,15 +67,15 @@ export interface MapType<T, K> extends BaseType {
     /**
      * Removes the elements of the specified key.
      */
-    eraseElementByKey: (key: T) => void;
+    eraseElementByKey: (key: K) => void;
     /**
      * Removes element by iterator.
      */
-    eraseElementByIterator: (iter: ContainerIterator<Pair<T, K>>) => ContainerIterator<Pair<T, K>>;
+    eraseElementByIterator: (iter: ContainerIterator<Pair<K, V>>) => ContainerIterator<Pair<K, V>>;
     /**
      * Union the other Set to self.
      */
-    union: (other: MapType<T, K>) => void;
+    union: (other: MapType<K, V>) => void;
     /**
      * @return The height of the RB-tree.
      */
@@ -83,10 +83,10 @@ export interface MapType<T, K> extends BaseType {
     /**
      * Using for 'for...of' syntax like Array.
      */
-    [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
+    [Symbol.iterator]: () => Generator<Pair<K, V>, void, undefined>;
 }
 
-function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (element: Pair<T, K>) => void) => void } = [], cmp: (x: T, y: T) => number) {
+function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (element: Pair<K, V>) => void) => void } = [], cmp: (x: K, y: K) => number) {
     cmp = cmp || ((x, y) => {
         if (x < y) return -1;
         if (x > y) return 1;
@@ -94,9 +94,9 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
     });
 
     let len = 0;
-    let root = new TreeNode<T, K>();
+    let root = new TreeNode<K, V>();
     root.color = TreeNode.TreeNodeColorType.black;
-    const header = new TreeNode<T, K>();
+    const header = new TreeNode<K, V>();
     header.parent = root;
     root.parent = header;
 
@@ -131,12 +131,12 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         return new TreeIterator(header, header);
     }
 
-    const findSubTreeMinNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
+    const findSubTreeMinNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = function (curNode: TreeNode<K, V>) {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
     };
 
-    const findSubTreeMaxNode: (curNode: TreeNode<T, K>) => TreeNode<T, K> = function (curNode: TreeNode<T, K>) {
+    const findSubTreeMaxNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = function (curNode: TreeNode<K, V>) {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
         return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
     };
@@ -161,7 +161,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         };
     };
 
-    this.forEach = function (callback: (element: Pair<T, K>, index: number) => void) {
+    this.forEach = function (callback: (element: Pair<K, V>, index: number) => void) {
         let index = 0;
         for (const pair of this) callback(pair, index++);
     };
@@ -176,7 +176,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         throw new Error("unknown Error");
     };
 
-    const _lowerBound: (curNode: TreeNode<T, K> | undefined, key: T) => TreeNode<T, K> | undefined = (curNode: TreeNode<T, K> | undefined, key: T) => {
+    const _lowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return curNode;
@@ -186,12 +186,12 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         return resNode;
     };
 
-    this.lowerBound = function (key: T) {
+    this.lowerBound = function (key: K) {
         const resNode = _lowerBound(root, key);
         return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
     };
 
-    const _upperBound: (curNode: TreeNode<T, K> | undefined, key: T) => TreeNode<T, K> | undefined = (curNode: TreeNode<T, K> | undefined, key: T) => {
+    const _upperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
@@ -200,12 +200,12 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         return resNode;
     };
 
-    this.upperBound = function (key: T) {
+    this.upperBound = function (key: K) {
         const resNode = _upperBound(root, key);
         return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
     };
 
-    const _reverseLowerBound: (curNode: TreeNode<T, K> | undefined, key: T) => TreeNode<T, K> | undefined = (curNode: TreeNode<T, K> | undefined, key: T) => {
+    const _reverseLowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult === 0) return curNode;
@@ -215,12 +215,12 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         return resNode;
     };
 
-    this.reverseLowerBound = function (key: T) {
+    this.reverseLowerBound = function (key: K) {
         const resNode = _reverseLowerBound(root, key);
         return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
     };
 
-    const _reverseUpperBound: (curNode: TreeNode<T, K> | undefined, key: T) => TreeNode<T, K> | undefined = (curNode: TreeNode<T, K> | undefined, key: T) => {
+    const _reverseUpperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
         const cmpResult = cmp(curNode.key, key);
         if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
@@ -229,12 +229,12 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         return resNode;
     };
 
-    this.reverseUpperBound = function (key: T) {
+    this.reverseUpperBound = function (key: K) {
         const resNode = _reverseUpperBound(root, key);
         return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
     };
 
-    const eraseNodeSelfBalance = function (curNode: TreeNode<T, K>) {
+    const eraseNodeSelfBalance = function (curNode: TreeNode<K, V>) {
         const parentNode = curNode.parent;
         if (!parentNode || parentNode === header) {
             if (curNode === root) return;
@@ -328,8 +328,8 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         }
     };
 
-    const eraseNode = function (curNode: TreeNode<T, K>) {
-        let swapNode: TreeNode<T, K> = curNode;
+    const eraseNode = function (curNode: TreeNode<K, V>) {
+        let swapNode: TreeNode<K, V> = curNode;
         while (swapNode.leftChild || swapNode.rightChild) {
             if (swapNode.rightChild) {
                 swapNode = findSubTreeMinNode(swapNode.rightChild);
@@ -371,7 +371,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const inOrderTraversal: (curNode: TreeNode<T, K> | undefined, callback: (curNode: TreeNode<T, K>) => boolean) => boolean = function (curNode: TreeNode<T, K> | undefined, callback: (curNode: TreeNode<T, K>) => boolean) {
+    const inOrderTraversal: (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean = function (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) {
         if (!curNode || curNode.key === undefined) return false;
         const ifReturn = inOrderTraversal(curNode.leftChild, callback);
         if (ifReturn) return true;
@@ -392,7 +392,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         });
     };
 
-    this.eraseElementByKey = function (key: T) {
+    this.eraseElementByKey = function (key: K) {
         if (this.empty()) return;
 
         const curNode = findElementPos(root, key);
@@ -401,32 +401,32 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         eraseNode(curNode);
     };
 
-    const findInsertPos: (curNode: TreeNode<T, K>, element: T) => TreeNode<T, K> = function (curNode: TreeNode<T, K>, element: T) {
+    const findInsertPos: (curNode: TreeNode<K, V>, key: K) => TreeNode<K, V> = function (curNode: TreeNode<K, V>, key: K) {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
-        const cmpResult = cmp(element, curNode.key);
+        const cmpResult = cmp(key, curNode.key);
         if (cmpResult < 0) {
             if (!curNode.leftChild) {
-                curNode.leftChild = new TreeNode<T, K>();
+                curNode.leftChild = new TreeNode<K, V>();
                 curNode.leftChild.parent = curNode;
                 curNode.leftChild.brother = curNode.rightChild;
                 if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
                 return curNode.leftChild;
             }
-            return findInsertPos(curNode.leftChild, element);
+            return findInsertPos(curNode.leftChild, key);
         } else if (cmpResult > 0) {
             if (!curNode.rightChild) {
-                curNode.rightChild = new TreeNode<T, K>();
+                curNode.rightChild = new TreeNode<K, V>();
                 curNode.rightChild.parent = curNode;
                 curNode.rightChild.brother = curNode.leftChild;
                 if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
                 return curNode.rightChild;
             }
-            return findInsertPos(curNode.rightChild, element);
+            return findInsertPos(curNode.rightChild, key);
         }
         return curNode;
     };
 
-    const insertNodeSelfBalance = function (curNode: TreeNode<T, K>) {
+    const insertNodeSelfBalance = function (curNode: TreeNode<K, V>) {
         const parentNode = curNode.parent;
         if (!parentNode || parentNode === header) {
             if (curNode === root) return;
@@ -488,7 +488,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         }
     };
 
-    this.setElement = function (key: T, value: K) {
+    this.setElement = function (key: K, value: V) {
         if (key === null || key === undefined) {
             throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
         }
@@ -529,35 +529,35 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
         root.color = TreeNode.TreeNodeColorType.black;
     };
 
-    const findElementPos: (curNode: TreeNode<T, K> | undefined, element: T) => TreeNode<T, K> | undefined = function (curNode: TreeNode<T, K> | undefined, element: T) {
+    const findElementPos: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = function (curNode: TreeNode<K, V> | undefined, key: K) {
         if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(element, curNode.key);
-        if (cmpResult < 0) return findElementPos(curNode.leftChild, element);
-        else if (cmpResult > 0) return findElementPos(curNode.rightChild, element);
+        const cmpResult = cmp(key, curNode.key);
+        if (cmpResult < 0) return findElementPos(curNode.leftChild, key);
+        else if (cmpResult > 0) return findElementPos(curNode.rightChild, key);
         return curNode;
     };
 
-    this.find = function (element: T) {
-        const curNode = findElementPos(root, element);
+    this.find = function (key: K) {
+        const curNode = findElementPos(root, key);
         if (curNode === undefined || curNode.key === undefined) return this.end();
         return new TreeIterator(curNode, header);
     };
 
-    this.getElementByKey = function (element: T) {
-        const curNode = findElementPos(root, element);
+    this.getElementByKey = function (key: K) {
+        const curNode = findElementPos(root, key);
         if (curNode?.key === undefined || curNode?.value === undefined) throw new Error("unknown error");
         return curNode.value;
     };
 
     // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
     // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
-    this.union = function (other: MapType<T, K>) {
+    this.union = function (other: MapType<K, V>) {
         other.forEach(({ key, value }) => this.setElement(key, value));
     };
 
     this.getHeight = function () {
         if (this.empty()) return 0;
-        const traversal: (curNode: TreeNode<T, K> | undefined) => number = function (curNode: TreeNode<T, K> | undefined) {
+        const traversal: (curNode: TreeNode<K, V> | undefined) => number = function (curNode: TreeNode<K, V> | undefined) {
             if (!curNode) return 1;
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
@@ -565,7 +565,7 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
     };
 
     if (typeof Symbol.iterator === 'symbol') {
-        const iterationFunc: (curNode: TreeNode<T, K> | undefined) => Generator<Pair<T, K>, void, undefined> = function* (curNode: TreeNode<T, K> | undefined) {
+        const iterationFunc: (curNode: TreeNode<K, V> | undefined) => Generator<Pair<K, V>, void, undefined> = function* (curNode: TreeNode<K, V> | undefined) {
             if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
             yield* iterationFunc(curNode.leftChild);
             yield { key: curNode.key, value: curNode.value };
@@ -580,4 +580,4 @@ function Map<T, K>(this: MapType<T, K>, container: { forEach: (callback: (elemen
     container.forEach(({ key, value }) => this.setElement(key, value));
 }
 
-export default (Map as unknown as { new <T, K>(container?: { forEach: (callback: (element: Pair<T, K>) => void) => void }, cmp?: (x: T, y: T) => number): MapType<T, K> });
+export default (Map as unknown as { new <K, V>(container?: { forEach: (callback: (element: Pair<K, V>) => void) => void }, cmp?: (x: K, y: K) => number): MapType<K, V> });

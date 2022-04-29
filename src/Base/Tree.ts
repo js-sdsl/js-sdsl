@@ -1,7 +1,7 @@
 import { Pair } from "./Base";
 import { ContainerIterator } from "./Base";
 
-export class TreeNode<T, K> {
+export class TreeNode<K, V> {
     static TreeNodeColorType: {
         red: true,
         black: false
@@ -10,14 +10,14 @@ export class TreeNode<T, K> {
             black: false
         };
     color = true;
-    key: T | undefined = undefined;
-    value: K | undefined = undefined;
-    parent: TreeNode<T, K> | undefined = undefined;
-    brother: TreeNode<T, K> | undefined = undefined;
-    leftChild: TreeNode<T, K> | undefined = undefined;
-    rightChild: TreeNode<T, K> | undefined = undefined;
+    key: K | undefined = undefined;
+    value: V | undefined = undefined;
+    parent: TreeNode<K, V> | undefined = undefined;
+    brother: TreeNode<K, V> | undefined = undefined;
+    leftChild: TreeNode<K, V> | undefined = undefined;
+    rightChild: TreeNode<K, V> | undefined = undefined;
 
-    constructor(key?: T, value?: K) {
+    constructor(key?: K, value?: V) {
         if (key !== undefined && value !== undefined) {
             this.key = key;
             this.value = value;
@@ -126,10 +126,10 @@ export class TreeNode<T, K> {
     }
 }
 
-function _TreeIterator<T, K>(
+function _TreeIterator<K, V>(
     this: ContainerIterator<unknown>,
-    _node: TreeNode<T, K>,
-    header: TreeNode<T, K>,
+    _node: TreeNode<K, V>,
+    header: TreeNode<K, V>,
     iteratorType: 'normal' | 'reverse' = 'normal'
 ) {
     Object.defineProperties(this, {
@@ -159,7 +159,7 @@ function _TreeIterator<T, K>(
                         get() {
                             return _node.value;
                         },
-                        set(newValue: K) {
+                        set(newValue: V) {
                             _node.value = newValue;
                         },
                         enumerable: true,
@@ -180,7 +180,7 @@ function _TreeIterator<T, K>(
     };
 
     const _pre = function () {
-        let preNode: TreeNode<T, K | undefined> | undefined = _node;
+        let preNode: TreeNode<K, V | undefined> | undefined = _node;
         if (preNode.color === TreeNode.TreeNodeColorType.red && preNode.parent?.parent === preNode) {
             preNode = preNode.rightChild;
         } else if (preNode.leftChild) {
@@ -199,7 +199,7 @@ function _TreeIterator<T, K>(
     };
 
     const _next = function () {
-        let nextNode: TreeNode<T, K | undefined> | undefined = _node;
+        let nextNode: TreeNode<K, V | undefined> | undefined = _node;
         if (nextNode?.rightChild) {
             nextNode = nextNode.rightChild;
             while (nextNode.leftChild) nextNode = nextNode?.leftChild;
@@ -246,9 +246,9 @@ export const TreeIterator = _TreeIterator as unknown as {
         header: TreeNode<T, undefined>,
         iteratorType?: 'normal' | 'reverse'
     ): ContainerIterator<T>;
-    new <T, K>(
-        _node: TreeNode<T, K>,
-        header: TreeNode<T, K>,
+    new <K, V>(
+        _node: TreeNode<K, V>,
+        header: TreeNode<K, V>,
         iteratorType?: 'normal' | 'reverse'
-    ): ContainerIterator<Pair<T, K>>;
+    ): ContainerIterator<Pair<K, V>>;
 };
