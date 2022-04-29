@@ -42,6 +42,7 @@
     "lint-staged": "^12.1.0",
     "rollup": "^2.61.1",
     "typedoc": "^0.22.10",
+    "typedoc-plugin-missing-exports": "^0.22.6",
     "typescript": "^4.5.4",
     "uglify-js": "^3.14.5"
   },
@@ -72,8 +73,5 @@
   "bugs": {
     "email": "951711127@qq.com",
     "url": "https://github.com/ZLY201/js-sdsl/issues"
-  },
-  "dependencies": {
-    "typedoc-plugin-missing-exports": "^0.22.6"
   }
 }

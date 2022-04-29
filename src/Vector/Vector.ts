@@ -1,6 +1,6 @@
 import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
-export interface VectorType<T> extends SequentialContainerType<T> {}
+export type VectorType<T> = SequentialContainerType<T>;
 
 const VectorIterator = function <T>(
     this: ContainerIterator<T>,
