@@ -81,7 +81,7 @@ export interface ContainerType<T> extends BaseType {
      */
     eraseElementByValue: (value: T) => void;
     /**
-     * Removes elements by iterator.
+     * Removes element by iterator.
      */
     eraseElementByIterator: (iter: ContainerIterator<T>) => ContainerIterator<T>;
     /**
@@ -125,6 +125,7 @@ export interface SequentialContainerType<T> extends ContainerType<T> {
     sort: (cmp?: (x: T, y: T) => number) => void;
 }
 
+/** Key-value pair for map and set. */
 export interface Pair<T, K> {
     key: T;
     value: K;

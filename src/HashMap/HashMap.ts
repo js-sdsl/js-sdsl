@@ -4,10 +4,25 @@ import Map, { MapType } from "../Map/Map";
 
 export interface HashMapType<T, K> extends BaseType {
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
+    /**
+     * @return If the specified element in the HashSet.
+     */
     find: (element: T) => boolean;
+    /**
+     * Gets the value of the element which has the specified key.
+     */
     getElementByKey: (key: T) => K | undefined;
+    /**
+     * Insert a new key-value pair or set value by key.
+     */
     setElement: (key: T, value: K) => void;
+    /**
+     * Removes the element of the specified key.
+     */
     eraseElementByKey: (key: T) => void;
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
     [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
 }
 

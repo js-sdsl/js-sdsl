@@ -4,9 +4,21 @@ import LinkList, { LinkListType } from "../LinkList/LinkList";
 
 export interface HashSetType<T> extends BaseType {
     forEach: (callback: (element: T, index: number) => void) => void;
+    /**
+     * Inserts element to Set.
+     */
     insert: (element: T) => void;
+    /**
+     * Removes the elements of the specified value.
+     */
     eraseElementByValue: (value: T) => void;
+    /**
+     * @return If the specified element in the HashSet.
+     */
     find: (element: T) => boolean;
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
     [Symbol.iterator]: () => Generator<T, void, undefined>;
 }
 

@@ -2,12 +2,33 @@ import { TreeNode, TreeIterator } from "../Base/Tree";
 import { ContainerIterator, ContainerType } from "../Base/Base";
 
 export interface SetType<T> extends ContainerType<T> {
+    /**
+     * Inserts element to Set.
+     */
     insert: (element: T) => void;
+    /**
+     * @return An iterator to the first element not less than the given key.
+     */
     lowerBound: (key: T) => ContainerIterator<T>;
+    /**
+     * @return An iterator to the first element greater than the given key.
+     */
     upperBound: (key: T) => ContainerIterator<T>;
+    /**
+     * @return An iterator to the first element not greater than the given key.
+     */
     reverseLowerBound: (key: T) => ContainerIterator<T>;
+    /**
+     * @return An iterator to the first element less than the given key.
+     */
     reverseUpperBound: (key: T) => ContainerIterator<T>;
+    /**
+     * Union the other Set to self.
+     */
     union: (other: SetType<T>) => void;
+    /**
+     * @return The height of the RB-tree.
+     */
     getHeight: () => number;
 }
 

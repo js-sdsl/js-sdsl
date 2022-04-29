@@ -2,26 +2,87 @@ import { ContainerIterator, BaseType, Pair } from "../Base/Base";
 import { TreeIterator, TreeNode } from "../Base/Tree";
 
 export interface MapType<T, K> extends BaseType {
+    /**
+     * @return Iterator pointing to the begin element.
+     */
     begin: () => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return Iterator pointing to the super end like c++.
+     */
     end: () => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return Iterator pointing to the end element.
+     */
     rBegin: () => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return Iterator pointing to the super begin like c++.
+     */
     rEnd: () => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return The first element.
+     */
     front: () => Pair<T, K> | undefined;
+    /**
+     * @return The last element.
+     */
     back: () => Pair<T, K> | undefined;
     forEach: (callback: (element: Pair<T, K>, index: number) => void) => void;
+    /**
+     * @param element The element you want to find.
+     * @return Iterator pointing to the element if found, or super end if not found.
+     */
     find: (element: T) => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return An iterator to the first element not less than the given key.
+     */
     lowerBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return An iterator to the first element greater than the given key.
+     */
     upperBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return An iterator to the first element not greater than the given key.
+     */
     reverseLowerBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    /**
+     * @return An iterator to the first element less than the given key.
+     */
     reverseUpperBound: (key: T) => ContainerIterator<Pair<T, K>>;
+    /**
+     * Gets the key and value of the element at the specified position.
+     */
     getElementByPos: (pos: number) => Pair<T, K>;
+    /**
+     * Gets the value of the element of the specified key.
+     */
     getElementByKey: (key: T) => K | undefined;
+    /**
+     * Insert a new key-value pair or set value by key.
+     */
     setElement: (key: T, value: K) => void;
+    /**
+     * Removes the elements at the specified position.
+     */
     eraseElementByPos: (pos: number) => void;
+    /**
+     * Removes the elements of the specified key.
+     */
     eraseElementByKey: (key: T) => void;
+    /**
+     * Removes element by iterator.
+     */
     eraseElementByIterator: (iter: ContainerIterator<Pair<T, K>>) => ContainerIterator<Pair<T, K>>;
+    /**
+     * Union the other Set to self.
+     */
     union: (other: MapType<T, K>) => void;
+    /**
+     * @return The height of the RB-tree.
+     */
     getHeight: () => number;
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
     [Symbol.iterator]: () => Generator<Pair<T, K>, void, undefined>;
 }
 
