@@ -67,6 +67,59 @@
         };
         throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
     };
+    var VectorIterator = function (index, size, getElementByPos, setElementByPos, iteratorType) {
+        if (iteratorType === void 0) { iteratorType = 'normal'; }
+        Object.defineProperties(this, {
+            iteratorType: {
+                value: iteratorType
+            },
+            node: {
+                value: index,
+            },
+            pointer: {
+                get: function () {
+                    if (index < 0 || index >= size()) {
+                        throw new Error("Deque iterator access denied!");
+                    }
+                    return getElementByPos(index);
+                },
+                set: function (newValue) {
+                    setElementByPos(index, newValue);
+                },
+                enumerable: true
+            }
+        });
+        this.equals = function (obj) {
+            if (obj.constructor.name !== this.constructor.name) {
+                throw new Error("obj's constructor is not ".concat(this.constructor.name, "!"));
+            }
+            if (this.iteratorType !== obj.iteratorType) {
+                throw new Error("iterator type error!");
+            }
+            // @ts-ignore
+            return this.node === obj.node;
+        };
+        this.pre = function () {
+            if (this.iteratorType === 'reverse') {
+                if (index === size() - 1)
+                    throw new Error("Deque iterator access denied!");
+                return new VectorIterator(index + 1, size, getElementByPos, setElementByPos, this.iteratorType);
+            }
+            if (index === 0)
+                throw new Error("Deque iterator access denied!");
+            return new VectorIterator(index - 1, size, getElementByPos, setElementByPos);
+        };
+        this.next = function () {
+            if (this.iteratorType === 'reverse') {
+                if (index === -1)
+                    throw new Error("Deque iterator access denied!");
+                return new VectorIterator(index - 1, size, getElementByPos, setElementByPos, this.iteratorType);
+            }
+            if (index === size())
+                throw new Error("Iterator access denied!");
+            return new VectorIterator(index + 1, size, getElementByPos, setElementByPos);
+        };
+    };
     function Vector(container) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -81,6 +134,18 @@
         this.clear = function () {
             len = 0;
             vector.length = 0;
+        };
+        this.begin = function () {
+            return new VectorIterator(0, this.size, this.getElementByPos, this.setElementByPos);
+        };
+        this.end = function () {
+            return new VectorIterator(len, this.size, this.getElementByPos, this.setElementByPos);
+        };
+        this.rBegin = function () {
+            return new VectorIterator(len - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        };
+        this.rEnd = function () {
+            return new VectorIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
         };
         this.front = function () {
             if (this.empty())
@@ -130,19 +195,30 @@
                 --len;
         };
         this.setElementByPos = function (pos, element) {
+            if (element === undefined || element === null) {
+                this.eraseElementByPos(pos);
+                return;
+            }
             if (pos < 0 || pos >= len)
                 throw new Error("pos must more than 0 and less than vector's size");
             vector[pos] = element;
         };
         this.insert = function (pos, element, num) {
             if (num === void 0) { num = 1; }
+            if (element === undefined || element === null) {
+                throw new Error("you can't push undefined or null here");
+            }
             if (pos < 0 || pos > len)
                 throw new Error("pos must more than 0 and less than or equal to vector's size");
             vector.splice.apply(vector, __spreadArray([pos, 0], __read(new Array(num).fill(element)), false));
             len += num;
         };
         this.find = function (element) {
-            return vector.includes(element);
+            for (var i = 0; i < len; ++i) {
+                if (vector[i] === element)
+                    return new VectorIterator(i, this.size, this.getElementByPos, this.getElementByPos);
+            }
+            return this.end();
         };
         this.reverse = function () {
             vector.reverse();
@@ -166,20 +242,20 @@
         this.sort = function (cmp) {
             vector.sort(cmp);
         };
-        this[Symbol.iterator] = function () {
-            return (function () {
-                return __generator$6(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [5 /*yield**/, __values$4(vector)];
-                        case 1: return [2 /*return*/, _a.sent()];
-                    }
-                });
-            })();
-        };
+        if (typeof Symbol.iterator === 'symbol') {
+            this[Symbol.iterator] = function () {
+                return (function () {
+                    return __generator$6(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [5 /*yield**/, __values$4(vector)];
+                            case 1: return [2 /*return*/, _a.sent()];
+                        }
+                    });
+                })();
+            };
+        }
         container.forEach(function (element) { return _this.pushBack(element); });
-        Object.freeze(this);
     }
-    Object.freeze(Vector);
 
     function Stack(container) {
         var _this = this;
@@ -209,9 +285,7 @@
             return stack[len - 1];
         };
         container.forEach(function (element) { return _this.push(element); });
-        Object.freeze(this);
     }
-    Object.freeze(Stack);
 
     var __generator$5 = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -249,12 +323,69 @@
         }
         return LinkNode;
     }());
+    var LinkListIterator = function (_node, head, tail, iteratorType) {
+        if (iteratorType === void 0) { iteratorType = 'normal'; }
+        Object.defineProperties(this, {
+            iteratorType: {
+                value: iteratorType
+            },
+            node: {
+                value: _node
+            },
+            pointer: {
+                get: function () {
+                    return _node.value;
+                },
+                set: function (newValue) {
+                    if (_node.value === undefined) {
+                        throw new Error("LinkList iterator access denied!");
+                    }
+                    if (newValue === null || newValue === undefined) {
+                        throw new Error("you can't push undefined or null here");
+                    }
+                    _node.value = newValue;
+                },
+                enumerable: true
+            }
+        });
+        this.equals = function (obj) {
+            if (obj.constructor.name !== this.constructor.name) {
+                throw new Error("obj's constructor is not ".concat(this.constructor.name, "!"));
+            }
+            if (this.iteratorType !== obj.iteratorType) {
+                throw new Error("iterator type error!");
+            }
+            // @ts-ignore
+            return this.node === obj.node;
+        };
+        this.pre = function () {
+            if (this.iteratorType === 'reverse') {
+                if (_node === tail)
+                    throw new Error("LinkList iterator access denied!");
+                return new LinkListIterator(_node.next || _node, head, tail, this.iteratorType);
+            }
+            if (_node === head)
+                throw new Error("LinkList iterator access denied!");
+            return new LinkListIterator(_node.pre || _node, head, tail);
+        };
+        this.next = function () {
+            if (this.iteratorType === 'reverse') {
+                if (_node.value === undefined)
+                    throw new Error("LinkList iterator access denied!");
+                return new LinkListIterator(_node.pre || _node, head, tail, this.iteratorType);
+            }
+            if (_node.value === undefined)
+                throw new Error("LinkList iterator access denied!");
+            return new LinkListIterator(_node.next || _node, head, tail);
+        };
+    };
     function LinkList(container) {
         var _this = this;
         if (container === void 0) { container = []; }
         var len = 0;
         var head = undefined;
         var tail = undefined;
+        var header = new LinkNode();
         this.size = function () {
             return len;
         };
@@ -262,8 +393,21 @@
             return len === 0;
         };
         this.clear = function () {
-            head = tail = undefined;
             len = 0;
+            head = tail = undefined;
+            header.pre = header.next = undefined;
+        };
+        this.begin = function () {
+            return new LinkListIterator(head || header, head || header, tail || header);
+        };
+        this.end = function () {
+            return new LinkListIterator(header, head || header, tail || header);
+        };
+        this.rBegin = function () {
+            return new LinkListIterator(tail || header, head || header, tail || header);
+        };
+        this.rEnd = function () {
+            return new LinkListIterator(header, head || header, tail || header);
         };
         this.front = function () {
             return head === null || head === void 0 ? void 0 : head.value;
@@ -274,7 +418,7 @@
         this.forEach = function (callback) {
             var curNode = head;
             var index = 0;
-            while (curNode) {
+            while (curNode && curNode !== header) {
                 if (curNode.value === undefined)
                     throw new Error("unknown error");
                 callback(curNode.value, index++);
@@ -327,7 +471,7 @@
             if (!head)
                 return;
             var curNode = head;
-            while (curNode) {
+            while (curNode && curNode !== header) {
                 if (curNode.value === value) {
                     var pre = curNode.pre;
                     var next = curNode.next;
@@ -349,28 +493,34 @@
             var newTail = new LinkNode(element);
             if (!tail) {
                 head = tail = newTail;
+                header.next = head;
+                head.pre = header;
             }
             else {
                 tail.next = newTail;
                 newTail.pre = tail;
                 tail = newTail;
             }
+            tail.next = header;
+            header.pre = tail;
         };
         this.popBack = function () {
             if (!tail)
                 return;
             if (len > 0)
                 --len;
-            if (!tail)
-                return;
             if (head === tail) {
                 head = tail = undefined;
+                header.next = undefined;
             }
             else {
                 tail = tail.pre;
                 if (tail)
                     tail.next = undefined;
             }
+            header.pre = tail;
+            if (tail)
+                tail.next = header;
         };
         this.setElementByPos = function (pos, element) {
             if (element === null || element === undefined) {
@@ -387,11 +537,6 @@
             if (curNode)
                 curNode.value = element;
         };
-        /**
-         * @param {number} pos insert element before pos, should in [0, list.size]
-         * @param {any} element the element you want to insert
-         * @param {number} [num = 1] the nums you want to insert
-         */
         this.insert = function (pos, element, num) {
             if (num === void 0) { num = 1; }
             if (element === null || element === undefined) {
@@ -433,12 +578,12 @@
         };
         this.find = function (element) {
             var curNode = head;
-            while (curNode) {
+            while (curNode && curNode !== header) {
                 if (curNode.value === element)
-                    return true;
+                    return new LinkListIterator(curNode, head || header, tail || header);
                 curNode = curNode.next;
             }
-            return false;
+            return this.end();
         };
         this.reverse = function () {
             var pHead = head;
@@ -455,7 +600,7 @@
         };
         this.unique = function () {
             var curNode = head;
-            while (curNode) {
+            while (curNode && curNode !== header) {
                 var tmpNode = curNode;
                 while (tmpNode && tmpNode.next && tmpNode.value === tmpNode.next.value) {
                     tmpNode = tmpNode.next;
@@ -490,41 +635,41 @@
             var newHead = new LinkNode(element);
             if (!head) {
                 head = tail = newHead;
+                tail.next = header;
+                header.pre = tail;
             }
             else {
                 newHead.next = head;
                 head.pre = newHead;
                 head = newHead;
             }
+            header.next = head;
+            head.pre = header;
         };
         this.popFront = function () {
             if (!head)
                 return;
             if (len > 0)
                 --len;
-            if (!head)
-                return;
             if (head === tail) {
                 head = tail = undefined;
+                header.pre = tail;
             }
             else {
                 head = head.next;
                 if (head)
-                    head.pre = undefined;
+                    head.pre = header;
             }
+            header.next = head;
         };
-        /**
-         * merge two sorted lists
-         * @param list other list
-         */
         this.merge = function (list) {
             var _this = this;
             var curNode = head;
             list.forEach(function (element) {
-                while (curNode && curNode.value !== undefined && curNode.value <= element) {
+                while (curNode && curNode !== header && curNode.value !== undefined && curNode.value <= element) {
                     curNode = curNode.next;
                 }
-                if (curNode === undefined) {
+                if (curNode === header) {
                     _this.pushBack(element);
                     curNode = tail;
                 }
@@ -533,6 +678,8 @@
                     curNode = head;
                 }
                 else {
+                    if (!curNode)
+                        throw new Error("unknown error");
                     ++len;
                     var pre = curNode.pre;
                     if (pre) {
@@ -545,32 +692,32 @@
                 }
             });
         };
-        this[Symbol.iterator] = function () {
-            return (function () {
-                var curNode;
-                return __generator$5(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            curNode = head;
-                            _a.label = 1;
-                        case 1:
-                            if (!(curNode !== undefined)) return [3 /*break*/, 3];
-                            if (!curNode.value)
-                                throw new Error("unknown error");
-                            return [4 /*yield*/, curNode.value];
-                        case 2:
-                            _a.sent();
-                            curNode = curNode.next;
-                            return [3 /*break*/, 1];
-                        case 3: return [2 /*return*/];
-                    }
-                });
-            })();
-        };
+        if (typeof Symbol.iterator === 'symbol') {
+            this[Symbol.iterator] = function () {
+                return (function () {
+                    var curNode;
+                    return __generator$5(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                curNode = head;
+                                _a.label = 1;
+                            case 1:
+                                if (!(curNode && curNode !== header)) return [3 /*break*/, 3];
+                                if (!curNode.value)
+                                    throw new Error("unknown error");
+                                return [4 /*yield*/, curNode.value];
+                            case 2:
+                                _a.sent();
+                                curNode = curNode.next;
+                                return [3 /*break*/, 1];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                })();
+            };
+        }
         container.forEach(function (element) { return _this.pushBack(element); });
-        Object.freeze(this);
     }
-    Object.freeze(LinkList);
 
     function Queue(container) {
         if (container === void 0) { container = []; }
@@ -593,9 +740,7 @@
         this.front = function () {
             return queue.front();
         };
-        Object.freeze(this);
     }
-    Object.freeze(Queue);
 
     var __generator$4 = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -624,8 +769,61 @@
             if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
         }
     };
+    var DequeIterator = function (index, size, getElementByPos, setElementByPos, iteratorType) {
+        if (iteratorType === void 0) { iteratorType = 'normal'; }
+        Object.defineProperties(this, {
+            iteratorType: {
+                value: iteratorType
+            },
+            node: {
+                value: index,
+            },
+            pointer: {
+                get: function () {
+                    if (index < 0 || index >= size()) {
+                        throw new Error("Deque iterator access denied!");
+                    }
+                    return getElementByPos(index);
+                },
+                set: function (newValue) {
+                    setElementByPos(index, newValue);
+                },
+                enumerable: true
+            }
+        });
+        this.equals = function (obj) {
+            if (obj.constructor.name !== this.constructor.name) {
+                throw new Error("obj's constructor is not ".concat(this.constructor.name, "!"));
+            }
+            if (this.iteratorType !== obj.iteratorType) {
+                throw new Error("iterator type error!");
+            }
+            // @ts-ignore
+            return this.node === obj.node;
+        };
+        this.pre = function () {
+            if (this.iteratorType === 'reverse') {
+                if (index === size() - 1)
+                    throw new Error("Deque iterator access denied!");
+                return new DequeIterator(index + 1, size, getElementByPos, setElementByPos, this.iteratorType);
+            }
+            if (index === 0)
+                throw new Error("Deque iterator access denied!");
+            return new DequeIterator(index - 1, size, getElementByPos, setElementByPos);
+        };
+        this.next = function () {
+            if (this.iteratorType === 'reverse') {
+                if (index === -1)
+                    throw new Error("Deque iterator access denied!");
+                return new DequeIterator(index - 1, size, getElementByPos, setElementByPos, this.iteratorType);
+            }
+            if (index === size())
+                throw new Error("Iterator access denied!");
+            return new DequeIterator(index + 1, size, getElementByPos, setElementByPos);
+        };
+    };
     Deque.sigma = 3; // growth factor
-    Deque.bucketSize = 5000;
+    Deque.bucketSize = (1 << 12);
     function Deque(container) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -646,6 +844,18 @@
             first = last = curFirst = curLast = bucketNum = len = 0;
             reAllocate.call(this, Deque.bucketSize);
             len = 0;
+        };
+        this.begin = function () {
+            return new DequeIterator(0, this.size, this.getElementByPos, this.setElementByPos);
+        };
+        this.end = function () {
+            return new DequeIterator(len, this.size, this.getElementByPos, this.setElementByPos);
+        };
+        this.rBegin = function () {
+            return new DequeIterator(len - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        };
+        this.rEnd = function () {
+            return new DequeIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
         };
         this.front = function () {
             return map[first][curFirst];
@@ -685,9 +895,6 @@
             var curNodePointerIndex = curNodeIndex % Deque.bucketSize;
             return { curNodeBucketIndex: curNodeBucketIndex, curNodePointerIndex: curNodePointerIndex };
         };
-        /**
-         * @param pos index from 0 to size - 1
-         */
         this.getElementByPos = function (pos) {
             var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
             return map[curNodeBucketIndex][curNodePointerIndex];
@@ -723,6 +930,13 @@
             for (var i = 0; i < _len; ++i)
                 this.setElementByPos(i, arr[i]);
             this.cut(_len - 1);
+        };
+        this.eraseElementByIterator = function (iter) {
+            var nextIter = iter.next();
+            // @ts-ignore
+            this.eraseElementByPos(iter.node);
+            iter = nextIter;
+            return iter;
         };
         var reAllocate = function (originalSize) {
             var newMap = [];
@@ -789,17 +1003,19 @@
                 --len;
         };
         this.setElementByPos = function (pos, element) {
+            if (element === undefined || element === null) {
+                this.eraseElementByPos(pos);
+                return;
+            }
             var _a = getElementIndex(pos), curNodeBucketIndex = _a.curNodeBucketIndex, curNodePointerIndex = _a.curNodePointerIndex;
             map[curNodeBucketIndex][curNodePointerIndex] = element;
         };
-        /**
-         * @param {number} pos insert element before pos, should in [0, queue.size]
-         * @param {any} element the element you want to insert
-         * @param {number} [num = 1] the nums you want to insert
-         */
         this.insert = function (pos, element, num) {
             var _this = this;
             if (num === void 0) { num = 1; }
+            if (element === undefined || element === null) {
+                throw new Error("you can't push undefined or null here");
+            }
             if (pos === 0) {
                 while (num--)
                     this.pushFront(element);
@@ -820,28 +1036,44 @@
             }
         };
         this.find = function (element) {
+            function getIndex(curNodeBucketIndex, curNodePointerIndex) {
+                if (curNodeBucketIndex === first)
+                    return curNodePointerIndex - curFirst;
+                if (curNodeBucketIndex === last)
+                    return len - (curLast - curNodePointerIndex) - 1;
+                return (Deque.bucketSize - first) + (curNodeBucketIndex - 2) * Deque.bucketSize + curNodePointerIndex;
+            }
+            var resIndex = undefined;
             if (first === last) {
                 for (var i = curFirst; i <= curLast; ++i) {
                     if (map[first][i] === element)
-                        return true;
+                        resIndex = getIndex(first, i);
                 }
-                return false;
+                return this.end();
             }
             for (var i = curFirst; i < Deque.bucketSize; ++i) {
                 if (map[first][i] === element)
-                    return true;
+                    resIndex = getIndex(first, i);
             }
-            for (var i = first + 1; i < last; ++i) {
-                for (var j = 0; j < Deque.bucketSize; ++j) {
-                    if (map[i][j] === element)
-                        return true;
+            if (resIndex === undefined) {
+                for (var i = first + 1; i < last; ++i) {
+                    for (var j = 0; j < Deque.bucketSize; ++j) {
+                        if (map[i][j] === element)
+                            resIndex = getIndex(first, i);
+                    }
                 }
             }
-            for (var i = 0; i <= curLast; ++i) {
-                if (map[last][i] === element)
-                    return true;
+            if (resIndex === undefined) {
+                for (var i = 0; i <= curLast; ++i) {
+                    if (map[last][i] === element)
+                        resIndex = getIndex(first, i);
+                }
             }
-            return false;
+            if (resIndex === undefined)
+                return this.end();
+            if (resIndex === 0)
+                return this.begin();
+            return new DequeIterator(resIndex, this.size, this.getElementByPos, this.setElementByPos);
         };
         this.reverse = function () {
             var l = 0, r = len - 1;
@@ -879,6 +1111,9 @@
                 this.setElementByPos(i, arr[i]);
         };
         this.pushFront = function (element) {
+            if (element === undefined || element === null) {
+                throw new Error("you can't push undefined or null here");
+            }
             if (!this.empty()) {
                 if (first === 0 && curFirst === 0) {
                     reAllocate.call(this, this.size());
@@ -909,9 +1144,6 @@
             if (len > 0)
                 --len;
         };
-        /**
-         * reduces memory usage by freeing unused memory
-         */
         this.shrinkToFit = function () {
             var _this = this;
             var arr = [];
@@ -927,9 +1159,6 @@
             this.clear();
             arr.forEach(function (element) { return _this.pushBack(element); });
         };
-        /**
-         * @param pos cut elements after pos
-         */
         this.cut = function (pos) {
             if (pos < 0) {
                 this.clear();
@@ -940,75 +1169,77 @@
             curLast = curNodePointerIndex;
             len = pos + 1;
         };
-        this[Symbol.iterator] = function () {
-            return (function () {
-                var i, i, i, j, i;
-                return __generator$4(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            if (len === 0)
-                                return [2 /*return*/];
-                            if (!(first === last)) return [3 /*break*/, 5];
-                            i = curFirst;
-                            _a.label = 1;
-                        case 1:
-                            if (!(i <= curLast)) return [3 /*break*/, 4];
-                            return [4 /*yield*/, map[first][i]];
-                        case 2:
-                            _a.sent();
-                            _a.label = 3;
-                        case 3:
-                            ++i;
-                            return [3 /*break*/, 1];
-                        case 4: return [2 /*return*/];
-                        case 5:
-                            i = curFirst;
-                            _a.label = 6;
-                        case 6:
-                            if (!(i < Deque.bucketSize)) return [3 /*break*/, 9];
-                            return [4 /*yield*/, map[first][i]];
-                        case 7:
-                            _a.sent();
-                            _a.label = 8;
-                        case 8:
-                            ++i;
-                            return [3 /*break*/, 6];
-                        case 9:
-                            i = first + 1;
-                            _a.label = 10;
-                        case 10:
-                            if (!(i < last)) return [3 /*break*/, 15];
-                            j = 0;
-                            _a.label = 11;
-                        case 11:
-                            if (!(j < Deque.bucketSize)) return [3 /*break*/, 14];
-                            return [4 /*yield*/, map[i][j]];
-                        case 12:
-                            _a.sent();
-                            _a.label = 13;
-                        case 13:
-                            ++j;
-                            return [3 /*break*/, 11];
-                        case 14:
-                            ++i;
-                            return [3 /*break*/, 10];
-                        case 15:
-                            i = 0;
-                            _a.label = 16;
-                        case 16:
-                            if (!(i <= curLast)) return [3 /*break*/, 19];
-                            return [4 /*yield*/, map[last][i]];
-                        case 17:
-                            _a.sent();
-                            _a.label = 18;
-                        case 18:
-                            ++i;
-                            return [3 /*break*/, 16];
-                        case 19: return [2 /*return*/];
-                    }
-                });
-            })();
-        };
+        if (typeof Symbol.iterator === 'symbol') {
+            this[Symbol.iterator] = function () {
+                return (function () {
+                    var i, i, i, j, i;
+                    return __generator$4(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (len === 0)
+                                    return [2 /*return*/];
+                                if (!(first === last)) return [3 /*break*/, 5];
+                                i = curFirst;
+                                _a.label = 1;
+                            case 1:
+                                if (!(i <= curLast)) return [3 /*break*/, 4];
+                                return [4 /*yield*/, map[first][i]];
+                            case 2:
+                                _a.sent();
+                                _a.label = 3;
+                            case 3:
+                                ++i;
+                                return [3 /*break*/, 1];
+                            case 4: return [2 /*return*/];
+                            case 5:
+                                i = curFirst;
+                                _a.label = 6;
+                            case 6:
+                                if (!(i < Deque.bucketSize)) return [3 /*break*/, 9];
+                                return [4 /*yield*/, map[first][i]];
+                            case 7:
+                                _a.sent();
+                                _a.label = 8;
+                            case 8:
+                                ++i;
+                                return [3 /*break*/, 6];
+                            case 9:
+                                i = first + 1;
+                                _a.label = 10;
+                            case 10:
+                                if (!(i < last)) return [3 /*break*/, 15];
+                                j = 0;
+                                _a.label = 11;
+                            case 11:
+                                if (!(j < Deque.bucketSize)) return [3 /*break*/, 14];
+                                return [4 /*yield*/, map[i][j]];
+                            case 12:
+                                _a.sent();
+                                _a.label = 13;
+                            case 13:
+                                ++j;
+                                return [3 /*break*/, 11];
+                            case 14:
+                                ++i;
+                                return [3 /*break*/, 10];
+                            case 15:
+                                i = 0;
+                                _a.label = 16;
+                            case 16:
+                                if (!(i <= curLast)) return [3 /*break*/, 19];
+                                return [4 /*yield*/, map[last][i]];
+                            case 17:
+                                _a.sent();
+                                _a.label = 18;
+                            case 18:
+                                ++i;
+                                return [3 /*break*/, 16];
+                            case 19: return [2 /*return*/];
+                        }
+                    });
+                })();
+            };
+        }
         (function () {
             var _len = Deque.bucketSize;
             if (container.size) {
@@ -1028,15 +1259,8 @@
             last = first;
             container.forEach(function (element) { return _this.pushBack(element); });
         })();
-        Object.freeze(this);
     }
-    Object.freeze(Deque);
 
-    /**
-     * @param container
-     * @param cmp default cmp will generate a max heap
-     * @constructor
-     */
     function PriorityQueue(container, cmp) {
         if (container === void 0) { container = []; }
         cmp = cmp || (function (x, y) {
@@ -1138,9 +1362,7 @@
         this.top = function () {
             return priorityQueue[0];
         };
-        Object.freeze(this);
     }
-    Object.freeze(PriorityQueue);
 
     var TreeNode = /** @class */ (function () {
         function TreeNode(key, value) {
@@ -1151,8 +1373,10 @@
             this.brother = undefined;
             this.leftChild = undefined;
             this.rightChild = undefined;
-            this.key = key;
-            this.value = value;
+            if (key !== undefined && value !== undefined) {
+                this.key = key;
+                this.value = value;
+            }
         }
         TreeNode.prototype.rotateLeft = function () {
             var PP = this.parent;
@@ -1163,7 +1387,7 @@
                 throw new Error("unknown error");
             var R = V.leftChild;
             var X = V.rightChild;
-            if (PP) {
+            if (PP && PP.key !== undefined) {
                 if (PP.leftChild === this)
                     PP.leftChild = V;
                 else if (PP.rightChild === this)
@@ -1202,7 +1426,7 @@
             var V = this.rightChild;
             var D = F.leftChild;
             var K = F.rightChild;
-            if (PP) {
+            if (PP && PP.key !== undefined) {
                 if (PP.leftChild === this)
                     PP.leftChild = F;
                 else if (PP.rightChild === this)
@@ -1254,7 +1478,126 @@
         };
         return TreeNode;
     }());
-    Object.freeze(TreeNode);
+    function _TreeIterator(_node, header, iteratorType) {
+        if (iteratorType === void 0) { iteratorType = 'normal'; }
+        Object.defineProperties(this, {
+            iteratorType: {
+                value: iteratorType
+            },
+            node: {
+                value: _node
+            },
+            pointer: {
+                get: function () {
+                    if (_node.key === undefined) {
+                        throw new Error("Tree iterator access denied!");
+                    }
+                    if (_node.value === undefined) {
+                        return _node.key;
+                    }
+                    var obj = {};
+                    Object.defineProperties(obj, {
+                        key: {
+                            get: function () {
+                                return _node.key;
+                            },
+                            enumerable: true,
+                        },
+                        value: {
+                            get: function () {
+                                return _node.value;
+                            },
+                            set: function (newValue) {
+                                _node.value = newValue;
+                            },
+                            enumerable: true,
+                        }
+                    });
+                    return obj;
+                },
+                enumerable: true
+            }
+        });
+        this.equals = function (obj) {
+            if (obj.constructor.name !== this.constructor.name) {
+                throw new Error("obj's constructor is not ".concat(this.constructor.name, "!"));
+            }
+            if (this.iteratorType !== obj.iteratorType) {
+                throw new Error("iterator type error!");
+            }
+            // @ts-ignore
+            return _node === obj.node;
+        };
+        var _pre = function () {
+            var _a;
+            var preNode = _node;
+            if (preNode.color === TreeNode.TreeNodeColorType.red && ((_a = preNode.parent) === null || _a === void 0 ? void 0 : _a.parent) === preNode) {
+                preNode = preNode.rightChild;
+            }
+            else if (preNode.leftChild) {
+                preNode = preNode.leftChild;
+                while (preNode.rightChild)
+                    preNode = preNode === null || preNode === void 0 ? void 0 : preNode.rightChild;
+            }
+            else {
+                var pre = (preNode === null || preNode === void 0 ? void 0 : preNode.parent) || undefined;
+                while ((pre === null || pre === void 0 ? void 0 : pre.leftChild) === preNode) {
+                    preNode = pre;
+                    pre = (preNode === null || preNode === void 0 ? void 0 : preNode.parent) || undefined;
+                }
+                preNode = pre;
+            }
+            if (preNode === undefined)
+                throw new Error("unknown error");
+            return preNode;
+        };
+        var _next = function () {
+            var nextNode = _node;
+            if (nextNode === null || nextNode === void 0 ? void 0 : nextNode.rightChild) {
+                nextNode = nextNode.rightChild;
+                while (nextNode.leftChild)
+                    nextNode = nextNode === null || nextNode === void 0 ? void 0 : nextNode.leftChild;
+            }
+            else {
+                var pre = (nextNode === null || nextNode === void 0 ? void 0 : nextNode.parent) || undefined;
+                while ((pre === null || pre === void 0 ? void 0 : pre.rightChild) === nextNode) {
+                    nextNode = pre;
+                    pre = (nextNode === null || nextNode === void 0 ? void 0 : nextNode.parent) || undefined;
+                }
+                if (nextNode.rightChild !== pre) {
+                    nextNode = pre;
+                }
+            }
+            if (nextNode === undefined)
+                throw new Error("unknown error");
+            return nextNode;
+        };
+        this.pre = function () {
+            if (this.iteratorType === 'reverse') {
+                if (_node === header.rightChild)
+                    throw new Error("Tree iterator access denied!");
+                var preNode_1 = _next();
+                return new TreeIterator(preNode_1, header, this.iteratorType);
+            }
+            if (_node === header.leftChild)
+                throw new Error("Tree iterator access denied!");
+            var preNode = _pre();
+            return new TreeIterator(preNode, header);
+        };
+        this.next = function () {
+            if (this.iteratorType === 'reverse') {
+                if (_node === header)
+                    throw new Error("Tree iterator access denied!");
+                var nextNode_1 = _pre();
+                return new TreeIterator(nextNode_1, header, this.iteratorType);
+            }
+            if (_node === header)
+                throw new Error("Tree iterator access denied!");
+            var nextNode = _next();
+            return new TreeIterator(nextNode, header);
+        };
+    }
+    var TreeIterator = _TreeIterator;
 
     var __generator$3 = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -1307,6 +1650,9 @@
         var len = 0;
         var root = new TreeNode();
         root.color = TreeNode.TreeNodeColorType.black;
+        var header = new TreeNode();
+        header.parent = root;
+        root.parent = header;
         this.size = function () {
             return len;
         };
@@ -1316,8 +1662,20 @@
         this.clear = function () {
             len = 0;
             root.key = undefined;
-            root.leftChild = root.rightChild = root.brother = root.parent = undefined;
-            root.color = TreeNode.TreeNodeColorType.black;
+            root.leftChild = root.rightChild = root.brother = undefined;
+            header.leftChild = header.rightChild = undefined;
+        };
+        this.begin = function () {
+            return new TreeIterator(header.leftChild || header, header);
+        };
+        this.end = function () {
+            return new TreeIterator(header, header);
+        };
+        this.rBegin = function () {
+            return new TreeIterator(header.rightChild || header, header);
+        };
+        this.rEnd = function () {
+            return new TreeIterator(header, header);
         };
         var findSubTreeMinNode = function (curNode) {
             if (!curNode || curNode.key === undefined)
@@ -1330,16 +1688,12 @@
             return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
         };
         this.front = function () {
-            if (this.empty())
-                return undefined;
-            var minNode = findSubTreeMinNode(root);
-            return minNode.key;
+            var _a;
+            return (_a = header.leftChild) === null || _a === void 0 ? void 0 : _a.key;
         };
         this.back = function () {
-            if (this.empty())
-                return undefined;
-            var maxNode = findSubTreeMaxNode(root);
-            return maxNode.key;
+            var _a;
+            return (_a = header.rightChild) === null || _a === void 0 ? void 0 : _a.key;
         };
         this.forEach = function (callback) {
             var e_1, _a;
@@ -1382,7 +1736,7 @@
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode) {
+            if (!parentNode || parentNode === header) {
                 if (curNode === root)
                     return;
                 throw new Error("unknown error");
@@ -1399,8 +1753,11 @@
                     brotherNode.color = TreeNode.TreeNodeColorType.black;
                     parentNode.color = TreeNode.TreeNodeColorType.red;
                     var newRoot = parentNode.rotateLeft();
-                    if (root === parentNode)
+                    if (root === parentNode) {
                         root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
@@ -1410,8 +1767,11 @@
                         if (brotherNode.rightChild)
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = parentNode.rotateLeft();
-                        if (root === parentNode)
+                        if (root === parentNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
                     else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
@@ -1419,8 +1779,11 @@
                         if (brotherNode.leftChild)
                             brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = brotherNode.rotateRight();
-                        if (root === brotherNode)
+                        if (root === brotherNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         eraseNodeSelfBalance(curNode);
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
@@ -1434,8 +1797,11 @@
                     brotherNode.color = TreeNode.TreeNodeColorType.black;
                     parentNode.color = TreeNode.TreeNodeColorType.red;
                     var newRoot = parentNode.rotateRight();
-                    if (root === parentNode)
+                    if (root === parentNode) {
                         root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
@@ -1445,8 +1811,11 @@
                         if (brotherNode.leftChild)
                             brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = parentNode.rotateRight();
-                        if (root === parentNode)
+                        if (root === parentNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
@@ -1454,8 +1823,11 @@
                         if (brotherNode.rightChild)
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = brotherNode.rotateLeft();
-                        if (root === brotherNode)
+                        if (root === brotherNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         eraseNodeSelfBalance(curNode);
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
@@ -1466,6 +1838,7 @@
             }
         };
         var eraseNode = function (curNode) {
+            var _a, _b, _c, _d, _e, _f;
             var swapNode = curNode;
             while (swapNode.leftChild || swapNode.rightChild) {
                 if (swapNode.rightChild) {
@@ -1482,6 +1855,24 @@
                     swapNode.key = tmpKey;
                     curNode = swapNode;
                 }
+            }
+            if (swapNode.key === undefined)
+                throw new Error("unknown error");
+            if (header.leftChild && header.leftChild.key !== undefined && cmp(header.leftChild.key, swapNode.key) === 0) {
+                if (header.leftChild !== root)
+                    header.leftChild = (_a = header.leftChild) === null || _a === void 0 ? void 0 : _a.parent;
+                else if ((_b = header.leftChild) === null || _b === void 0 ? void 0 : _b.rightChild)
+                    header.leftChild = (_c = header.leftChild) === null || _c === void 0 ? void 0 : _c.rightChild;
+                else
+                    header.leftChild = undefined;
+            }
+            if (header.rightChild && header.rightChild.key !== undefined && cmp(header.rightChild.key, swapNode.key) === 0) {
+                if (header.rightChild !== root)
+                    header.rightChild = (_d = header.rightChild) === null || _d === void 0 ? void 0 : _d.parent;
+                else if ((_e = header.rightChild) === null || _e === void 0 ? void 0 : _e.leftChild)
+                    header.rightChild = (_f = header.rightChild) === null || _f === void 0 ? void 0 : _f.leftChild;
+                else
+                    header.rightChild = undefined;
             }
             eraseNodeSelfBalance(swapNode);
             if (swapNode)
@@ -1550,7 +1941,7 @@
         };
         var insertNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode) {
+            if (!parentNode || parentNode === header) {
                 if (curNode === root)
                     return;
                 throw new Error("unknown error");
@@ -1573,29 +1964,41 @@
                             parentNode.color = TreeNode.TreeNodeColorType.black;
                             grandParent.color = TreeNode.TreeNodeColorType.red;
                             var newRoot = grandParent.rotateRight();
-                            if (grandParent === root)
+                            if (grandParent === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                         }
                         else if (curNode === parentNode.rightChild) {
                             var newRoot = parentNode.rotateLeft();
-                            if (grandParent === root)
+                            if (parentNode === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                             insertNodeSelfBalance(parentNode);
                         }
                     }
                     else if (parentNode === grandParent.rightChild) {
                         if (curNode === parentNode.leftChild) {
                             var newRoot = parentNode.rotateRight();
-                            if (grandParent === root)
+                            if (parentNode === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                             insertNodeSelfBalance(parentNode);
                         }
                         else if (curNode === parentNode.rightChild) {
                             parentNode.color = TreeNode.TreeNodeColorType.black;
                             grandParent.color = TreeNode.TreeNodeColorType.red;
                             var newRoot = grandParent.rotateLeft();
-                            if (grandParent === root)
+                            if (grandParent === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                         }
                     }
                 }
@@ -1609,6 +2012,8 @@
                 ++len;
                 root.key = element;
                 root.color = TreeNode.TreeNodeColorType.black;
+                header.leftChild = root;
+                header.rightChild = root;
                 return;
             }
             var curNode = findInsertPos(root, element);
@@ -1616,6 +2021,12 @@
                 return;
             ++len;
             curNode.key = element;
+            if (header.leftChild === undefined || header.leftChild.key === undefined || cmp(header.leftChild.key, element) > 0) {
+                header.leftChild = curNode;
+            }
+            if (header.rightChild === undefined || header.rightChild.key === undefined || cmp(header.rightChild.key, element) < 0) {
+                header.rightChild = curNode;
+            }
             insertNodeSelfBalance(curNode);
             root.color = TreeNode.TreeNodeColorType.black;
         };
@@ -1631,20 +2042,26 @@
         };
         this.find = function (element) {
             var curNode = findElementPos(root, element);
-            return curNode !== undefined && curNode.key !== undefined && cmp(curNode.key, element) === 0;
+            if (curNode !== undefined && curNode.key !== undefined)
+                return new TreeIterator(curNode, header);
+            return this.end();
         };
         var _lowerBound = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
-                return curNode.key;
+                return curNode;
             if (cmpResult < 0)
                 return _lowerBound(curNode.rightChild, key);
-            return _lowerBound(curNode.leftChild, key) || curNode.key;
+            var resNode = _lowerBound(curNode.leftChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.lowerBound = function (key) {
-            return _lowerBound(root, key);
+            var resNode = _lowerBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _upperBound = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
@@ -1652,23 +2069,31 @@
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult <= 0)
                 return _upperBound(curNode.rightChild, key);
-            return _upperBound(curNode.leftChild, key) || curNode.key;
+            var resNode = _upperBound(curNode.leftChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.upperBound = function (key) {
-            return _upperBound(root, key);
+            var resNode = _upperBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _reverseLowerBound = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
-                return curNode.key;
+                return curNode;
             if (cmpResult > 0)
                 return _reverseLowerBound(curNode.leftChild, key);
-            return _reverseLowerBound(curNode.rightChild, key) || curNode.key;
+            var resNode = _reverseLowerBound(curNode.rightChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.reverseLowerBound = function (key) {
-            return _reverseLowerBound(root, key);
+            var resNode = _reverseLowerBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _reverseUpperBound = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
@@ -1676,10 +2101,14 @@
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult >= 0)
                 return _reverseUpperBound(curNode.leftChild, key);
-            return _reverseUpperBound(curNode.rightChild, key) || curNode.key;
+            var resNode = _reverseUpperBound(curNode.rightChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.reverseUpperBound = function (key) {
-            return _reverseUpperBound(root, key);
+            var resNode = _reverseUpperBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
         // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
@@ -1697,32 +2126,32 @@
             };
             return traversal(root);
         };
-        var iterationFunc = function (curNode) {
-            return __generator$3(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!curNode || curNode.key === undefined)
+        if (typeof Symbol.iterator === 'symbol') {
+            var iterationFunc_1 = function (curNode) {
+                return __generator$3(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!curNode || curNode.key === undefined)
+                                return [2 /*return*/];
+                            return [5 /*yield**/, __values$3(iterationFunc_1(curNode.leftChild))];
+                        case 1:
+                            _a.sent();
+                            return [4 /*yield*/, curNode.key];
+                        case 2:
+                            _a.sent();
+                            return [5 /*yield**/, __values$3(iterationFunc_1(curNode.rightChild))];
+                        case 3:
+                            _a.sent();
                             return [2 /*return*/];
-                        return [5 /*yield**/, __values$3(iterationFunc(curNode.leftChild))];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, curNode.key];
-                    case 2:
-                        _a.sent();
-                        return [5 /*yield**/, __values$3(iterationFunc(curNode.rightChild))];
-                    case 3:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        };
-        this[Symbol.iterator] = function () {
-            return iterationFunc(root);
-        };
+                    }
+                });
+            };
+            this[Symbol.iterator] = function () {
+                return iterationFunc_1(root);
+            };
+        }
         container.forEach(function (element) { return _this.insert(element); });
-        Object.freeze(this);
     }
-    Object.freeze(Set);
 
     var __generator$2 = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -1775,6 +2204,9 @@
         var len = 0;
         var root = new TreeNode();
         root.color = TreeNode.TreeNodeColorType.black;
+        var header = new TreeNode();
+        header.parent = root;
+        root.parent = header;
         this.size = function () {
             return len;
         };
@@ -1785,6 +2217,19 @@
             len = 0;
             root.key = root.value = undefined;
             root.leftChild = root.rightChild = root.brother = undefined;
+            header.leftChild = header.rightChild = undefined;
+        };
+        this.begin = function () {
+            return new TreeIterator(header.leftChild || header, header);
+        };
+        this.end = function () {
+            return new TreeIterator(header, header);
+        };
+        this.rBegin = function () {
+            return new TreeIterator(header.rightChild || header, header);
+        };
+        this.rEnd = function () {
+            return new TreeIterator(header, header);
         };
         var findSubTreeMinNode = function (curNode) {
             if (!curNode || curNode.key === undefined)
@@ -1799,8 +2244,8 @@
         this.front = function () {
             if (this.empty())
                 return undefined;
-            var minNode = findSubTreeMinNode(root);
-            if (minNode.key === undefined || minNode.value === undefined)
+            var minNode = header.leftChild;
+            if (!minNode || minNode.key === undefined || minNode.value === undefined)
                 throw new Error("unknown error");
             return {
                 key: minNode.key,
@@ -1810,8 +2255,8 @@
         this.back = function () {
             if (this.empty())
                 return undefined;
-            var maxNode = findSubTreeMaxNode(root);
-            if (maxNode.key === undefined || maxNode.value === undefined)
+            var maxNode = header.rightChild;
+            if (!maxNode || maxNode.key === undefined || maxNode.value === undefined)
                 throw new Error("unknown error");
             return {
                 key: maxNode.key,
@@ -1858,68 +2303,72 @@
             throw new Error("unknown Error");
         };
         var _lowerBound = function (curNode, key) {
-            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
-                return { key: curNode.key, value: curNode.value };
+                return curNode;
             if (cmpResult < 0)
                 return _lowerBound(curNode.rightChild, key);
-            return _lowerBound(curNode.leftChild, key) || {
-                key: curNode.key,
-                value: curNode.value
-            };
+            var resNode = _lowerBound(curNode.leftChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.lowerBound = function (key) {
-            return _lowerBound(root, key);
+            var resNode = _lowerBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _upperBound = function (curNode, key) {
-            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult <= 0)
                 return _upperBound(curNode.rightChild, key);
-            return _upperBound(curNode.leftChild, key) || {
-                key: curNode.key,
-                value: curNode.value
-            };
+            var resNode = _upperBound(curNode.leftChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.upperBound = function (key) {
-            return _upperBound(root, key);
+            var resNode = _upperBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _reverseLowerBound = function (curNode, key) {
-            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult === 0)
-                return { key: curNode.key, value: curNode.value };
+                return curNode;
             if (cmpResult > 0)
                 return _reverseLowerBound(curNode.leftChild, key);
-            return _reverseLowerBound(curNode.rightChild, key) || {
-                key: curNode.key,
-                value: curNode.value
-            };
+            var resNode = _reverseLowerBound(curNode.rightChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.reverseLowerBound = function (key) {
-            return _reverseLowerBound(root, key);
+            var resNode = _reverseLowerBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var _reverseUpperBound = function (curNode, key) {
-            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+            if (!curNode || curNode.key === undefined)
                 return undefined;
             var cmpResult = cmp(curNode.key, key);
             if (cmpResult >= 0)
                 return _reverseUpperBound(curNode.leftChild, key);
-            return _reverseUpperBound(curNode.rightChild, key) || {
-                key: curNode.key,
-                value: curNode.value
-            };
+            var resNode = _reverseUpperBound(curNode.rightChild, key);
+            if (resNode === undefined)
+                return curNode;
+            return resNode;
         };
         this.reverseUpperBound = function (key) {
-            return _reverseUpperBound(root, key);
+            var resNode = _reverseUpperBound(root, key);
+            return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
         };
         var eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode) {
+            if (!parentNode || parentNode === header) {
                 if (curNode === root)
                     return;
                 throw new Error("unknown error");
@@ -1936,8 +2385,11 @@
                     brotherNode.color = TreeNode.TreeNodeColorType.black;
                     parentNode.color = TreeNode.TreeNodeColorType.red;
                     var newRoot = parentNode.rotateLeft();
-                    if (root === parentNode)
+                    if (root === parentNode) {
                         root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
@@ -1947,8 +2399,11 @@
                         if (brotherNode.rightChild)
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = parentNode.rotateLeft();
-                        if (root === parentNode)
+                        if (root === parentNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
                     else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
@@ -1956,8 +2411,11 @@
                         if (brotherNode.leftChild)
                             brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = brotherNode.rotateRight();
-                        if (root === brotherNode)
+                        if (root === brotherNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         eraseNodeSelfBalance(curNode);
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
@@ -1971,8 +2429,11 @@
                     brotherNode.color = TreeNode.TreeNodeColorType.black;
                     parentNode.color = TreeNode.TreeNodeColorType.red;
                     var newRoot = parentNode.rotateRight();
-                    if (root === parentNode)
+                    if (root === parentNode) {
                         root = newRoot;
+                        header.parent = root;
+                        root.parent = header;
+                    }
                     eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
@@ -1982,8 +2443,11 @@
                         if (brotherNode.leftChild)
                             brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = parentNode.rotateRight();
-                        if (root === parentNode)
+                        if (root === parentNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
@@ -1991,8 +2455,11 @@
                         if (brotherNode.rightChild)
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                         var newRoot = brotherNode.rotateLeft();
-                        if (root === brotherNode)
+                        if (root === brotherNode) {
                             root = newRoot;
+                            header.parent = root;
+                            root.parent = header;
+                        }
                         eraseNodeSelfBalance(curNode);
                     }
                     else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
@@ -2003,6 +2470,7 @@
             }
         };
         var eraseNode = function (curNode) {
+            var _a, _b, _c, _d, _e, _f;
             var swapNode = curNode;
             while (swapNode.leftChild || swapNode.rightChild) {
                 if (swapNode.rightChild) {
@@ -2025,6 +2493,24 @@
                     swapNode.value = tmpValue;
                     curNode = swapNode;
                 }
+            }
+            if (swapNode.key === undefined)
+                throw new Error("unknown error");
+            if (header.leftChild && header.leftChild.key !== undefined && cmp(header.leftChild.key, swapNode.key) === 0) {
+                if (header.leftChild !== root)
+                    header.leftChild = (_a = header.leftChild) === null || _a === void 0 ? void 0 : _a.parent;
+                else if ((_b = header.leftChild) === null || _b === void 0 ? void 0 : _b.rightChild)
+                    header.leftChild = (_c = header.leftChild) === null || _c === void 0 ? void 0 : _c.rightChild;
+                else
+                    header.leftChild = undefined;
+            }
+            if (header.rightChild && header.rightChild.key !== undefined && cmp(header.rightChild.key, swapNode.key) === 0) {
+                if (header.rightChild !== root)
+                    header.rightChild = (_d = header.rightChild) === null || _d === void 0 ? void 0 : _d.parent;
+                else if ((_e = header.rightChild) === null || _e === void 0 ? void 0 : _e.leftChild)
+                    header.rightChild = (_f = header.rightChild) === null || _f === void 0 ? void 0 : _f.leftChild;
+                else
+                    header.rightChild = undefined;
             }
             eraseNodeSelfBalance(swapNode);
             if (swapNode)
@@ -2063,10 +2549,10 @@
                 return;
             eraseNode(curNode);
         };
-        var findInsertPos = function (curNode, element) {
+        var findInsertPos = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
                 throw new Error("unknown error");
-            var cmpResult = cmp(element, curNode.key);
+            var cmpResult = cmp(key, curNode.key);
             if (cmpResult < 0) {
                 if (!curNode.leftChild) {
                     curNode.leftChild = new TreeNode();
@@ -2076,7 +2562,7 @@
                         curNode.rightChild.brother = curNode.leftChild;
                     return curNode.leftChild;
                 }
-                return findInsertPos(curNode.leftChild, element);
+                return findInsertPos(curNode.leftChild, key);
             }
             else if (cmpResult > 0) {
                 if (!curNode.rightChild) {
@@ -2087,13 +2573,13 @@
                         curNode.leftChild.brother = curNode.rightChild;
                     return curNode.rightChild;
                 }
-                return findInsertPos(curNode.rightChild, element);
+                return findInsertPos(curNode.rightChild, key);
             }
             return curNode;
         };
         var insertNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode) {
+            if (!parentNode || parentNode === header) {
                 if (curNode === root)
                     return;
                 throw new Error("unknown error");
@@ -2116,29 +2602,41 @@
                             parentNode.color = TreeNode.TreeNodeColorType.black;
                             grandParent.color = TreeNode.TreeNodeColorType.red;
                             var newRoot = grandParent.rotateRight();
-                            if (grandParent === root)
+                            if (grandParent === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                         }
                         else if (curNode === parentNode.rightChild) {
                             var newRoot = parentNode.rotateLeft();
-                            if (grandParent === root)
+                            if (parentNode === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                             insertNodeSelfBalance(parentNode);
                         }
                     }
                     else if (parentNode === grandParent.rightChild) {
                         if (curNode === parentNode.leftChild) {
                             var newRoot = parentNode.rotateRight();
-                            if (grandParent === root)
+                            if (parentNode === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                             insertNodeSelfBalance(parentNode);
                         }
                         else if (curNode === parentNode.rightChild) {
                             parentNode.color = TreeNode.TreeNodeColorType.black;
                             grandParent.color = TreeNode.TreeNodeColorType.red;
                             var newRoot = grandParent.rotateLeft();
-                            if (grandParent === root)
+                            if (grandParent === root) {
                                 root = newRoot;
+                                header.parent = root;
+                                root.parent = header;
+                            }
                         }
                     }
                 }
@@ -2157,6 +2655,8 @@
                 root.key = key;
                 root.value = value;
                 root.color = TreeNode.TreeNodeColorType.black;
+                header.leftChild = root;
+                header.rightChild = root;
                 return;
             }
             var curNode = findInsertPos(root, key);
@@ -2167,24 +2667,33 @@
             ++len;
             curNode.key = key;
             curNode.value = value;
+            if (header.leftChild === undefined || header.leftChild.key === undefined || cmp(header.leftChild.key, key) > 0) {
+                header.leftChild = curNode;
+            }
+            if (header.rightChild === undefined || header.rightChild.key === undefined || cmp(header.rightChild.key, key) < 0) {
+                header.rightChild = curNode;
+            }
             insertNodeSelfBalance(curNode);
             root.color = TreeNode.TreeNodeColorType.black;
         };
-        var findElementPos = function (curNode, element) {
+        var findElementPos = function (curNode, key) {
             if (!curNode || curNode.key === undefined)
                 return undefined;
-            var cmpResult = cmp(element, curNode.key);
+            var cmpResult = cmp(key, curNode.key);
             if (cmpResult < 0)
-                return findElementPos(curNode.leftChild, element);
+                return findElementPos(curNode.leftChild, key);
             else if (cmpResult > 0)
-                return findElementPos(curNode.rightChild, element);
+                return findElementPos(curNode.rightChild, key);
             return curNode;
         };
-        this.find = function (element) {
-            return !!findElementPos(root, element);
+        this.find = function (key) {
+            var curNode = findElementPos(root, key);
+            if (curNode === undefined || curNode.key === undefined)
+                return this.end();
+            return new TreeIterator(curNode, header);
         };
-        this.getElementByKey = function (element) {
-            var curNode = findElementPos(root, element);
+        this.getElementByKey = function (key) {
+            var curNode = findElementPos(root, key);
             if ((curNode === null || curNode === void 0 ? void 0 : curNode.key) === undefined || (curNode === null || curNode === void 0 ? void 0 : curNode.value) === undefined)
                 throw new Error("unknown error");
             return curNode.value;
@@ -2208,35 +2717,35 @@
             };
             return traversal(root);
         };
-        var iterationFunc = function (curNode) {
-            return __generator$2(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!curNode || curNode.key === undefined || curNode.value === undefined)
+        if (typeof Symbol.iterator === 'symbol') {
+            var iterationFunc_1 = function (curNode) {
+                return __generator$2(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!curNode || curNode.key === undefined || curNode.value === undefined)
+                                return [2 /*return*/];
+                            return [5 /*yield**/, __values$2(iterationFunc_1(curNode.leftChild))];
+                        case 1:
+                            _a.sent();
+                            return [4 /*yield*/, { key: curNode.key, value: curNode.value }];
+                        case 2:
+                            _a.sent();
+                            return [5 /*yield**/, __values$2(iterationFunc_1(curNode.rightChild))];
+                        case 3:
+                            _a.sent();
                             return [2 /*return*/];
-                        return [5 /*yield**/, __values$2(iterationFunc(curNode.leftChild))];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, { key: curNode.key, value: curNode.value }];
-                    case 2:
-                        _a.sent();
-                        return [5 /*yield**/, __values$2(iterationFunc(curNode.rightChild))];
-                    case 3:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        };
-        this[Symbol.iterator] = function () {
-            return iterationFunc(root);
-        };
+                    }
+                });
+            };
+            this[Symbol.iterator] = function () {
+                return iterationFunc_1(root);
+            };
+        }
         container.forEach(function (_a) {
             var key = _a.key, value = _a.value;
             return _this.setElement(key, value);
         });
-        Object.freeze(this);
     }
-    Object.freeze(Map);
 
     var __generator$1 = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -2282,13 +2791,6 @@
     HashSet.treeifyThreshold = 8;
     HashSet.untreeifyThreshold = 6;
     HashSet.minTreeifySize = 64;
-    /**
-     * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
-     * @param container Initialize the container
-     * @param initBucketNum Initialize the bucket num
-     * @param hashFunc Function to map elements to numbers
-     * @constructor
-     */
     function HashSet(container, initBucketNum, hashFunc) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -2407,7 +2909,7 @@
             else {
                 var preSize = hashTable[index].size();
                 if (hashTable[index] instanceof LinkList) {
-                    if (hashTable[index].find(element))
+                    if (!hashTable[index].find(element).equals(hashTable[index].end()))
                         return;
                     hashTable[index].pushBack(element);
                     if (hashTable[index].size() >= HashSet.treeifyThreshold) {
@@ -2441,61 +2943,61 @@
             var index = hashFunc(element) & (bucketNum - 1);
             if (!hashTable[index])
                 return false;
-            return hashTable[index].find(element);
+            return !hashTable[index].find(element).equals(hashTable[index].end());
         };
-        this[Symbol.iterator] = function () {
-            return (function () {
-                var index, _a, _b, element, e_1_1;
-                var e_1, _c;
-                return __generator$1(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            index = 0;
-                            _d.label = 1;
-                        case 1:
-                            if (!(index < bucketNum)) return [3 /*break*/, 10];
-                            while (index < bucketNum && !hashTable[index])
+        if (typeof Symbol.iterator === 'symbol') {
+            this[Symbol.iterator] = function () {
+                return (function () {
+                    var index, _a, _b, element, e_1_1;
+                    var e_1, _c;
+                    return __generator$1(this, function (_d) {
+                        switch (_d.label) {
+                            case 0:
+                                index = 0;
+                                _d.label = 1;
+                            case 1:
+                                if (!(index < bucketNum)) return [3 /*break*/, 10];
+                                while (index < bucketNum && !hashTable[index])
+                                    ++index;
+                                if (index >= bucketNum)
+                                    return [3 /*break*/, 10];
+                                _d.label = 2;
+                            case 2:
+                                _d.trys.push([2, 7, 8, 9]);
+                                _a = (e_1 = void 0, __values$1(hashTable[index])), _b = _a.next();
+                                _d.label = 3;
+                            case 3:
+                                if (!!_b.done) return [3 /*break*/, 6];
+                                element = _b.value;
+                                return [4 /*yield*/, element];
+                            case 4:
+                                _d.sent();
+                                _d.label = 5;
+                            case 5:
+                                _b = _a.next();
+                                return [3 /*break*/, 3];
+                            case 6: return [3 /*break*/, 9];
+                            case 7:
+                                e_1_1 = _d.sent();
+                                e_1 = { error: e_1_1 };
+                                return [3 /*break*/, 9];
+                            case 8:
+                                try {
+                                    if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                                }
+                                finally { if (e_1) throw e_1.error; }
+                                return [7 /*endfinally*/];
+                            case 9:
                                 ++index;
-                            if (index >= bucketNum)
-                                return [3 /*break*/, 10];
-                            _d.label = 2;
-                        case 2:
-                            _d.trys.push([2, 7, 8, 9]);
-                            _a = (e_1 = void 0, __values$1(hashTable[index])), _b = _a.next();
-                            _d.label = 3;
-                        case 3:
-                            if (!!_b.done) return [3 /*break*/, 6];
-                            element = _b.value;
-                            return [4 /*yield*/, element];
-                        case 4:
-                            _d.sent();
-                            _d.label = 5;
-                        case 5:
-                            _b = _a.next();
-                            return [3 /*break*/, 3];
-                        case 6: return [3 /*break*/, 9];
-                        case 7:
-                            e_1_1 = _d.sent();
-                            e_1 = { error: e_1_1 };
-                            return [3 /*break*/, 9];
-                        case 8:
-                            try {
-                                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
-                            }
-                            finally { if (e_1) throw e_1.error; }
-                            return [7 /*endfinally*/];
-                        case 9:
-                            ++index;
-                            return [3 /*break*/, 1];
-                        case 10: return [2 /*return*/];
-                    }
-                });
-            })();
-        };
+                                return [3 /*break*/, 1];
+                            case 10: return [2 /*return*/];
+                        }
+                    });
+                })();
+            };
+        }
         container.forEach(function (element) { return _this.insert(element); });
-        Object.freeze(this);
     }
-    Object.freeze(HashSet);
 
     var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
         var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
@@ -2541,13 +3043,6 @@
     HashMap.treeifyThreshold = 8;
     HashMap.untreeifyThreshold = 6;
     HashMap.minTreeifySize = 64;
-    /**
-     * Note that resize is a time-consuming operation, please try to determine the number of buckets before use.
-     * @param container Initialize the container
-     * @param initBucketNum Initialize the bucket num, must be 2 to the power of n
-     * @param hashFunc Function to map elements to numbers
-     * @constructor
-     */
     function HashMap(container, initBucketNum, hashFunc) {
         var _this = this;
         if (container === void 0) { container = []; }
@@ -2620,11 +3115,14 @@
                 if (container.empty())
                     return;
                 if (container instanceof LinkList && container.size() === 1) {
-                    var _a = container.front(), key = _a.key, value = _a.value;
-                    newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList([{
-                            key: key,
-                            value: value
-                        }]);
+                    var pair = container.front();
+                    if (pair !== undefined) {
+                        var key = pair.key, value = pair.value;
+                        newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList([{
+                                key: key,
+                                value: value
+                            }]);
+                    }
                 }
                 else if (container instanceof Map) {
                     var lowList_1 = new LinkList();
@@ -2782,7 +3280,7 @@
             if (!hashTable[index])
                 return false;
             if (hashTable[index] instanceof Map)
-                return hashTable[index].find(key);
+                return !hashTable[index].find(key).equals(hashTable[index].end());
             try {
                 for (var _b = __values(hashTable[index]), _c = _b.next(); !_c.done; _c = _b.next()) {
                     var pair = _c.value;
@@ -2799,62 +3297,66 @@
             }
             return false;
         };
-        this[Symbol.iterator] = function () {
-            return (function () {
-                var index, _a, _b, pair, e_6_1;
-                var e_6, _c;
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
-                        case 0:
-                            index = 0;
-                            _d.label = 1;
-                        case 1:
-                            if (!(index < bucketNum)) return [3 /*break*/, 10];
-                            while (index < bucketNum && !hashTable[index])
+        if (typeof Symbol.iterator === 'symbol') {
+            this[Symbol.iterator] = function () {
+                return (function () {
+                    var index, _a, _b, pair, e_6_1;
+                    var e_6, _c;
+                    return __generator(this, function (_d) {
+                        switch (_d.label) {
+                            case 0:
+                                index = 0;
+                                _d.label = 1;
+                            case 1:
+                                if (!(index < bucketNum)) return [3 /*break*/, 10];
+                                while (index < bucketNum && !hashTable[index])
+                                    ++index;
+                                if (index >= bucketNum)
+                                    return [3 /*break*/, 10];
+                                _d.label = 2;
+                            case 2:
+                                _d.trys.push([2, 7, 8, 9]);
+                                _a = (e_6 = void 0, __values(hashTable[index])), _b = _a.next();
+                                _d.label = 3;
+                            case 3:
+                                if (!!_b.done) return [3 /*break*/, 6];
+                                pair = _b.value;
+                                return [4 /*yield*/, pair];
+                            case 4:
+                                _d.sent();
+                                _d.label = 5;
+                            case 5:
+                                _b = _a.next();
+                                return [3 /*break*/, 3];
+                            case 6: return [3 /*break*/, 9];
+                            case 7:
+                                e_6_1 = _d.sent();
+                                e_6 = { error: e_6_1 };
+                                return [3 /*break*/, 9];
+                            case 8:
+                                try {
+                                    if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                                }
+                                finally { if (e_6) throw e_6.error; }
+                                return [7 /*endfinally*/];
+                            case 9:
                                 ++index;
-                            if (index >= bucketNum)
-                                return [3 /*break*/, 10];
-                            _d.label = 2;
-                        case 2:
-                            _d.trys.push([2, 7, 8, 9]);
-                            _a = (e_6 = void 0, __values(hashTable[index])), _b = _a.next();
-                            _d.label = 3;
-                        case 3:
-                            if (!!_b.done) return [3 /*break*/, 6];
-                            pair = _b.value;
-                            return [4 /*yield*/, pair];
-                        case 4:
-                            _d.sent();
-                            _d.label = 5;
-                        case 5:
-                            _b = _a.next();
-                            return [3 /*break*/, 3];
-                        case 6: return [3 /*break*/, 9];
-                        case 7:
-                            e_6_1 = _d.sent();
-                            e_6 = { error: e_6_1 };
-                            return [3 /*break*/, 9];
-                        case 8:
-                            try {
-                                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
-                            }
-                            finally { if (e_6) throw e_6.error; }
-                            return [7 /*endfinally*/];
-                        case 9:
-                            ++index;
-                            return [3 /*break*/, 1];
-                        case 10: return [2 /*return*/];
-                    }
-                });
-            })();
-        };
+                                return [3 /*break*/, 1];
+                            case 10: return [2 /*return*/];
+                        }
+                    });
+                })();
+            };
+        }
         container.forEach(function (_a) {
             var key = _a.key, value = _a.value;
             return _this.setElement(key, value);
         });
-        Object.freeze(this);
     }
-    Object.freeze(HashMap);
+
+    if (typeof Symbol.iterator !== 'symbol') {
+        console.warn("Your running environment does not support symbol type, you may can not use the 'for...of' syntax.");
+    }
 
     exports.Deque = Deque;
     exports.HashMap = HashMap;
