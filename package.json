@@ -51,6 +51,11 @@
     "url": "https://github.com/ZLY201/js-sdsl.git"
   },
   "license": "MIT",
+  "files": [
+    "dist/cjs",
+    "dist/esm",
+    "CHANGELOG.md"
+  ],
   "keywords": [
     "javascript",
     "data",

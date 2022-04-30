@@ -1,7 +1,7 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
-[![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
 [![version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
+[![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
 [![version](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
 
 **A javascript standard data structure library which benchmark against C++ STL.**
