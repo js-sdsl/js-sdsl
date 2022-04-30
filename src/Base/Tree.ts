@@ -172,6 +172,9 @@ function _TreeIterator<K, V>(
     });
 
     this.equals = function (obj: ContainerIterator<unknown>) {
+        if (obj.constructor.name !== this.constructor.name) {
+            throw new Error(`obj's constructor is not ${this.constructor.name}!`);
+        }
         if (this.iteratorType !== obj.iteratorType) {
             throw new Error("iterator type error!");
         }

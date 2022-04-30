@@ -69,6 +69,7 @@ export interface MapType<K, V> extends BaseType {
      */
     eraseElementByKey: (key: K) => void;
     /**
+     * @return An iterator point to the next iterator.
      * Removes element by iterator.
      */
     eraseElementByIterator: (iter: ContainerIterator<Pair<K, V>>) => ContainerIterator<Pair<K, V>>;

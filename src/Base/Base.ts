@@ -81,6 +81,7 @@ export interface ContainerType<T> extends BaseType {
      */
     eraseElementByValue: (value: T) => void;
     /**
+     * @return An iterator point to the next iterator.
      * Removes element by iterator.
      */
     eraseElementByIterator: (iter: ContainerIterator<T>) => ContainerIterator<T>;
@@ -106,7 +107,7 @@ export interface SequentialContainerType<T> extends ContainerType<T> {
     /**
      * @param pos The position you want to insert.
      * @param element The element you want to insert.
-     * @param num The number of elements you want to insert.
+     * @param num The number of elements you want to insert (default 1).
      * Insert several elements after the specified position.
      */
     insert: (pos: number, element: T, num?: number) => void;
