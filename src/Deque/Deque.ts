@@ -1,4 +1,4 @@
-import { BaseType, ContainerIterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainerType } from "../Base/Base";
 
 export interface DequeType<T> extends SequentialContainerType<T> {
     /**
@@ -87,12 +87,12 @@ class Deque<T> implements DequeType<T> {
     private static bucketSize = (1 << 12);
 
     private map: (T[])[] = [];
-    private first: number = 0;
-    private curFirst: number = 0;
-    private last: number = 0;
-    private curLast: number = 0;
-    private bucketNum: number = 0;
-    private length: number = 0;
+    private first = 0;
+    private curFirst = 0;
+    private last = 0;
+    private curLast = 0;
+    private bucketNum = 0;
+    private length = 0;
 
     constructor(container: {
         forEach: (callback: (element: T) => void) => void,
@@ -148,7 +148,7 @@ class Deque<T> implements DequeType<T> {
         this.curLast = newCurLast;
         this.bucketNum = newBucketNum;
         this.length = originalSize;
-    };
+    }
     private getElementIndex(pos: number) {
         const curFirstIndex = this.first * Deque.bucketSize + this.curFirst;
         const curNodeIndex = curFirstIndex + pos;
@@ -157,15 +157,15 @@ class Deque<T> implements DequeType<T> {
         const curNodeBucketIndex = Math.floor(curNodeIndex / Deque.bucketSize);
         const curNodePointerIndex = curNodeIndex % Deque.bucketSize;
         return { curNodeBucketIndex, curNodePointerIndex };
-    };
+    }
     private getIndex(curNodeBucketIndex: number, curNodePointerIndex: number) {
         if (curNodeBucketIndex === this.first) return curNodePointerIndex - this.curFirst;
         if (curNodeBucketIndex === this.last) return this.length - (this.curLast - curNodePointerIndex) - 1;
         return (Deque.bucketSize - this.first) + (curNodeBucketIndex - 2) * Deque.bucketSize + curNodePointerIndex;
     }
 
-    size() { return this.length };
-    empty() { return this.length === 0 };
+    size() { return this.length }
+    empty() { return this.length === 0 }
     clear() {
         this.first = this.last = this.curFirst = this.curLast = this.bucketNum = this.length = 0;
         this.reAllocate(Deque.bucketSize);
@@ -425,28 +425,27 @@ class Deque<T> implements DequeType<T> {
         arr.forEach(element => this.pushBack(element));
     }
     [Symbol.iterator]() {
-        const self = this;
-        return (function* () {
-            if (self.length === 0) return;
-            if (self.first === self.last) {
-                for (let i = self.curFirst; i <= self.curLast; ++i) {
-                    yield self.map[self.first][i];
+        return (function* (this: Deque<T>) {
+            if (this.length === 0) return;
+            if (this.first === this.last) {
+                for (let i = this.curFirst; i <= this.curLast; ++i) {
+                    yield this.map[this.first][i];
                 }
                 return;
             }
-            for (let i = self.curFirst; i < Deque.bucketSize; ++i) {
-                yield self.map[self.first][i];
+            for (let i = this.curFirst; i < Deque.bucketSize; ++i) {
+                yield this.map[this.first][i];
             }
-            for (let i = self.first + 1; i < self.last; ++i) {
+            for (let i = this.first + 1; i < this.last; ++i) {
                 for (let j = 0; j < Deque.bucketSize; ++j) {
-                    yield self.map[i][j];
+                    yield this.map[i][j];
                 }
             }
-            for (let i = 0; i <= self.curLast; ++i) {
-                yield self.map[self.last][i];
+            for (let i = 0; i <= this.curLast; ++i) {
+                yield this.map[this.last][i];
             }
-        })();
-    };
+        }).bind(this)();
+    }
 }
 
 export default Deque;
