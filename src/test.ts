@@ -5,8 +5,8 @@ import {
     LinkList,
     Deque,
     PriorityQueue,
-    Set as SdslSet,
-    Map as SdslMap,
+    Set as OrderedSet,
+    Map as OrderedMap,
     HashSet,
     HashMap,
 } from "./index";
@@ -649,15 +649,15 @@ function testPriorityQueue(testNum: number) {
 }
 
 function testSet(testNum: number) {
-    function judgeSet(mySdslSet: SetType<number>, myVector: VectorType<number>) {
-        if (mySdslSet.getHeight() > 2 * Math.log2(mySdslSet.size() + 1)) {
+    function judgeSet(myOrderedSet: SetType<number>, myVector: VectorType<number>) {
+        if (myOrderedSet.getHeight() > 2 * Math.log2(myOrderedSet.size() + 1)) {
             throw new Error("Set tree too high!");
         }
-        if (mySdslSet.size() !== myVector.size()) {
+        if (myOrderedSet.size() !== myVector.size()) {
             throw new Error("Set size test failed!");
         }
         myVector.sort((x, y) => x - y);
-        mySdslSet.forEach((element, index) => {
+        myOrderedSet.forEach((element, index) => {
             if (myVector.getElementByPos(index) !== element) {
                 throw new Error("Set test failed!");
             }
@@ -670,87 +670,87 @@ function testSet(testNum: number) {
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const mySdslSet = new SdslSet(arr);
+    const myOrderedSet = new OrderedSet(arr);
     endTime = Date.now();
     reportList.push({
         testFunc: "constructor",
         testNum: 1,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
     const myVector = new Vector(arr);
-    judgeSet(mySdslSet, myVector);
+    judgeSet(myOrderedSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const random = Math.random() * 1000000;
-        mySdslSet.insert(random);
+        myOrderedSet.insert(random);
         myVector.pushBack(random);
     }
-    judgeSet(mySdslSet, myVector);
+    judgeSet(myOrderedSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * myVector.size());
         const eraseValue = myVector.getElementByPos(pos);
         myVector.eraseElementByPos(pos);
-        mySdslSet.eraseElementByValue(eraseValue);
+        myOrderedSet.eraseElementByValue(eraseValue);
     }
-    judgeSet(mySdslSet, myVector);
+    judgeSet(myOrderedSet, myVector);
 
     for (let i = 0; i < 10000; ++i) {
         const pos = Math.floor(Math.random() * myVector.size());
         myVector.eraseElementByPos(pos);
-        mySdslSet.eraseElementByPos(pos);
+        myOrderedSet.eraseElementByPos(pos);
     }
-    judgeSet(mySdslSet, myVector);
+    judgeSet(myOrderedSet, myVector);
 
-    const otherSdslSet = new SdslSet<number>();
+    const otherOrderedSet = new OrderedSet<number>();
     for (let i = 0; i < 20000; ++i) {
         const random = Math.random() * 1000000;
-        otherSdslSet.insert(random);
+        otherOrderedSet.insert(random);
         myVector.pushBack(random);
     }
-    mySdslSet.union(otherSdslSet);
-    judgeSet(mySdslSet, myVector);
+    myOrderedSet.union(otherOrderedSet);
+    judgeSet(myOrderedSet, myVector);
 
     myVector.forEach((element: number) => {
-        if (!mySdslSet.find(element)) throw new Error("Set test failed!");
+        if (!myOrderedSet.find(element)) throw new Error("Set test failed!");
     });
 
     myVector.sort((x: number, y: number) => x - y);
     for (let i = 0; i < myVector.size(); ++i) {
-        if (mySdslSet.lowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
+        if (myOrderedSet.lowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
             throw new Error("Set lowerBound test failed!");
         }
-        if (i !== myVector.size() - 1 && mySdslSet.upperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i + 1)) {
+        if (i !== myVector.size() - 1 && myOrderedSet.upperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i + 1)) {
             throw new Error("Set upperBound test failed!");
         }
     }
     console.log("Set lowerBound and upperBound test passed.");
 
     for (let i = 0; i < myVector.size(); ++i) {
-        if (mySdslSet.reverseLowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
+        if (myOrderedSet.reverseLowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
             throw new Error("Set reverseLowerBound test failed!");
         }
-        if (i !== 0 && mySdslSet.reverseUpperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i - 1)) {
+        if (i !== 0 && myOrderedSet.reverseUpperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i - 1)) {
             throw new Error("Set reverseUpperBound test failed!");
         }
     }
     console.log("Set reverseLowerBound and reverseUpperBound test passed.");
 
     for (let i = 0; i < 10000; ++i) {
-        mySdslSet.eraseElementByPos(0);
+        myOrderedSet.eraseElementByPos(0);
         myVector.eraseElementByPos(0);
-        if (mySdslSet.front() !== myVector.front()) {
+        if (myOrderedSet.front() !== myVector.front()) {
             throw new Error("Set test failed!");
         }
-        mySdslSet.eraseElementByPos(mySdslSet.size() - 1);
+        myOrderedSet.eraseElementByPos(myOrderedSet.size() - 1);
         myVector.eraseElementByPos(myVector.size() - 1);
-        if (mySdslSet.back() !== myVector.back()) {
+        if (myOrderedSet.back() !== myVector.back()) {
             throw new Error("Set test failed!");
         }
     }
-    judgeSet(mySdslSet, myVector);
+    judgeSet(myOrderedSet, myVector);
 
 
     console.clear();
@@ -759,21 +759,21 @@ function testSet(testNum: number) {
     console.log("Set test report generating...");
 
     startTime = Date.now();
-    for (let i = 0; i < testNum; ++i) mySdslSet.insert(i);
+    for (let i = 0; i < testNum; ++i) myOrderedSet.insert(i);
     endTime = Date.now();
     reportList.push({
         testFunc: "insert",
         testNum: testNum,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
-    for (let i = 0; i < testNum; ++i) mySdslSet.insert(Math.random() * 1000000);
+    for (let i = 0; i < testNum; ++i) myOrderedSet.insert(Math.random() * 1000000);
     const tmpArr: number[] = [];
-    mySdslSet.forEach((element: number) => tmpArr.push(element));
+    myOrderedSet.forEach((element: number) => tmpArr.push(element));
     startTime = Date.now();
-    const size = mySdslSet.size();
-    for (let i = 0; i < testNum; ++i) mySdslSet.eraseElementByValue(tmpArr[i]);
+    const size = myOrderedSet.size();
+    for (let i = 0; i < testNum; ++i) myOrderedSet.eraseElementByValue(tmpArr[i]);
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByValue",
@@ -783,7 +783,7 @@ function testSet(testNum: number) {
     });
 
     startTime = Date.now();
-    for (let i = 0; i < 10; ++i) mySdslSet.eraseElementByPos(Math.floor(Math.random() * mySdslSet.size()));
+    for (let i = 0; i < 10; ++i) myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.size()));
     endTime = Date.now();
     reportList.push({
         testFunc: "eraseElementByPos",
@@ -792,74 +792,74 @@ function testSet(testNum: number) {
         runTime: endTime - startTime
     });
 
-    const _otherSdslSet = new SdslSet<number>();
-    for (let i = 0; i < testNum; ++i) _otherSdslSet.insert(Math.random() * 1000000);
+    const _otherOrderedSet = new OrderedSet<number>();
+    for (let i = 0; i < testNum; ++i) _otherOrderedSet.insert(Math.random() * 1000000);
     startTime = Date.now();
-    mySdslSet.union(_otherSdslSet);
+    myOrderedSet.union(_otherOrderedSet);
     endTime = Date.now();
     reportList.push({
         testFunc: "union",
         testNum: 1,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
     let num = 0;
     startTime = Date.now();
-    for (const element of mySdslSet) {
+    for (const element of myOrderedSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.lowerBound(element);
+        myOrderedSet.lowerBound(element);
     }
     endTime = Date.now();
     reportList.push({
         testFunc: "lowerBound",
         testNum: testNum,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
     num = 0;
     startTime = Date.now();
-    for (const element of mySdslSet) {
+    for (const element of myOrderedSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.upperBound(element);
+        myOrderedSet.upperBound(element);
     }
     endTime = Date.now();
     reportList.push({
         testFunc: "upperBound",
         testNum: testNum,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
     num = 0;
     startTime = Date.now();
-    for (const element of mySdslSet) {
+    for (const element of myOrderedSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.reverseLowerBound(element);
+        myOrderedSet.reverseLowerBound(element);
     }
     endTime = Date.now();
     reportList.push({
         testFunc: "reverseLowerBound",
         testNum: testNum,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
     num = 0;
     startTime = Date.now();
-    for (const element of mySdslSet) {
+    for (const element of myOrderedSet) {
         ++num;
         if (num >= testNum) break;
-        mySdslSet.reverseUpperBound(element);
+        myOrderedSet.reverseUpperBound(element);
     }
     endTime = Date.now();
     reportList.push({
         testFunc: "reverseUpperBound",
         testNum: testNum,
-        containerSize: mySdslSet.size(),
+        containerSize: myOrderedSet.size(),
         runTime: endTime - startTime
     });
 
@@ -900,7 +900,7 @@ function testMap(testNum: number) {
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const myMap = new SdslMap(arr.map((element, index) => ({
+    const myMap = new OrderedMap(arr.map((element, index) => ({
         key: element,
         value: index
     })));
@@ -952,7 +952,7 @@ function testMap(testNum: number) {
     }
     judgeMap(myMap, stdMap);
 
-    const otherMap = new SdslMap<number, number>();
+    const otherMap = new OrderedMap<number, number>();
     for (let i = 20000; i < 30000; ++i) {
         const random = Math.random() * 1000000;
         otherMap.setElement(i, random);
@@ -1034,7 +1034,7 @@ function testMap(testNum: number) {
         runTime: endTime - startTime
     });
 
-    const _otherMap = new SdslMap<number, number>();
+    const _otherMap = new OrderedMap<number, number>();
     for (let i = testNum; i < testNum * 2; ++i) _otherMap.setElement(i, Math.random() * 1000000);
     startTime = Date.now();
     myMap.union(_otherMap);
@@ -1327,8 +1327,8 @@ function testIterator() {
         new Vector(arr),
         new LinkList(arr),
         new Deque(arr),
-        new SdslSet(arr),
-        new SdslMap(arr.map((element, index) => ({
+        new OrderedSet(arr),
+        new OrderedMap(arr.map((element, index) => ({
             key: element,
             value: index
         }))),
@@ -1344,11 +1344,11 @@ function testIterator() {
         let index = 0;
         for (let it = container.begin() as ContainerIterator<unknown>; !it.equals(container.end() as ContainerIterator<unknown>); it = it.next()) {
             let testPassed = true;
-            if (container instanceof SdslSet) {
+            if (container instanceof OrderedSet) {
                 if (it.pointer !== sortedArr[index++]) {
                     testPassed = false;
                 }
-            } else if (container instanceof SdslMap) {
+            } else if (container instanceof OrderedMap) {
                 if ((it as ContainerIterator<Pair<number, number>>).pointer.key !== arr[(it as ContainerIterator<Pair<number, number>>).pointer.value]) {
                     testPassed = false;
                 }
@@ -1367,11 +1367,11 @@ function testIterator() {
         let index = arr.length - 1;
         for (let it = container.rBegin() as ContainerIterator<unknown>; !it.equals(container.rEnd() as ContainerIterator<unknown>); it = it.next()) {
             let testPassed = true;
-            if (container instanceof SdslSet) {
+            if (container instanceof OrderedSet) {
                 if (it.pointer !== sortedArr[index--]) {
                     testPassed = false;
                 }
-            } else if (container instanceof SdslMap) {
+            } else if (container instanceof OrderedMap) {
                 if ((it as ContainerIterator<Pair<number, number>>).pointer.key !== arr[(it as ContainerIterator<Pair<number, number>>).pointer.value]) {
                     testPassed = false;
                 }
