@@ -1,7 +1,7 @@
-import { ContainerIterator, BaseType, Pair } from "../Base/Base";
+import { ContainerIterator, Base, Pair } from "../Base/Base";
 import { TreeIterator, TreeNode } from "../Base/Tree";
 
-export interface MapType<K, V> extends BaseType {
+export interface MapType<K, V> extends Base {
     /**
      * @return Iterator pointing to the begin element.
      */

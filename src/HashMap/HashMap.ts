@@ -1,8 +1,8 @@
-import { BaseType, Pair } from "../Base/Base";
+import { Base, Pair } from "../Base/Base";
 import LinkList, { LinkListType } from "../LinkList/LinkList";
 import Map, { MapType } from "../Map/Map";
 
-export interface HashMapType<K, V> extends BaseType {
+export interface HashMapType<K, V> extends Base {
     forEach: (callback: (element: Pair<K, V>, index: number) => void) => void;
     /**
      * @return If the specified element in the HashSet.

@@ -1,7 +1,7 @@
 import { TreeNode, TreeIterator } from "../Base/Tree";
-import { ContainerIterator, ContainerType } from "../Base/Base";
+import { ContainerIterator, Container } from "../Base/Base";
 
-export interface SetType<T> extends ContainerType<T> {
+export interface SetType<T> extends Container<T> {
     /**
      * Inserts element to Set.
      */

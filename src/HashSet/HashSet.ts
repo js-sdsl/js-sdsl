@@ -1,8 +1,8 @@
-import { BaseType } from "../Base/Base";
+import { Base } from "../Base/Base";
 import Set, { SetType } from "../Set/Set";
 import LinkList, { LinkListType } from "../LinkList/LinkList";
 
-export interface HashSetType<T> extends BaseType {
+export interface HashSetType<T> extends Base {
     forEach: (callback: (element: T, index: number) => void) => void;
     /**
      * Inserts element to Set.

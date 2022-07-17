@@ -22,7 +22,7 @@ export interface ContainerIterator<T> {
     equals: (obj: ContainerIterator<T>) => boolean;
 }
 
-export interface BaseType {
+export interface Base {
     /**
      * @return The size of the container.
      */
@@ -37,7 +37,7 @@ export interface BaseType {
     clear: () => void;
 }
 
-export interface ContainerType<T> extends BaseType {
+export interface Container<T> extends Base {
     /**
      * @return Iterator pointing to the begin element.
      */
@@ -91,7 +91,7 @@ export interface ContainerType<T> extends BaseType {
     [Symbol.iterator]: () => Generator<T, void, undefined>;
 }
 
-export interface SequentialContainerType<T> extends ContainerType<T> {
+export interface SequentialContainer<T> extends Container<T> {
     /**
      * Push the element to the back.
      */

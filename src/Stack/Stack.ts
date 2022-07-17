@@ -1,6 +1,6 @@
-import { BaseType } from "../Base/Base";
+import { Base } from "../Base/Base";
 
-export interface StackType<T> extends BaseType {
+export interface StackType<T> extends Base {
     /**
      * Inserts element at the top.
      */

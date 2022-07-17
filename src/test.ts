@@ -10,8 +10,7 @@ import {
     HashSet,
     HashMap,
 } from "./index";
-import { ContainerIterator, SequentialContainerType, Pair } from "./Base/Base";
-import { VectorType } from "./Vector/Vector";
+import { ContainerIterator, SequentialContainer, Pair } from "./Base/Base";
 import { StackType } from "./Stack/Stack";
 import { QueueType } from "./Queue/Queue";
 import { SetType } from "./Set/Set";
@@ -33,7 +32,7 @@ type testReportFormat = {
 }
 
 function testStack(testNum: number) {
-    function judgeStack(myStack: StackType<number>, myVector: VectorType<number>) {
+    function judgeStack(myStack: StackType<number>, myVector: Vector<number>) {
         while (!myStack.empty()) {
             if (myStack.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -107,7 +106,7 @@ function testStack(testNum: number) {
 }
 
 function testQueue(testNum: number) {
-    function judgeQueue(myQueue: QueueType<number>, myVector: VectorType<number>) {
+    function judgeQueue(myQueue: QueueType<number>, myVector: Vector<number>) {
         while (!myQueue.empty()) {
             if (myQueue.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -180,7 +179,7 @@ function testQueue(testNum: number) {
     };
 }
 
-function judgeSequentialContainer(funcName: string, container: SequentialContainerType<number>, myVector: SequentialContainerType<number>) {
+function judgeSequentialContainer(funcName: string, container: SequentialContainer<number>, myVector: SequentialContainer<number>) {
     let testResult = (container.size() === myVector.size());
     container.forEach((element, index) => {
         testResult = testResult && (element === myVector.getElementByPos(index));
@@ -189,7 +188,7 @@ function judgeSequentialContainer(funcName: string, container: SequentialContain
     console.log(container.constructor.name, funcName, "test passed.");
 }
 
-function testSequentialContainer(container: SequentialContainerType<number>, testNum: number) {
+function testSequentialContainer(container: SequentialContainer<number>, testNum: number) {
     const containerName = container.constructor.name;
     console.log(containerName, "SequentialContainer standard test start...");
 
@@ -649,7 +648,7 @@ function testPriorityQueue(testNum: number) {
 }
 
 function testSet(testNum: number) {
-    function judgeSet(myOrderedSet: SetType<number>, myVector: VectorType<number>) {
+    function judgeSet(myOrderedSet: SetType<number>, myVector: Vector<number>) {
         if (myOrderedSet.getHeight() > 2 * Math.log2(myOrderedSet.size() + 1)) {
             throw new Error("Set tree too high!");
         }

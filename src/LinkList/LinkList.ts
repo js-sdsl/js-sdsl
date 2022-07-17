@@ -1,4 +1,4 @@
-import { ContainerIterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainer } from "../Base/Base";
 
 export class LinkNode<T> {
     value: T | undefined = undefined;
@@ -10,7 +10,7 @@ export class LinkNode<T> {
     }
 }
 
-export interface LinkListType<T> extends SequentialContainerType<T> {
+export interface LinkListType<T> extends SequentialContainer<T> {
     /**
      * Inserts an element to the beginning.
      */

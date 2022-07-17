@@ -1,23 +1,4 @@
-import { ContainerIterator, SequentialContainerType } from "../Base/Base";
-
-export interface DequeType<T> extends SequentialContainerType<T> {
-    /**
-     * Push the element to the front.
-     */
-    pushFront: (element: T) => void;
-    /**
-     * Remove the first element.
-     */
-    popFront: () => void;
-    /**
-     * Remove useless space.
-     */
-    shrinkToFit: () => void;
-    /**
-     * Remove all elements after the specified position (excluding the specified position).
-     */
-    cut: (pos: number) => void;
-}
+import { ContainerIterator, SequentialContainer } from "../Base/Base";
 
 class DequeIterator<T> implements ContainerIterator<T> {
     private node: number;
@@ -40,9 +21,7 @@ class DequeIterator<T> implements ContainerIterator<T> {
         this.getElementByPos = getElementByPos;
         this.setElementByPos = setElementByPos;
         this.iteratorType = iteratorType;
-
         this.pointer = undefined as unknown as T;
-
         Object.defineProperty(this, 'pointer', {
             get(this: DequeIterator<T>) {
                 return this.getElementByPos(this.node);
@@ -82,17 +61,17 @@ class DequeIterator<T> implements ContainerIterator<T> {
     }
 }
 
-class Deque<T> implements DequeType<T> {
+class Deque<T> implements SequentialContainer<T> {
     private static sigma = 3;
     private static bucketSize = (1 << 12);
 
-    private map: (T[])[] = [];
     private first = 0;
     private curFirst = 0;
     private last = 0;
     private curLast = 0;
     private bucketNum = 0;
     private length = 0;
+    private map: (T[])[] = [];
 
     constructor(container: {
         forEach: (callback: (element: T) => void) => void,
@@ -216,6 +195,9 @@ class Deque<T> implements DequeType<T> {
         }
         if (this.length > 0) --this.length;
     }
+    /**
+     * Push the element to the front.
+     */
     pushFront(element: T) {
         if (element === undefined || element === null) {
             throw new Error("you can't push undefined or null here");
@@ -234,6 +216,9 @@ class Deque<T> implements DequeType<T> {
         ++this.length;
         this.map[this.first][this.curFirst] = element;
     }
+    /**
+     * Remove the first element.
+     */
     popFront() {
         if (this.empty()) return;
         if (this.size() !== 1) {
@@ -303,6 +288,9 @@ class Deque<T> implements DequeType<T> {
             arr.forEach(element => this.pushBack(element));
         }
     }
+    /**
+     * Remove all elements after the specified position (excluding the specified position).
+     */
     cut(pos: number) {
         if (pos < 0) {
             this.clear();
@@ -410,6 +398,9 @@ class Deque<T> implements DequeType<T> {
         arr.sort(cmp);
         for (let i = 0; i < this.length; ++i) this.setElementByPos(i, arr[i]);
     }
+    /**
+     * Remove useless space.
+     */
     shrinkToFit() {
         const arr: T[] = [];
         this.forEach((element) => {

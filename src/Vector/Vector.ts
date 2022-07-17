@@ -1,184 +1,165 @@
-import { ContainerIterator, SequentialContainerType } from "../Base/Base";
+import { ContainerIterator, SequentialContainer } from "../Base/Base";
 
-export type VectorType<T> = SequentialContainerType<T>;
+class VectorIterator<T> implements ContainerIterator<T> {
+    private node: number;
+    private size: () => number;
+    private getElementByPos: (pos: number) => T;
+    private setElementByPos: (pos: number, element: T) => void;
 
-const VectorIterator = function <T>(
-    this: ContainerIterator<T>,
-    index: number,
-    size: () => number,
-    getElementByPos: (pos: number) => T,
-    setElementByPos: (pos: number, element: T) => void,
-    iteratorType: 'normal' | 'reverse' = 'normal',
-) {
-    Object.defineProperties(this, {
-        iteratorType: {
-            value: iteratorType
-        },
-        node: {
-            value: index,
-        },
-        pointer: {
-            get: () => {
-                if (index < 0 || index >= size()) {
-                    throw new Error("Deque iterator access denied!");
-                }
-                return getElementByPos(index);
+    pointer: T;
+    readonly iteratorType: 'normal' | 'reverse' = 'normal';
+
+    constructor(
+        index: number,
+        size: () => number,
+        getElementByPos: (pos: number) => T,
+        setElementByPos: (pos: number, element: T) => void,
+        iteratorType: 'normal' | 'reverse' = 'normal'
+    ) {
+        this.node = index;
+        this.size = size;
+        this.getElementByPos = getElementByPos;
+        this.setElementByPos = setElementByPos;
+        this.iteratorType = iteratorType;
+        this.pointer = undefined as unknown as T;
+        Object.defineProperty(this, 'pointer', {
+            get(this: VectorIterator<T>) {
+                return this.getElementByPos(this.node);
             },
-            set: (newValue: T) => {
-                setElementByPos(index, newValue);
-            },
-            enumerable: true
+            set(this: VectorIterator<T>, newValue: T) {
+                this.setElementByPos(this.node, newValue);
+            }
+        });
+    }
+
+    pre() {
+        if (this.iteratorType === 'reverse') {
+            if (this.node === this.size() - 1) throw new Error("Deque iterator access denied!");
+            ++this.node;
         }
-    });
-
-    this.equals = function (obj: ContainerIterator<T>) {
+        if (this.node === 0) throw new Error("Deque iterator access denied!");
+        --this.node;
+        return this;
+    }
+    next() {
+        if (this.iteratorType === 'reverse') {
+            if (this.node === -1) throw new Error("Deque iterator access denied!");
+            --this.node
+        }
+        if (this.node === this.size()) throw new Error("Iterator access denied!");
+        ++this.node;
+        return this;
+    }
+    equals(obj: ContainerIterator<T>) {
         if (obj.constructor.name !== this.constructor.name) {
             throw new Error(`obj's constructor is not ${this.constructor.name}!`);
         }
         if (this.iteratorType !== obj.iteratorType) {
             throw new Error("iterator type error!");
         }
-        // @ts-ignore
-        return this.node === obj.node;
-    };
+        return this.node === (obj as VectorIterator<T>).node;
+    }
+}
 
-    this.pre = function () {
-        if (this.iteratorType === 'reverse') {
-            if (index === size() - 1) throw new Error("Deque iterator access denied!");
-            return new VectorIterator(index + 1, size, getElementByPos, setElementByPos, this.iteratorType);
-        }
-        if (index === 0) throw new Error("Deque iterator access denied!");
-        return new VectorIterator(index - 1, size, getElementByPos, setElementByPos);
-    };
+class Vector<T> implements SequentialContainer<T> {
+    private length : number = 0;
+    private vector: T[] = [];
 
-    this.next = function () {
-        if (this.iteratorType === 'reverse') {
-            if (index === -1) throw new Error("Deque iterator access denied!");
-            return new VectorIterator(index - 1, size, getElementByPos, setElementByPos, this.iteratorType);
-        }
-        if (index === size()) throw new Error("Iterator access denied!");
-        return new VectorIterator(index + 1, size, getElementByPos, setElementByPos);
-    };
-} as unknown as {
-    new <T>(
-        pos: number,
-        size: () => number,
-        getElementByPos: (pos: number) => T,
-        setElementByPos: (pos: number, element: T) => void,
-        type?: 'normal' | 'reverse',
-    ): ContainerIterator<T>
-};
-
-function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
-    let len = 0;
-    const vector: T[] = [];
-
-    this.size = function () {
-        return len;
-    };
-
-    this.empty = function () {
-        return len === 0;
-    };
-
-    this.clear = function () {
-        len = 0;
-        vector.length = 0;
-    };
-
-    this.begin = function () {
-        return new VectorIterator(0, this.size, this.getElementByPos, this.setElementByPos);
-    };
-
-    this.end = function () {
-        return new VectorIterator(len, this.size, this.getElementByPos, this.setElementByPos);
-    };
-
-    this.rBegin = function () {
-        return new VectorIterator(len - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+    constructor(container: { forEach: (callback: (element: T) => void) => void } = []) {
+        container.forEach(element => this.pushBack(element));
     }
 
-    this.rEnd = function () {
+    size() { return this.length; }
+    empty() { return this.length === 0; }
+    clear() {
+        this.length = 0;
+        this.vector.length = 0;
+    }
+    begin() {
+        return new VectorIterator(0, this.size, this.getElementByPos, this.setElementByPos);
+    }
+    end() {
+        return new VectorIterator(this.length, this.size, this.getElementByPos, this.setElementByPos);
+    }
+    rBegin() {
+        return new VectorIterator(this.length - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+    }
+
+    rEnd() {
         return new VectorIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
     }
-
-    this.front = function () {
+    front() {
         if (this.empty()) return undefined;
-        return vector[0];
-    };
-
-    this.back = function () {
+        return this.vector[0];
+    }
+    back() {
         if (this.empty()) return undefined;
-        return vector[len - 1];
-    };
-
-    this.forEach = function (callback: (element: T, index: number) => void) {
-        vector.forEach(callback);
-    };
-
-    this.getElementByPos = function (pos: number) {
-        if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than vector's size");
-        return vector[pos];
-    };
-
-    this.eraseElementByPos = function (pos: number) {
-        if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than vector's size");
-        for (let i = pos; i < len - 1; ++i) vector[i] = vector[i + 1];
+        return this.vector[this.length - 1];
+    }
+    forEach(callback: (element: T, index: number) => void) {
+        this.vector.forEach(callback);
+    }
+    getElementByPos(pos: number) {
+        if (pos < 0 || pos >= this.length) throw new Error("pos must more than 0 and less than vector's size");
+        return this.vector[pos];
+    }
+    eraseElementByPos(pos: number) {
+        if (pos < 0 || pos >= this.length) throw new Error("pos must more than 0 and less than vector's size");
+        for (let i = pos; i < this.length - 1; ++i) this.vector[i] = this.vector[i + 1];
         this.popBack();
-    };
-
-    this.eraseElementByValue = function (value: T) {
+    }
+    eraseElementByValue(value: T) {
         const newArr: T[] = [];
         this.forEach(element => {
             if (element !== value) newArr.push(element);
         });
         newArr.forEach((element, index) => {
-            vector[index] = element;
+            this.vector[index] = element;
         });
         const newLen = newArr.length;
-        while (len > newLen) this.popBack();
-    };
-
-    this.pushBack = function (element: T) {
-        vector.push(element);
-        ++len;
-    };
-
-    this.popBack = function () {
-        vector.pop();
-        if (len > 0) --len;
-    };
-
-    this.setElementByPos = function (pos: number, element: T) {
+        while (this.length > newLen) this.popBack();
+    }
+    eraseElementByIterator(iter: ContainerIterator<T>) {
+        const nextIter = iter.next();
+        // @ts-ignore
+        this.eraseElementByPos(iter.node);
+        iter = nextIter;
+        return iter;
+    }
+    pushBack(element: T) {
+        this.vector.push(element);
+        ++this.length;
+    }
+    popBack() {
+        this.vector.pop();
+        if (this.length > 0) --this.length;
+    }
+    setElementByPos(pos: number, element: T) {
         if (element === undefined || element === null) {
             this.eraseElementByPos(pos);
             return;
         }
-        if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than vector's size");
-        vector[pos] = element;
-    };
-
-    this.insert = function (pos: number, element: T, num = 1) {
+        if (pos < 0 || pos >= this.length) throw new Error("pos must more than 0 and less than vector's size");
+        this.vector[pos] = element;
+    }
+    insert(pos: number, element: T, num = 1) {
         if (element === undefined || element === null) {
             throw new Error("you can't push undefined or null here");
         }
-        if (pos < 0 || pos > len) throw new Error("pos must more than 0 and less than or equal to vector's size");
-        vector.splice(pos, 0, ...new Array<T>(num).fill(element));
-        len += num;
-    };
-
-    this.find = function (element: T) {
-        for (let i = 0; i < len; ++i) {
-            if (vector[i] === element) return new VectorIterator(i, this.size, this.getElementByPos, this.getElementByPos);
+        if (pos < 0 || pos > this.length) throw new Error("pos must more than 0 and less than or equal to vector's size");
+        this.vector.splice(pos, 0, ...new Array<T>(num).fill(element));
+        this.length += num;
+    }
+    find(element: T) {
+        for (let i = 0; i < this.length; ++i) {
+            if (this.vector[i] === element) return new VectorIterator(i, this.size, this.getElementByPos, this.getElementByPos);
         }
         return this.end();
-    };
-
-    this.reverse = function () {
-        vector.reverse();
-    };
-
-    this.unique = function () {
+    }
+    reverse() {
+        this.vector.reverse();
+    }
+    unique() {
         let pre: T;
         const newArr: T[] = [];
         this.forEach((element, index) => {
@@ -188,25 +169,19 @@ function Vector<T>(this: VectorType<T>, container: { forEach: (callback: (elemen
             }
         });
         newArr.forEach((element, index) => {
-            vector[index] = element;
+            this.vector[index] = element;
         });
         const newLen = newArr.length;
-        while (len > newLen) this.popBack();
-    };
-
-    this.sort = function (cmp?: (x: T, y: T) => number) {
-        vector.sort(cmp);
-    };
-
-    if (typeof Symbol.iterator === 'symbol') {
-        this[Symbol.iterator] = function () {
-            return (function* () {
-                return yield* vector;
-            })();
-        };
+        while (this.length > newLen) this.popBack();
     }
-
-    container.forEach(element => this.pushBack(element));
+    sort(cmp?: (x: T, y: T) => number) {
+        this.vector.sort(cmp);
+    }
+    [Symbol.iterator]() {
+        return (function* (this: Vector<T>) {
+            return yield* this.vector;
+        }).bind(this)();
+    };
 }
 
-export default (Vector as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }): VectorType<T>; });
+export default Vector;

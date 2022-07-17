@@ -1,6 +1,6 @@
-import { BaseType } from "../Base/Base";
+import { Base } from "../Base/Base";
 
-export interface PriorityQueueType<T> extends BaseType {
+export interface PriorityQueueType<T> extends Base {
     /**
      * Inserts element and sorts the underlying container.
      */

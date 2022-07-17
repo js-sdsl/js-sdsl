@@ -1,7 +1,7 @@
-import { BaseType } from "../Base/Base";
+import { Base } from "../Base/Base";
 import LinkList from "../LinkList/LinkList";
 
-export interface QueueType<T> extends BaseType {
+export interface QueueType<T> extends Base {
     /**
      * Inserts element at the end.
      */
