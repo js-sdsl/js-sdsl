@@ -1,111 +1,64 @@
-import { Base, Pair } from "../Base/Base";
-import LinkList, { LinkListType } from "../LinkList/LinkList";
-import Map, { MapType } from "../Map/Map";
+import { Base, Pair, initContainer } from "../Base/Base";
+import LinkList from "../LinkList/LinkList";
+import Map, { MapType } from "../OrderedMap/OrderedMap";
 
-export interface HashMapType<K, V> extends Base {
-    forEach: (callback: (element: Pair<K, V>, index: number) => void) => void;
-    /**
-     * @return If the specified element in the HashSet.
-     */
-    find: (key: K) => boolean;
-    /**
-     * Gets the value of the element which has the specified key.
-     */
-    getElementByKey: (key: K) => V | undefined;
-    /**
-     * Insert a new key-value pair or set value by key.
-     */
-    setElement: (key: K, value: V) => void;
-    /**
-     * Removes the element of the specified key.
-     */
-    eraseElementByKey: (key: K) => void;
-    /**
-     * Using for 'for...of' syntax like Array.
-     */
-    [Symbol.iterator]: () => Generator<Pair<K, V>, void, undefined>;
-}
+class HashMap<K, V> implements Base {
+    private static initSize: number = (1 << 4);
+    private static maxSize: number = (1 << 30);
+    private static sigma = 0.75;
+    private static treeifyThreshold = 8;
+    private static untreeifyThreshold = 6;
+    private static minTreeifySize = 64;
 
-HashMap.initSize = (1 << 4);
-HashMap.maxSize = (1 << 30);
-HashMap.sigma = 0.75;   // default load factor
-HashMap.treeifyThreshold = 8;
-HashMap.untreeifyThreshold = 6;
-HashMap.minTreeifySize = 64;
+    private length = 0;
+    private initBucketNum: number;
+    private bucketNum: number;
+    private hashFunc: (x: K) => number;
+    private hashTable: (LinkList<Pair<K, V>> | MapType<K, V>)[] = [];
 
-function HashMap<K, V>(this: HashMapType<K, V>, container: { forEach: (callback: (element: Pair<K, V>) => void) => void } = [], initBucketNum = HashMap.initSize, hashFunc: (x: K) => number) {
-    hashFunc = hashFunc || ((x: K) => {
-        let hashCode = 0;
-        let str = '';
-        if (typeof x === "number") {
-            hashCode = Math.floor(x);
-            hashCode = ((hashCode << 5) - hashCode);
-            hashCode = hashCode & hashCode;
-        } else {
+    constructor(container: initContainer<Pair<K, V>> = [], initBucketNum = HashMap.initSize, hashFunc?: (x: K) => number) {
+        if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+            throw new Error("initBucketNum must be 2 to the power of n");
+        }
+        this.initBucketNum = initBucketNum;
+        this.bucketNum = Math.max(HashMap.initSize, Math.min(HashMap.maxSize, this.initBucketNum));
+        this.hashFunc = hashFunc ?? ((x: K) => {
+            let hashCode = 0;
+            let str = '';
             if (typeof x !== "string") {
                 str = JSON.stringify(x);
             } else str = x;
-            for (const ch of str) {
-                const character = ch.charCodeAt(0);
+            for (let i = 0; i < str.length; i++) {
+                const character = str.charCodeAt(i);
                 hashCode = ((hashCode << 5) - hashCode) + character;
                 hashCode = hashCode & hashCode;
             }
-        }
-        hashCode ^= (hashCode >>> 16);
-        return hashCode;
-    });
-
-    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
-        throw new Error("initBucketNum must be 2 to the power of n");
+            hashCode ^= (hashCode >>> 16);
+            return hashCode;
+        });
+        container.forEach(element => this.setElement(element.key, element.value));
     }
 
-    let len = 0;
-    let hashTable: (LinkListType<Pair<K, V>> | MapType<K, V>)[] = [];
-    let bucketNum = Math.max(HashMap.initSize, Math.min(HashMap.maxSize, initBucketNum));
-
-    this.size = function () {
-        return len;
-    };
-
-    this.empty = function () {
-        return len === 0;
-    };
-
-    this.clear = function () {
-        len = 0;
-        bucketNum = initBucketNum;
-        hashTable = [];
-    };
-
-    this.forEach = function (callback: (element: Pair<K, V>, index: number) => void) {
-        let index = 0;
-        hashTable.forEach(container => {
-            container.forEach(element => {
-                callback(element, index++);
-            });
-        });
-    };
-
-    const reAllocate = function (this: HashMapType<K, V>, originalBucketNum: number) {
+    private reAllocate(originalBucketNum: number) {
         if (originalBucketNum >= HashMap.maxSize) return;
-        bucketNum = originalBucketNum * 2;
-        const newHashTable: (LinkListType<Pair<K, V>> | MapType<K, V>)[] = [];
-        hashTable.forEach((container, index) => {
+        this.bucketNum = originalBucketNum * 2;
+        const newHashTable: (LinkList<Pair<K, V>> | MapType<K, V>)[] = [];
+        this.hashTable.forEach((container, index) => {
             if (container.empty()) return;
             if (container instanceof LinkList && container.size() === 1) {
                 const pair = container.front();
                 if (pair !== undefined) {
                     const { key, value } = pair;
-                    newHashTable[hashFunc(key) & (bucketNum - 1)] = new LinkList<Pair<K, V>>([{
+                    newHashTable[this.hashFunc(key) & (this.bucketNum - 1)] = new LinkList<Pair<K, V>>([{
                         key,
                         value
                     }]);
                 }
             } else if (container instanceof Map) {
-                const lowList: (LinkListType<Pair<K, V>>) = new LinkList<Pair<K, V>>();
-                const highList: (LinkListType<Pair<K, V>>) = new LinkList<Pair<K, V>>();
+                const lowList: (LinkList<Pair<K, V>>) = new LinkList<Pair<K, V>>();
+                const highList: (LinkList<Pair<K, V>>) = new LinkList<Pair<K, V>>();
                 container.forEach((pair) => {
-                    const hashCode = hashFunc(pair.key);
+                    const hashCode = this.hashFunc(pair.key);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(pair);
                     } else highList.pushBack(pair);
@@ -118,7 +71,7 @@ function HashMap<K, V>(this: HashMapType<K, V>, container: { forEach: (callback:
                 const lowList = new LinkList<Pair<K, V>>();
                 const highList = new LinkList<Pair<K, V>>();
                 container.forEach(pair => {
-                    const hashCode = hashFunc(pair.key);
+                    const hashCode = this.hashFunc(pair.key);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(pair);
                     } else highList.pushBack(pair);
@@ -126,12 +79,30 @@ function HashMap<K, V>(this: HashMapType<K, V>, container: { forEach: (callback:
                 if (lowList.size()) newHashTable[index] = lowList;
                 if (highList.size()) newHashTable[index + originalBucketNum] = highList;
             }
-            hashTable[index].clear();
+            this.hashTable[index].clear();
         });
-        hashTable = newHashTable;
-    };
+        this.hashTable = newHashTable;
+    }
 
-    this.setElement = function (key: K, value: V) {
+    size() { return this.length; }
+    empty() { return this.length === 0; }
+    clear() {
+        this.length = 0;
+        this.bucketNum = this.initBucketNum;
+        this.hashTable = [];
+    }
+    forEach(callback: (element: Pair<K, V>, index: number) => void) {
+        let index = 0;
+        this.hashTable.forEach(container => {
+            container.forEach(element => {
+                callback(element, index++);
+            });
+        });
+    }
+    /**
+     * Insert a new key-value pair or set value by key.
+     */
+    setElement(key: K, value: V) {
         if (key === null || key === undefined) {
             throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
         }
@@ -139,95 +110,101 @@ function HashMap<K, V>(this: HashMapType<K, V>, container: { forEach: (callback:
             this.eraseElementByKey(key);
             return;
         }
-        const index = hashFunc(key) & (bucketNum - 1);
-        if (!hashTable[index]) {
-            ++len;
-            hashTable[index] = new LinkList<Pair<K, V>>([{ key, value }]);
+        const index = this.hashFunc(key) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) {
+            ++this.length;
+            this.hashTable[index] = new LinkList<Pair<K, V>>([{ key, value }]);
         } else {
-            const preSize = hashTable[index].size();
-            if (hashTable[index] instanceof LinkList) {
-                for (const pair of hashTable[index]) {
+            const preSize = this.hashTable[index].size();
+            if (this.hashTable[index] instanceof LinkList) {
+                for (const pair of this.hashTable[index]) {
                     if (pair.key === key) {
                         pair.value = value;
                         return;
                     }
                 }
-                (hashTable[index] as LinkListType<Pair<K, V>>).pushBack({
+                (this.hashTable[index] as LinkList<Pair<K, V>>).pushBack({
                     key,
                     value,
                 });
-                if (hashTable[index].size() >= HashMap.treeifyThreshold) {
-                    hashTable[index] = new Map<K, V>(hashTable[index]);
+                if (this.bucketNum <= HashMap.minTreeifySize) {
+                    this.reAllocate(this.bucketNum);
+                } else if (this.hashTable[index].size() >= HashMap.treeifyThreshold) {
+                    this.hashTable[index] = new Map<K, V>(this.hashTable[index]);
                 }
-            } else (hashTable[index] as MapType<K, V>).setElement(key, value);
-            const curSize = hashTable[index].size();
-            len += curSize - preSize;
+            } else (this.hashTable[index] as MapType<K, V>).setElement(key, value);
+            const curSize = this.hashTable[index].size();
+            this.length += curSize - preSize;
         }
-        if (len > bucketNum * HashMap.sigma) {
-            reAllocate.call(this, bucketNum);
+        if (this.length > this.bucketNum * HashMap.sigma) {
+            this.reAllocate.call(this, this.bucketNum);
         }
-    };
-
-    this.getElementByKey = function (key: K) {
-        const index = hashFunc(key) & (bucketNum - 1);
-        if (!hashTable[index]) return undefined;
-        if (hashTable[index] instanceof Map) return (hashTable[index] as MapType<K, V>).getElementByKey(key);
+    }
+    /**
+     * Gets the value of the element which has the specified key.
+     */
+    getElementByKey(key: K) {
+        const index = this.hashFunc(key) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) return undefined;
+        if (this.hashTable[index] instanceof Map) return (this.hashTable[index] as MapType<K, V>).getElementByKey(key);
         else {
-            for (const pair of hashTable[index]) {
+            for (const pair of this.hashTable[index]) {
                 if (pair.key === key) return pair.value;
             }
             return undefined;
         }
-    };
-
-    this.eraseElementByKey = function (key: K) {
-        const index = hashFunc(key) & (bucketNum - 1);
-        if (!hashTable[index]) return;
-        const preSize = hashTable[index].size();
-        if (hashTable[index] instanceof Map) {
-            (hashTable[index] as MapType<K, V>).eraseElementByKey(key);
-            if (hashTable[index].size() <= HashMap.untreeifyThreshold) {
-                hashTable[index] = new LinkList<Pair<K, V>>(hashTable[index]);
+    }
+    /**
+     * Removes the element of the specified key.
+     */
+    eraseElementByKey(key: K) {
+        const index = this.hashFunc(key) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) return;
+        const preSize = this.hashTable[index].size();
+        if (this.hashTable[index] instanceof Map) {
+            (this.hashTable[index] as MapType<K, V>).eraseElementByKey(key);
+            if (this.hashTable[index].size() <= HashMap.untreeifyThreshold) {
+                this.hashTable[index] = new LinkList<Pair<K, V>>(this.hashTable[index]);
             }
         } else {
             let pos = -1;
-            for (const pair of hashTable[index]) {
+            for (const pair of this.hashTable[index]) {
                 ++pos;
                 if (pair.key === key) {
-                    hashTable[index].eraseElementByPos(pos);
+                    this.hashTable[index].eraseElementByPos(pos);
                     break;
                 }
             }
         }
-        const curSize = hashTable[index].size();
-        len += curSize - preSize;
-    };
-
-    this.find = function (key: K) {
-        const index = hashFunc(key) & (bucketNum - 1);
-        if (!hashTable[index]) return false;
-        if (hashTable[index] instanceof Map) return !(hashTable[index] as MapType<K, V>).find(key).equals(hashTable[index].end());
-        for (const pair of hashTable[index]) {
+        const curSize = this.hashTable[index].size();
+        this.length += curSize - preSize;
+    }
+    /**
+     * @return If the specified element in the HashSet.
+     */
+    find(key: K) {
+        const index = this.hashFunc(key) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) return false;
+        if (this.hashTable[index] instanceof Map) return !(this.hashTable[index] as MapType<K, V>).find(key).equals(this.hashTable[index].end());
+        for (const pair of this.hashTable[index]) {
             if (pair.key === key) return true;
         }
         return false;
-    };
-
-    if (typeof Symbol.iterator === 'symbol') {
-        this[Symbol.iterator] = function () {
-            return (function* () {
-                let index = 0;
-                while (index < bucketNum) {
-                    while (index < bucketNum && !hashTable[index]) ++index;
-                    if (index >= bucketNum) break;
-                    for (const pair of hashTable[index]) yield pair;
-                    ++index;
-                }
-            })();
-        };
     }
-
-    container.forEach(({ key, value }) => this.setElement(key, value));
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
+    [Symbol.iterator]() {
+        return (function* (this: HashMap<K, V>) {
+            let index = 0;
+            while (index < this.bucketNum) {
+                while (index < this.bucketNum && !this.hashTable[index]) ++index;
+                if (index >= this.bucketNum) break;
+                for (const pair of this.hashTable[index]) yield pair;
+                ++index;
+            }
+        }).bind(this)();
+    }
 }
 
-export default (HashMap as unknown as { new <K, V>(container?: { forEach: (callback: (element: Pair<K, V>) => void) => void }, initBucketNum?: number, hashFunc?: (x: K) => number): HashMapType<K, V> });
+export default HashMap;

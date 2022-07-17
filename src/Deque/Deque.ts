@@ -1,4 +1,4 @@
-import { ContainerIterator, SequentialContainer } from "../Base/Base";
+import { ContainerIterator, SequentialContainer, initContainer } from "../Base/Base";
 
 class DequeIterator<T> implements ContainerIterator<T> {
     private node: number;
@@ -7,7 +7,7 @@ class DequeIterator<T> implements ContainerIterator<T> {
     private setElementByPos: (pos: number, element: T) => void;
 
     pointer: T;
-    readonly iteratorType: 'normal' | 'reverse' = 'normal';
+    readonly iteratorType: 'normal' | 'reverse';
 
     constructor(
         index: number,
@@ -24,9 +24,15 @@ class DequeIterator<T> implements ContainerIterator<T> {
         this.pointer = undefined as unknown as T;
         Object.defineProperty(this, 'pointer', {
             get(this: DequeIterator<T>) {
+                if (this.node < 0 || this.node >= this.size()) {
+                    throw new Error("Deque iterator access denied!");
+                }
                 return this.getElementByPos(this.node);
             },
             set(this: DequeIterator<T>, newValue: T) {
+                if (this.node < 0 || this.node >= this.size()) {
+                    throw new Error("Deque iterator access denied!");
+                }
                 this.setElementByPos(this.node, newValue);
             }
         });
@@ -36,18 +42,20 @@ class DequeIterator<T> implements ContainerIterator<T> {
         if (this.iteratorType === 'reverse') {
             if (this.node === this.size() - 1) throw new Error("Deque iterator access denied!");
             ++this.node;
+        } else {
+            if (this.node === 0) throw new Error("Deque iterator access denied!");
+            --this.node;
         }
-        if (this.node === 0) throw new Error("Deque iterator access denied!");
-        --this.node;
         return this;
     }
     next() {
         if (this.iteratorType === 'reverse') {
             if (this.node === -1) throw new Error("Deque iterator access denied!");
             --this.node
+        } else {
+            if (this.node === this.size()) throw new Error("Iterator access denied!");
+            ++this.node;
         }
-        if (this.node === this.size()) throw new Error("Iterator access denied!");
-        ++this.node;
         return this;
     }
     equals(obj: ContainerIterator<T>) {
@@ -57,7 +65,8 @@ class DequeIterator<T> implements ContainerIterator<T> {
         if (this.iteratorType !== obj.iteratorType) {
             throw new Error("iterator type error!");
         }
-        return this.node === (obj as DequeIterator<T>).node;
+        // @ts-ignore
+        return this.node === obj.node;
     }
 }
 
@@ -73,16 +82,14 @@ class Deque<T> implements SequentialContainer<T> {
     private length = 0;
     private map: (T[])[] = [];
 
-    constructor(container: {
-        forEach: (callback: (element: T) => void) => void,
-        size?: () => number,
-        length?: number
-    } = []) {
+    constructor(container: initContainer<T> = []) {
         let _length = Deque.bucketSize;
-        if (container.size) {
+        if ('size' in container) {
             _length = container.size();
-        } else if (container.length) {
+        } else if ('length' in container) {
             _length = container.length;
+        } else {
+            throw new Error("Can't get container's size!");
         }
         const needSize = _length * Deque.sigma;
         this.bucketNum = Math.ceil(needSize / Deque.bucketSize);
@@ -157,16 +164,16 @@ class Deque<T> implements SequentialContainer<T> {
         return this.map[this.last][this.curLast];
     }
     begin() {
-        return new DequeIterator(0, this.size, this.getElementByPos, this.setElementByPos);
+        return new DequeIterator<T>(0, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
     }
     end() {
-        return new DequeIterator(this.length, this.size, this.getElementByPos, this.setElementByPos);
+        return new DequeIterator<T>(this.length, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
     }
     rBegin() {
-        return new DequeIterator(this.length - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        return new DequeIterator<T>(this.length - 1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
     }
     rEnd() {
-        return new DequeIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        return new DequeIterator<T>(-1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
     }
     pushBack(element: T) {
         if (!this.empty()) {
@@ -264,6 +271,7 @@ class Deque<T> implements SequentialContainer<T> {
             this.eraseElementByPos(pos);
             return;
         }
+        if (pos < 0 || pos >= this.length) throw new Error("pos must more than 0 and less than Deque's size");
         const {
             curNodeBucketIndex,
             curNodePointerIndex

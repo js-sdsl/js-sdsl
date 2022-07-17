@@ -5,18 +5,13 @@ import {
     LinkList,
     Deque,
     PriorityQueue,
-    Set as OrderedSet,
-    Map as OrderedMap,
+    OrderedSet,
+    OrderedMap,
     HashSet,
     HashMap,
 } from "./index";
 import { ContainerIterator, SequentialContainer, Pair } from "./Base/Base";
-import { StackType } from "./Stack/Stack";
-import { QueueType } from "./Queue/Queue";
-import { SetType } from "./Set/Set";
-import { MapType } from "./Map/Map";
-import { HashSetType } from "./HashSet/HashSet";
-import { HashMapType } from "./HashMap/HashMap";
+import { MapType } from "./OrderedMap/OrderedMap";
 
 const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
@@ -32,7 +27,7 @@ type testReportFormat = {
 }
 
 function testStack(testNum: number) {
-    function judgeStack(myStack: StackType<number>, myVector: Vector<number>) {
+    function judgeStack(myStack: Stack<number>, myVector: Vector<number>) {
         while (!myStack.empty()) {
             if (myStack.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -106,7 +101,7 @@ function testStack(testNum: number) {
 }
 
 function testQueue(testNum: number) {
-    function judgeQueue(myQueue: QueueType<number>, myVector: Vector<number>) {
+    function judgeQueue(myQueue: Queue<number>, myVector: Vector<number>) {
         while (!myQueue.empty()) {
             if (myQueue.size() !== myVector.size()) {
                 throw new Error("Stack size test failed!");
@@ -647,8 +642,8 @@ function testPriorityQueue(testNum: number) {
     };
 }
 
-function testSet(testNum: number) {
-    function judgeSet(myOrderedSet: SetType<number>, myVector: Vector<number>) {
+function testOrderedSet(testNum: number) {
+    function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
         if (myOrderedSet.getHeight() > 2 * Math.log2(myOrderedSet.size() + 1)) {
             throw new Error("Set tree too high!");
         }
@@ -871,7 +866,7 @@ function testSet(testNum: number) {
     };
 }
 
-function testMap(testNum: number) {
+function testOrderedMap(testNum: number) {
     function judgeMap(myMap: MapType<number, number>, stdMap: Map<number, number>) {
         if (myMap.getHeight() > 2 * Math.log2(myMap.size() + 1)) {
             throw new Error("Map tree too high!");
@@ -899,7 +894,7 @@ function testMap(testNum: number) {
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const myMap = new OrderedMap(arr.map((element, index) => ({
+    const myMap: MapType<number, number> = new OrderedMap(arr.map((element, index) => ({
         key: element,
         value: index
     })));
@@ -1114,7 +1109,7 @@ function testMap(testNum: number) {
 }
 
 function testHashSet(testNum: number) {
-    function judgeHashSet(funcName: string, myHashSet: HashSetType<number>, stdSet: Set<number>) {
+    function judgeHashSet(funcName: string, myHashSet: HashSet<number>, stdSet: Set<number>) {
         if (myHashSet.size() !== stdSet.size) {
             throw new Error(`HashSet ${funcName} test failed!`);
         }
@@ -1215,7 +1210,7 @@ function testHashSet(testNum: number) {
 }
 
 function testHashMap(testNum: number) {
-    function judgeHashMap(funcName: string, myHashMap: HashMapType<number, number>, stdMap: Map<number, number>) {
+    function judgeHashMap(funcName: string, myHashMap: HashMap<number, number>, stdMap: Map<number, number>) {
         if (myHashMap.size() !== stdMap.size) {
             throw new Error(`HashMap ${funcName} test failed!`);
         }
@@ -1356,7 +1351,9 @@ function testIterator() {
                     testPassed = false;
                 }
             }
-            if (!testPassed) throw new Error(`${container.constructor.name}'s normal iterator error!`);
+            if (!testPassed) {
+                throw new Error(`${container.constructor.name}'s normal iterator error!`);
+            }
         }
     }
     console.log("Normal iterator test end, all tests passed.");
@@ -1399,8 +1396,8 @@ function main(taskQueue: string[]) {
     if (taskQueue.length === 0 || taskQueue.includes("LinkList")) testReport.push(testLinkList(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("Deque")) testReport.push(testDeque(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("PriorityQueue")) testReport.push(testPriorityQueue(testNum * 10));
-    if (taskQueue.length === 0 || taskQueue.includes("Set")) testReport.push(testSet(testNum));
-    if (taskQueue.length === 0 || taskQueue.includes("Map")) testReport.push(testMap(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("OrderedSet")) testReport.push(testOrderedSet(testNum));
+    if (taskQueue.length === 0 || taskQueue.includes("OrderedMap")) testReport.push(testOrderedMap(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("HashSet")) testReport.push(testHashSet(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("HashMap")) testReport.push(testHashMap(testNum));
     if (taskQueue.length === 0 || taskQueue.includes("Iterator")) testIterator();

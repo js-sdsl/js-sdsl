@@ -1,43 +1,30 @@
-import { Base } from "../Base/Base";
-import Set, { SetType } from "../Set/Set";
-import LinkList, { LinkListType } from "../LinkList/LinkList";
+import { Base, initContainer } from "../Base/Base";
+import OrderedSet from "../OrderedSet/OrderedSet";
+import LinkList from "../LinkList/LinkList";
 
-export interface HashSetType<T> extends Base {
-    forEach: (callback: (element: T, index: number) => void) => void;
-    /**
-     * Inserts element to Set.
-     */
-    insert: (element: T) => void;
-    /**
-     * Removes the elements of the specified value.
-     */
-    eraseElementByValue: (value: T) => void;
-    /**
-     * @return If the specified element in the HashSet.
-     */
-    find: (element: T) => boolean;
-    /**
-     * Using for 'for...of' syntax like Array.
-     */
-    [Symbol.iterator]: () => Generator<T, void, undefined>;
-}
+class HashSet<T> implements Base {
+    private static initSize: number = (1 << 4);
+    private static maxSize: number = (1 << 30);
+    private static sigma = 0.75;
+    private static treeifyThreshold = 8;
+    private static untreeifyThreshold = 6;
+    private static minTreeifySize = 64;
 
-HashSet.initSize = (1 << 4);
-HashSet.maxSize = (1 << 30);
-HashSet.sigma = 0.75;   // default load factor
-HashSet.treeifyThreshold = 8;
-HashSet.untreeifyThreshold = 6;
-HashSet.minTreeifySize = 64;
+    private length = 0;
+    private initBucketNum: number;
+    private bucketNum: number;
+    private hashFunc: (x: T) => number;
+    private hashTable: (LinkList<T> | OrderedSet<T>)[] = [];
 
-function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (element: T) => void) => void } = [], initBucketNum = HashSet.initSize, hashFunc: (x: T) => number) {
-    hashFunc = hashFunc || ((x: T) => {
-        let hashCode = 0;
-        let str = '';
-        if (typeof x === "number") {
-            hashCode = Math.floor(x);
-            hashCode = ((hashCode << 5) - hashCode);
-            hashCode = hashCode & hashCode;
-        } else {
+    constructor(container: initContainer<T> = [], initBucketNum = HashSet.initSize, hashFunc?: (x: T) => number) {
+        if ((initBucketNum & (initBucketNum - 1)) !== 0) {
+            throw new Error("initBucketNum must be 2 to the power of n");
+        }
+        this.initBucketNum = initBucketNum;
+        this.bucketNum = Math.max(HashSet.initSize, Math.min(HashSet.maxSize, this.initBucketNum));
+        this.hashFunc = hashFunc ?? ((x: T) => {
+            let hashCode = 0;
+            let str = '';
             if (typeof x !== "string") {
                 str = JSON.stringify(x);
             } else str = x;
@@ -46,70 +33,40 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
                 hashCode = ((hashCode << 5) - hashCode) + character;
                 hashCode = hashCode & hashCode;
             }
-        }
-        hashCode ^= (hashCode >>> 16);
-        return hashCode;
-    });
-
-    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
-        throw new Error("initBucketNum must be 2 to the power of n");
+            hashCode ^= (hashCode >>> 16);
+            return hashCode;
+        });
+        container.forEach(element => this.insert(element));
     }
 
-    let len = 0;
-    let hashTable: (LinkListType<T> | SetType<T>)[] = [];
-    let bucketNum = Math.max(HashSet.initSize, Math.min(HashSet.maxSize, initBucketNum));
-
-    this.size = function () {
-        return len;
-    };
-
-    this.empty = function () {
-        return len === 0;
-    };
-
-    this.clear = function () {
-        len = 0;
-        bucketNum = initBucketNum;
-        hashTable = [];
-    };
-
-    this.forEach = function (callback: (element: T, index: number) => void) {
-        let index = 0;
-        hashTable.forEach(container => {
-            container.forEach(element => {
-                callback(element, index++);
-            });
-        });
-    };
-
-    const reAllocate = function (this: HashSetType<T>, originalBucketNum: number) {
+    private reAllocate(originalBucketNum: number) {
         if (originalBucketNum >= HashSet.maxSize) return;
-        bucketNum = originalBucketNum * 2;
-        const newHashTable: (LinkListType<T> | SetType<T>)[] = [];
-        hashTable.forEach((container, index) => {
+        this.bucketNum = originalBucketNum * 2;
+        const newHashTable: (LinkList<T> | OrderedSet<T>)[] = [];
+        this.hashTable.forEach((container, index) => {
             if (container.empty()) return;
             if (container instanceof LinkList && container.size() === 1) {
                 const element = container.front();
                 if (element === undefined) throw new Error("unknown error");
-                newHashTable[hashFunc(element) & (bucketNum - 1)] = new LinkList<T>([element]);
-            } else if (container instanceof Set) {
-                const lowList: LinkListType<T> = new LinkList<T>();
-                const highList: LinkListType<T> = new LinkList<T>();
+                newHashTable[this.hashFunc(element) & (this.bucketNum - 1)] = new LinkList<T>([element]);
+            } else if (container instanceof OrderedSet) {
+                const lowList: LinkList<T> = new LinkList<T>();
+                const highList: LinkList<T> = new LinkList<T>();
                 container.forEach(element => {
-                    const hashCode = hashFunc(element);
+                    const hashCode = this.hashFunc(element);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(element);
                     } else highList.pushBack(element);
                 });
-                if (lowList.size() > HashSet.untreeifyThreshold) newHashTable[index] = new Set<T>(lowList);
+                if (lowList.size() > HashSet.untreeifyThreshold) newHashTable[index] = new OrderedSet<T>(lowList);
                 else if (lowList.size()) newHashTable[index] = lowList;
-                if (highList.size() > HashSet.untreeifyThreshold) newHashTable[index + originalBucketNum] = new Set<T>(highList);
+                if (highList.size() > HashSet.untreeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedSet<T>(highList);
                 else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
             } else {
                 const lowList = new LinkList<T>();
                 const highList = new LinkList<T>();
                 container.forEach(element => {
-                    const hashCode = hashFunc(element);
+                    const hashCode = this.hashFunc(element);
                     if ((hashCode & originalBucketNum) === 0) {
                         lowList.pushBack(element);
                     } else highList.pushBack(element);
@@ -117,71 +74,93 @@ function HashSet<T>(this: HashSetType<T>, container: { forEach: (callback: (elem
                 if (lowList.size()) newHashTable[index] = lowList;
                 if (highList.size()) newHashTable[index + originalBucketNum] = highList;
             }
-            hashTable[index].clear();
+            this.hashTable[index].clear();
         });
-        hashTable = newHashTable;
-    };
+        this.hashTable = newHashTable;
+    }
 
-    this.insert = function (element: T) {
+    size() { return this.length; }
+    empty() { return this.length === 0; }
+    clear() {
+        this.length = 0;
+        this.bucketNum = this.initBucketNum;
+        this.hashTable = [];
+    }
+    forEach(callback: (element: T, index: number) => void) {
+        let index = 0;
+        this.hashTable.forEach(container => {
+            container.forEach(element => {
+                callback(element, index++);
+            });
+        });
+    }
+    /**
+     * Inserts element to Set.
+     */
+    insert(element: T) {
         if (element === null || element === undefined) {
             throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
         }
-        const index = hashFunc(element) & (bucketNum - 1);
-        if (!hashTable[index]) {
-            hashTable[index] = new LinkList<T>([element]);
-            ++len;
+        const index = this.hashFunc(element) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) {
+            this.hashTable[index] = new LinkList<T>([element]);
+            ++this.length;
         } else {
-            const preSize = hashTable[index].size();
-            if (hashTable[index] instanceof LinkList) {
-                if (!hashTable[index].find(element).equals(hashTable[index].end())) return;
-                (hashTable[index] as LinkListType<T>).pushBack(element);
-                if (hashTable[index].size() >= HashSet.treeifyThreshold) {
-                    hashTable[index] = new Set<T>(hashTable[index]);
+            const preSize = this.hashTable[index].size();
+            if (this.hashTable[index] instanceof LinkList) {
+                if (!this.hashTable[index].find(element).equals(this.hashTable[index].end())) return;
+                (this.hashTable[index] as LinkList<T>).pushBack(element);
+                if (this.bucketNum <= HashSet.minTreeifySize) {
+                    this.reAllocate(this.bucketNum);
+                } else if (this.hashTable[index].size() >= HashSet.treeifyThreshold) {
+                    this.hashTable[index] = new OrderedSet<T>(this.hashTable[index]);
                 }
-            } else (hashTable[index] as SetType<T>).insert(element);
-            const curSize = hashTable[index].size();
-            len += curSize - preSize;
+            } else (this.hashTable[index] as OrderedSet<T>).insert(element);
+            const curSize = this.hashTable[index].size();
+            this.length += curSize - preSize;
         }
-        if (len > bucketNum * HashSet.sigma) {
-            reAllocate.call(this, bucketNum);
+        if (this.length > this.bucketNum * HashSet.sigma) {
+            this.reAllocate(this.bucketNum);
         }
-    };
-
-    this.eraseElementByValue = function (element: T) {
-        const index = hashFunc(element) & (bucketNum - 1);
-        if (!hashTable[index]) return;
-        const preSize = hashTable[index].size();
-        hashTable[index].eraseElementByValue(element);
-        if (hashTable[index] instanceof Set) {
-            if (hashTable[index].size() <= HashSet.untreeifyThreshold) {
-                hashTable[index] = new LinkList<T>(hashTable[index]);
+    }
+    /**
+     * Removes the elements of the specified value.
+     */
+    eraseElementByValue(element: T) {
+        const index = this.hashFunc(element) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) return;
+        const preSize = this.hashTable[index].size();
+        this.hashTable[index].eraseElementByValue(element);
+        if (this.hashTable[index] instanceof OrderedSet) {
+            if (this.hashTable[index].size() <= HashSet.untreeifyThreshold) {
+                this.hashTable[index] = new LinkList<T>(this.hashTable[index]);
             }
         }
-        const curSize = hashTable[index].size();
-        len += curSize - preSize;
-    };
-
-    this.find = function (element: T) {
-        const index = hashFunc(element) & (bucketNum - 1);
-        if (!hashTable[index]) return false;
-        return !hashTable[index].find(element).equals(hashTable[index].end());
-    };
-
-    if (typeof Symbol.iterator === 'symbol') {
-        this[Symbol.iterator] = function () {
-            return (function* () {
-                let index = 0;
-                while (index < bucketNum) {
-                    while (index < bucketNum && !hashTable[index]) ++index;
-                    if (index >= bucketNum) break;
-                    for (const element of hashTable[index]) yield element;
-                    ++index;
-                }
-            })();
-        };
+        const curSize = this.hashTable[index].size();
+        this.length += curSize - preSize;
     }
-
-    container.forEach(element => this.insert(element));
+    /**
+     * @return If the specified element in the HashSet.
+     */
+    find(element: T) {
+        const index = this.hashFunc(element) & (this.bucketNum - 1);
+        if (!this.hashTable[index]) return false;
+        return !this.hashTable[index].find(element).equals(this.hashTable[index].end());
+    }
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
+    [Symbol.iterator]() {
+        return (function* (this: HashSet<T>) {
+            let index = 0;
+            while (index < this.bucketNum) {
+                while (index < this.bucketNum && !this.hashTable[index]) ++index;
+                if (index >= this.bucketNum) break;
+                for (const element of this.hashTable[index]) yield element;
+                ++index;
+            }
+        }).bind(this)();
+    }
 }
 
-export default (HashSet as unknown as { new <T>(container?: { forEach: (callback: (element: T) => void) => void }, initBucketNum?: number, hashFunc?: (x: T) => number): HashSetType<T> });
+export default HashSet;

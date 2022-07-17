@@ -4,8 +4,8 @@ import Queue from "./Queue/Queue";
 import LinkList from "./LinkList/LinkList";
 import Deque from "./Deque/Deque";
 import PriorityQueue from "./PriorityQueue/PriorityQueue";
-import Set from "./Set/Set";
-import Map from "./Map/Map";
+import OrderedSet from "./OrderedSet/OrderedSet";
+import OrderedMap from "./OrderedMap/OrderedMap";
 import HashSet from "./HashSet/HashSet";
 import HashMap from "./HashMap/HashMap";
 
@@ -20,8 +20,8 @@ export {
     LinkList,
     Deque,
     PriorityQueue,
-    Set,
-    Map,
+    OrderedSet,
+    OrderedMap,
     HashSet,
     HashMap
 };

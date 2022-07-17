@@ -1,52 +1,37 @@
-import { Base } from "../Base/Base";
+import { Base, initContainer } from "../Base/Base";
 
-export interface StackType<T> extends Base {
+class Stack<T> implements Base {
+    private length = 0;
+    private stack: T[] = [];
+
+    constructor(container: initContainer<T> = []) {
+        container.forEach(element => this.push(element));
+    }
+    
+    size() { return this.length; }
+    empty() { return this.length === 0; }
+    clear() {
+        this.length = 0;
+        this.stack.length = 0;
+    }
     /**
      * Inserts element at the top.
      */
-    push: (element: T) => void;
+    push(element: T) {
+        this.stack.push(element);
+        ++this.length;
+    }
     /**
      * Removes the top element.
      */
-    pop: () => void;
+    pop() {
+        this.stack.pop();
+        if (this.length > 0) --this.length;
+    }
     /**
      * Accesses the top element.
      */
-    top: () => T | undefined;
+    top() { return this.stack[this.length - 1]; }
 }
 
-function Stack<T>(this: StackType<T>, container: { forEach: (callback: (element: T) => void) => void } = []) {
-    let len = 0;
-    const stack: T[] = [];
-
-    this.size = function () {
-        return len;
-    };
-
-    this.empty = function () {
-        return len === 0;
-    };
-
-    this.clear = function () {
-        len = 0;
-        stack.length = 0;
-    };
-
-    this.push = function (element: T) {
-        stack.push(element);
-        ++len;
-    };
-
-    this.pop = function () {
-        stack.pop();
-        if (len > 0) --len;
-    };
-
-    this.top = function () {
-        return stack[len - 1];
-    };
-
-    container.forEach(element => this.push(element));
-}
-
-export default (Stack as unknown as { new<T>(container?: { forEach: (callback: (element: T) => void) => void }): StackType<T> });
+export default Stack;

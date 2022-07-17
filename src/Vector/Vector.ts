@@ -1,4 +1,4 @@
-import { ContainerIterator, SequentialContainer } from "../Base/Base";
+import { ContainerIterator, SequentialContainer, initContainer } from "../Base/Base";
 
 class VectorIterator<T> implements ContainerIterator<T> {
     private node: number;
@@ -7,7 +7,7 @@ class VectorIterator<T> implements ContainerIterator<T> {
     private setElementByPos: (pos: number, element: T) => void;
 
     pointer: T;
-    readonly iteratorType: 'normal' | 'reverse' = 'normal';
+    readonly iteratorType: 'normal' | 'reverse';
 
     constructor(
         index: number,
@@ -24,9 +24,15 @@ class VectorIterator<T> implements ContainerIterator<T> {
         this.pointer = undefined as unknown as T;
         Object.defineProperty(this, 'pointer', {
             get(this: VectorIterator<T>) {
+                if (this.node < 0 || this.node >= this.size()) {
+                    throw new Error("Deque iterator access denied!");
+                }
                 return this.getElementByPos(this.node);
             },
             set(this: VectorIterator<T>, newValue: T) {
+                if (this.node < 0 || this.node >= this.size()) {
+                    throw new Error("Deque iterator access denied!");
+                }
                 this.setElementByPos(this.node, newValue);
             }
         });
@@ -36,18 +42,20 @@ class VectorIterator<T> implements ContainerIterator<T> {
         if (this.iteratorType === 'reverse') {
             if (this.node === this.size() - 1) throw new Error("Deque iterator access denied!");
             ++this.node;
+        } else {
+            if (this.node === 0) throw new Error("Deque iterator access denied!");
+            --this.node;
         }
-        if (this.node === 0) throw new Error("Deque iterator access denied!");
-        --this.node;
         return this;
     }
     next() {
         if (this.iteratorType === 'reverse') {
             if (this.node === -1) throw new Error("Deque iterator access denied!");
             --this.node
+        } else {
+            if (this.node === this.size()) throw new Error("Iterator access denied!");
+            ++this.node;
         }
-        if (this.node === this.size()) throw new Error("Iterator access denied!");
-        ++this.node;
         return this;
     }
     equals(obj: ContainerIterator<T>) {
@@ -57,15 +65,16 @@ class VectorIterator<T> implements ContainerIterator<T> {
         if (this.iteratorType !== obj.iteratorType) {
             throw new Error("iterator type error!");
         }
-        return this.node === (obj as VectorIterator<T>).node;
+        // @ts-ignore
+        return this.node === obj.node;
     }
 }
 
 class Vector<T> implements SequentialContainer<T> {
-    private length : number = 0;
+    private length  = 0;
     private vector: T[] = [];
 
-    constructor(container: { forEach: (callback: (element: T) => void) => void } = []) {
+    constructor(container: initContainer<T> = []) {
         container.forEach(element => this.pushBack(element));
     }
 
@@ -76,17 +85,16 @@ class Vector<T> implements SequentialContainer<T> {
         this.vector.length = 0;
     }
     begin() {
-        return new VectorIterator(0, this.size, this.getElementByPos, this.setElementByPos);
+        return new VectorIterator<T>(0, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
     }
     end() {
-        return new VectorIterator(this.length, this.size, this.getElementByPos, this.setElementByPos);
+        return new VectorIterator<T>(this.length, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
     }
     rBegin() {
-        return new VectorIterator(this.length - 1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        return new VectorIterator<T>(this.length - 1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
     }
-
     rEnd() {
-        return new VectorIterator(-1, this.size, this.getElementByPos, this.setElementByPos, 'reverse');
+        return new VectorIterator<T>(-1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
     }
     front() {
         if (this.empty()) return undefined;
@@ -181,7 +189,7 @@ class Vector<T> implements SequentialContainer<T> {
         return (function* (this: Vector<T>) {
             return yield* this.vector;
         }).bind(this)();
-    };
+    }
 }
 
 export default Vector;

@@ -131,3 +131,7 @@ export interface Pair<K, V> {
     key: K;
     value: V;
 }
+
+export type initContainer<T> =
+    ({ size: () => number; } | { length: number; }) &
+    { forEach: (callback: (element: T) => void) => void; }
