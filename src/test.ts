@@ -11,7 +11,6 @@ import {
     HashMap,
 } from "./index";
 import { ContainerIterator, SequentialContainer, Pair } from "./Base/Base";
-import { MapType } from "./OrderedMap/OrderedMap";
 
 const arr: number[] = [];
 for (let i = 0; i < 10000; ++i) arr.push(Math.random() * 1000000);
@@ -645,20 +644,20 @@ function testPriorityQueue(testNum: number) {
 function testOrderedSet(testNum: number) {
     function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
         if (myOrderedSet.getHeight() > 2 * Math.log2(myOrderedSet.size() + 1)) {
-            throw new Error("Set tree too high!");
+            throw new Error("OrderedMap tree too high!");
         }
         if (myOrderedSet.size() !== myVector.size()) {
-            throw new Error("Set size test failed!");
+            throw new Error("OrderedMap size test failed!");
         }
         myVector.sort((x, y) => x - y);
         myOrderedSet.forEach((element, index) => {
             if (myVector.getElementByPos(index) !== element) {
-                throw new Error("Set test failed!");
+                throw new Error("OrderedMap test failed!");
             }
         });
     }
 
-    console.log("Set test start...");
+    console.log("OrderedMap test start...");
 
     let startTime, endTime;
     const reportList: testReportFormat["reportList"] = [];
@@ -708,49 +707,49 @@ function testOrderedSet(testNum: number) {
     judgeSet(myOrderedSet, myVector);
 
     myVector.forEach((element: number) => {
-        if (!myOrderedSet.find(element)) throw new Error("Set test failed!");
+        if (!myOrderedSet.find(element)) throw new Error("OrderedMap test failed!");
     });
 
     myVector.sort((x: number, y: number) => x - y);
     for (let i = 0; i < myVector.size(); ++i) {
         if (myOrderedSet.lowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
-            throw new Error("Set lowerBound test failed!");
+            throw new Error("OrderedMap lowerBound test failed!");
         }
         if (i !== myVector.size() - 1 && myOrderedSet.upperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i + 1)) {
-            throw new Error("Set upperBound test failed!");
+            throw new Error("OrderedMap upperBound test failed!");
         }
     }
-    console.log("Set lowerBound and upperBound test passed.");
+    console.log("OrderedMap lowerBound and upperBound test passed.");
 
     for (let i = 0; i < myVector.size(); ++i) {
         if (myOrderedSet.reverseLowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
-            throw new Error("Set reverseLowerBound test failed!");
+            throw new Error("OrderedMap reverseLowerBound test failed!");
         }
         if (i !== 0 && myOrderedSet.reverseUpperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i - 1)) {
-            throw new Error("Set reverseUpperBound test failed!");
+            throw new Error("OrderedMap reverseUpperBound test failed!");
         }
     }
-    console.log("Set reverseLowerBound and reverseUpperBound test passed.");
+    console.log("OrderedMap reverseLowerBound and reverseUpperBound test passed.");
 
     for (let i = 0; i < 10000; ++i) {
         myOrderedSet.eraseElementByPos(0);
         myVector.eraseElementByPos(0);
         if (myOrderedSet.front() !== myVector.front()) {
-            throw new Error("Set test failed!");
+            throw new Error("OrderedMap test failed!");
         }
         myOrderedSet.eraseElementByPos(myOrderedSet.size() - 1);
         myVector.eraseElementByPos(myVector.size() - 1);
         if (myOrderedSet.back() !== myVector.back()) {
-            throw new Error("Set test failed!");
+            throw new Error("OrderedMap test failed!");
         }
     }
     judgeSet(myOrderedSet, myVector);
 
 
     console.clear();
-    console.log("Set test end, all tests passed!");
+    console.log("OrderedMap test end, all tests passed!");
 
-    console.log("Set test report generating...");
+    console.log("OrderedMap test report generating...");
 
     startTime = Date.now();
     for (let i = 0; i < testNum; ++i) myOrderedSet.insert(i);
@@ -858,43 +857,43 @@ function testOrderedSet(testNum: number) {
     });
 
 
-    console.log("Set test report done.");
+    console.log("OrderedMap test report done.");
 
     return {
-        containerName: "Set",
+        containerName: "OrderedMap",
         reportList
     };
 }
 
 function testOrderedMap(testNum: number) {
-    function judgeMap(myMap: MapType<number, number>, stdMap: Map<number, number>) {
+    function judgeMap(myMap: OrderedMap<number, number>, stdMap: Map<number, number>) {
         if (myMap.getHeight() > 2 * Math.log2(myMap.size() + 1)) {
-            throw new Error("Map tree too high!");
+            throw new Error("OrderedMap tree too high!");
         }
         if (myMap.size() !== stdMap.size) {
-            throw new Error("Map tree too high!");
+            throw new Error("OrderedMap tree too high!");
         }
         stdMap.forEach((value, key) => {
             const _value = myMap.getElementByKey(key);
             if (_value !== stdMap.get(key)) {
-                throw new Error("Map test failed!");
+                throw new Error("OrderedMap test failed!");
             }
         });
         myMap.forEach(({ key, value }) => {
             const _value = stdMap.get(key);
             if (_value !== value) {
-                throw new Error("Map test failed!");
+                throw new Error("OrderedMap test failed!");
             }
         });
     }
 
-    console.log("Map test start...");
+    console.log("OrderedMap test start...");
 
     let startTime, endTime;
     const reportList: testReportFormat["reportList"] = [];
 
     startTime = Date.now();
-    const myMap: MapType<number, number> = new OrderedMap(arr.map((element, index) => ({
+    const myMap: OrderedMap<number, number> = new OrderedMap(arr.map((element, index) => ({
         key: element,
         value: index
     })));
@@ -913,7 +912,7 @@ function testOrderedMap(testNum: number) {
     myMap.forEach(({ key, value }) => {
         const v = stdMap.get(key);
         if (v !== value) {
-            throw new Error("Map test failed!");
+            throw new Error("OrderedMap test failed!");
         }
         if (Math.random() > 0.5) {
             eraseArr.push(key);
@@ -961,40 +960,40 @@ function testOrderedMap(testNum: number) {
         let vElement = myVector.getElementByPos(i);
         let myElement = myMap.lowerBound(vElement.key).pointer;
         if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-            throw new Error("Map lowerBound test failed!");
+            throw new Error("OrderedMap lowerBound test failed!");
         }
         if (i !== myVector.size() - 1) {
             vElement = myVector.getElementByPos(i);
             myElement = myMap.upperBound(vElement.key).pointer;
             vElement = myVector.getElementByPos(i + 1);
             if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-                throw new Error("Map upperBound test failed!");
+                throw new Error("OrderedMap upperBound test failed!");
             }
         }
     }
-    console.log("Map lowerBound and upperBound test passed.");
+    console.log("OrderedMap lowerBound and upperBound test passed.");
 
     for (let i = 0; i < myVector.size(); ++i) {
         let vElement = myVector.getElementByPos(i);
         let myElement = myMap.reverseLowerBound(vElement.key).pointer;
         if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-            throw new Error("Map reverseLowerBound test failed!");
+            throw new Error("OrderedMap reverseLowerBound test failed!");
         }
         if (i !== 0) {
             vElement = myVector.getElementByPos(i);
             myElement = myMap.reverseUpperBound(vElement.key).pointer;
             vElement = myVector.getElementByPos(i - 1);
             if (vElement?.key !== myElement?.key || vElement?.value !== myElement?.value) {
-                throw new Error("Map reverseUpperBound test failed!");
+                throw new Error("OrderedMap reverseUpperBound test failed!");
             }
         }
     }
-    console.log("Map reverseLowerBound and reverseUpperBound test passed.");
+    console.log("OrderedMap reverseLowerBound and reverseUpperBound test passed.");
 
     console.clear();
-    console.log("Map test end, all tests passed!");
+    console.log("OrderedMap test end, all tests passed!");
 
-    console.log("Map test report generating...");
+    console.log("OrderedMap test report generating...");
 
     startTime = Date.now();
     for (let i = 0; i < testNum; ++i) myMap.setElement(i, Math.random() * 1000000);
@@ -1100,10 +1099,10 @@ function testOrderedMap(testNum: number) {
         runTime: endTime - startTime
     });
 
-    console.log("Map test report done.");
+    console.log("OrderedMap test report done.");
 
     return {
-        containerName: "Map",
+        containerName: "OrderedMap",
         reportList
     };
 }

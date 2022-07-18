@@ -1,244 +1,71 @@
-import { ContainerIterator, Base, Pair } from "../Base/Base";
+import { ContainerIterator, Base, Pair, initContainer } from "../Base/Base";
 import { TreeIterator, TreeNode } from "../Base/Tree";
 
-export interface MapType<K, V> extends Base {
-    /**
-     * @return Iterator pointing to the begin element.
-     */
-    begin: () => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return Iterator pointing to the super end like c++.
-     */
-    end: () => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return Iterator pointing to the end element.
-     */
-    rBegin: () => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return Iterator pointing to the super begin like c++.
-     */
-    rEnd: () => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return The first element.
-     */
-    front: () => Pair<K, V> | undefined;
-    /**
-     * @return The last element.
-     */
-    back: () => Pair<K, V> | undefined;
-    forEach: (callback: (element: Pair<K, V>, index: number) => void) => void;
-    /**
-     * @param element The element you want to find.
-     * @return Iterator pointing to the element if found, or super end if not found.
-     */
-    find: (key: K) => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return An iterator to the first element not less than the given key.
-     */
-    lowerBound: (key: K) => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return An iterator to the first element greater than the given key.
-     */
-    upperBound: (key: K) => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return An iterator to the first element not greater than the given key.
-     */
-    reverseLowerBound: (key: K) => ContainerIterator<Pair<K, V>>;
-    /**
-     * @return An iterator to the first element less than the given key.
-     */
-    reverseUpperBound: (key: K) => ContainerIterator<Pair<K, V>>;
-    /**
-     * Gets the key and value of the element at the specified position.
-     */
-    getElementByPos: (pos: number) => Pair<K, V>;
-    /**
-     * Gets the value of the element of the specified key.
-     */
-    getElementByKey: (key: K) => V | undefined;
-    /**
-     * Insert a new key-value pair or set value by key.
-     */
-    setElement: (key: K, value: V) => void;
-    /**
-     * Removes the elements at the specified position.
-     */
-    eraseElementByPos: (pos: number) => void;
-    /**
-     * Removes the elements of the specified key.
-     */
-    eraseElementByKey: (key: K) => void;
-    /**
-     * @return An iterator point to the next iterator.
-     * Removes element by iterator.
-     */
-    eraseElementByIterator: (iter: ContainerIterator<Pair<K, V>>) => ContainerIterator<Pair<K, V>>;
-    /**
-     * Union the other Set to self.
-     */
-    union: (other: MapType<K, V>) => void;
-    /**
-     * @return The height of the RB-tree.
-     */
-    getHeight: () => number;
-    /**
-     * Using for 'for...of' syntax like Array.
-     */
-    [Symbol.iterator]: () => Generator<Pair<K, V>, void, undefined>;
-}
+class OrderedMap<K, V> implements Base {
+    private length = 0;
+    private root: TreeNode<K, V> = new TreeNode<K, V>();
+    private header: TreeNode<K, V> = new TreeNode<K, V>();
+    private cmp: (x: K, y: K) => number;
 
-function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (element: Pair<K, V>) => void) => void } = [], cmp: (x: K, y: K) => number) {
-    cmp = cmp || ((x, y) => {
-        if (x < y) return -1;
-        if (x > y) return 1;
-        return 0;
-    });
-
-    let len = 0;
-    let root = new TreeNode<K, V>();
-    root.color = TreeNode.TreeNodeColorType.black;
-    const header = new TreeNode<K, V>();
-    header.parent = root;
-    root.parent = header;
-
-    this.size = function () {
-        return len;
-    };
-
-    this.empty = function () {
-        return len === 0;
-    };
-
-    this.clear = function () {
-        len = 0;
-        root.key = root.value = undefined;
-        root.leftChild = root.rightChild = root.brother = undefined;
-        header.leftChild = header.rightChild = undefined;
-    };
-
-    this.begin = function () {
-        return new TreeIterator(header.leftChild || header, header);
+    constructor(container: initContainer<Pair<K, V>> = [], cmp?: (x: K, y: K) => number) {
+        this.root.color = TreeNode.TreeNodeColorType.black;
+        this.header.parent = this.root;
+        this.root.parent = this.header;
+        this.cmp = cmp ?? ((x: K, y: K) => {
+            if (x < y) return -1;
+            if (x > y) return 1;
+            return 0;
+        });
+        this.iterationFunc = this.iterationFunc.bind(this);
+        container.forEach(({ key, value }) => this.setElement(key, value));
     }
 
-    this.end = function () {
-        return new TreeIterator(header, header);
-    }
-
-    this.rBegin = function () {
-        return new TreeIterator(header.rightChild || header, header);
-    }
-
-    this.rEnd = function () {
-        return new TreeIterator(header, header);
-    }
-
-    const findSubTreeMinNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = function (curNode: TreeNode<K, V>) {
+    private findSubTreeMinNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = (curNode: TreeNode<K, V>) => {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
-        return curNode.leftChild ? findSubTreeMinNode(curNode.leftChild) : curNode;
-    };
-
-    const findSubTreeMaxNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = function (curNode: TreeNode<K, V>) {
+        return curNode.leftChild ? this.findSubTreeMinNode(curNode.leftChild) : curNode;
+    }
+    private findSubTreeMaxNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = (curNode: TreeNode<K, V>) => {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
-        return curNode.rightChild ? findSubTreeMaxNode(curNode.rightChild) : curNode;
-    };
-
-    this.front = function () {
-        if (this.empty()) return undefined;
-        const minNode = header.leftChild;
-        if (!minNode || minNode.key === undefined || minNode.value === undefined) throw new Error("unknown error");
-        return {
-            key: minNode.key,
-            value: minNode.value
-        };
-    };
-
-    this.back = function () {
-        if (this.empty()) return undefined;
-        const maxNode = header.rightChild;
-        if (!maxNode || maxNode.key === undefined || maxNode.value === undefined) throw new Error("unknown error");
-        return {
-            key: maxNode.key,
-            value: maxNode.value
-        };
-    };
-
-    this.forEach = function (callback: (element: Pair<K, V>, index: number) => void) {
-        let index = 0;
-        for (const pair of this) callback(pair, index++);
-    };
-
-    this.getElementByPos = function (pos: number) {
-        if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
-        let index = 0;
-        for (const pair of this) {
-            if (index === pos) return pair;
-            ++index;
-        }
-        throw new Error("unknown Error");
-    };
-
-    const _lowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
+        return curNode.rightChild ? this.findSubTreeMaxNode(curNode.rightChild) : curNode;
+    }
+    private _lowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(curNode.key, key);
+        const cmpResult = this.cmp(curNode.key, key);
         if (cmpResult === 0) return curNode;
-        if (cmpResult < 0) return _lowerBound(curNode.rightChild, key);
-        const resNode = _lowerBound(curNode.leftChild, key);
+        if (cmpResult < 0) return this._lowerBound(curNode.rightChild, key);
+        const resNode = this._lowerBound(curNode.leftChild, key);
         if (resNode === undefined) return curNode;
         return resNode;
-    };
-
-    this.lowerBound = function (key: K) {
-        const resNode = _lowerBound(root, key);
-        return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
-    };
-
-    const _upperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
+    }
+    private _upperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(curNode.key, key);
-        if (cmpResult <= 0) return _upperBound(curNode.rightChild, key);
-        const resNode = _upperBound(curNode.leftChild, key);
+        const cmpResult = this.cmp(curNode.key, key);
+        if (cmpResult <= 0) return this._upperBound(curNode.rightChild, key);
+        const resNode = this._upperBound(curNode.leftChild, key);
         if (resNode === undefined) return curNode;
         return resNode;
-    };
-
-    this.upperBound = function (key: K) {
-        const resNode = _upperBound(root, key);
-        return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
-    };
-
-    const _reverseLowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
+    }
+    private _reverseLowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(curNode.key, key);
+        const cmpResult = this.cmp(curNode.key, key);
         if (cmpResult === 0) return curNode;
-        if (cmpResult > 0) return _reverseLowerBound(curNode.leftChild, key);
-        const resNode = _reverseLowerBound(curNode.rightChild, key);
+        if (cmpResult > 0) return this._reverseLowerBound(curNode.leftChild, key);
+        const resNode = this._reverseLowerBound(curNode.rightChild, key);
         if (resNode === undefined) return curNode;
         return resNode;
-    };
-
-    this.reverseLowerBound = function (key: K) {
-        const resNode = _reverseLowerBound(root, key);
-        return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
-    };
-
-    const _reverseUpperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
+    }
+    private _reverseUpperBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
         if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(curNode.key, key);
-        if (cmpResult >= 0) return _reverseUpperBound(curNode.leftChild, key);
-        const resNode = _reverseUpperBound(curNode.rightChild, key);
+        const cmpResult = this.cmp(curNode.key, key);
+        if (cmpResult >= 0) return this._reverseUpperBound(curNode.leftChild, key);
+        const resNode = this._reverseUpperBound(curNode.rightChild, key);
         if (resNode === undefined) return curNode;
         return resNode;
-    };
-
-    this.reverseUpperBound = function (key: K) {
-        const resNode = _reverseUpperBound(root, key);
-        return resNode === undefined ? this.end() : new TreeIterator(resNode, header);
-    };
-
-    const eraseNodeSelfBalance = function (curNode: TreeNode<K, V>) {
+    }
+    private eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
         const parentNode = curNode.parent;
-        if (!parentNode || parentNode === header) {
-            if (curNode === root) return;
+        if (!parentNode || parentNode === this.header) {
+            if (curNode === this.root) return;
             throw new Error("unknown error");
         }
 
@@ -255,37 +82,37 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
                 brotherNode.color = TreeNode.TreeNodeColorType.black;
                 parentNode.color = TreeNode.TreeNodeColorType.red;
                 const newRoot = parentNode.rotateLeft();
-                if (root === parentNode) {
-                    root = newRoot;
-                    header.parent = root;
-                    root.parent = header;
+                if (this.root === parentNode) {
+                    this.root = newRoot;
+                    this.header.parent = this.root;
+                    this.root.parent = this.header;
                 }
-                eraseNodeSelfBalance(curNode);
+                this.eraseNodeSelfBalance(curNode);
             } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
                 if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = parentNode.color;
                     parentNode.color = TreeNode.TreeNodeColorType.black;
                     if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = parentNode.rotateLeft();
-                    if (root === parentNode) {
-                        root = newRoot;
-                        header.parent = root;
-                        root.parent = header;
+                    if (this.root === parentNode) {
+                        this.root = newRoot;
+                        this.header.parent = this.root;
+                        this.root.parent = this.header;
                     }
                     curNode.color = TreeNode.TreeNodeColorType.black;
                 } else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
                     if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = brotherNode.rotateRight();
-                    if (root === brotherNode) {
-                        root = newRoot;
-                        header.parent = root;
-                        root.parent = header;
+                    if (this.root === brotherNode) {
+                        this.root = newRoot;
+                        this.header.parent = this.root;
+                        this.root.parent = this.header;
                     }
-                    eraseNodeSelfBalance(curNode);
+                    this.eraseNodeSelfBalance(curNode);
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    eraseNodeSelfBalance(parentNode);
+                    this.eraseNodeSelfBalance(parentNode);
                 }
             }
         } else if (curNode === parentNode.rightChild) {
@@ -293,47 +120,46 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
                 brotherNode.color = TreeNode.TreeNodeColorType.black;
                 parentNode.color = TreeNode.TreeNodeColorType.red;
                 const newRoot = parentNode.rotateRight();
-                if (root === parentNode) {
-                    root = newRoot;
-                    header.parent = root;
-                    root.parent = header;
+                if (this.root === parentNode) {
+                    this.root = newRoot;
+                    this.header.parent = this.root;
+                    this.root.parent = this.header;
                 }
-                eraseNodeSelfBalance(curNode);
+                this.eraseNodeSelfBalance(curNode);
             } else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
                 if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = parentNode.color;
                     parentNode.color = TreeNode.TreeNodeColorType.black;
                     if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = parentNode.rotateRight();
-                    if (root === parentNode) {
-                        root = newRoot;
-                        header.parent = root;
-                        root.parent = header;
+                    if (this.root === parentNode) {
+                        this.root = newRoot;
+                        this.header.parent = this.root;
+                        this.root.parent = this.header;
                     }
                     curNode.color = TreeNode.TreeNodeColorType.black;
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
                     if (brotherNode.rightChild) brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
                     const newRoot = brotherNode.rotateLeft();
-                    if (root === brotherNode) {
-                        root = newRoot;
-                        header.parent = root;
-                        root.parent = header;
+                    if (this.root === brotherNode) {
+                        this.root = newRoot;
+                        this.header.parent = this.root;
+                        this.root.parent = this.header;
                     }
-                    eraseNodeSelfBalance(curNode);
+                    this.eraseNodeSelfBalance(curNode);
                 } else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                     brotherNode.color = TreeNode.TreeNodeColorType.red;
-                    eraseNodeSelfBalance(parentNode);
+                    this.eraseNodeSelfBalance(parentNode);
                 }
             }
         }
-    };
-
-    const eraseNode = function (curNode: TreeNode<K, V>) {
+    }
+    private eraseNode(curNode: TreeNode<K, V>) {
         let swapNode: TreeNode<K, V> = curNode;
         while (swapNode.leftChild || swapNode.rightChild) {
             if (swapNode.rightChild) {
-                swapNode = findSubTreeMinNode(swapNode.rightChild);
+                swapNode = this.findSubTreeMinNode(swapNode.rightChild);
                 const tmpKey = curNode.key;
                 curNode.key = swapNode.key;
                 swapNode.key = tmpKey;
@@ -343,7 +169,7 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
                 curNode = swapNode;
             }
             if (swapNode.leftChild) {
-                swapNode = findSubTreeMaxNode(swapNode.leftChild);
+                swapNode = this.findSubTreeMaxNode(swapNode.leftChild);
                 const tmpKey = curNode.key;
                 curNode.key = swapNode.key;
                 swapNode.key = tmpKey;
@@ -355,56 +181,32 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
         }
 
         if (swapNode.key === undefined) throw new Error("unknown error");
-        if (header.leftChild && header.leftChild.key !== undefined && cmp(header.leftChild.key, swapNode.key) === 0) {
-            if (header.leftChild !== root) header.leftChild = header.leftChild?.parent;
-            else if (header.leftChild?.rightChild) header.leftChild = header.leftChild?.rightChild;
-            else header.leftChild = undefined;
+        if (this.header.leftChild && this.header.leftChild.key !== undefined && this.cmp(this.header.leftChild.key, swapNode.key) === 0) {
+            if (this.header.leftChild !== this.root) this.header.leftChild = this.header.leftChild?.parent;
+            else if (this.header.leftChild?.rightChild) this.header.leftChild = this.header.leftChild?.rightChild;
+            else this.header.leftChild = undefined;
         }
-        if (header.rightChild && header.rightChild.key !== undefined && cmp(header.rightChild.key, swapNode.key) === 0) {
-            if (header.rightChild !== root) header.rightChild = header.rightChild?.parent;
-            else if (header.rightChild?.leftChild) header.rightChild = header.rightChild?.leftChild;
-            else header.rightChild = undefined;
+        if (this.header.rightChild && this.header.rightChild.key !== undefined && this.cmp(this.header.rightChild.key, swapNode.key) === 0) {
+            if (this.header.rightChild !== this.root) this.header.rightChild = this.header.rightChild?.parent;
+            else if (this.header.rightChild?.leftChild) this.header.rightChild = this.header.rightChild?.leftChild;
+            else this.header.rightChild = undefined;
         }
 
-        eraseNodeSelfBalance(swapNode);
+        this.eraseNodeSelfBalance(swapNode);
         if (swapNode) swapNode.remove();
-        --len;
-        root.color = TreeNode.TreeNodeColorType.black;
-    };
-
-    const inOrderTraversal: (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean = function (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) {
+        --this.length;
+        this.root.color = TreeNode.TreeNodeColorType.black;
+    }
+    private inOrderTraversal: (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean = (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => {
         if (!curNode || curNode.key === undefined) return false;
-        const ifReturn = inOrderTraversal(curNode.leftChild, callback);
+        const ifReturn = this.inOrderTraversal(curNode.leftChild, callback);
         if (ifReturn) return true;
         if (callback(curNode)) return true;
-        return inOrderTraversal(curNode.rightChild, callback);
-    };
-
-    this.eraseElementByPos = function (pos: number) {
-        if (pos < 0 || pos >= len) throw new Error("pos must more than 0 and less than set's size");
-        let index = 0;
-        inOrderTraversal(root, curNode => {
-            if (pos === index) {
-                eraseNode(curNode);
-                return true;
-            }
-            ++index;
-            return false;
-        });
-    };
-
-    this.eraseElementByKey = function (key: K) {
-        if (this.empty()) return;
-
-        const curNode = findElementPos(root, key);
-        if (curNode === undefined || curNode.key === undefined || cmp(curNode.key, key) !== 0) return;
-
-        eraseNode(curNode);
-    };
-
-    const findInsertPos: (curNode: TreeNode<K, V>, key: K) => TreeNode<K, V> = function (curNode: TreeNode<K, V>, key: K) {
+        return this.inOrderTraversal(curNode.rightChild, callback);
+    }
+    private findInsertPos: (curNode: TreeNode<K, V>, key: K) => TreeNode<K, V> = (curNode: TreeNode<K, V>, key: K) => {
         if (!curNode || curNode.key === undefined) throw new Error("unknown error");
-        const cmpResult = cmp(key, curNode.key);
+        const cmpResult = this.cmp(key, curNode.key);
         if (cmpResult < 0) {
             if (!curNode.leftChild) {
                 curNode.leftChild = new TreeNode<K, V>();
@@ -413,7 +215,7 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
                 if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
                 return curNode.leftChild;
             }
-            return findInsertPos(curNode.leftChild, key);
+            return this.findInsertPos(curNode.leftChild, key);
         } else if (cmpResult > 0) {
             if (!curNode.rightChild) {
                 curNode.rightChild = new TreeNode<K, V>();
@@ -422,15 +224,14 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
                 if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
                 return curNode.rightChild;
             }
-            return findInsertPos(curNode.rightChild, key);
+            return this.findInsertPos(curNode.rightChild, key);
         }
         return curNode;
-    };
-
-    const insertNodeSelfBalance = function (curNode: TreeNode<K, V>) {
+    }
+    private insertNodeSelfBalance(curNode: TreeNode<K, V>) {
         const parentNode = curNode.parent;
-        if (!parentNode || parentNode === header) {
-            if (curNode === root) return;
+        if (!parentNode || parentNode === this.header) {
+            if (curNode === this.root) return;
             throw new Error("unknown error");
         }
 
@@ -444,52 +245,205 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
             if (uncleNode && uncleNode.color === TreeNode.TreeNodeColorType.red) {
                 uncleNode.color = parentNode.color = TreeNode.TreeNodeColorType.black;
                 grandParent.color = TreeNode.TreeNodeColorType.red;
-                insertNodeSelfBalance(grandParent);
+                this.insertNodeSelfBalance(grandParent);
             } else if (!uncleNode || uncleNode.color === TreeNode.TreeNodeColorType.black) {
                 if (parentNode === grandParent.leftChild) {
                     if (curNode === parentNode.leftChild) {
                         parentNode.color = TreeNode.TreeNodeColorType.black;
                         grandParent.color = TreeNode.TreeNodeColorType.red;
                         const newRoot = grandParent.rotateRight();
-                        if (grandParent === root) {
-                            root = newRoot;
-                            header.parent = root;
-                            root.parent = header;
+                        if (grandParent === this.root) {
+                            this.root = newRoot;
+                            this.header.parent = this.root;
+                            this.root.parent = this.header;
                         }
                     } else if (curNode === parentNode.rightChild) {
                         const newRoot = parentNode.rotateLeft();
-                        if (parentNode === root) {
-                            root = newRoot;
-                            header.parent = root;
-                            root.parent = header;
+                        if (parentNode === this.root) {
+                            this.root = newRoot;
+                            this.header.parent = this.root;
+                            this.root.parent = this.header;
                         }
-                        insertNodeSelfBalance(parentNode);
+                        this.insertNodeSelfBalance(parentNode);
                     }
                 } else if (parentNode === grandParent.rightChild) {
                     if (curNode === parentNode.leftChild) {
                         const newRoot = parentNode.rotateRight();
-                        if (parentNode === root) {
-                            root = newRoot;
-                            header.parent = root;
-                            root.parent = header;
+                        if (parentNode === this.root) {
+                            this.root = newRoot;
+                            this.header.parent = this.root;
+                            this.root.parent = this.header;
                         }
-                        insertNodeSelfBalance(parentNode);
+                        this.insertNodeSelfBalance(parentNode);
                     } else if (curNode === parentNode.rightChild) {
                         parentNode.color = TreeNode.TreeNodeColorType.black;
                         grandParent.color = TreeNode.TreeNodeColorType.red;
                         const newRoot = grandParent.rotateLeft();
-                        if (grandParent === root) {
-                            root = newRoot;
-                            header.parent = root;
-                            root.parent = header;
+                        if (grandParent === this.root) {
+                            this.root = newRoot;
+                            this.header.parent = this.root;
+                            this.root.parent = this.header;
                         }
                     }
                 }
             }
         }
-    };
+    }
+    private findElementPos: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
+        if (!curNode || curNode.key === undefined) return undefined;
+        const cmpResult = this.cmp(key, curNode.key);
+        if (cmpResult < 0) return this.findElementPos(curNode.leftChild, key);
+        else if (cmpResult > 0) return this.findElementPos(curNode.rightChild, key);
+        return curNode;
+    }
+    private iterationFunc: (curNode: TreeNode<K, V> | undefined) => Generator<Pair<K, V>, void, undefined> = function* (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
+        if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
+        yield* this.iterationFunc(curNode.leftChild);
+        yield { key: curNode.key, value: curNode.value };
+        yield* this.iterationFunc(curNode.rightChild);
+    }
 
-    this.setElement = function (key: K, value: V) {
+    size() { return this.length; }
+    empty() { return this.length === 0; }
+    clear() {
+        this.length = 0;
+        this.root.key = this.root.value = undefined;
+        this.root.leftChild = this.root.rightChild = this.root.brother = undefined;
+        this.header.leftChild = this.header.rightChild = undefined;
+    }
+    /**
+     * @return Iterator pointing to the begin element.
+     */
+    begin() {
+        return new TreeIterator(this.header.leftChild || this.header, this.header);
+    }
+    /**
+     * @return Iterator pointing to the super end like c++.
+     */
+    end() {
+        return new TreeIterator(this.header, this.header);
+    }
+    /**
+     * @return Iterator pointing to the end element.
+     */
+    rBegin() {
+        return new TreeIterator(this.header.rightChild || this.header, this.header);
+    }
+    /**
+     * @return Iterator pointing to the super begin like c++.
+     */
+    rEnd() {
+        return new TreeIterator(this.header, this.header);
+    }
+    /**
+     * @return The first element.
+     */
+    front() {
+        if (this.empty()) return undefined;
+        const minNode = this.header.leftChild;
+        if (!minNode || minNode.key === undefined || minNode.value === undefined) throw new Error("unknown error");
+        return {
+            key: minNode.key,
+            value: minNode.value
+        };
+    }
+    /**
+     * @return The last element.
+     */
+    back() {
+        if (this.empty()) return undefined;
+        const maxNode = this.header.rightChild;
+        if (!maxNode || maxNode.key === undefined || maxNode.value === undefined) throw new Error("unknown error");
+        return {
+            key: maxNode.key,
+            value: maxNode.value
+        };
+    }
+    forEach(callback: (element: Pair<K, V>, index: number) => void) {
+        let index = 0;
+        for (const pair of this) callback(pair, index++);
+    }
+    /**
+     * Gets the key and value of the element at the specified position.
+     */
+    getElementByPos(pos: number) {
+        if (pos < 0 || pos >= this.size()) throw new Error("pos must more than 0 and less than set's size");
+        let index = 0;
+        for (const pair of this) {
+            if (index === pos) return pair;
+            ++index;
+        }
+        throw new Error("unknown Error");
+    }
+    /**
+     * @return An iterator to the first element not less than the given key.
+     */
+    lowerBound(key: K) {
+        const resNode = this._lowerBound(this.root, key);
+        return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    }
+    /**
+     * @return An iterator to the first element greater than the given key.
+     */
+    upperBound(key: K) {
+        const resNode = this._upperBound(this.root, key);
+        return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    }
+    /**
+     * @return An iterator to the first element not greater than the given key.
+     */
+    reverseLowerBound(key: K) {
+        const resNode = this._reverseLowerBound(this.root, key);
+        return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    }
+    /**
+     * @return An iterator to the first element less than the given key.
+     */
+    reverseUpperBound(key: K) {
+        const resNode = this._reverseUpperBound(this.root, key);
+        return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    }
+    /**
+     * Removes the elements at the specified position.
+     */
+    eraseElementByPos(pos: number) {
+        if (pos < 0 || pos >= this.length) throw new Error("pos must more than 0 and less than set's size");
+        let index = 0;
+        this.inOrderTraversal(this.root, curNode => {
+            if (pos === index) {
+                this.eraseNode(curNode);
+                return true;
+            }
+            ++index;
+            return false;
+        });
+    }
+    /**
+     * Removes the elements of the specified key.
+     */
+    eraseElementByKey(key: K) {
+        if (this.empty()) return;
+
+        const curNode = this.findElementPos(this.root, key);
+        if (curNode === undefined || curNode.key === undefined || this.cmp(curNode.key, key) !== 0) return;
+
+        this.eraseNode(curNode);
+    }
+    /**
+     * @return An iterator point to the next iterator.
+     * Removes element by iterator.
+     */
+    eraseElementByIterator(iter: ContainerIterator<Pair<K, V>>) {
+        const nextIter = iter.next();
+        // @ts-ignore
+        this.eraseNode(iter.node);
+        iter = nextIter;
+        return iter;
+    }
+    /**
+     * Insert a new key-value pair or set value by key.
+     */
+    setElement(key: K, value: V) {
         if (key === null || key === undefined) {
             throw new Error("to avoid some unnecessary errors, we don't suggest you insert null or undefined here");
         }
@@ -500,85 +454,77 @@ function Map<K, V>(this: MapType<K, V>, container: { forEach: (callback: (elemen
         }
 
         if (this.empty()) {
-            ++len;
-            root.key = key;
-            root.value = value;
-            root.color = TreeNode.TreeNodeColorType.black;
-            header.leftChild = root;
-            header.rightChild = root;
+            ++this.length;
+            this.root.key = key;
+            this.root.value = value;
+            this.root.color = TreeNode.TreeNodeColorType.black;
+            this.header.leftChild = this.root;
+            this.header.rightChild = this.root;
             return;
         }
 
-        const curNode = findInsertPos(root, key);
-        if (curNode.key !== undefined && cmp(curNode.key, key) === 0) {
+        const curNode = this.findInsertPos(this.root, key);
+        if (curNode.key !== undefined && this.cmp(curNode.key, key) === 0) {
             curNode.value = value;
             return;
         }
 
-        ++len;
+        ++this.length;
         curNode.key = key;
         curNode.value = value;
 
-        if (header.leftChild === undefined || header.leftChild.key === undefined || cmp(header.leftChild.key, key) > 0) {
-            header.leftChild = curNode;
+        if (this.header.leftChild === undefined || this.header.leftChild.key === undefined || this.cmp(this.header.leftChild.key, key) > 0) {
+            this.header.leftChild = curNode;
         }
-        if (header.rightChild === undefined || header.rightChild.key === undefined || cmp(header.rightChild.key, key) < 0) {
-            header.rightChild = curNode;
+        if (this.header.rightChild === undefined || this.header.rightChild.key === undefined || this.cmp(this.header.rightChild.key, key) < 0) {
+            this.header.rightChild = curNode;
         }
 
-        insertNodeSelfBalance(curNode);
-        root.color = TreeNode.TreeNodeColorType.black;
-    };
-
-    const findElementPos: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = function (curNode: TreeNode<K, V> | undefined, key: K) {
-        if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = cmp(key, curNode.key);
-        if (cmpResult < 0) return findElementPos(curNode.leftChild, key);
-        else if (cmpResult > 0) return findElementPos(curNode.rightChild, key);
-        return curNode;
-    };
-
-    this.find = function (key: K) {
-        const curNode = findElementPos(root, key);
+        this.insertNodeSelfBalance(curNode);
+        this.root.color = TreeNode.TreeNodeColorType.black;
+    }
+    /**
+     * @param element The element you want to find.
+     * @return Iterator pointing to the element if found, or super end if not found.
+     */
+    find(key: K) {
+        const curNode = this.findElementPos(this.root, key);
         if (curNode === undefined || curNode.key === undefined) return this.end();
-        return new TreeIterator(curNode, header);
-    };
-
-    this.getElementByKey = function (key: K) {
-        const curNode = findElementPos(root, key);
+        return new TreeIterator(curNode, this.header);
+    }
+    /**
+     * Gets the value of the element of the specified key.
+     */
+    getElementByKey(key: K) {
+        const curNode = this.findElementPos(this.root, key);
         if (curNode?.key === undefined || curNode?.value === undefined) throw new Error("unknown error");
         return curNode.value;
-    };
-
-    // waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
-    // (https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations)
-    this.union = function (other: MapType<K, V>) {
+    }
+    /**
+     * Union the other Set to self.
+     * waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
+     * More information => https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations
+     */
+    union(other: OrderedMap<K, V>) {
         other.forEach(({ key, value }) => this.setElement(key, value));
-    };
-
-    this.getHeight = function () {
+    }
+    /**
+     * @return The height of the RB-tree.
+     */
+    getHeight() {
         if (this.empty()) return 0;
-        const traversal: (curNode: TreeNode<K, V> | undefined) => number = function (curNode: TreeNode<K, V> | undefined) {
+        const traversal: (curNode: TreeNode<K, V> | undefined) => number = (curNode: TreeNode<K, V> | undefined) => {
             if (!curNode) return 1;
             return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
         };
-        return traversal(root);
-    };
-
-    if (typeof Symbol.iterator === 'symbol') {
-        const iterationFunc: (curNode: TreeNode<K, V> | undefined) => Generator<Pair<K, V>, void, undefined> = function* (curNode: TreeNode<K, V> | undefined) {
-            if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
-            yield* iterationFunc(curNode.leftChild);
-            yield { key: curNode.key, value: curNode.value };
-            yield* iterationFunc(curNode.rightChild);
-        };
-
-        this[Symbol.iterator] = function () {
-            return iterationFunc(root);
-        };
+        return traversal(this.root);
     }
-
-    container.forEach(({ key, value }) => this.setElement(key, value));
+    /**
+     * Using for 'for...of' syntax like Array.
+     */
+    [Symbol.iterator]() {
+        return this.iterationFunc(this.root);
+    }
 }
 
-export default (Map as unknown as { new <K, V>(container?: { forEach: (callback: (element: Pair<K, V>) => void) => void }, cmp?: (x: K, y: K) => number): MapType<K, V> });
+export default OrderedMap;

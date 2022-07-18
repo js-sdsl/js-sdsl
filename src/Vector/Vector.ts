@@ -5,8 +5,6 @@ class VectorIterator<T> implements ContainerIterator<T> {
     private size: () => number;
     private getElementByPos: (pos: number) => T;
     private setElementByPos: (pos: number, element: T) => void;
-
-    pointer: T;
     readonly iteratorType: 'normal' | 'reverse';
 
     constructor(
@@ -21,23 +19,20 @@ class VectorIterator<T> implements ContainerIterator<T> {
         this.getElementByPos = getElementByPos;
         this.setElementByPos = setElementByPos;
         this.iteratorType = iteratorType;
-        this.pointer = undefined as unknown as T;
-        Object.defineProperty(this, 'pointer', {
-            get(this: VectorIterator<T>) {
-                if (this.node < 0 || this.node >= this.size()) {
-                    throw new Error("Deque iterator access denied!");
-                }
-                return this.getElementByPos(this.node);
-            },
-            set(this: VectorIterator<T>, newValue: T) {
-                if (this.node < 0 || this.node >= this.size()) {
-                    throw new Error("Deque iterator access denied!");
-                }
-                this.setElementByPos(this.node, newValue);
-            }
-        });
     }
 
+    get pointer() {
+        if (this.node < 0 || this.node >= this.size()) {
+            throw new Error("Deque iterator access denied!");
+        }
+        return this.getElementByPos(this.node);
+    }
+    set pointer(newValue: T) {
+        if (this.node < 0 || this.node >= this.size()) {
+            throw new Error("Deque iterator access denied!");
+        }
+        this.setElementByPos(this.node, newValue);
+    }
     pre() {
         if (this.iteratorType === 'reverse') {
             if (this.node === this.size() - 1) throw new Error("Deque iterator access denied!");

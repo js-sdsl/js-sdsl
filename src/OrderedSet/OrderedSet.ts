@@ -377,7 +377,8 @@ class OrderedSet<T> implements Base {
     }
     eraseElementByIterator(iter: ContainerIterator<T>) {
         const nextIter = iter.next();
-        this.eraseElementByValue(iter.pointer);
+        // @ts-ignore
+        this.eraseNode(iter.node);
         iter = nextIter;
         return iter;
     }

@@ -12,8 +12,6 @@ export class LinkNode<T> {
 
 class LinkListIterator<T> implements ContainerIterator<T> {
     private node: LinkNode<T>;
-
-    pointer: T;
     readonly iteratorType: "normal" | "reverse";
 
     constructor(
@@ -22,23 +20,21 @@ class LinkListIterator<T> implements ContainerIterator<T> {
     ) {
         this.node = node;
         this.iteratorType = iteratorType;
-        this.pointer = undefined as unknown as T;
-        Object.defineProperty(this, 'pointer', {
-            get() {
-                return this.node.value;
-            },
-            set(newValue: T) {
-                if (this.node.value === undefined) {
-                    throw new Error("LinkList iterator access denied!");
-                }
-                if (newValue === null || newValue === undefined) {
-                    throw new Error("you can't push undefined or null here");
-                }
-                this.node.value = newValue;
-            }
-        });
     }
 
+    get pointer() {
+        if (this.node.value === undefined) throw new Error("unknown error");
+        return this.node.value;
+    }
+    set pointer(newValue: T) {
+        if (this.node.value === undefined) {
+            throw new Error("LinkList iterator access denied!");
+        }
+        if (newValue === null || newValue === undefined) {
+            throw new Error("you can't push undefined or null here");
+        }
+        this.node.value = newValue;
+    }
     pre() {
         if (this.iteratorType === 'reverse') {
             if (this.node.next?.value) throw new Error("LinkList iterator access denied!");
