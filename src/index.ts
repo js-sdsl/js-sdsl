@@ -1,27 +1,27 @@
-import Vector from "./Vector/Vector";
-import Stack from "./Stack/Stack";
-import Queue from "./Queue/Queue";
-import LinkList from "./LinkList/LinkList";
-import Deque from "./Deque/Deque";
-import PriorityQueue from "./PriorityQueue/PriorityQueue";
-import OrderedSet from "./OrderedSet/OrderedSet";
-import OrderedMap from "./OrderedMap/OrderedMap";
-import HashSet from "./HashSet/HashSet";
-import HashMap from "./HashMap/HashMap";
+import Vector from './container/SequentialContainer/Vector';
+import Stack from './container/OtherContainer/Stack';
+import Queue from './container/OtherContainer/Queue';
+import LinkList from './container/SequentialContainer/LinkList';
+import Deque from './container/SequentialContainer/Deque';
+import PriorityQueue from './container/OtherContainer/PriorityQueue';
+import OrderedSet from './container/TreeContainer/OrderedSet';
+import OrderedMap from './container/TreeContainer/OrderedMap';
+import HashSet from './container/HashContainer/HashSet';
+import HashMap from './container/HashContainer/HashMap';
 
 if (typeof Symbol.iterator !== 'symbol') {
-    console.warn("Your running environment does not support symbol type, you may can not use the 'for...of' syntax.");
+  console.warn('Your running environment does not support symbol type, you may can not use the \'for...of\' syntax.');
 }
 
 export {
-    Vector,
-    Stack,
-    Queue,
-    LinkList,
-    Deque,
-    PriorityQueue,
-    OrderedSet,
-    OrderedMap,
-    HashSet,
-    HashMap
+  Vector,
+  Stack,
+  Queue,
+  LinkList,
+  Deque,
+  PriorityQueue,
+  OrderedSet,
+  OrderedMap,
+  HashSet,
+  HashMap
 };

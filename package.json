@@ -12,12 +12,12 @@
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
     "build": "rm -rf dist/test && yarn build:cjs && yarn build:umd:min",
-    "build:cjs": "rm -rf dist/cjs && tsc src/index.ts --downlevelIteration --declaration --module commonjs --target es5 --outDir dist/cjs",
-    "build:esm": "rm -rf dist/esm && tsc src/index.ts --downlevelIteration --declaration --module es2015 --target es5 --outDir dist/esm",
+    "build:cjs": "rm -rf dist/cjs && ttsc src/index.ts --downlevelIteration --declaration --module commonjs --target es5 --outDir dist/cjs",
+    "build:esm": "rm -rf dist/esm && ttsc src/index.ts --downlevelIteration --declaration --module es2015 --target es5 --outDir dist/esm",
     "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name sdsl -o dist/umd/js-sdsl.js",
     "build:umd:min": "yarn build:umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o dist/umd/js-sdsl.min.js -- dist/umd/js-sdsl.js",
-    "test": "rm -rf dist/test && tsc --downlevelIteration --declaration src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
-    "lint": "eslint .eslintrc.json --fix --color --cache --max-warnings=0 ./src",
+    "test": "rm -rf dist/test && ttsc --downlevelIteration --declaration src/test.ts --module commonjs --target es5 --outDir dist/test && node ./dist/test/test.js",
+    "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 ./src",
     "deploy": "yarn build:umd:min && typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs && gh-pages -d docs"
   },
   "husky": {
@@ -42,8 +42,11 @@
     "eslint": "^8.4.1",
     "gh-pages": "^3.2.3",
     "husky": "^3.1.0",
+    "jest": "^28.1.3",
     "lint-staged": "^12.1.0",
     "rollup": "^2.61.1",
+    "ts-transform-paths": "^2.0.3",
+    "ttypescript": "^1.5.13",
     "typedoc": "^0.22.10",
     "typedoc-plugin-missing-exports": "^0.22.6",
     "typescript": "^4.5.4",

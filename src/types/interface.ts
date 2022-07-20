@@ -84,7 +84,9 @@ export interface Container<T> extends Base {
      * @return An iterator point to the next iterator.
      * Removes element by iterator.
      */
-    eraseElementByIterator: (iter: ContainerIterator<T>) => ContainerIterator<T>;
+    eraseElementByIterator: (
+        iter: ContainerIterator<T>
+    ) => ContainerIterator<T>;
     /**
      * Using for 'for...of' syntax like Array.
      */
@@ -132,6 +134,6 @@ export interface Pair<K, V> {
     value: V;
 }
 
-export type initContainer<T> =
-    ({ size: () => number; } | { length: number; }) &
-    { forEach: (callback: (element: T) => void) => void; }
+export type initContainer<T> = ({ size: () => number } | { length: number }) & {
+    forEach: (callback: (element: T) => void) => void;
+};
