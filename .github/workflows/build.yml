@@ -13,14 +13,18 @@ jobs:
       with:
         node-version: 16.13.2
         cache: 'yarn'
+    - name: install
     - run: yarn install
+    - name: test
     - run: yarn test:check
+    - name: make test-coverage
+    - run: make test-coverage
 
   finish:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - name: Coveralls Finished
+    - name: coveralls finished
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.github_token }}
