@@ -1,6 +1,6 @@
+import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList, Deque } from '@/index';
-import { TestError } from '@/types/error';
-import { SequentialContainer } from '@/types/interface';
+import { TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 1000;

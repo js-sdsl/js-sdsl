@@ -1,6 +1,7 @@
-import { RunTimeError } from '@/types/error';
-import { ContainerIterator, SequentialContainer, initContainer } from '@/types/interface';
+import { RunTimeError } from '@/utils/error';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
+import SequentialContainer from './Base/index';
 
 export class VectorIterator<T> extends ContainerIterator<T, number> {
   private size: () => number;

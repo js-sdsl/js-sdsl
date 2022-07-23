@@ -30,7 +30,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   myOrderedSet.forEach((element: number) => tmpArr.push(element));
   startTime = Date.now();
   const size = myOrderedSet.size();
-  for (let i = 0; i < testNum; ++i) myOrderedSet.eraseElementByValue(tmpArr[i]);
+  for (let i = 0; i < testNum; ++i) myOrderedSet.eraseElementByKey(tmpArr[i]);
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByValue',

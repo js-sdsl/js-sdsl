@@ -1,5 +1,5 @@
 import { Vector, Deque } from '@/index';
-import { RunTimeError } from '@/types/error';
+import { RunTimeError } from '@/utils/error';
 import judgeSequentialContainer from './SequentialContainer.test';
 
 const arr: number[] = [];

@@ -1,46 +1,21 @@
-import { Base, initContainer } from '@/types/interface';
+import { initContainer } from '@/container/ContainerBase/index';
 import LinkList from '../SequentialContainer/LinkList';
 import OrderedMap from '../TreeContainer/OrderedMap';
 import { checkUndefinedParams } from '@/utils/checkParams';
-import { ContainerInitError } from '@/types/error';
+import HashContainerBase from './Base/index';
 
-class HashMap<K, V> extends Base {
-  private static maxBucketNum: number = (1 << 30);
-  private static initBucketNum: number = (1 << 4);
-  private static sigma = 0.75;
-  private static treeifyThreshold = 8;
-  private static untreeifyThreshold = 6;
-  private static minTreeifySize = 64;
-  private initBucketNum: number;
-  private bucketNum: number;
-  private hashFunc: (x: K) => number;
+class HashMap<K, V> extends HashContainerBase<K> {
   private hashTable: (LinkList<[K, V]> | OrderedMap<K, V>)[] = [];
-  constructor(container: initContainer<[K, V]> = [], initBucketNum = HashMap.initBucketNum, hashFunc?: (x: K) => number) {
-    super();
-    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
-      throw new ContainerInitError('initBucketNum must be 2 to the power of n');
-    }
-    this.initBucketNum = initBucketNum;
-    this.bucketNum = Math.max(HashMap.initBucketNum, Math.min(HashMap.maxBucketNum, this.initBucketNum));
-    this.hashFunc = hashFunc ?? ((x: K) => {
-      let hashCode = 0;
-      let str = '';
-      if (typeof x !== 'string') {
-        str = JSON.stringify(x);
-      } else str = x;
-      for (let i = 0; i < str.length; i++) {
-        const character = str.charCodeAt(i);
-        hashCode = ((hashCode << 5) - hashCode) + character;
-        hashCode = hashCode & hashCode;
-      }
-      hashCode ^= (hashCode >>> 16);
-      return hashCode;
-    });
+  constructor(
+    container: initContainer<[K, V]> = [],
+    initBucketNum? :number,
+    hashFunc?: (x: K) => number) {
+    super(initBucketNum, hashFunc);
     container.forEach(element => this.setElement(element[0], element[1]));
   }
   private reAllocate(originalBucketNum: number) {
-    if (originalBucketNum >= HashMap.maxBucketNum) return;
-    this.bucketNum = Math.min((originalBucketNum << 1), HashMap.maxBucketNum);
+    if (originalBucketNum >= HashContainerBase.maxBucketNum) return;
+    this.bucketNum = Math.min((originalBucketNum << 1), HashContainerBase.maxBucketNum);
     const newHashTable: (LinkList<[K, V]> | OrderedMap<K, V>)[] = [];
     this.hashTable.forEach((container, index) => {
       if (container.empty()) return;

@@ -1,6 +1,7 @@
-import { InternalError, RunTimeError } from '@/types/error';
-import { ContainerIterator, initContainer, SequentialContainer } from '@/types/interface';
+import { InternalError, RunTimeError } from '@/utils/error';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
+import SequentialContainer from './Base/index';
 
 export class LinkNode<T> {
   value: T | undefined = undefined;

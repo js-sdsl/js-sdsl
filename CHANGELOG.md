@@ -4,11 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [unReleased] - 2022-07-16
+## [unReleased] - 2022-07-23
+
+### Added
+
+- Complete test examples (don't effect using).
+- The error thrown is standardized, you can catch it according to the error type.
 
 ### changed
 
-- Refactor container Deque from function to class (don't effect using)
+- Refactor all container from function to class (don't effect using).
+- Abstracting tree containers and hash containers, change `Set`'s and `Map`'s name to `OrderedSet` and `OrderedMap` to distinguish it from the official container.
+- Change `OrderedSet` api `eraseElementByValue`'s name to `eraseElementByKey`.
+
+### Fixed
+
+- Fixed so many bugs.
 
 ## [3.0.0-beta.0] - 2022-04-29
 

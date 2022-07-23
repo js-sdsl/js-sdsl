@@ -5,8 +5,8 @@ import {
   OrderedSet,
   OrderedMap
 } from '@/index';
-import { RunTimeError } from '@/types/error';
-import { ContainerIterator } from '@/types/interface';
+import { RunTimeError } from '@/utils/error';
+import { ContainerIterator } from '@/container/ContainerBase/index';
 
 let arr: number[] = [];
 const testNum = 10000;

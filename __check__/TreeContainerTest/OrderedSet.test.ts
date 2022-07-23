@@ -1,5 +1,5 @@
 import { Vector, OrderedSet } from '@/index';
-import { NullValueError, TestError } from '@/types/error';
+import { NullValueError, TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -41,7 +41,7 @@ describe('OrderedSet test', () => {
       const pos = Math.floor(Math.random() * myVector.size());
       const eraseValue = myVector.getElementByPos(pos);
       myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByValue(eraseValue);
+      myOrderedSet.eraseElementByKey(eraseValue);
     }
     judgeSet(myOrderedSet, myVector);
   });

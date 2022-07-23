@@ -1,5 +1,5 @@
 import { Vector, OrderedMap } from '@/index';
-import { NullValueError, TestError } from '@/types/error';
+import { NullValueError, TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;

@@ -1,4 +1,4 @@
-import { NullValueError, RunTimeError } from '../types/error';
+import { NullValueError, RunTimeError } from './error';
 
 export function checkUndefinedParams(...args: unknown[]) {
   if (args.includes(undefined) || args.includes(null)) {
