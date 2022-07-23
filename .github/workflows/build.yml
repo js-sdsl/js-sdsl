@@ -5,17 +5,13 @@ on: ["push", "pull_request"]
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x, 16.x]
     steps:
     - name: checkout
       uses: actions/checkout@master
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }} for test
+    - name: use Node.js 16.13.2
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 16.13.2
         cache: 'yarn'
     - run: yarn install
     - run: yarn test:check
