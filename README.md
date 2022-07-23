@@ -1,6 +1,7 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
 [![version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
+[![building](https://app.travis-ci.com/ZLY201/js-sdsl.svg?branch=feat%2Frefactor)](https://app.travis-ci.com/github/zly201/js-sdsl)
 [![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
 [![version](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
 
@@ -14,10 +15,10 @@
 - LinkList
 - Deque
 - PriorityQueue
-- Set (using RBTree)
-- Map (using RBTree)
-- HashSet (for reference only)
-- HashMap (for reference only)
+- OrderedSet (using RBTree)
+- OrderedMap (using RBTree)
+- HashSet
+- HashMap
 
 ## Supported platforms
 

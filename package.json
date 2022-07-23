@@ -36,6 +36,7 @@
     "all-contributors-cli": "^6.20.0",
     "commitlint": "^17.0.3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
+    "coveralls": "^3.1.1",
     "eslint": "^8.4.1",
     "gh-pages": "^3.2.3",
     "husky": "^8.0.1",
