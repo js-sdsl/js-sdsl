@@ -1,7 +1,7 @@
 import { HashSet } from '@/index';
 
 const arr: number[] = [];
-const testNum = 200000;
+const testNum = 100000;
 for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
 }

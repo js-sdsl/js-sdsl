@@ -17,8 +17,6 @@ jobs:
       run: yarn install
     - name: test
       run: yarn test:check
-    - name: make test-coverage
-      run: make test-coverage
 
   finish:
     needs: test
@@ -27,5 +25,5 @@ jobs:
     - name: coveralls finished
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.github_token }}
+        github-token: ${{ secrets.COVERALLS_TOKEN }}
         parallel-finished: true
