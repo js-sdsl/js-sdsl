@@ -19,7 +19,7 @@
     "test": "yarn test:check && yarn test:performance",
     "test:check": "jest --coverage",
     "test:performance": "ts-node -r tsconfig-paths/register __performance__/index.ts",
-    "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 ./src",
+    "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 .",
     "deploy": "yarn build:umd:min && typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs && gh-pages -d docs"
   },
   "lint-staged": {
