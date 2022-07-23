@@ -1,6 +1,8 @@
 # [js-sdsl](https://github.com/ZLY201/js-sdsl)
 
 [![version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
+[![Actions Status](https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg)](https://github.com/zly201/js-sdsl/actions)
+[![Coverage Status](https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=feat%2Frefactor)](https://coveralls.io/github/ZLY201/js-sdsl)
 [![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
 [![version](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
 
