@@ -1,4 +1,4 @@
-name: Node.js CI
+name: js-sdsl test CI
 
 on: ["push", "pull_request"]
 
@@ -17,13 +17,7 @@ jobs:
       run: yarn install
     - name: test
       run: yarn test:check
-
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: coveralls finished
+    - name: coveralls
       uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.COVERALLS_TOKEN }}
-        parallel-finished: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
