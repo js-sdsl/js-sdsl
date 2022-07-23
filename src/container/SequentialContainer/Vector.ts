@@ -2,12 +2,10 @@ import { RunTimeError } from '@/types/error';
 import { ContainerIterator, SequentialContainer, initContainer } from '@/types/interface';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 
-class VectorIterator<T> implements ContainerIterator<T> {
-  private node: number;
+export class VectorIterator<T> extends ContainerIterator<T, number> {
   private size: () => number;
   private getElementByPos: (pos: number) => T;
   private setElementByPos: (pos: number, element: T) => void;
-  readonly iteratorType: 'normal' | 'reverse';
   constructor(
     index: number,
     size: () => number,
@@ -15,11 +13,10 @@ class VectorIterator<T> implements ContainerIterator<T> {
     setElementByPos: (pos: number, element: T) => void,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
-    this.node = index;
+    super(index, iteratorType);
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
-    this.iteratorType = iteratorType;
   }
   get pointer() {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
@@ -31,25 +28,33 @@ class VectorIterator<T> implements ContainerIterator<T> {
   }
   pre() {
     if (this.iteratorType === 'reverse') {
-      if (this.node === this.size() - 1) throw new RunTimeError('Deque iterator access denied!');
+      if (this.node === this.size() - 1) {
+        throw new RunTimeError('Deque iterator access denied!');
+      }
       ++this.node;
     } else {
-      if (this.node === 0) throw new RunTimeError('Deque iterator access denied!');
+      if (this.node === 0) {
+        throw new RunTimeError('Deque iterator access denied!');
+      }
       --this.node;
     }
     return this;
   }
   next() {
     if (this.iteratorType === 'reverse') {
-      if (this.node === -1) throw new RunTimeError('Deque iterator access denied!');
+      if (this.node === -1) {
+        throw new RunTimeError('Deque iterator access denied!');
+      }
       --this.node;
     } else {
-      if (this.node === this.size()) throw new RunTimeError('Iterator access denied!');
+      if (this.node === this.size()) {
+        throw new RunTimeError('Iterator access denied!');
+      }
       ++this.node;
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: ContainerIterator<T, number>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -61,17 +66,11 @@ class VectorIterator<T> implements ContainerIterator<T> {
   }
 }
 
-class Vector<T> implements SequentialContainer<T> {
-  private length = 0;
+class Vector<T> extends SequentialContainer<T, number> {
   private vector: T[] = [];
   constructor(container: initContainer<T> = []) {
+    super();
     container.forEach(element => this.pushBack(element));
-  }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
   }
   clear() {
     this.length = 0;
@@ -120,11 +119,11 @@ class Vector<T> implements SequentialContainer<T> {
     const newLen = newArr.length;
     while (this.length > newLen) this.popBack();
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
-    const nextIter = iter.next();
+  eraseElementByIterator(iter: ContainerIterator<T, number>) {
     // @ts-ignore
-    this.eraseElementByPos(iter.node);
-    iter = nextIter;
+    const node = iter.node;
+    iter = iter.next();
+    this.eraseElementByPos(node);
     return iter;
   }
   pushBack(element: T) {

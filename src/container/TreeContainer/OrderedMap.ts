@@ -1,14 +1,45 @@
 import { InternalError } from '@/types/error';
-import { ContainerIterator, Base, Pair, initContainer } from '@/types/interface';
+import { ContainerIterator, Base, initContainer } from '@/types/interface';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
-import { TreeIterator, TreeNode } from './TreeBase';
+import { TreeNode, TreeIterator } from './TreeBase';
 
-class OrderedMap<K, V> implements Base {
-  private length = 0;
+export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
+  constructor(
+    node: TreeNode<K, V>,
+    header: TreeNode<K, V>,
+    iteratorType: 'normal' | 'reverse' = 'normal'
+  ) {
+    super(node, header, iteratorType);
+  }
+  get pointer() {
+    return new Proxy([this.node.key, this.node.value] as [K, V], {
+      get: (_, prop) => {
+        const index = Number(prop);
+        if (Number.isNaN(index)) {
+          throw new TypeError('prop must be number');
+        }
+        checkWithinAccessParams(index, 0, 1);
+        return index === 0 ? this.node.key : this.node.value;
+      },
+      set: (_, prop, newValue: V) => {
+        const index = Number(prop);
+        if (Number.isNaN(index)) {
+          throw new TypeError('prop must be number');
+        }
+        checkWithinAccessParams(index, 1, 1);
+        this.node.value = newValue;
+        return true;
+      }
+    });
+  }
+}
+
+class OrderedMap<K, V> extends Base {
   private root: TreeNode<K, V> = new TreeNode<K, V>();
   private header: TreeNode<K, V> = new TreeNode<K, V>();
   private cmp: (x: K, y: K) => number;
-  constructor(container: initContainer<Pair<K, V>> = [], cmp?: (x: K, y: K) => number) {
+  constructor(container: initContainer<[K, V]> = [], cmp?: (x: K, y: K) => number) {
+    super();
     this.root.color = TreeNode.TreeNodeColorType.black;
     this.header.parent = this.root;
     this.root.parent = this.header;
@@ -18,7 +49,7 @@ class OrderedMap<K, V> implements Base {
       return 0;
     });
     this.iterationFunc = this.iterationFunc.bind(this);
-    container.forEach(({ key, value }) => this.setElement(key, value));
+    container.forEach(([key, value]) => this.setElement(key, value));
   }
   private findSubTreeMinNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = (curNode: TreeNode<K, V>) => {
     if (!curNode || curNode.key === undefined) throw new InternalError();
@@ -296,18 +327,12 @@ class OrderedMap<K, V> implements Base {
     else if (cmpResult > 0) return this.findElementPos(curNode.rightChild, key);
     return curNode;
   };
-  private iterationFunc: (curNode: TreeNode<K, V> | undefined) => Generator<Pair<K, V>, void, undefined> = function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
+  private iterationFunc: (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> = function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
     if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
     yield * this.iterationFunc(curNode.leftChild);
-    yield { key: curNode.key, value: curNode.value };
+    yield [curNode.key, curNode.value];
     yield * this.iterationFunc(curNode.rightChild);
   };
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
-  }
   clear() {
     this.length = 0;
     this.root.key = this.root.value = undefined;
@@ -318,25 +343,25 @@ class OrderedMap<K, V> implements Base {
    * @return Iterator pointing to the begin element.
    */
   begin() {
-    return new TreeIterator(this.header.leftChild || this.header, this.header);
+    return new OrderedMapIterator(this.header.leftChild || this.header, this.header);
   }
   /**
    * @return Iterator pointing to the super end like c++.
    */
   end() {
-    return new TreeIterator(this.header, this.header);
+    return new OrderedMapIterator(this.header, this.header);
   }
   /**
    * @return Iterator pointing to the end element.
    */
   rBegin() {
-    return new TreeIterator(this.header.rightChild || this.header, this.header);
+    return new OrderedMapIterator(this.header.rightChild || this.header, this.header, 'reverse');
   }
   /**
    * @return Iterator pointing to the super begin like c++.
    */
   rEnd() {
-    return new TreeIterator(this.header, this.header);
+    return new OrderedMapIterator(this.header, this.header, 'reverse');
   }
   /**
    * @return The first element.
@@ -345,10 +370,7 @@ class OrderedMap<K, V> implements Base {
     if (this.empty()) return undefined;
     const minNode = this.header.leftChild;
     if (!minNode || minNode.key === undefined || minNode.value === undefined) throw new InternalError();
-    return {
-      key: minNode.key,
-      value: minNode.value
-    };
+    return [minNode.key, minNode.value];
   }
   /**
    * @return The last element.
@@ -357,12 +379,12 @@ class OrderedMap<K, V> implements Base {
     if (this.empty()) return undefined;
     const maxNode = this.header.rightChild;
     if (!maxNode || maxNode.key === undefined || maxNode.value === undefined) throw new InternalError();
-    return {
-      key: maxNode.key,
-      value: maxNode.value
-    };
+    return [maxNode.key, maxNode.value];
   }
-  forEach(callback: (element: Pair<K, V>, index: number) => void) {
+  /**
+   * @param callback callback function, it's first param is an array which type is [key, value].
+   */
+  forEach(callback: (element: [K, V], index: number) => void) {
     let index = 0;
     for (const pair of this) callback(pair, index++);
   }
@@ -383,28 +405,28 @@ class OrderedMap<K, V> implements Base {
    */
   lowerBound(key: K) {
     const resNode = this._lowerBound(this.root, key);
-    return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element greater than the given key.
    */
   upperBound(key: K) {
     const resNode = this._upperBound(this.root, key);
-    return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element not greater than the given key.
    */
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this.root, key);
-    return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element less than the given key.
    */
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this.root, key);
-    return resNode === undefined ? this.end() : new TreeIterator(resNode, this.header);
+    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
   }
   /**
    * Removes the elements at the specified position.
@@ -436,11 +458,11 @@ class OrderedMap<K, V> implements Base {
    * @return An iterator point to the next iterator.
    * Removes element by iterator.
    */
-  eraseElementByIterator(iter: ContainerIterator<Pair<K, V>>) {
-    const nextIter = iter.next();
+  eraseElementByIterator(iter: ContainerIterator<[K, V], TreeNode<K, V>>) {
     // @ts-ignore
-    this.eraseNode(iter.node);
-    iter = nextIter;
+    const node = iter.node;
+    iter = iter.next();
+    this.eraseNode(node);
     return iter;
   }
   /**
@@ -491,7 +513,7 @@ class OrderedMap<K, V> implements Base {
   find(key: K) {
     const curNode = this.findElementPos(this.root, key);
     if (curNode === undefined || curNode.key === undefined) return this.end();
-    return new TreeIterator(curNode, this.header);
+    return new OrderedMapIterator(curNode, this.header);
   }
   /**
    * Gets the value of the element of the specified key.
@@ -507,7 +529,7 @@ class OrderedMap<K, V> implements Base {
    * More information => https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations
    */
   union(other: OrderedMap<K, V>) {
-    other.forEach(({ key, value }) => this.setElement(key, value));
+    other.forEach(([key, value]) => this.setElement(key, value));
   }
   /**
    * @return The height of the RB-tree.

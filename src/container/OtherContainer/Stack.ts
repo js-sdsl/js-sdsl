@@ -1,16 +1,10 @@
 import { Base, initContainer } from '@/types/interface';
 
-class Stack<T> implements Base {
-  private length = 0;
+class Stack<T> extends Base {
   private stack: T[] = [];
   constructor(container: initContainer<T> = []) {
+    super();
     container.forEach(element => this.push(element));
-  }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
   }
   clear() {
     this.length = 0;

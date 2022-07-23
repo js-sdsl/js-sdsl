@@ -1,16 +1,16 @@
-import { InternalError } from '@/types/error';
 import { Base, initContainer } from '@/types/interface';
 
-class PriorityQueue<T> implements Base {
-  private length = 0;
+class PriorityQueue<T> extends Base {
   private priorityQueue: T[] = [];
   private cmp: (x: T, y: T) => number;
-  constructor(container: initContainer<T> = [], cmp?: (x: T, y: T) => number) {
-    this.cmp = cmp ?? ((x: T, y: T) => {
+  constructor(container: initContainer<T> = [],
+    cmp: (x: T, y: T) => number = (x: T, y: T) => {
       if (x > y) return -1;
       if (x < y) return 1;
       return 0;
-    });
+    }) {
+    super();
+    this.cmp = cmp;
     container.forEach(element => this.priorityQueue.push(element));
     this.length = this.priorityQueue.length;
     for (let parent = Math.floor((this.length - 1) / 2); parent >= 0; --parent) {
@@ -29,24 +29,15 @@ class PriorityQueue<T> implements Base {
     }
   }
   private swap(x: number, y: number) {
-    if (x < 0 || x >= this.length) throw new InternalError();
-    if (y < 0 || y >= this.length) throw new InternalError();
     const tmp = this.priorityQueue[x];
     this.priorityQueue[x] = this.priorityQueue[y];
     this.priorityQueue[y] = tmp;
   }
   private adjust(parent: number) {
-    if (parent < 0 || parent >= this.length) throw new InternalError();
     const leftChild = parent * 2 + 1;
     const rightChild = parent * 2 + 2;
     if (leftChild < this.length && this.cmp(this.priorityQueue[parent], this.priorityQueue[leftChild]) > 0) this.swap(parent, leftChild);
     if (rightChild < this.length && this.cmp(this.priorityQueue[parent], this.priorityQueue[rightChild]) > 0) this.swap(parent, rightChild);
-  }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
   }
   clear() {
     this.length = 0;

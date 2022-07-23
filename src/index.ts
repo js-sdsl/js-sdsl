@@ -9,10 +9,6 @@ import OrderedMap from './container/TreeContainer/OrderedMap';
 import HashSet from './container/HashContainer/HashSet';
 import HashMap from './container/HashContainer/HashMap';
 
-if (typeof Symbol.iterator !== 'symbol') {
-  console.warn('Your running environment does not support symbol type, you may can not use the \'for...of\' syntax.');
-}
-
 export {
   Vector,
   Stack,

@@ -4,19 +4,19 @@ import LinkList from '../SequentialContainer/LinkList';
 import { checkUndefinedParams } from '@/utils/checkParams';
 import { ContainerInitError, InternalError } from '@/types/error';
 
-class HashSet<T> implements Base {
+class HashSet<T> extends Base {
   private static initSize: number = (1 << 4);
   private static maxSize: number = (1 << 30);
   private static sigma = 0.75;
   private static treeifyThreshold = 8;
   private static untreeifyThreshold = 6;
   private static minTreeifySize = 64;
-  private length = 0;
   private initBucketNum: number;
   private bucketNum: number;
   private hashFunc: (x: T) => number;
   private hashTable: (LinkList<T> | OrderedSet<T>)[] = [];
   constructor(container: initContainer<T> = [], initBucketNum = HashSet.initSize, hashFunc?: (x: T) => number) {
+    super();
     if ((initBucketNum & (initBucketNum - 1)) !== 0) {
       throw new ContainerInitError('initBucketNum must be 2 to the power of n');
     }
@@ -77,12 +77,6 @@ class HashSet<T> implements Base {
     });
     this.hashTable = newHashTable;
   }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
-  }
   clear() {
     this.length = 0;
     this.bucketNum = this.initBucketNum;
@@ -108,10 +102,13 @@ class HashSet<T> implements Base {
     } else {
       const preSize = this.hashTable[index].size();
       if (this.hashTable[index] instanceof LinkList) {
-        if (!this.hashTable[index].find(element).equals(this.hashTable[index].end())) return;
+        if (!(this.hashTable[index] as LinkList<T>).find(element)
+          .equals((this.hashTable[index] as LinkList<T>).end())) return;
         (this.hashTable[index] as LinkList<T>).pushBack(element);
         if (this.bucketNum <= HashSet.minTreeifySize) {
+          ++this.length;
           this.reAllocate(this.bucketNum);
+          return;
         } else if (this.hashTable[index].size() >= HashSet.treeifyThreshold) {
           this.hashTable[index] = new OrderedSet<T>(this.hashTable[index]);
         }
@@ -145,7 +142,8 @@ class HashSet<T> implements Base {
   find(element: T) {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
     if (!this.hashTable[index]) return false;
-    return !this.hashTable[index].find(element).equals(this.hashTable[index].end());
+    return !(this.hashTable[index] as LinkList<T>).find(element)
+      .equals((this.hashTable[index] as LinkList<T>).end());
   }
   /**
    * Using for 'for...of' syntax like Array.

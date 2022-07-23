@@ -1,31 +1,30 @@
 import { Base, initContainer } from '@/types/interface';
 import LinkList from '../SequentialContainer/LinkList';
 
-class Queue<T> implements Base {
+class Queue<T> extends Base {
   private queue: LinkList<T>;
   constructor(container: initContainer<T> = []) {
+    super();
     this.queue = new LinkList(container);
-  }
-  size() {
-    return this.queue.size();
-  }
-  empty() {
-    return this.queue.empty();
+    this.length = this.queue.size();
   }
   clear() {
     this.queue.clear();
+    this.length = 0;
   }
   /**
    * Inserts element at the end.
    */
   push(element: T) {
     this.queue.pushBack(element);
+    ++this.length;
   }
   /**
    * Removes the first element.
    */
   pop() {
     this.queue.popFront();
+    if (this.length) --this.length;
   }
   /**
    * Access the first element.

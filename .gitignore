@@ -3,6 +3,7 @@
 .idea/
 dist/
 docs/
+coverage/
 node_modules/
 .eslintcache
 .npmignore

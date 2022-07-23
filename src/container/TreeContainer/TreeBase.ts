@@ -1,14 +1,11 @@
 import { InternalError, RunTimeError } from '@/types/error';
-import { ContainerIterator, Pair } from '@/types/interface';
+import { ContainerIterator } from '@/types/interface';
 
 export class TreeNode<K, V> {
-  static TreeNodeColorType: {
-        red: true,
-        black: false
-    } = {
-      red: true,
-      black: false
-    };
+  static TreeNodeColorType = {
+    red: true,
+    black: false
+  } as const;
   color = true;
   key: K | undefined = undefined;
   value: V | undefined = undefined;
@@ -17,17 +14,15 @@ export class TreeNode<K, V> {
   leftChild: TreeNode<K, V> | undefined = undefined;
   rightChild: TreeNode<K, V> | undefined = undefined;
   constructor(key?: K, value?: V) {
-    if (key !== undefined && value !== undefined) {
-      this.key = key;
-      this.value = value;
-    }
+    this.key = key;
+    this.value = value;
   }
   rotateLeft() {
     const PP = this.parent;
     const PB = this.brother;
     const F = this.leftChild;
-    const V = this.rightChild;
-    if (!V) throw new InternalError();
+    const V = this.rightChild as TreeNode<K, V>;
+
     const R = V.leftChild;
     const X = V.rightChild;
 
@@ -68,8 +63,8 @@ export class TreeNode<K, V> {
   rotateRight() {
     const PP = this.parent;
     const PB = this.brother;
-    const F = this.leftChild;
-    if (!F) throw new InternalError();
+    const F = this.leftChild as TreeNode<K, V>;
+
     const V = this.rightChild;
     const D = F.leftChild;
     const K = F.rightChild;
@@ -109,7 +104,9 @@ export class TreeNode<K, V> {
     return F;
   }
   remove() {
-    if (this.leftChild || this.rightChild) throw new InternalError('can only remove leaf node');
+    if (this.leftChild || this.rightChild) {
+      throw new InternalError('can only remove leaf node');
+    }
     if (this.parent) {
       if (this === this.parent.leftChild) this.parent.leftChild = undefined;
       else if (this === this.parent.rightChild) this.parent.rightChild = undefined;
@@ -122,18 +119,15 @@ export class TreeNode<K, V> {
   }
 }
 
-export const TreeIterator = class <K, V> implements ContainerIterator<unknown> {
-  private node: TreeNode<K, V>;
+export abstract class TreeIterator<K, V> extends ContainerIterator<unknown, TreeNode<K, V>> {
   private header: TreeNode<K, V>;
-  readonly iteratorType: 'normal' | 'reverse';
   constructor(
     node: TreeNode<K, V>,
     header: TreeNode<K, V>,
-    iteratorType: 'normal' | 'reverse' = 'normal'
+    iteratorType: 'normal' | 'reverse'
   ) {
-    this.node = node;
+    super(node, iteratorType);
     this.header = header;
-    this.iteratorType = iteratorType;
   }
   private _pre() {
     let preNode: TreeNode<K, V> | undefined = this.node;
@@ -143,10 +137,10 @@ export const TreeIterator = class <K, V> implements ContainerIterator<unknown> {
       preNode = preNode.leftChild;
       while (preNode.rightChild) preNode = preNode?.rightChild;
     } else {
-      let pre = preNode?.parent || undefined;
+      let pre = preNode?.parent;
       while (pre?.leftChild === preNode) {
         preNode = pre;
-        pre = preNode?.parent || undefined;
+        pre = preNode?.parent;
       }
       preNode = pre;
     }
@@ -161,44 +155,19 @@ export const TreeIterator = class <K, V> implements ContainerIterator<unknown> {
       nextNode = nextNode.rightChild;
       while (nextNode.leftChild) nextNode = nextNode?.leftChild;
     } else {
-      let pre = nextNode?.parent || undefined;
+      let pre = nextNode?.parent;
       while (pre?.rightChild === nextNode) {
         nextNode = pre;
-        pre = nextNode?.parent || undefined;
+        pre = nextNode?.parent;
       }
       if (nextNode.rightChild !== pre) {
         nextNode = pre;
       }
     }
-    if (nextNode === undefined) throw new InternalError();
+    if (nextNode === undefined) {
+      throw new InternalError();
+    }
     return nextNode;
-  }
-  get pointer() {
-    if (this.node.key === undefined) {
-      throw new RunTimeError('Tree iterator access denied!');
-    }
-    if (this.node.value === undefined) {
-      return this.node.key;
-    }
-    const obj = {};
-    Object.defineProperties(obj, {
-      key: {
-        get: () => {
-          return this.node.key;
-        },
-        enumerable: true
-      },
-      value: {
-        get: () => {
-          return this.node.value;
-        },
-        set: (newValue: V) => {
-          this.node.value = newValue;
-        },
-        enumerable: true
-      }
-    });
-    return obj;
   }
   pre() {
     if (this.iteratorType === 'reverse') {
@@ -228,25 +197,14 @@ export const TreeIterator = class <K, V> implements ContainerIterator<unknown> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<unknown>) {
+  equals(obj: ContainerIterator<unknown, TreeNode<K, V>>) {
     if (obj.constructor.name !== this.constructor.name) {
-      throw new RunTimeError(`obj's constructor is not ${this.constructor.name}!`);
+      throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
-      throw new RunTimeError('iterator type error!');
+      throw new TypeError('iterator type error!');
     }
     // @ts-ignore
     return this.node === obj.node;
   }
-} as unknown as {
-  new <T>(
-      _node: TreeNode<T, undefined>,
-      header: TreeNode<T, undefined>,
-      iteratorType?: 'normal' | 'reverse'
-  ): ContainerIterator<T>;
-  new <K, V>(
-      _node: TreeNode<K, V>,
-      header: TreeNode<K, V>,
-      iteratorType?: 'normal' | 'reverse'
-  ): ContainerIterator<Pair<K, V>>;
-};
+}

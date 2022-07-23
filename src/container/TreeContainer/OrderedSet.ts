@@ -1,17 +1,30 @@
 import { TreeNode, TreeIterator } from './TreeBase';
 import { Base, ContainerIterator, initContainer } from '@/types/interface';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
-import { InternalError } from '@/types/error';
+import { InternalError, RunTimeError } from '@/types/error';
 
-class OrderedSet<T> implements Base {
-  private length = 0;
+export class OrderedSetIterator<T> extends TreeIterator<T, undefined> {
+  constructor(
+    node: TreeNode<T, undefined>,
+    header: TreeNode<T, undefined>,
+    iteratorType: 'normal' | 'reverse' = 'normal'
+  ) {
+    super(node, header, iteratorType);
+  }
+  get pointer() {
+    if (this.node.key === undefined) {
+      throw new RunTimeError('Tree iterator access denied!');
+    }
+    return this.node.key;
+  }
+}
+
+class OrderedSet<T> extends Base {
   private root: TreeNode<T, undefined> = new TreeNode<T, undefined>();
   private header: TreeNode<T, undefined> = new TreeNode<T, undefined>();
   private cmp: (x: T, y: T) => number;
-  constructor(
-    container: initContainer<T> = [],
-    cmp?: (x: T, y: T) => number
-  ) {
+  constructor(container: initContainer<T> = [], cmp?: (x: T, y: T) => number) {
+    super();
     this.root.color = TreeNode.TreeNodeColorType.black;
     this.header.parent = this.root;
     this.root.parent = this.header;
@@ -440,12 +453,6 @@ class OrderedSet<T> implements Base {
       yield curNode.key;
       yield * this.iterationFunc(curNode.rightChild);
     };
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
-  }
   clear() {
     this.length = 0;
     this.root.key = undefined;
@@ -456,23 +463,23 @@ class OrderedSet<T> implements Base {
     this.header.leftChild = this.header.rightChild = undefined;
   }
   begin() {
-    return new TreeIterator(
+    return new OrderedSetIterator(
       this.header.leftChild || this.header,
       this.header
     );
   }
   end() {
-    return new TreeIterator(this.header, this.header);
+    return new OrderedSetIterator(this.header, this.header);
   }
   rBegin() {
-    return new TreeIterator(
+    return new OrderedSetIterator(
       this.header.rightChild || this.header,
       this.header,
       'reverse'
     );
   }
   rEnd() {
-    return new TreeIterator(this.header, this.header, 'reverse');
+    return new OrderedSetIterator(this.header, this.header, 'reverse');
   }
   front() {
     return this.header.leftChild?.key;
@@ -491,7 +498,6 @@ class OrderedSet<T> implements Base {
       if (index === pos) return element;
       ++index;
     }
-    throw new InternalError();
   }
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
@@ -519,11 +525,11 @@ class OrderedSet<T> implements Base {
 
     this.eraseNode(curNode);
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
-    const nextIter = iter.next();
+  eraseElementByIterator(iter: ContainerIterator<T, TreeNode<T, undefined>>) {
     // @ts-ignore
-    this.eraseNode(iter.node);
-    iter = nextIter;
+    const node = iter.node;
+    iter = iter.next();
+    this.eraseNode(node);
     return iter;
   }
   /**
@@ -570,7 +576,7 @@ class OrderedSet<T> implements Base {
   find(element: T) {
     const curNode = this.findElementPos(this.root, element);
     if (curNode !== undefined && curNode.key !== undefined) {
-      return new TreeIterator(curNode, this.header);
+      return new OrderedSetIterator(curNode, this.header);
     }
     return this.end();
   }
@@ -581,7 +587,7 @@ class OrderedSet<T> implements Base {
     const resNode = this._lowerBound(this.root, key);
     return resNode === undefined
       ? this.end()
-      : new TreeIterator(resNode, this.header);
+      : new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element greater than the given key.
@@ -590,7 +596,7 @@ class OrderedSet<T> implements Base {
     const resNode = this._upperBound(this.root, key);
     return resNode === undefined
       ? this.end()
-      : new TreeIterator(resNode, this.header);
+      : new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element not greater than the given key.
@@ -599,7 +605,7 @@ class OrderedSet<T> implements Base {
     const resNode = this._reverseLowerBound(this.root, key);
     return resNode === undefined
       ? this.end()
-      : new TreeIterator(resNode, this.header);
+      : new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element less than the given key.
@@ -608,7 +614,7 @@ class OrderedSet<T> implements Base {
     const resNode = this._reverseUpperBound(this.root, key);
     return resNode === undefined
       ? this.end()
-      : new TreeIterator(resNode, this.header);
+      : new OrderedSetIterator(resNode, this.header);
   }
   /**
    * Union the other Set to self.

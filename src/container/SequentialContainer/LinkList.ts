@@ -11,15 +11,12 @@ export class LinkNode<T> {
   }
 }
 
-class LinkListIterator<T> implements ContainerIterator<T> {
-  private node: LinkNode<T>;
-  readonly iteratorType: 'normal' | 'reverse';
+export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
   constructor(
     node: LinkNode<T>,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
-    this.node = node;
-    this.iteratorType = iteratorType;
+    super(node, iteratorType);
   }
   get pointer() {
     if (this.node.value === undefined) throw new InternalError();
@@ -34,12 +31,12 @@ class LinkListIterator<T> implements ContainerIterator<T> {
   }
   pre() {
     if (this.iteratorType === 'reverse') {
-      if (this.node.next?.value) {
+      if (this.node.next?.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
       this.node = this.node.next ?? this.node;
     } else {
-      if (this.node.pre?.value) {
+      if (this.node.pre?.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
       this.node = this.node.pre ?? this.node;
@@ -60,7 +57,7 @@ class LinkListIterator<T> implements ContainerIterator<T> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: ContainerIterator<T, LinkNode<T>>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -72,19 +69,13 @@ class LinkListIterator<T> implements ContainerIterator<T> {
   }
 }
 
-class LinkList<T> implements SequentialContainer<T> {
-  private length = 0;
+class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
   private header: LinkNode<T> = new LinkNode<T>();
   private head: LinkNode<T> | undefined = undefined;
   private tail: LinkNode<T> | undefined = undefined;
   constructor(container: initContainer<T> = []) {
+    super();
     container.forEach(element => this.pushBack(element));
-  }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
   }
   clear() {
     this.length = 0;
@@ -168,11 +159,22 @@ class LinkList<T> implements SequentialContainer<T> {
       curNode = curNode.next;
     }
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
-    const nextIter = iter.next();
+  eraseElementByIterator(iter: ContainerIterator<T, LinkNode<T>>) {
+    if (this.empty()) {
+      throw new RunTimeError();
+    }
     // @ts-ignore
-    this.eraseElementByPos(iter.node);
-    iter = nextIter;
+    const node = iter.node;
+    iter = iter.next();
+    if (this.head === node) this.popFront();
+    else if (this.tail === node) this.popBack();
+    else {
+      const pre = node.pre;
+      const next = node.next;
+      if (next) next.pre = pre;
+      if (pre) pre.next = next;
+      --this.length;
+    }
     return iter;
   }
   pushBack(element: T) {
@@ -356,8 +358,7 @@ class LinkList<T> implements SequentialContainer<T> {
     return function * (this: LinkList<T>) {
       let curNode = this.head;
       while (curNode && curNode !== this.header) {
-        if (!curNode.value) throw new InternalError();
-        yield curNode.value;
+        yield curNode.value as T;
         curNode = curNode.next;
       }
     }.bind(this)();

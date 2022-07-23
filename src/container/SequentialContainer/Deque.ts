@@ -2,12 +2,10 @@ import { ContainerInitError, RunTimeError } from '@/types/error';
 import { ContainerIterator, SequentialContainer, initContainer } from '@/types/interface';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 
-class DequeIterator<T> implements ContainerIterator<T> {
-  private node: number;
+export class DequeIterator<T> extends ContainerIterator<T, number> {
   private size: () => number;
   private getElementByPos: (pos: number) => T;
   private setElementByPos: (pos: number, element: T) => void;
-  readonly iteratorType: 'normal' | 'reverse';
   constructor(
     index: number,
     size: () => number,
@@ -15,11 +13,11 @@ class DequeIterator<T> implements ContainerIterator<T> {
     setElementByPos: (pos: number, element: T) => void,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
+    super(index, iteratorType);
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
-    this.iteratorType = iteratorType;
   }
   get pointer() {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
@@ -57,7 +55,7 @@ class DequeIterator<T> implements ContainerIterator<T> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: ContainerIterator<T, number>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -69,7 +67,7 @@ class DequeIterator<T> implements ContainerIterator<T> {
   }
 }
 
-class Deque<T> implements SequentialContainer<T> {
+class Deque<T> extends SequentialContainer<T, number> {
   private static sigma = 3;
   private static bucketSize = (1 << 12);
   private first = 0;
@@ -77,12 +75,16 @@ class Deque<T> implements SequentialContainer<T> {
   private last = 0;
   private curLast = 0;
   private bucketNum = 0;
-  private length = 0;
   private map: (T[])[] = [];
   constructor(container: initContainer<T> = []) {
+    super();
     let _length = Deque.bucketSize;
     if ('size' in container) {
-      _length = container.size();
+      if (typeof container.size === 'number') {
+        _length = container.size;
+      } else {
+        _length = container.size();
+      }
     } else if ('length' in container) {
       _length = container.length;
     } else {
@@ -144,12 +146,6 @@ class Deque<T> implements SequentialContainer<T> {
     if (curNodeBucketIndex === this.first) return curNodePointerIndex - this.curFirst;
     if (curNodeBucketIndex === this.last) return this.length - (this.curLast - curNodePointerIndex) - 1;
     return (Deque.bucketSize - this.first) + (curNodeBucketIndex - 2) * Deque.bucketSize + curNodePointerIndex;
-  }
-  size() {
-    return this.length;
-  }
-  empty() {
-    return this.length === 0;
   }
   clear() {
     this.first = this.last = this.curFirst = this.curLast = this.bucketNum = this.length = 0;
@@ -257,6 +253,7 @@ class Deque<T> implements SequentialContainer<T> {
     }
   }
   getElementByPos(pos: number) {
+    checkWithinAccessParams(pos, 0, this.size() - 1);
     const {
       curNodeBucketIndex,
       curNodePointerIndex
@@ -335,40 +332,46 @@ class Deque<T> implements SequentialContainer<T> {
     for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
     this.cut(_length - 1);
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
-    const nextIter = iter.next();
+  eraseElementByIterator(iter: ContainerIterator<T, number>) {
     // @ts-ignore
-    this.eraseElementByPos(iter.node);
-    iter = nextIter;
+    const node = iter.node;
+    this.eraseElementByPos(node);
+    iter = iter.next();
     return iter;
   }
   find(element: T) {
-    let resIndex: number | undefined;
-
-    if (this.first === this.last) {
-      for (let i = this.curFirst; i <= this.curLast; ++i) {
-        if (this.map[this.first][i] === element) resIndex = this.getIndex(this.first, i);
+    const resIndex = (() => {
+      if (this.first === this.last) {
+        for (let i = this.curFirst; i <= this.curLast; ++i) {
+          if (this.map[this.first][i] === element) {
+            return this.getIndex(this.first, i);
+          }
+        }
+        return undefined;
       }
-      return this.end();
-    }
-    for (let i = this.curFirst; i < Deque.bucketSize; ++i) {
-      if (this.map[this.first][i] === element) resIndex = this.getIndex(this.first, i);
-    }
-    if (resIndex === undefined) {
-      for (let i = this.first + 1; i < this.last; ++i) {
-        for (let j = 0; j < Deque.bucketSize; ++j) {
-          if (this.map[i][j] === element) resIndex = this.getIndex(this.first, i);
+      for (let i = this.curFirst; i < Deque.bucketSize; ++i) {
+        if (this.map[this.first][i] === element) {
+          return this.getIndex(this.first, i);
         }
       }
-    }
-    if (resIndex === undefined) {
-      for (let i = 0; i <= this.curLast; ++i) {
-        if (this.map[this.last][i] === element) resIndex = this.getIndex(this.first, i);
+      for (let i = this.first + 1; i < this.last; ++i) {
+        for (let j = 0; j < Deque.bucketSize; ++j) {
+          if (this.map[i][j] === element) {
+            return this.getIndex(i, j);
+          }
+        }
       }
-    }
+      for (let i = 0; i <= this.curLast; ++i) {
+        if (this.map[this.last][i] === element) {
+          return this.getIndex(this.last, i);
+        }
+      }
+      return undefined;
+    })();
     if (resIndex === undefined) return this.end();
     if (resIndex === 0) return this.begin();
-    return new DequeIterator(resIndex, this.size, this.getElementByPos, this.setElementByPos);
+    return new DequeIterator(resIndex, this.size.bind(this),
+      this.getElementByPos.bind(this), this.setElementByPos.bind(this));
   }
   reverse() {
     let l = 0; let r = this.length - 1;
