@@ -1,0 +1,32 @@
+name: Node.js CI
+
+on: ["push", "pull_request"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+    steps:
+    - name: checkout
+      uses: actions/checkout@master
+    - name: install
+      run: npm install
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }} for test
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+    - run: yarn test:check
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
