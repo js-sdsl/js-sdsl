@@ -1,8 +1,8 @@
-# <center>[js-sdsl](https://github.com/ZLY201/js-sdsl)</center>
+# <p>[js-sdsl](https://github.com/ZLY201/js-sdsl)</p>
 
-<center><h3>A javascript standard data structure library which benchmark against C++ STL.</h3></center>
+<p align="center"><h3>A javascript standard data structure library which benchmark against C++ STL.</h3></p>
 
-<center>
+<p align="center">
 
 [![Version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
 [![Actions Status](https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg)](https://github.com/zly201/js-sdsl/actions)
@@ -12,9 +12,7 @@
 [![License](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
 [![Language](https://img.shields.io/github/languages/top/zly201/js-sdsl.svg)](https://coveralls.io/github/ZLY201/js-sdsl)
 
-</center>
-
-<hr/>
+</p>
 
 ## Included data structures
 
