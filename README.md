@@ -1,12 +1,20 @@
-# [js-sdsl](https://github.com/ZLY201/js-sdsl)
+# <center>[js-sdsl](https://github.com/ZLY201/js-sdsl)</center>
 
-[![version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
+<center><h3>A javascript standard data structure library which benchmark against C++ STL.</h3></center>
+
+<center>
+
+[![Version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
 [![Actions Status](https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg)](https://github.com/zly201/js-sdsl/actions)
 [![Coverage Status](https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=feat%2Frefactor)](https://coveralls.io/github/ZLY201/js-sdsl)
-[![downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
-[![version](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/zly201/js-sdsl.svg)](https://github.com/ZLY201/js-sdsl)
+[![Downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
+[![License](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
+[![Language](https://img.shields.io/github/languages/top/zly201/js-sdsl.svg)](https://coveralls.io/github/ZLY201/js-sdsl)
 
-**A javascript standard data structure library which benchmark against C++ STL.**
+</center>
+
+<hr/>
 
 ## Included data structures
 
@@ -25,7 +33,7 @@
 
 - node.js (using commonjs)
 - react/vue (using es5)
-- browser (support most browsers including IE8+)
+- browser (support most browsers)
 
 ## Download
 
@@ -56,20 +64,19 @@ To help you have a better use, we provide this [API document](https://zly201.git
 </script>
 ```
 
-### Other
-
-Just like other packages.
-
-If you want to get more help, viewing `src/test.ts` may help.
-
 ## Build by source code
 
 You can pull this repository and run `yarn build` to rebuild this library.
 
 ## Unit test
 
-Before publishing, we conducted strict unit tests on each function, you can see `testResult.txt` to find our test
-results or run `yarn test` to reproduce it.
+### For check
+
+We use jest library to write unit tests, you can see test coverage on [coveralls](https://coveralls.io/github/ZLY201/js-sdsl). You can run `yarn test:check` command to reproduce it.
+
+### For performance
+
+We tested most of the functions for efficiency. You can go to `testResult.txt` to see our running results or reproduce it with `yarn test:performance` command.
 
 ## Maintainers
 
