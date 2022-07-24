@@ -1,5 +1,5 @@
 import { Vector, OrderedSet } from '@/index';
-import { NullValueError, TestError } from '@/utils/error';
+import { NullValueError, RunTimeError, TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -124,5 +124,49 @@ describe('OrderedSet test', () => {
     myOrderedSet.clear();
     myVector.clear();
     judgeSet(myOrderedSet, myVector);
+  });
+
+  test('OrderedSet empty test', () => {
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.begin().pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.rBegin().pointer;
+    }).toThrowError(RunTimeError);
+    expect(myOrderedSet.front()).toEqual(undefined);
+    expect(myOrderedSet.back()).toEqual(undefined);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.find(0).pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.begin().pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.lowerBound(0).pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.upperBound(0).pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.reverseLowerBound(0).pointer;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedSet.reverseUpperBound(0).pointer;
+    }).toThrowError(RunTimeError);
+    myOrderedSet.eraseElementByKey(0);
+    expect(myOrderedSet.size()).toBe(0);
+    myOrderedSet.insert(1);
+    myOrderedSet.eraseElementByKey(0);
+    expect(myOrderedSet.getElementByPos(0)).toBe(1);
+    myOrderedSet.insert(3);
+    expect(myOrderedSet.getElementByPos(1)).toBe(3);
   });
 });

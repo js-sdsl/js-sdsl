@@ -136,22 +136,24 @@ class Vector<T> extends SequentialContainer<T, number> {
     if (this.length > 0) --this.length;
   }
   setElementByPos(pos: number, element: T) {
+    checkWithinAccessParams(pos, 0, this.length - 1);
     if (element === undefined || element === null) {
       this.eraseElementByPos(pos);
       return;
     }
-    checkWithinAccessParams(pos, 0, this.length - 1);
     this.vector[pos] = element;
   }
   insert(pos: number, element: T, num = 1) {
     checkUndefinedParams(element);
-    checkWithinAccessParams(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length);
     this.vector.splice(pos, 0, ...new Array<T>(num).fill(element));
     this.length += num;
   }
   find(element: T) {
     for (let i = 0; i < this.length; ++i) {
-      if (this.vector[i] === element) return new VectorIterator(i, this.size, this.getElementByPos, this.getElementByPos);
+      if (this.vector[i] === element) {
+        return new VectorIterator(i, this.size, this.getElementByPos.bind(this), this.getElementByPos.bind(this));
+      }
     }
     return this.end();
   }

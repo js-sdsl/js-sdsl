@@ -3,7 +3,12 @@ import {
   LinkList,
   Deque,
   OrderedSet,
-  OrderedMap
+  OrderedMap,
+  VectorIterator,
+  LinkListIterator,
+  DequeIterator,
+  OrderedSetIterator,
+  OrderedMapIterator
 } from '@/index';
 import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
@@ -126,4 +131,36 @@ describe('iterator test', () => {
       expect(() => container.rEnd().equals({})).toThrowError(TypeError);
     });
   }
+
+  test('export test', () => {
+    expect(() => {
+      // eslint-disable-next-line no-new
+      new VectorIterator<number>(0,
+        function () {
+          return 0;
+        }, function () {
+          return 0;
+        }, function () {
+          return 0;
+        });
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new LinkListIterator<number>(containerArr[0].begin().node);
+      // eslint-disable-next-line no-new
+      new DequeIterator<number>(0,
+        function () {
+          return 0;
+        }, function () {
+          return 0;
+        }, function () {
+          return 0;
+        });
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new OrderedSetIterator<number>(containerArr[3].begin().node, containerArr[3].header);
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new OrderedMapIterator<number, number>(containerArr[4].begin().node, containerArr[4].header);
+    }).not.toThrowError(Error);
+  });
 });

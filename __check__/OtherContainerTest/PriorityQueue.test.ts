@@ -18,6 +18,15 @@ function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
 }
 
 describe('PriorityQueue test', () => {
+  test('PriorityQueue empty insert test', () => {
+    const myQueue = new PriorityQueue();
+    myQueue.pop();
+    expect(myQueue.size()).toEqual(0);
+    myQueue.push(1);
+    expect(myQueue.size()).toEqual(1);
+    expect(myQueue.top()).toEqual(1);
+  });
+
   const myQueue = new PriorityQueue(arr);
   const myVector = new Vector(arr);
 

@@ -2,7 +2,6 @@ import { initContainer } from '@/container/ContainerBase/index';
 import OrderedSet from '../TreeContainer/OrderedSet';
 import LinkList from '../SequentialContainer/LinkList';
 import { checkUndefinedParams } from '@/utils/checkParams';
-import { InternalError } from '@/utils/error';
 import HashContainerBase from './Base/index';
 
 class HashSet<K> extends HashContainerBase<K> {
@@ -18,8 +17,7 @@ class HashSet<K> extends HashContainerBase<K> {
     this.hashTable.forEach((container, index) => {
       if (container.empty()) return;
       if (container instanceof LinkList && container.size() === 1) {
-        const element = container.front();
-        if (element === undefined) throw new InternalError();
+        const element = container.front() as K;
         newHashTable[this.hashFunc(element) & (this.bucketNum - 1)] = new LinkList<K>([element]);
       } else if (container instanceof OrderedSet) {
         const lowList: LinkList<K> = new LinkList<K>();
@@ -43,8 +41,10 @@ class HashSet<K> extends HashContainerBase<K> {
             lowList.pushBack(element);
           } else highList.pushBack(element);
         });
-        if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() >= HashSet.treeifyThreshold) newHashTable[index] = new OrderedSet<K>(lowList);
+        else if (lowList.size()) newHashTable[index] = lowList;
+        if (highList.size() >= HashSet.treeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedSet<K>(highList);
+        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
       }
       this.hashTable[index].clear();
     });

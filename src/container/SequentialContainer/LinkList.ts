@@ -20,7 +20,9 @@ export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
     super(node, iteratorType);
   }
   get pointer() {
-    if (this.node.value === undefined) throw new InternalError();
+    if (this.node.value === undefined) {
+      throw new RunTimeError('LinkList iterator access denied!');
+    }
     return this.node.value;
   }
   set pointer(newValue: T) {
@@ -35,12 +37,12 @@ export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
       if (this.node.next?.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
-      this.node = this.node.next ?? this.node;
+      this.node = this.node.next;
     } else {
       if (this.node.pre?.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
-      this.node = this.node.pre ?? this.node;
+      this.node = this.node.pre;
     }
     return this;
   }
@@ -49,12 +51,12 @@ export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
       if (this.node.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
-      this.node = this.node.pre ?? this.node;
+      this.node = this.node.pre as LinkNode<T>;
     } else {
       if (this.node.value === undefined) {
         throw new RunTimeError('LinkList iterator access denied!');
       }
-      this.node = this.node.next ?? this.node;
+      this.node = this.node.next as LinkNode<T>;
     }
     return this;
   }
@@ -131,10 +133,12 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
     else {
       let curNode = this.head;
       while (pos--) {
-        if (!curNode?.next) throw new InternalError();
+        if (curNode?.next === undefined) {
+          throw new InternalError();
+        }
         curNode = curNode.next;
       }
-      if (!curNode || !curNode.pre || !curNode.next) {
+      if (curNode?.pre === undefined || curNode.next === undefined) {
         throw new InternalError();
       }
       const pre = curNode.pre;
@@ -212,14 +216,16 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
     checkWithinAccessParams(pos, 0, this.length - 1);
     let curNode = this.head;
     while (pos--) {
-      if (!curNode) throw new InternalError();
+      if (curNode === undefined) {
+        throw new InternalError();
+      }
       curNode = curNode.next;
     }
     if (curNode) curNode.value = element;
   }
   insert(pos: number, element: T, num = 1) {
     checkUndefinedParams(element);
-    checkWithinAccessParams(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length);
     if (num < 0) return;
     if (pos === 0) {
       while (num--) this.pushFront(element);
@@ -228,10 +234,12 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
     } else {
       let curNode = this.head;
       for (let i = 1; i < pos; ++i) {
-        if (!curNode?.next) throw new InternalError();
+        if (curNode?.next === undefined) {
+          throw new InternalError();
+        }
         curNode = curNode?.next;
       }
-      if (!curNode) {
+      if (curNode === undefined) {
         throw new InternalError();
       }
       const next = curNode.next;
@@ -343,7 +351,9 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
         this.pushFront(element);
         curNode = this.head;
       } else {
-        if (!curNode) throw new InternalError();
+        if (curNode === undefined) {
+          throw new InternalError();
+        }
         ++this.length;
         const pre = curNode.pre;
         if (pre) {

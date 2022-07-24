@@ -1,6 +1,6 @@
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList, Deque } from '@/index';
-import { TestError } from '@/utils/error';
+import { RunTimeError, TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 1000;
@@ -8,7 +8,7 @@ for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
 }
 
-function judgeSequentialContainer(funcName: string,
+function judgeSequentialContainer(
   container: SequentialContainer<number, unknown>,
   myVector: SequentialContainer<number, unknown>
 ) {
@@ -17,8 +17,6 @@ function judgeSequentialContainer(funcName: string,
     expect(element).toEqual(myVector.getElementByPos(index));
   });
 }
-
-export default judgeSequentialContainer;
 
 function testSequentialContainer(container: SequentialContainer<number, unknown>) {
   const myVector = new Vector<number>(arr);
@@ -35,19 +33,19 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     throw new TestError('back test failed!');
   }
 
-  judgeSequentialContainer('forEach', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     container.pushBack(i);
     myVector.pushBack(i);
   }
-  judgeSequentialContainer('pushBack', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     container.popBack();
     myVector.popBack();
   }
-  judgeSequentialContainer('popBack', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   let testResult = true;
   const len = container.size();
@@ -63,14 +61,14 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     myVector.setElementByPos(i, i);
     container.setElementByPos(i, i);
   }
-  judgeSequentialContainer('setElementByPos', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     const pos = Math.floor(Math.random() * myVector.size());
     container.eraseElementByPos(pos);
     myVector.eraseElementByPos(pos);
   }
-  judgeSequentialContainer('eraseElementByPos', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     container.pushBack(i);
@@ -82,15 +80,17 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     container.insert(pos, -2, num);
     myVector.insert(pos, -2, num);
   }
-  judgeSequentialContainer('insert', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   container.eraseElementByValue(-2);
   myVector.eraseElementByValue(-2);
-  judgeSequentialContainer('eraseElementByValue', container, myVector);
+  container.eraseElementByValue(container.back() as number);
+  myVector.eraseElementByValue(myVector.back() as number);
+  judgeSequentialContainer(container, myVector);
 
   container.reverse();
   myVector.reverse();
-  judgeSequentialContainer('reverse', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     const pos = Math.floor(Math.random() * container.size());
@@ -100,7 +100,7 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
   }
   container.unique();
   myVector.unique();
-  judgeSequentialContainer('unique', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
     container.pushBack(i);
@@ -108,14 +108,31 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
   }
   container.sort((x, y) => x - y);
   myVector.sort((x: number, y: number) => x - y);
-  judgeSequentialContainer('sort', container, myVector);
+  judgeSequentialContainer(container, myVector);
 
   container.clear();
   myVector.clear();
-  judgeSequentialContainer('clear', container, myVector);
+  judgeSequentialContainer(container, myVector);
 }
 
 describe('SequentialContainer test', () => {
+  test('Vector test', () => {
+    const myVector = new Vector([1]);
+    myVector.begin().pointer = 0;
+    expect(myVector.front()).toBe(0);
+    expect(myVector.find(0).pointer).toBe(0);
+    myVector.eraseElementByIterator(myVector.begin());
+    expect(myVector.size()).toBe(0);
+    expect(myVector.front()).toEqual(undefined);
+    expect(myVector.back()).toEqual(undefined);
+    myVector.insert(0, 100);
+    // @ts-ignore
+    myVector.setElementByPos(0, undefined);
+    expect(() => {
+      myVector.find(0).pointer = 1;
+    }).toThrowError(RunTimeError);
+  });
+
   test('LinkList standard test', () => {
     const myLinkList = new LinkList(arr);
     expect(testSequentialContainer(myLinkList)).toEqual(undefined);

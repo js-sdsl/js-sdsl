@@ -8,13 +8,6 @@ import OrderedSet, { OrderedSetIterator } from './container/TreeContainer/Ordere
 import OrderedMap, { OrderedMapIterator } from './container/TreeContainer/OrderedMap';
 import HashSet from './container/HashContainer/HashSet';
 import HashMap from './container/HashContainer/HashMap';
-import { Container } from './container/ContainerBase/index';
-import SequentialContainer from './container/SequentialContainer/Base/index';
-
-export {
-  Container,
-  SequentialContainer
-};
 
 export {
   VectorIterator,

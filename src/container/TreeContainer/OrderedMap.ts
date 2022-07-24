@@ -1,4 +1,4 @@
-import { InternalError } from '@/utils/error';
+import { RunTimeError } from '@/utils/error';
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
@@ -14,6 +14,9 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     super(node, header, iteratorType);
   }
   get pointer() {
+    if (this.node.key === undefined) {
+      throw new RunTimeError('OrderedMap iterator access denied');
+    }
     return new Proxy([this.node.key, this.node.value] as [K, V], {
       get: (_, prop) => {
         const index = Number(prop);
@@ -79,8 +82,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   front() {
     if (this.empty()) return undefined;
-    const minNode = this.header.leftChild;
-    if (!minNode || minNode.key === undefined || minNode.value === undefined) throw new InternalError();
+    const minNode = this.header.leftChild as TreeNode<K, V>;
     return [minNode.key, minNode.value];
   }
   /**
@@ -88,8 +90,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   back() {
     if (this.empty()) return undefined;
-    const maxNode = this.header.rightChild;
-    if (!maxNode || maxNode.key === undefined || maxNode.value === undefined) throw new InternalError();
+    const maxNode = this.header.rightChild as TreeNode<K, V>;
     return [maxNode.key, maxNode.value];
   }
   /**
@@ -174,7 +175,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   find(key: K) {
     const curNode = this.findElementNode(this.root, key);
-    if (curNode !== undefined && curNode.key === undefined) {
+    if (curNode !== undefined && curNode.key !== undefined) {
       return new OrderedMapIterator(curNode, this.header);
     }
     return this.end();
@@ -184,7 +185,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   getElementByKey(key: K) {
     const curNode = this.findElementNode(this.root, key);
-    if (curNode?.key === undefined || curNode?.value === undefined) throw new InternalError();
+    if (curNode?.value === undefined) return undefined;
     return curNode.value;
   }
   getElementByPos(pos: number) {
@@ -194,7 +195,6 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
       if (index === pos) return pair;
       ++index;
     }
-    throw new InternalError();
   }
   /**
    * @return An iterator point to the next iterator.

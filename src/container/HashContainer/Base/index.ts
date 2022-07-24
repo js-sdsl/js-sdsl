@@ -32,9 +32,8 @@ abstract class HashContainerBase<K> extends Base {
     if ((initBucketNum & (initBucketNum - 1)) !== 0) {
       throw new ContainerInitError('initBucketNum must be 2 to the power of n');
     }
-    this.initBucketNum = initBucketNum;
-    this.bucketNum = Math.max(HashContainerBase.initBucketNum,
-      Math.min(HashContainerBase.initBucketNum, this.initBucketNum));
+    this.initBucketNum = Math.max(initBucketNum, HashContainerBase.initBucketNum);
+    this.bucketNum = this.initBucketNum;
     this.hashFunc = hashFunc;
   }
 }

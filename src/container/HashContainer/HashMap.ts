@@ -44,8 +44,10 @@ class HashMap<K, V> extends HashContainerBase<K> {
             lowList.pushBack(pair);
           } else highList.pushBack(pair);
         });
-        if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() >= HashMap.treeifyThreshold) newHashTable[index] = new OrderedMap<K, V>(lowList);
+        else if (lowList.size()) newHashTable[index] = lowList;
+        if (highList.size() >= HashMap.treeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
+        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
       }
       this.hashTable[index].clear();
     });
@@ -108,8 +110,9 @@ class HashMap<K, V> extends HashContainerBase<K> {
   getElementByKey(key: K) {
     const index = this.hashFunc(key) & (this.bucketNum - 1);
     if (!this.hashTable[index]) return undefined;
-    if (this.hashTable[index] instanceof OrderedMap) return (this.hashTable[index] as OrderedMap<K, V>).getElementByKey(key);
-    else {
+    if (this.hashTable[index] instanceof OrderedMap) {
+      return (this.hashTable[index] as OrderedMap<K, V>).getElementByKey(key);
+    } else {
       for (const pair of this.hashTable[index]) {
         if (pair[0] === key) return pair[1];
       }

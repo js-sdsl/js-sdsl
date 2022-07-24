@@ -15,7 +15,7 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   }
   get pointer() {
     if (this.node.key === undefined) {
-      throw new RunTimeError('Tree iterator access denied!');
+      throw new RunTimeError('OrderedSet iterator access denied!');
     }
     return this.node.key;
   }

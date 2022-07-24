@@ -1,5 +1,5 @@
 import { Vector, OrderedMap } from '@/index';
-import { NullValueError, TestError } from '@/utils/error';
+import { InternalError, NullValueError, RunTimeError, TestError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -33,6 +33,11 @@ describe('OrderedMap test', () => {
   const stdMap = new Map(arr.map((element, index) => [element, index]));
 
   test('OrderedMap insert null test', () => {
+    expect(() => {
+      // @ts-ignore
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedMap.begin().next().node.remove();
+    }).toThrowError(InternalError);
     // @ts-ignore
     expect(() => myOrderedMap.setElement(null, null)).toThrowError(NullValueError);
     // @ts-ignore
@@ -71,7 +76,7 @@ describe('OrderedMap test', () => {
       const pos = Math.floor(Math.random() * myOrderedMap.size());
       const pair = myOrderedMap.getElementByPos(pos);
       myOrderedMap.eraseElementByPos(pos);
-      stdMap.delete(pair[0]);
+      if (pair) stdMap.delete(pair[0]);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -132,9 +137,67 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
+  test('OrderedMap iterator error test', () => {
+    expect(() => {
+      // @ts-ignore
+      myOrderedMap.begin().pointer.a = 2;
+    }).toThrow(TypeError);
+    myOrderedMap.begin().pointer['1'] = 2;
+    expect(myOrderedMap.front()).toEqual([myOrderedMap.begin().pointer[0], 2]);
+    expect(() => {
+      // @ts-ignore
+      myOrderedMap.begin().pointer['0'] = 2;
+    }).toThrow(RunTimeError);
+    expect(() => {
+      // @ts-ignore
+      myOrderedMap.begin().pointer['3'] = 2;
+    }).toThrow(RunTimeError);
+  });
+
   test('OrderedMap clear function test', () => {
     myOrderedMap.clear();
     stdMap.clear();
     judgeMap(myOrderedMap, stdMap);
+  });
+
+  test('OrderedMap empty test', () => {
+    expect(myOrderedMap.front()).toEqual(undefined);
+    expect(myOrderedMap.back()).toEqual(undefined);
+    expect(() => {
+      myOrderedMap.begin().pointer[1] = 1;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      myOrderedMap.lowerBound(0).pointer[1] = 1;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      myOrderedMap.upperBound(0).pointer[1] = 1;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      myOrderedMap.reverseLowerBound(0).pointer[1] = 1;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      myOrderedMap.reverseUpperBound(0).pointer[1] = 1;
+    }).toThrowError(RunTimeError);
+    expect(() => {
+      myOrderedMap.find(0).pointer[0] = 2;
+    }).toThrowError(RunTimeError);
+    myOrderedMap.setElement(1, 1);
+    expect(myOrderedMap.find(1).pointer[1]).toBe(1);
+    expect(myOrderedMap.size()).toBe(1);
+    // @ts-ignore
+    myOrderedMap.setElement(1, undefined);
+    expect(myOrderedMap.size()).toBe(0);
+    expect(() => {
+      // @ts-ignore
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedMap.rBegin().pointer.a;
+    }).toThrowError(RunTimeError);
+    myOrderedMap.setElement(1, 1);
+    expect(() => {
+      // @ts-ignore
+      // eslint-disable-next-line no-unused-expressions
+      myOrderedMap.begin().pointer.a;
+    }).toThrowError(TypeError);
+    expect(myOrderedMap.getElementByKey(0)).toEqual(undefined);
   });
 });

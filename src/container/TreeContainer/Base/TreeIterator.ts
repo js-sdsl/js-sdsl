@@ -1,4 +1,4 @@
-import { InternalError, RunTimeError } from '@/utils/error';
+import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
 import TreeNode from './TreeNode';
 
@@ -27,10 +27,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<unknown, TreeNode<K,
       }
       preNode = pre;
     }
-    if (preNode === undefined) {
-      throw new InternalError();
-    }
-    return preNode;
+    return preNode as TreeNode<K, V>;
   }
   private _next() {
     let nextNode: TreeNode<K, V> | undefined = this.node;
@@ -47,10 +44,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<unknown, TreeNode<K,
         nextNode = pre;
       }
     }
-    if (nextNode === undefined) {
-      throw new InternalError();
-    }
-    return nextNode;
+    return nextNode as TreeNode<K, V>;
   }
   pre() {
     if (this.iteratorType === 'reverse') {

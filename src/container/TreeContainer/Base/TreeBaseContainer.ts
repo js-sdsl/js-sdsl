@@ -19,11 +19,9 @@ abstract class TreeBaseContainer<K, V> extends Base {
     this.cmp = cmp;
   }
   protected findSubTreeMinNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = (curNode: TreeNode<K, V>) => {
-    if (!curNode || curNode.key === undefined) throw new InternalError();
     return curNode.leftChild ? this.findSubTreeMinNode(curNode.leftChild) : curNode;
   };
   protected findSubTreeMaxNode: (curNode: TreeNode<K, V>) => TreeNode<K, V> = (curNode: TreeNode<K, V>) => {
-    if (!curNode || curNode.key === undefined) throw new InternalError();
     return curNode.rightChild ? this.findSubTreeMaxNode(curNode.rightChild) : curNode;
   };
   protected _lowerBound: (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined = (curNode: TreeNode<K, V> | undefined, key: K) => {
