@@ -1,4 +1,4 @@
-name: js-sdsl test CI
+name: js-sdsl CI
 
 on: ["push", "pull_request"]
 
@@ -21,3 +21,16 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    prod-check:
+      if: ${{ github.ref == 'refs/heads/main' && success() }}
+    steps:
+    - name: build
+      run: yarn build:umd:min
+    - name: generate type documentation
+      run: typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs
+    - name: deploy to github pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs
