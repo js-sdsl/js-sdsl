@@ -38,7 +38,7 @@ jobs:
     - name: build
       run: yarn build:umd:min
     - name: generate type documentation
-      run: typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs
+      run: ./node_modules/typedoc/bin/typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs
     - name: deploy to github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
