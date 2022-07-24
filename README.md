@@ -10,7 +10,7 @@
     <img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg" alt="action status" />
   </a>
   <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
-    <img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=feat%2Frefactor" alt="coverage status" />
+    <img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" />
   </a>
   <a target="_blank" href="https://github.com/ZLY201/js-sdsl">
     <img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" />
