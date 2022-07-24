@@ -26,6 +26,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() }}
     steps:
+    - name: checkout
+      uses: actions/checkout@master
+    - name: use Node.js 16.13.2
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.13.2
+        cache: 'yarn'
+    - name: install
+      run: yarn install
     - name: build
       run: yarn build:umd:min
     - name: generate type documentation
