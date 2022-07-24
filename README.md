@@ -1,17 +1,29 @@
-# <p>[js-sdsl](https://github.com/ZLY201/js-sdsl)</p>
+<h1><p align="center"><a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a></p></h1>
 
-<p align="center"><h3>A javascript standard data structure library which benchmark against C++ STL.</h3></p>
+<h3><p align="center">A javascript standard data structure library which benchmark against C++ STL.</p></h3>
 
 <p align="center">
-
-[![Version](https://img.shields.io/npm/v/js-sdsl?color=blue)](https://www.npmjs.com/package/js-sdsl)
-[![Actions Status](https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg)](https://github.com/zly201/js-sdsl/actions)
-[![Coverage Status](https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=feat%2Frefactor)](https://coveralls.io/github/ZLY201/js-sdsl)
-[![Stars](https://img.shields.io/github/stars/zly201/js-sdsl.svg)](https://github.com/ZLY201/js-sdsl)
-[![Downloads](https://img.shields.io/npm/dm/js-sdsl)](https://www.npmjs.com/package/js-sdsl)
-[![License](https://img.shields.io/npm/l/js-sdsl?color=%230969da)](https://github.com/ZLY201/js-sdsl/blob/main/LICENSE)
-[![Language](https://img.shields.io/github/languages/top/zly201/js-sdsl.svg)](https://coveralls.io/github/ZLY201/js-sdsl)
-
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
+    <img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="version" />
+  </a>
+  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions">
+    <img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20test%20CI/badge.svg" alt="action status" />
+  </a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
+    <img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=feat%2Frefactor" alt="coverage status" />
+  </a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl">
+    <img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" />
+  </a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
+    <img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" />
+  </a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE">
+    <img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" />
+  </a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
+    <img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" />
+  </a>
 </p>
 
 ## Included data structures
