@@ -26,6 +26,8 @@
   </a>
 </p>
 
+<p align="center">English | <a href="https://github.com/ZLY201/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
+
 ## Included data structures
 
 - Vector
@@ -68,9 +70,21 @@ To help you have a better use, we provide this [API document](https://zly201.git
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
 <script>
-    const { Vector } = sdsl;
-    const myVector = new Vector();
-    // you code here...
+    const { 
+      Vector,
+      Stack,
+      Queue,
+      LinkList,
+      Deque,
+      PriorityQueue,
+      OrderedSet,
+      OrderedMap,
+      HashSet,
+      HashMap
+    } = sdsl;
+    const myOrderedMap = new OrderedMap();
+    myOrderedMap.setElement(1, 2);
+    console.log(myOrderedMap.getElementByKey(1)); // 2
 </script>
 ```
 
@@ -90,15 +104,15 @@ We tested most of the functions for efficiency. You can go to `testResult.txt` t
 
 ## Maintainers
 
-[@ZLY201](https://github.com/ZLY201).
+[@ZLY201](https://github.com/ZLY201)
 
 ## Contributing
 
-Feel free to dive in! Open an issue or submit PRs.
+Feel free to dive in! Open an issue or submit PRs. It may be helpful to read the [Contributor Guide](https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md).
 
 ### Contributors
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
