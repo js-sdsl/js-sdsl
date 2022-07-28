@@ -127,5 +127,7 @@ describe('LinkList test', () => {
     myLinkList.merge(new LinkList([2]));
     expect(myLinkList.size()).toBe(1);
     expect(myLinkList.front()).toBe(2);
+    myLinkList.insert(1, 1, 0);
+    expect(myLinkList.size()).toBe(1);
   });
 });

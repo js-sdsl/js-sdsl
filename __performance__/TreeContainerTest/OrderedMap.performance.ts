@@ -38,7 +38,9 @@ function testOrderedMap(arr: number[], testNum: number) {
 
   startTime = Date.now();
   size = myMap.size();
-  for (let i = testNum; i < testNum + 100; ++i) myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
+  for (let i = testNum; i < testNum + 100; ++i) {
+    myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
+  }
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByPos',

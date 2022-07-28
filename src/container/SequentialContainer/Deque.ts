@@ -150,9 +150,15 @@ class Deque<T> extends SequentialContainer<T, number> {
     return { curNodeBucketIndex, curNodePointerIndex };
   }
   private getIndex(curNodeBucketIndex: number, curNodePointerIndex: number) {
-    if (curNodeBucketIndex === this.first) return curNodePointerIndex - this.curFirst;
-    if (curNodeBucketIndex === this.last) return this.length - (this.curLast - curNodePointerIndex) - 1;
-    return (this.bucketSize - this.first) + (curNodeBucketIndex - this.first - 1) * this.bucketNum + curNodePointerIndex;
+    if (curNodeBucketIndex === this.first) {
+      return curNodePointerIndex - this.curFirst;
+    }
+    if (curNodeBucketIndex === this.last) {
+      return this.length - (this.curLast - curNodePointerIndex) - 1;
+    }
+    return (this.bucketSize - this.first) +
+           (curNodeBucketIndex - this.first - 1) *
+           this.bucketNum + curNodePointerIndex;
   }
   clear() {
     this.first = this.last = this.curFirst = this.curLast = this.bucketNum = this.length = 0;
@@ -166,16 +172,37 @@ class Deque<T> extends SequentialContainer<T, number> {
     return this.map[this.last][this.curLast];
   }
   begin() {
-    return new DequeIterator<T>(0, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
+    return new DequeIterator<T>(
+      0,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this)
+    );
   }
   end() {
-    return new DequeIterator<T>(this.length, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
+    return new DequeIterator(
+      this.length,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this)
+    );
   }
   rBegin() {
-    return new DequeIterator<T>(this.length - 1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
+    return new DequeIterator(
+      this.length - 1,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this),
+      'reverse');
   }
   rEnd() {
-    return new DequeIterator<T>(-1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
+    return new DequeIterator(
+      -1,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this),
+      'reverse'
+    );
   }
   pushBack(element: T) {
     if (!this.empty()) {

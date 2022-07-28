@@ -151,9 +151,13 @@ module.exports = {
       'error',
       'never'
     ],
-    'multiline-comment-style': [
+    'max-len': [
       'error',
-      'starred-block'
+      {
+        code: 100,
+        comments: 120,
+        ignoreUrls: true
+      }
     ],
     'multiline-ternary': [
       'error',

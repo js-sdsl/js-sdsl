@@ -31,46 +31,48 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     container.pushBack(i);
   }
   startTime = Date.now();
-  for (let i = 0; i < 10000; ++i) {
+  for (let i = 0; i < testNum; ++i) {
     container.getElementByPos(i);
   }
   endTime = Date.now();
   reportList.push({
     testFunc: 'getElementByPos',
-    testNum: 10000,
+    testNum,
     containerSize: container.size(),
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  for (let i = 0; i < 10000; ++i) container.setElementByPos(i, i);
+  for (let i = 0; i < testNum; ++i) container.setElementByPos(i, i);
   endTime = Date.now();
   reportList.push({
     testFunc: 'setElementByPos',
-    testNum: 10000,
+    testNum,
     containerSize: container.size(),
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
   size = container.size();
-  for (let i = 0; i < (container.constructor.name === 'Deque' ? 10 : 10000); ++i) {
-    container.eraseElementByPos(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))));
+  for (let i = 0; i < (container.constructor.name === 'Deque' ? 10 : testNum); ++i) {
+    container.eraseElementByPos(Math.floor(Math.random() * container.size()));
   }
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByPos',
-    testNum: 10000,
+    testNum: (container.constructor.name === 'Deque' ? 10 : testNum),
     containerSize: size,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  for (let i = 0; i < (container.constructor.name === 'Deque' ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(1000, Math.max(container.size() - 1, 0))), -1, Math.floor(Math.random() * 10));
+  for (let i = 0; i < (container.constructor.name === 'Deque' ? 50 : testNum); ++i) {
+    container.insert(Math.floor(Math.random() * container.size()), -1, 2);
+  }
   endTime = Date.now();
   reportList.push({
     testFunc: 'insert',
-    testNum: 10000,
+    testNum: container.constructor.name === 'Deque' ? 50 : testNum,
     containerSize: container.size(),
     runTime: endTime - startTime
   });
@@ -96,7 +98,9 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     runTime: endTime - startTime
   });
 
-  for (let i = 0; i < (container.constructor.name === 'Deque' ? 50 : 10000); ++i) container.insert(Math.floor(Math.random() * Math.min(container.size(), 10)), -1, Math.floor(Math.random() * 10));
+  for (let i = 0; i < (container.constructor.name === 'Deque' ? 50 : testNum); ++i) {
+    container.insert(Math.floor(Math.random() * container.size()), -1, 2);
+  }
   size = container.size();
   startTime = Date.now();
   container.unique();
@@ -108,7 +112,9 @@ function testSequentialContainer(container: SequentialContainer<number, unknown>
     runTime: endTime - startTime
   });
 
-  for (let i = 0; i < testNum; ++i) container.pushBack(Math.random() * testNum);
+  for (let i = 0; i < testNum; ++i) {
+    container.pushBack(Math.random() * testNum);
+  }
   startTime = Date.now();
   container.sort((x, y) => x - y);
   endTime = Date.now();

@@ -40,10 +40,10 @@ function testHashSet(arr: number[], testNum: number) {
   myHashSet.forEach(element => stdSet.add(element));
   const size = myHashSet.size();
   startTime = Date.now();
-  stdSet.forEach(element => myHashSet.eraseElementByValue(element));
+  stdSet.forEach(element => myHashSet.eraseElementByKey(element));
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByValue',
+    testFunc: 'eraseElementByKey',
     testNum: stdSet.size,
     containerSize: size,
     runTime: endTime - startTime

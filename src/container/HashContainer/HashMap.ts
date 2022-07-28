@@ -31,10 +31,12 @@ class HashMap<K, V> extends HashContainerBase<K> {
             lowList.pushBack(pair);
           } else highList.pushBack(pair);
         });
-        if (lowList.size() > HashMap.untreeifyThreshold) newHashTable[index] = new OrderedMap<K, V>(lowList);
-        else if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size() > HashMap.untreeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
-        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() > HashMap.untreeifyThreshold) {
+          newHashTable[index] = new OrderedMap<K, V>(lowList);
+        } else if (lowList.size()) newHashTable[index] = lowList;
+        if (highList.size() > HashMap.untreeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
+        } else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
       } else {
         const lowList = new LinkList<[K, V]>();
         const highList = new LinkList<[K, V]>();
@@ -44,10 +46,16 @@ class HashMap<K, V> extends HashContainerBase<K> {
             lowList.pushBack(pair);
           } else highList.pushBack(pair);
         });
-        if (lowList.size() >= HashMap.treeifyThreshold) newHashTable[index] = new OrderedMap<K, V>(lowList);
-        else if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size() >= HashMap.treeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
-        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() >= HashMap.treeifyThreshold) {
+          newHashTable[index] = new OrderedMap<K, V>(lowList);
+        } else if (lowList.size()) {
+          newHashTable[index] = lowList;
+        }
+        if (highList.size() >= HashMap.treeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
+        } else if (highList.size()) {
+          newHashTable[index + originalBucketNum] = highList;
+        }
       }
       this.hashTable[index].clear();
     });

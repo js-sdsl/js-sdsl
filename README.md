@@ -1,29 +1,22 @@
-<h1><p align="center"><a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a></p></h1>
-
-<h3><p align="center">A javascript standard data structure library which benchmark against C++ STL.</p></h3>
+<p align="center">
+  <h1 align="center">
+    <a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a>
+  </h1 align="center">
+</p>
 
 <p align="center">
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
-    <img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="version" />
-  </a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions">
-    <img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" />
-  </a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
-    <img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" />
-  </a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl">
-    <img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" />
-  </a>
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
-    <img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" />
-  </a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE">
-    <img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" />
-  </a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
-    <img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" />
-  </a>
+  <h3 align="center">
+    A javascript standard data structure library which benchmark against C++ STL.
+  </h3 align="center">
+</p>
+
+<p align="center"><a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="npm version" /></a>
+  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" /></a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" /></a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" /></a>
 </p>
 
 ## Included data structures
@@ -68,9 +61,22 @@ To help you have a better use, we provide this [API document](https://zly201.git
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
 <script>
-    const { Vector } = sdsl;
-    const myVector = new Vector();
-    // you code here...
+    const {
+      Vector,
+      Stack,
+      Queue,
+      LinkList,
+      Deque,
+      PriorityQueue,
+      OrderedSet,
+      OrderedMap,
+      HashSet,
+      HashMap
+    } = sdsl;
+    const myOrderedMap = new OrderedMap();
+    myOrderedMap.setElement(1, 2);
+    console.log(myOrderedMap.getElementByKey(1));   // 2
+    // ...
 </script>
 ```
 
@@ -87,6 +93,39 @@ We use jest library to write unit tests, you can see test coverage on [coveralls
 ### For performance
 
 We tested most of the functions for efficiency. You can go to `testResult.txt` to see our running results or reproduce it with `yarn test:performance` command.
+
+The following is a partial interception of the performance test:
+
+```bash
+=================================== OrderedSet ===================================
+┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
+│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
+├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
+│    0    │    'constructor'    │    1    │    1000000    │  1969   │
+│    1    │      'insert'       │ 1000000 │    2000000    │   617   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   496   │
+│    3    │ 'eraseElementByPos' │   10    │    3000000    │   603   │
+│    4    │       'union'       │    1    │    2999990    │  3531   │
+│    5    │    'lowerBound'     │ 1000000 │    2999990    │  1127   │
+│    6    │    'upperBound'     │ 1000000 │    2999990    │  1492   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    2999990    │  1131   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    2999990    │  1143   │
+└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
+=================================== OrderedMap ===================================
+┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
+│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
+├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
+│    0    │    'constructor'    │    1    │    1000000    │  2259   │
+│    1    │    'setElement'     │ 1000000 │    2000000    │   875   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   426   │
+│    3    │ 'eraseElementByPos' │   100   │    1000000    │  4722   │
+│    4    │       'union'       │    1    │    1999900    │  5106   │
+│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1279   │
+│    6    │    'upperBound'     │ 1000000 │    1999900    │  1197   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1222   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1347   │
+└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
+```
 
 ## Maintainers
 

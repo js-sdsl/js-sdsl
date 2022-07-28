@@ -159,10 +159,18 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     curNode.key = key;
     curNode.value = value;
 
-    if (this.header.leftChild === undefined || this.header.leftChild.key === undefined || this.cmp(this.header.leftChild.key, key) > 0) {
+    if (
+      this.header.leftChild === undefined ||
+      this.header.leftChild.key === undefined ||
+      this.cmp(this.header.leftChild.key, key) > 0
+    ) {
       this.header.leftChild = curNode;
     }
-    if (this.header.rightChild === undefined || this.header.rightChild.key === undefined || this.cmp(this.header.rightChild.key, key) < 0) {
+    if (
+      this.header.rightChild === undefined ||
+      this.header.rightChild.key === undefined ||
+      this.cmp(this.header.rightChild.key, key) < 0
+    ) {
       this.header.rightChild = curNode;
     }
 
