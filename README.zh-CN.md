@@ -3,27 +3,13 @@
 <h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
 
 <p align="center">
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
-    <img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="version" />
-  </a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions">
-    <img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" />
-  </a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
-    <img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" />
-  </a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl">
-    <img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" />
-  </a>
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl">
-    <img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" />
-  </a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE">
-    <img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" />
-  </a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl">
-    <img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" />
-  </a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="version" /></a>
+  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" /></a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" /></a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" /></a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" /></a>
 </p>
 
 <p align="center"><a href="https://github.com/ZLY201/js-sdsl/blob/main/README.md">English</a> | 简体中文</p>
@@ -101,6 +87,39 @@ npm install js-sdsl
 ### 对于性能的校验
 
 我们对于编写的所有 API 进行了性能测试，并将结果同步到了 `testResult.txt` 中，你可以通过 `yarn test:performance` 命令来重现它
+
+以下是性能测试结果的一部分：
+
+```bash
+=================================== OrderedSet ===================================
+┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
+│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
+├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
+│    0    │    'constructor'    │    1    │    1000000    │  1969   │
+│    1    │      'insert'       │ 1000000 │    2000000    │   617   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   496   │
+│    3    │ 'eraseElementByPos' │   10    │    3000000    │   603   │
+│    4    │       'union'       │    1    │    2999990    │  3531   │
+│    5    │    'lowerBound'     │ 1000000 │    2999990    │  1127   │
+│    6    │    'upperBound'     │ 1000000 │    2999990    │  1492   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    2999990    │  1131   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    2999990    │  1143   │
+└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
+=================================== OrderedMap ===================================
+┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
+│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
+├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
+│    0    │    'constructor'    │    1    │    1000000    │  2259   │
+│    1    │    'setElement'     │ 1000000 │    2000000    │   875   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   426   │
+│    3    │ 'eraseElementByPos' │   100   │    1000000    │  4722   │
+│    4    │       'union'       │    1    │    1999900    │  5106   │
+│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1279   │
+│    6    │    'upperBound'     │ 1000000 │    1999900    │  1197   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1222   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1347   │
+└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
+```
 
 ## 维护者
 
