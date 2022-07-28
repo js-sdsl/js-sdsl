@@ -129,7 +129,7 @@ npm install js-sdsl
 
 我们欢迎所有的开发人员提交 issue 或 pull request，阅读[贡献者指南](https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md)可能会有所帮助
 
-### Contributors
+### 贡献者
 
 感谢对本项目做出贡献的开发者们：
 
