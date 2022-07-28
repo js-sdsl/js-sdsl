@@ -33,14 +33,16 @@ function testOrderedSet(arr: number[], testNum: number) {
   for (let i = 0; i < testNum; ++i) myOrderedSet.eraseElementByKey(tmpArr[i]);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByValue',
+    testFunc: 'eraseElementByKey',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  for (let i = 0; i < 10; ++i) myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.size()));
+  for (let i = 0; i < 10; ++i) {
+    myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.size()));
+  }
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByPos',

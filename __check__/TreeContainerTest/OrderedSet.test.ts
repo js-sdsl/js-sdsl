@@ -1,5 +1,5 @@
 import { Vector, OrderedSet } from '@/index';
-import { NullValueError, RunTimeError, TestError } from '@/utils/error';
+import { NullValueError, RunTimeError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -29,14 +29,14 @@ describe('OrderedSet test', () => {
 
   test('OrderedSet insert function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      const random = Math.random() * 1000000;
+      const random = Math.random() * testNum * 10;
       myOrderedSet.insert(random);
       myVector.pushBack(random);
     }
     judgeSet(myOrderedSet, myVector);
   });
 
-  test('OrderedSet eraseElementByValue function test', () => {
+  test('OrderedSet eraseElementByKey function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.size());
       const eraseValue = myVector.getElementByPos(pos);
@@ -48,8 +48,8 @@ describe('OrderedSet test', () => {
 
   test('OrderedSet union function test', () => {
     const otherOrderedSet = new OrderedSet<number>();
-    for (let i = 0; i < testNum * 2; ++i) {
-      const random = Math.random() * 1000000;
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random() * testNum * 10;
       otherOrderedSet.insert(random);
       myVector.pushBack(random);
     }
@@ -75,29 +75,39 @@ describe('OrderedSet test', () => {
   myVector.sort((x: number, y: number) => x - y);
 
   test('OrderedSet binary search function test', () => {
-    expect((() => {
-      for (let i = 0; i < myVector.size(); ++i) {
-        if (myOrderedSet.lowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
-          throw new TestError();
-        }
-        if (i !== myVector.size() - 1 && myOrderedSet.upperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i + 1)) {
-          throw new TestError();
-        }
+    for (let i = 0; i < myVector.size(); ++i) {
+      expect(myOrderedSet.lowerBound(myVector.getElementByPos(i)).pointer)
+        .toBe(myVector.getElementByPos(i));
+      if (i !== myVector.size() - 1) {
+        expect(myOrderedSet.upperBound(myVector.getElementByPos(i)).pointer)
+          .toBe(myVector.getElementByPos(i + 1));
       }
-    })()).toEqual(undefined);
+      if (i !== 0) {
+        const mid = (myVector.getElementByPos(i) + myVector.getElementByPos(i - 1)) / 2;
+        expect(myOrderedSet.lowerBound(mid).pointer)
+          .toBe(myVector.getElementByPos(i));
+        expect(myOrderedSet.upperBound(mid).pointer)
+          .toBe(myVector.getElementByPos(i));
+      }
+    }
   });
 
   test('OrderedSet reverse binary search function test', () => {
-    expect((() => {
-      for (let i = 0; i < myVector.size(); ++i) {
-        if (myOrderedSet.reverseLowerBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i)) {
-          throw new TestError();
-        }
-        if (i !== 0 && myOrderedSet.reverseUpperBound(myVector.getElementByPos(i)).pointer !== myVector.getElementByPos(i - 1)) {
-          throw new TestError();
-        }
+    for (let i = 0; i < myVector.size(); ++i) {
+      expect(myOrderedSet.reverseLowerBound(myVector.getElementByPos(i)).pointer)
+        .toBe(myVector.getElementByPos(i));
+      if (i !== 0) {
+        expect(myOrderedSet.reverseUpperBound(myVector.getElementByPos(i)).pointer)
+          .toBe(myVector.getElementByPos(i - 1));
       }
-    })()).toEqual(undefined);
+      if (i !== 0) {
+        const mid = (myVector.getElementByPos(i) + myVector.getElementByPos(i - 1)) / 2;
+        expect(myOrderedSet.reverseLowerBound(mid).pointer)
+          .toBe(myVector.getElementByPos(i - 1));
+        expect(myOrderedSet.reverseUpperBound(mid).pointer)
+          .toBe(myVector.getElementByPos(i - 1));
+      }
+    }
   });
 
   test('OrderedSet front & back function test', () => {

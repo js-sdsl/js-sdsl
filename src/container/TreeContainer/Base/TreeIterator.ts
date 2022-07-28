@@ -2,7 +2,8 @@ import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
 import TreeNode from './TreeNode';
 
-abstract class TreeIterator<K, V> extends ContainerIterator<unknown, TreeNode<K, V>> {
+abstract class TreeIterator<K, V> extends
+  ContainerIterator<unknown, TreeNode<K, V>> {
   private header: TreeNode<K, V>;
   constructor(
     node: TreeNode<K, V>,
@@ -13,32 +14,37 @@ abstract class TreeIterator<K, V> extends ContainerIterator<unknown, TreeNode<K,
     this.header = header;
   }
   private _pre() {
-    let preNode: TreeNode<K, V> | undefined = this.node;
-    if (preNode.color === TreeNode.TreeNodeColorType.red && preNode.parent?.parent === preNode) {
-      preNode = preNode.rightChild;
+    let preNode: TreeNode<K, V> = this.node;
+    if (preNode.color === TreeNode.TreeNodeColorType.red &&
+      (preNode.parent as TreeNode<K, V>).parent === preNode) {
+      preNode = preNode.rightChild as TreeNode<K, V>;
     } else if (preNode.leftChild) {
       preNode = preNode.leftChild;
-      while (preNode.rightChild) preNode = preNode?.rightChild;
+      while (preNode.rightChild) {
+        preNode = preNode.rightChild;
+      }
     } else {
-      let pre = preNode?.parent;
-      while (pre?.leftChild === preNode) {
+      let pre = preNode.parent as TreeNode<K, V>;
+      while (pre.leftChild === preNode) {
         preNode = pre;
-        pre = preNode?.parent;
+        pre = preNode.parent as TreeNode<K, V>;
       }
       preNode = pre;
     }
     return preNode as TreeNode<K, V>;
   }
   private _next() {
-    let nextNode: TreeNode<K, V> | undefined = this.node;
-    if (nextNode?.rightChild) {
+    let nextNode: TreeNode<K, V> = this.node;
+    if (nextNode.rightChild) {
       nextNode = nextNode.rightChild;
-      while (nextNode.leftChild) nextNode = nextNode?.leftChild;
+      while (nextNode.leftChild) {
+        nextNode = nextNode.leftChild;
+      }
     } else {
-      let pre = nextNode?.parent;
-      while (pre?.rightChild === nextNode) {
+      let pre = nextNode.parent as TreeNode<K, V>;
+      while (pre.rightChild === nextNode) {
         nextNode = pre;
-        pre = nextNode?.parent;
+        pre = nextNode.parent as TreeNode<K, V>;
       }
       if (nextNode.rightChild !== pre) {
         nextNode = pre;

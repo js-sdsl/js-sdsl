@@ -1,5 +1,5 @@
 import { Vector, OrderedMap } from '@/index';
-import { InternalError, NullValueError, RunTimeError, TestError } from '@/utils/error';
+import { InternalError, NullValueError, RunTimeError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -48,9 +48,7 @@ describe('OrderedMap test', () => {
     const eraseArr: number[] = [];
     myOrderedMap.forEach(([key, value]) => {
       const v = stdMap.get(key);
-      if (v !== value) {
-        throw new TestError('OrderedMap test failed!');
-      }
+      expect(v).toBe(value);
       if (Math.random() > 0.5) {
         eraseArr.push(key);
       }
@@ -63,10 +61,9 @@ describe('OrderedMap test', () => {
   });
 
   test('OrderedMap setElement function test', () => {
-    for (let i = testNum; i < testNum * 3; ++i) {
-      const random = Math.random() * 1000000;
-      myOrderedMap.setElement(i, random);
-      stdMap.set(i, random);
+    for (let i = 0; i < testNum; ++i) {
+      myOrderedMap.setElement(i, i);
+      stdMap.set(i, i);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -83,10 +80,10 @@ describe('OrderedMap test', () => {
 
   test('OrderedMap union function test', () => {
     const otherMap = new OrderedMap<number, number>();
-    for (let i = testNum * 2; i < testNum * 3; ++i) {
+    for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * 1000000;
-      otherMap.setElement(i, random);
-      stdMap.set(i, random);
+      otherMap.setElement(random, i);
+      stdMap.set(random, i);
     }
     myOrderedMap.union(otherMap);
     judgeMap(myOrderedMap, stdMap);

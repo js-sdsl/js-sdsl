@@ -78,16 +78,38 @@ class Vector<T> extends SequentialContainer<T, number> {
     this.vector.length = 0;
   }
   begin() {
-    return new VectorIterator<T>(0, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
+    return new VectorIterator(
+      0,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this)
+    );
   }
   end() {
-    return new VectorIterator<T>(this.length, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this));
+    return new VectorIterator(
+      this.length,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this)
+    );
   }
   rBegin() {
-    return new VectorIterator<T>(this.length - 1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
+    return new VectorIterator(
+      this.length - 1,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this),
+      'reverse'
+    );
   }
   rEnd() {
-    return new VectorIterator<T>(-1, this.size.bind(this), this.getElementByPos.bind(this), this.setElementByPos.bind(this), 'reverse');
+    return new VectorIterator(
+      -1,
+      this.size.bind(this),
+      this.getElementByPos.bind(this),
+      this.setElementByPos.bind(this),
+      'reverse'
+    );
   }
   front() {
     if (this.empty()) return undefined;
@@ -152,7 +174,12 @@ class Vector<T> extends SequentialContainer<T, number> {
   find(element: T) {
     for (let i = 0; i < this.length; ++i) {
       if (this.vector[i] === element) {
-        return new VectorIterator(i, this.size, this.getElementByPos.bind(this), this.getElementByPos.bind(this));
+        return new VectorIterator(
+          i,
+          this.size.bind(this),
+          this.getElementByPos.bind(this),
+          this.getElementByPos.bind(this)
+        );
       }
     }
     return this.end();
