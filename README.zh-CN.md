@@ -50,7 +50,7 @@ npm install js-sdsl
 
 我们提供了完整的 [API 文档](https://zly201.github.io/js-sdsl/index.html)供您参考
 
-### 在浏览器中试用版
+### 在浏览器中使用
 
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
@@ -72,6 +72,18 @@ npm install js-sdsl
     myOrderedMap.setElement(1, 2);
     console.log(myOrderedMap.getElementByKey(1)); // 2
 </script>
+```
+
+### npm 引入
+
+```javascript
+// esModule
+import { OrderedMap } from 'js-sdsl';
+// commonJs
+const { OrderedMap } = require('js-sdsl');
+const myOrderedMap = new OrderedMap();
+myOrderedMap.setElement(1, 2);
+console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
 ## 从源码构建
