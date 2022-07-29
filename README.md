@@ -58,7 +58,7 @@ npm install js-sdsl
 
 To help you have a better use, we provide this [API document](https://zly201.github.io/js-sdsl/index.html).
 
-### For Browser
+### For browser
 
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
@@ -80,6 +80,18 @@ To help you have a better use, we provide this [API document](https://zly201.git
     myOrderedMap.setElement(1, 2);
     console.log(myOrderedMap.getElementByKey(1)); // 2
 </script>
+```
+
+### For npm
+
+```javascript
+// esModule
+import { OrderedMap } from 'js-sdsl';
+// commonJs
+const { OrderedMap } = require('js-sdsl');
+const myOrderedMap = new OrderedMap();
+myOrderedMap.setElement(1, 2);
+console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
 ## Build by source code
