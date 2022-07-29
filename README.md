@@ -10,14 +10,17 @@
   </h3 align="center">
 </p>
 
-<p align="center"><a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="npm version" /></a>
+<p align="center">
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="npm version" /></a>
   <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" /></a>
   <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" /></a>
   <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" /></a>
   <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" /></a>
   <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" /></a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" /></a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" /></a>
 </p>
+
+<p align="center">English | <a href="https://github.com/ZLY201/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
 
 ## Included data structures
 
@@ -55,7 +58,7 @@ npm install js-sdsl
 
 To help you have a better use, we provide this [API document](https://zly201.github.io/js-sdsl/index.html).
 
-### For Browser
+### For browser
 
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
@@ -75,9 +78,20 @@ To help you have a better use, we provide this [API document](https://zly201.git
     } = sdsl;
     const myOrderedMap = new OrderedMap();
     myOrderedMap.setElement(1, 2);
-    console.log(myOrderedMap.getElementByKey(1));   // 2
-    // ...
+    console.log(myOrderedMap.getElementByKey(1)); // 2
 </script>
+```
+
+### For npm
+
+```javascript
+// esModule
+import { OrderedMap } from 'js-sdsl';
+// commonJs
+const { OrderedMap } = require('js-sdsl');
+const myOrderedMap = new OrderedMap();
+myOrderedMap.setElement(1, 2);
+console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
 ## Build by source code
@@ -129,15 +143,15 @@ The following is a partial interception of the performance test:
 
 ## Maintainers
 
-[@ZLY201](https://github.com/ZLY201).
+[@ZLY201](https://github.com/ZLY201)
 
 ## Contributing
 
-Feel free to dive in! Open an issue or submit PRs.
+Feel free to dive in! Open an issue or submit PRs. It may be helpful to read the [Contributor Guide](https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md).
 
 ### Contributors
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
