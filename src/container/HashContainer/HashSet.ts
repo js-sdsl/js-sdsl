@@ -6,7 +6,11 @@ import HashContainerBase from './Base/index';
 
 class HashSet<K> extends HashContainerBase<K> {
   private hashTable: (LinkList<K> | OrderedSet<K>)[] = [];
-  constructor(container: initContainer<K> = [], initBucketNum?: number, hashFunc?: (x: K) => number) {
+  constructor(
+    container: initContainer<K> = [],
+    initBucketNum?: number,
+    hashFunc?: (x: K) => number
+  ) {
     super(initBucketNum, hashFunc);
     container.forEach(element => this.insert(element));
   }
@@ -28,10 +32,16 @@ class HashSet<K> extends HashContainerBase<K> {
             lowList.pushBack(element);
           } else highList.pushBack(element);
         });
-        if (lowList.size() > HashSet.untreeifyThreshold) newHashTable[index] = new OrderedSet<K>(lowList);
-        else if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size() > HashSet.untreeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedSet<K>(highList);
-        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() > HashSet.untreeifyThreshold) {
+          newHashTable[index] = new OrderedSet<K>(lowList);
+        } else if (lowList.size()) {
+          newHashTable[index] = lowList;
+        }
+        if (highList.size() > HashSet.untreeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedSet<K>(highList);
+        } else if (highList.size()) {
+          newHashTable[index + originalBucketNum] = highList;
+        }
       } else {
         const lowList = new LinkList<K>();
         const highList = new LinkList<K>();
@@ -41,10 +51,16 @@ class HashSet<K> extends HashContainerBase<K> {
             lowList.pushBack(element);
           } else highList.pushBack(element);
         });
-        if (lowList.size() >= HashSet.treeifyThreshold) newHashTable[index] = new OrderedSet<K>(lowList);
-        else if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size() >= HashSet.treeifyThreshold) newHashTable[index + originalBucketNum] = new OrderedSet<K>(highList);
-        else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.size() >= HashSet.treeifyThreshold) {
+          newHashTable[index] = new OrderedSet<K>(lowList);
+        } else if (lowList.size()) {
+          newHashTable[index] = lowList;
+        }
+        if (highList.size() >= HashSet.treeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedSet<K>(highList);
+        } else if (highList.size()) {
+          newHashTable[index + originalBucketNum] = highList;
+        }
       }
       this.hashTable[index].clear();
     });
@@ -96,7 +112,7 @@ class HashSet<K> extends HashContainerBase<K> {
   /**
    * Removes the elements of the specified value.
    */
-  eraseElementByValue(element: K) {
+  eraseElementByKey(element: K) {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
     if (!this.hashTable[index]) return;
     const preSize = this.hashTable[index].size();

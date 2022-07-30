@@ -1,13 +1,18 @@
-import { HashSet } from '@/index';
+import HashContainerBase from '@/container/HashContainer/Base/index';
+import { LinkList, HashSet } from '@/index';
 import { ContainerInitError } from '@/utils/error';
 
-const arr: number[] = [];
-const testNum = 100000;
-for (let i = 0; i < testNum; ++i) {
-  arr.push(Math.floor(Math.random() * testNum));
+function generateRandom(low = 0, high = 1e6, fix = 6) {
+  return (low + Math.random() * (high - low)).toFixed(fix);
 }
 
-function judgeHashSet(myHashSet: HashSet<number>, stdSet: Set<number>) {
+const arr: string[] = [];
+const testNum = 10000;
+for (let i = 0; i < testNum; ++i) {
+  arr.push(generateRandom());
+}
+
+function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
   expect(myHashSet.size()).toBe(stdSet.size);
   stdSet.forEach((element) => {
     expect(myHashSet.find(element)).toEqual(true);
@@ -15,16 +20,22 @@ function judgeHashSet(myHashSet: HashSet<number>, stdSet: Set<number>) {
 }
 
 describe('HashSet test', () => {
+  // @ts-ignore
+  HashContainerBase.treeifyThreshold = 2;
+  // @ts-ignore
+  HashContainerBase.untreeifyThreshold = 1;
   test('constructor test', () => {
     // eslint-disable-next-line no-new
     expect(() => new HashSet([], 28)).toThrow(ContainerInitError);
+    expect(new HashSet().size()).toBe(0);
   });
 
   test('HashSet hash function test', () => {
-    const myHashSet = new HashSet(arr.map(x => JSON.stringify(x)));
-    const stdSet = new Set(arr.map(x => JSON.stringify(x)));
-    // @ts-ignore
-    judgeHashSet(myHashSet, stdSet);
+    judgeHashSet(
+      // @ts-ignore
+      new HashSet(arr.map(x => Math.floor(Number(x)))),
+      new Set(arr.map(x => Math.floor(Number(x))))
+    );
   });
 
   const myHashSet = new HashSet(arr);
@@ -32,9 +43,9 @@ describe('HashSet test', () => {
 
   test('HashSet insert function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myHashSet.insert(i);
-      stdSet.add(i);
-      const random = Math.floor(Math.random() * testNum * 10);
+      myHashSet.insert(i.toString());
+      stdSet.add(i.toString());
+      const random = generateRandom();
       myHashSet.insert(random);
       stdSet.add(random);
     }
@@ -45,14 +56,20 @@ describe('HashSet test', () => {
     myHashSet.forEach((element) => {
       expect(stdSet.has(element)).toEqual(true);
     });
+    let cnt = 0;
+    for (const element of myHashSet) {
+      ++cnt;
+      expect(stdSet.has(element)).toEqual(true);
+    }
+    expect(cnt).toBe(myHashSet.size());
   });
 
-  test('HashSet eraseElementByValue function test', () => {
+  test('HashSet eraseElementByKey function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myHashSet.eraseElementByValue(arr[i]);
+      myHashSet.eraseElementByKey(arr[i]);
       stdSet.delete(arr[i]);
-      const random = Math.floor(Math.random() * testNum * 10);
-      myHashSet.eraseElementByValue(random);
+      const random = generateRandom();
+      myHashSet.eraseElementByKey(random);
       stdSet.delete(random);
     }
     judgeHashSet(myHashSet, stdSet);
@@ -65,6 +82,19 @@ describe('HashSet test', () => {
   });
 
   test('HashSet empty test', () => {
-    expect(myHashSet.find(1)).toEqual(false);
+    expect(myHashSet.find('1')).toEqual(false);
+    myHashSet.insert(arr[0]);
+    myHashSet.insert(arr[0]);
+    expect(myHashSet.size()).toBe(1);
+    // @ts-ignore
+    expect(myHashSet.reAllocate(HashContainerBase.maxBucketNum)).toEqual(undefined);
+    // @ts-ignore
+    myHashSet.hashTable[0] = new LinkList();
+    // @ts-ignore
+    myHashSet.hashTable[myHashSet.bucketNum - 5] = new LinkList();
+    // @ts-ignore
+    expect(myHashSet.reAllocate(myHashSet.bucketNum)).toEqual(undefined);
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
+    for (const _ of myHashSet) {}
   });
 });
