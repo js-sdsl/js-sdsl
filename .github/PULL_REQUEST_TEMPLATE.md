@@ -1,4 +1,10 @@
-## Please make sure to read the [Pull Request Guidelines](https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md)
+<!--
+Please make sure to read the Pull Request Guidelines:
+https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md
+-->
+
+<!-- PULL REQUEST TEMPLATE -->
+<!-- (Update "[ ]" to "[x]" to check a box) -->
 
 **What kind of change does this PR introduce?** (check at least one)
 
