@@ -64,7 +64,7 @@ To help you have a better use, we provide this [API document](https://zly201.git
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
 <script>
-    const { 
+    const {
       Vector,
       Stack,
       Queue,

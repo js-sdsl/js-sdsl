@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.07.27
+## [4.0.0] - 2022-07-30
 
-### changed
+### Changed
 
 - Remove InternalError error as much as possible (don't effect using).
 - Change `HashSet` api `eraseElementByValue`'s name to `eraseElementByKey`.
+- Change some unit tests to improve coverage (don't effect using).
 
 ## [4.0.0-beta.0] - 2022-07-24
 
@@ -18,7 +19,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Complete test examples (don't effect using).
 - The error thrown is standardized, you can catch it according to the error type.
 
-### changed
+### Changed
 
 - Refactor all container from function to class (don't effect using).
 - Abstracting tree containers and hash containers, change `Set`'s and `Map`'s name to `OrderedSet` and `OrderedMap` to distinguish it from the official container.
