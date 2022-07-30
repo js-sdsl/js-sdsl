@@ -363,7 +363,7 @@
         Vector.prototype.find = function (element) {
             for (var i = 0; i < this.length; ++i) {
                 if (this.vector[i] === element) {
-                    return new VectorIterator(i, this.size, this.getElementByPos.bind(this), this.getElementByPos.bind(this));
+                    return new VectorIterator(i, this.size.bind(this), this.getElementByPos.bind(this), this.getElementByPos.bind(this));
                 }
             }
             return this.end();
@@ -531,15 +531,16 @@
             configurable: true
         });
         LinkListIterator.prototype.pre = function () {
-            var _a, _b;
             if (this.iteratorType === 'reverse') {
-                if (((_a = this.node.next) === null || _a === void 0 ? void 0 : _a.value) === undefined) {
+                this.node.next = this.node.next;
+                if (this.node.next.value === undefined) {
                     throw new RunTimeError('LinkList iterator access denied!');
                 }
                 this.node = this.node.next;
             }
             else {
-                if (((_b = this.node.pre) === null || _b === void 0 ? void 0 : _b.value) === undefined) {
+                this.node.pre = this.node.pre;
+                if (this.node.pre.value === undefined) {
                     throw new RunTimeError('LinkList iterator access denied!');
                 }
                 this.node = this.node.pre;
@@ -613,9 +614,6 @@
             var curNode = this.head;
             var index = 0;
             while (curNode && curNode !== this.header) {
-                if (curNode.value === undefined) {
-                    throw new InternalError();
-                }
                 callback(curNode.value, index++);
                 curNode = curNode.next;
             }
@@ -624,12 +622,7 @@
             checkWithinAccessParams(pos, 0, this.length - 1);
             var curNode = this.head;
             while (pos--) {
-                if (!curNode)
-                    break;
                 curNode = curNode.next;
-            }
-            if (!curNode || curNode.value === undefined) {
-                throw new InternalError();
             }
             return curNode.value;
         };
@@ -642,14 +635,9 @@
             else {
                 var curNode = this.head;
                 while (pos--) {
-                    if ((curNode === null || curNode === void 0 ? void 0 : curNode.next) === undefined) {
-                        throw new InternalError();
-                    }
                     curNode = curNode.next;
                 }
-                if ((curNode === null || curNode === void 0 ? void 0 : curNode.pre) === undefined || curNode.next === undefined) {
-                    throw new InternalError();
-                }
+                curNode = curNode;
                 var pre = curNode.pre;
                 var next = curNode.next;
                 next.pre = pre;
@@ -742,9 +730,6 @@
             checkWithinAccessParams(pos, 0, this.length - 1);
             var curNode = this.head;
             while (pos--) {
-                if (curNode === undefined) {
-                    throw new InternalError();
-                }
                 curNode = curNode.next;
             }
             if (curNode)
@@ -754,7 +739,7 @@
             if (num === void 0) { num = 1; }
             checkUndefinedParams(element);
             checkWithinAccessParams(pos, 0, this.length);
-            if (num < 0)
+            if (num <= 0)
                 return;
             if (pos === 0) {
                 while (num--)
@@ -767,13 +752,7 @@
             else {
                 var curNode = this.head;
                 for (var i = 1; i < pos; ++i) {
-                    if ((curNode === null || curNode === void 0 ? void 0 : curNode.next) === undefined) {
-                        throw new InternalError();
-                    }
-                    curNode = curNode === null || curNode === void 0 ? void 0 : curNode.next;
-                }
-                if (curNode === undefined) {
-                    throw new InternalError();
+                    curNode = curNode.next;
                 }
                 var next = curNode.next;
                 this.length += num;
@@ -884,7 +863,10 @@
             var _this = this;
             var curNode = this.head;
             list.forEach(function (element) {
-                while (curNode && curNode !== _this.header && curNode.value !== undefined && curNode.value <= element) {
+                while (curNode &&
+                    curNode !== _this.header &&
+                    curNode.value !== undefined &&
+                    curNode.value <= element) {
                     curNode = curNode.next;
                 }
                 if (curNode === _this.header) {
@@ -896,9 +878,6 @@
                     curNode = _this.head;
                 }
                 else {
-                    if (curNode === undefined) {
-                        throw new InternalError();
-                    }
                     ++_this.length;
                     var pre = curNode.pre;
                     if (pre) {
@@ -1182,11 +1161,15 @@
             return { curNodeBucketIndex: curNodeBucketIndex, curNodePointerIndex: curNodePointerIndex };
         };
         Deque.prototype.getIndex = function (curNodeBucketIndex, curNodePointerIndex) {
-            if (curNodeBucketIndex === this.first)
+            if (curNodeBucketIndex === this.first) {
                 return curNodePointerIndex - this.curFirst;
-            if (curNodeBucketIndex === this.last)
+            }
+            if (curNodeBucketIndex === this.last) {
                 return this.length - (this.curLast - curNodePointerIndex) - 1;
-            return (this.bucketSize - this.first) + (curNodeBucketIndex - this.first - 1) * this.bucketNum + curNodePointerIndex;
+            }
+            return (this.bucketSize - this.first) +
+                (curNodeBucketIndex - this.first - 1) *
+                    this.bucketNum + curNodePointerIndex;
         };
         Deque.prototype.clear = function () {
             this.first = this.last = this.curFirst = this.curLast = this.bucketNum = this.length = 0;
@@ -1592,8 +1575,10 @@
                     var leftChild = curChild;
                     var rightChild = leftChild + 1;
                     var minChild = leftChild;
-                    if (rightChild < _this.length && _this.cmp(_this.priorityQueue[leftChild], _this.priorityQueue[rightChild]) > 0)
+                    if (rightChild < _this.length &&
+                        _this.cmp(_this.priorityQueue[leftChild], _this.priorityQueue[rightChild]) > 0) {
                         minChild = rightChild;
+                    }
                     if (_this.cmp(_this.priorityQueue[curParent], _this.priorityQueue[minChild]) <= 0)
                         break;
                     _this.swap(curParent, minChild);
@@ -1611,10 +1596,14 @@
         PriorityQueue.prototype.adjust = function (parent) {
             var leftChild = parent * 2 + 1;
             var rightChild = parent * 2 + 2;
-            if (leftChild < this.length && this.cmp(this.priorityQueue[parent], this.priorityQueue[leftChild]) > 0)
+            if (leftChild < this.length &&
+                this.cmp(this.priorityQueue[parent], this.priorityQueue[leftChild]) > 0) {
                 this.swap(parent, leftChild);
-            if (rightChild < this.length && this.cmp(this.priorityQueue[parent], this.priorityQueue[rightChild]) > 0)
+            }
+            if (rightChild < this.length &&
+                this.cmp(this.priorityQueue[parent], this.priorityQueue[rightChild]) > 0) {
                 this.swap(parent, rightChild);
+            }
         };
         PriorityQueue.prototype.clear = function () {
             this.length = 0;
@@ -1656,8 +1645,10 @@
                 if (leftChild >= this.length)
                     break;
                 var minChild = leftChild;
-                if (rightChild < this.length && this.cmp(this.priorityQueue[leftChild], this.priorityQueue[rightChild]) > 0)
+                if (rightChild < this.length &&
+                    this.cmp(this.priorityQueue[leftChild], this.priorityQueue[rightChild]) > 0) {
                     minChild = rightChild;
+                }
                 if (this.cmp(this.priorityQueue[minChild], last) >= 0)
                     break;
                 this.priorityQueue[parent] = this.priorityQueue[minChild];
@@ -1877,8 +1868,6 @@
                 return _this.inOrderTraversal(curNode.rightChild, callback);
             };
             _this.findInsertPos = function (curNode, key) {
-                if (!curNode || curNode.key === undefined)
-                    throw new InternalError();
                 var cmpResult = _this.cmp(key, curNode.key);
                 if (cmpResult < 0) {
                     if (!curNode.leftChild) {
@@ -1922,18 +1911,13 @@
         }
         TreeBaseContainer.prototype.eraseNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode || parentNode === this.header) {
-                if (curNode === this.root)
-                    return;
-                throw new InternalError();
-            }
+            if (!parentNode || parentNode === this.header)
+                return;
             if (curNode.color === TreeNode.TreeNodeColorType.red) {
                 curNode.color = TreeNode.TreeNodeColorType.black;
                 return;
             }
             var brotherNode = curNode.brother;
-            if (!brotherNode)
-                throw new InternalError();
             if (curNode === parentNode.leftChild) {
                 if (brotherNode.color === TreeNode.TreeNodeColorType.red) {
                     brotherNode.color = TreeNode.TreeNodeColorType.black;
@@ -1947,11 +1931,13 @@
                     this.eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                    if (brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                    if (brotherNode.rightChild &&
+                        brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
                         brotherNode.color = parentNode.color;
                         parentNode.color = TreeNode.TreeNodeColorType.black;
-                        if (brotherNode.rightChild)
+                        if (brotherNode.rightChild) {
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                        }
                         var newRoot = parentNode.rotateLeft();
                         if (this.root === parentNode) {
                             this.root = newRoot;
@@ -1960,10 +1946,14 @@
                         }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
-                    else if ((!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                    else if ((!brotherNode.rightChild ||
+                        brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black) &&
+                        brotherNode.leftChild &&
+                        brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
                         brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        if (brotherNode.leftChild)
+                        if (brotherNode.leftChild) {
                             brotherNode.leftChild.color = TreeNode.TreeNodeColorType.black;
+                        }
                         var newRoot = brotherNode.rotateRight();
                         if (this.root === brotherNode) {
                             this.root = newRoot;
@@ -1972,7 +1962,9 @@
                         }
                         this.eraseNodeSelfBalance(curNode);
                     }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                    else if ((!brotherNode.leftChild ||
+                        brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild ||
+                        brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                         brotherNode.color = TreeNode.TreeNodeColorType.red;
                         this.eraseNodeSelfBalance(parentNode);
                     }
@@ -1991,7 +1983,8 @@
                     this.eraseNodeSelfBalance(curNode);
                 }
                 else if (brotherNode.color === TreeNode.TreeNodeColorType.black) {
-                    if (brotherNode.leftChild && brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
+                    if (brotherNode.leftChild &&
+                        brotherNode.leftChild.color === TreeNode.TreeNodeColorType.red) {
                         brotherNode.color = parentNode.color;
                         parentNode.color = TreeNode.TreeNodeColorType.black;
                         if (brotherNode.leftChild)
@@ -2004,10 +1997,14 @@
                         }
                         curNode.color = TreeNode.TreeNodeColorType.black;
                     }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && brotherNode.rightChild && brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
+                    else if ((!brotherNode.leftChild ||
+                        brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) &&
+                        brotherNode.rightChild &&
+                        brotherNode.rightChild.color === TreeNode.TreeNodeColorType.red) {
                         brotherNode.color = TreeNode.TreeNodeColorType.red;
-                        if (brotherNode.rightChild)
+                        if (brotherNode.rightChild) {
                             brotherNode.rightChild.color = TreeNode.TreeNodeColorType.black;
+                        }
                         var newRoot = brotherNode.rotateLeft();
                         if (this.root === brotherNode) {
                             this.root = newRoot;
@@ -2016,7 +2013,9 @@
                         }
                         this.eraseNodeSelfBalance(curNode);
                     }
-                    else if ((!brotherNode.leftChild || brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild || brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
+                    else if ((!brotherNode.leftChild ||
+                        brotherNode.leftChild.color === TreeNode.TreeNodeColorType.black) && (!brotherNode.rightChild ||
+                        brotherNode.rightChild.color === TreeNode.TreeNodeColorType.black)) {
                         brotherNode.color = TreeNode.TreeNodeColorType.red;
                         this.eraseNodeSelfBalance(parentNode);
                     }
@@ -2024,7 +2023,6 @@
             }
         };
         TreeBaseContainer.prototype.eraseNode = function (curNode) {
-            var _a, _b, _c, _d, _e, _f;
             var swapNode = curNode;
             while (swapNode.leftChild || swapNode.rightChild) {
                 if (swapNode.rightChild) {
@@ -2048,23 +2046,31 @@
                     curNode = swapNode;
                 }
             }
-            if (swapNode.key === undefined)
-                throw new InternalError();
-            if (this.header.leftChild && this.header.leftChild.key !== undefined && this.cmp(this.header.leftChild.key, swapNode.key) === 0) {
-                if (this.header.leftChild !== this.root)
-                    this.header.leftChild = (_a = this.header.leftChild) === null || _a === void 0 ? void 0 : _a.parent;
-                else if ((_b = this.header.leftChild) === null || _b === void 0 ? void 0 : _b.rightChild)
-                    this.header.leftChild = (_c = this.header.leftChild) === null || _c === void 0 ? void 0 : _c.rightChild;
-                else
+            if (this.header.leftChild &&
+                this.header.leftChild.key !== undefined &&
+                this.cmp(this.header.leftChild.key, swapNode.key) === 0) {
+                if (this.header.leftChild !== this.root) {
+                    this.header.leftChild = this.header.leftChild.parent;
+                }
+                else if (this.header.leftChild.rightChild) {
+                    this.header.leftChild = this.header.leftChild.rightChild;
+                }
+                else {
                     this.header.leftChild = undefined;
+                }
             }
-            if (this.header.rightChild && this.header.rightChild.key !== undefined && this.cmp(this.header.rightChild.key, swapNode.key) === 0) {
-                if (this.header.rightChild !== this.root)
-                    this.header.rightChild = (_d = this.header.rightChild) === null || _d === void 0 ? void 0 : _d.parent;
-                else if ((_e = this.header.rightChild) === null || _e === void 0 ? void 0 : _e.leftChild)
-                    this.header.rightChild = (_f = this.header.rightChild) === null || _f === void 0 ? void 0 : _f.leftChild;
-                else
+            if (this.header.rightChild &&
+                this.header.rightChild.key !== undefined &&
+                this.cmp(this.header.rightChild.key, swapNode.key) === 0) {
+                if (this.header.rightChild !== this.root) {
+                    this.header.rightChild = this.header.rightChild.parent;
+                }
+                else if (this.header.rightChild.leftChild) {
+                    this.header.rightChild = this.header.rightChild.leftChild;
+                }
+                else {
                     this.header.rightChild = undefined;
+                }
             }
             this.eraseNodeSelfBalance(swapNode);
             if (swapNode)
@@ -2074,18 +2080,13 @@
         };
         TreeBaseContainer.prototype.insertNodeSelfBalance = function (curNode) {
             var parentNode = curNode.parent;
-            if (!parentNode || parentNode === this.header) {
-                if (curNode === this.root)
-                    return;
-                throw new InternalError();
-            }
+            if (!parentNode || parentNode === this.header)
+                return;
             if (parentNode.color === TreeNode.TreeNodeColorType.black)
                 return;
             if (parentNode.color === TreeNode.TreeNodeColorType.red) {
                 var uncleNode = parentNode.brother;
                 var grandParent = parentNode.parent;
-                if (!grandParent)
-                    throw new InternalError();
                 if (uncleNode && uncleNode.color === TreeNode.TreeNodeColorType.red) {
                     uncleNode.color = parentNode.color = TreeNode.TreeNodeColorType.black;
                     grandParent.color = TreeNode.TreeNodeColorType.red;
@@ -2163,7 +2164,9 @@
             if (this.empty())
                 return;
             var curNode = this.findElementNode(this.root, key);
-            if (curNode === undefined || curNode.key === undefined || this.cmp(curNode.key, key) !== 0)
+            if (curNode === undefined ||
+                curNode.key === undefined ||
+                this.cmp(curNode.key, key) !== 0)
                 return;
             this.eraseNode(curNode);
         };
@@ -2206,21 +2209,22 @@
             return _this;
         }
         TreeIterator.prototype._pre = function () {
-            var _a;
             var preNode = this.node;
-            if (preNode.color === TreeNode.TreeNodeColorType.red && ((_a = preNode.parent) === null || _a === void 0 ? void 0 : _a.parent) === preNode) {
+            if (preNode.color === TreeNode.TreeNodeColorType.red &&
+                preNode.parent.parent === preNode) {
                 preNode = preNode.rightChild;
             }
             else if (preNode.leftChild) {
                 preNode = preNode.leftChild;
-                while (preNode.rightChild)
-                    preNode = preNode === null || preNode === void 0 ? void 0 : preNode.rightChild;
+                while (preNode.rightChild) {
+                    preNode = preNode.rightChild;
+                }
             }
             else {
-                var pre = preNode === null || preNode === void 0 ? void 0 : preNode.parent;
-                while ((pre === null || pre === void 0 ? void 0 : pre.leftChild) === preNode) {
+                var pre = preNode.parent;
+                while (pre.leftChild === preNode) {
                     preNode = pre;
-                    pre = preNode === null || preNode === void 0 ? void 0 : preNode.parent;
+                    pre = preNode.parent;
                 }
                 preNode = pre;
             }
@@ -2228,16 +2232,17 @@
         };
         TreeIterator.prototype._next = function () {
             var nextNode = this.node;
-            if (nextNode === null || nextNode === void 0 ? void 0 : nextNode.rightChild) {
+            if (nextNode.rightChild) {
                 nextNode = nextNode.rightChild;
-                while (nextNode.leftChild)
-                    nextNode = nextNode === null || nextNode === void 0 ? void 0 : nextNode.leftChild;
+                while (nextNode.leftChild) {
+                    nextNode = nextNode.leftChild;
+                }
             }
             else {
-                var pre = nextNode === null || nextNode === void 0 ? void 0 : nextNode.parent;
-                while ((pre === null || pre === void 0 ? void 0 : pre.rightChild) === nextNode) {
+                var pre = nextNode.parent;
+                while (pre.rightChild === nextNode) {
                     nextNode = pre;
-                    pre = nextNode === null || nextNode === void 0 ? void 0 : nextNode.parent;
+                    pre = nextNode.parent;
                 }
                 if (nextNode.rightChild !== pre) {
                     nextNode = pre;
@@ -2794,10 +2799,14 @@
             ++this.length;
             curNode.key = key;
             curNode.value = value;
-            if (this.header.leftChild === undefined || this.header.leftChild.key === undefined || this.cmp(this.header.leftChild.key, key) > 0) {
+            if (this.header.leftChild === undefined ||
+                this.header.leftChild.key === undefined ||
+                this.cmp(this.header.leftChild.key, key) > 0) {
                 this.header.leftChild = curNode;
             }
-            if (this.header.rightChild === undefined || this.header.rightChild.key === undefined || this.cmp(this.header.rightChild.key, key) < 0) {
+            if (this.header.rightChild === undefined ||
+                this.header.rightChild.key === undefined ||
+                this.cmp(this.header.rightChild.key, key) < 0) {
                 this.header.rightChild = curNode;
             }
             this.insertNodeSelfBalance(curNode);
@@ -3014,14 +3023,18 @@
                         else
                             highList_1.pushBack(element);
                     });
-                    if (lowList_1.size() > HashSet.untreeifyThreshold)
+                    if (lowList_1.size() > HashSet.untreeifyThreshold) {
                         newHashTable[index] = new OrderedSet(lowList_1);
-                    else if (lowList_1.size())
+                    }
+                    else if (lowList_1.size()) {
                         newHashTable[index] = lowList_1;
-                    if (highList_1.size() > HashSet.untreeifyThreshold)
+                    }
+                    if (highList_1.size() > HashSet.untreeifyThreshold) {
                         newHashTable[index + originalBucketNum] = new OrderedSet(highList_1);
-                    else if (highList_1.size())
+                    }
+                    else if (highList_1.size()) {
                         newHashTable[index + originalBucketNum] = highList_1;
+                    }
                 }
                 else {
                     var lowList_2 = new LinkList();
@@ -3034,14 +3047,18 @@
                         else
                             highList_2.pushBack(element);
                     });
-                    if (lowList_2.size() >= HashSet.treeifyThreshold)
+                    if (lowList_2.size() >= HashSet.treeifyThreshold) {
                         newHashTable[index] = new OrderedSet(lowList_2);
-                    else if (lowList_2.size())
+                    }
+                    else if (lowList_2.size()) {
                         newHashTable[index] = lowList_2;
-                    if (highList_2.size() >= HashSet.treeifyThreshold)
+                    }
+                    if (highList_2.size() >= HashSet.treeifyThreshold) {
                         newHashTable[index + originalBucketNum] = new OrderedSet(highList_2);
-                    else if (highList_2.size())
+                    }
+                    else if (highList_2.size()) {
                         newHashTable[index + originalBucketNum] = highList_2;
+                    }
                 }
                 _this.hashTable[index].clear();
             });
@@ -3098,7 +3115,7 @@
         /**
          * Removes the elements of the specified value.
          */
-        HashSet.prototype.eraseElementByValue = function (element) {
+        HashSet.prototype.eraseElementByKey = function (element) {
             var index = this.hashFunc(element) & (this.bucketNum - 1);
             if (!this.hashTable[index])
                 return;
@@ -3268,12 +3285,14 @@
                         else
                             highList_1.pushBack(pair);
                     });
-                    if (lowList_1.size() > HashMap.untreeifyThreshold)
+                    if (lowList_1.size() > HashMap.untreeifyThreshold) {
                         newHashTable[index] = new OrderedMap(lowList_1);
+                    }
                     else if (lowList_1.size())
                         newHashTable[index] = lowList_1;
-                    if (highList_1.size() > HashMap.untreeifyThreshold)
+                    if (highList_1.size() > HashMap.untreeifyThreshold) {
                         newHashTable[index + originalBucketNum] = new OrderedMap(highList_1);
+                    }
                     else if (highList_1.size())
                         newHashTable[index + originalBucketNum] = highList_1;
                 }
@@ -3288,14 +3307,18 @@
                         else
                             highList_2.pushBack(pair);
                     });
-                    if (lowList_2.size() >= HashMap.treeifyThreshold)
+                    if (lowList_2.size() >= HashMap.treeifyThreshold) {
                         newHashTable[index] = new OrderedMap(lowList_2);
-                    else if (lowList_2.size())
+                    }
+                    else if (lowList_2.size()) {
                         newHashTable[index] = lowList_2;
-                    if (highList_2.size() >= HashMap.treeifyThreshold)
+                    }
+                    if (highList_2.size() >= HashMap.treeifyThreshold) {
                         newHashTable[index + originalBucketNum] = new OrderedMap(highList_2);
-                    else if (highList_2.size())
+                    }
+                    else if (highList_2.size()) {
                         newHashTable[index + originalBucketNum] = highList_2;
+                    }
                 }
                 _this.hashTable[index].clear();
             });
