@@ -1,4 +1,8 @@
-<h1><p align="center"><a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a></p></h1>
+<p align="center">
+  <h1 align="center">
+    <a href="https://js-sdsl.github.io/">Js-sdsl</a>
+  </h1 align="center">
+</p>
 
 <h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
 
