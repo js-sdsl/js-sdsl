@@ -1,6 +1,8 @@
 <p align="center">
   <h1 align="center">
-    <a href="https://js-sdsl.github.io/">Js-sdsl</a>
+    <a href="https://js-sdsl.github.io/">
+      <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" />
+    </a>
   </h1 align="center">
 </p>
 
