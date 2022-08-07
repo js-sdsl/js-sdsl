@@ -6,7 +6,7 @@
 
 <p align="center">
   <h3 align="center">
-    A javascript standard data structure library which benchmark against C++ STL.
+    A javascript standard data structure library which benchmark against C++ STL
   </h3 align="center">
 </p>
 
