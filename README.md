@@ -14,7 +14,7 @@
 
 <p align="center">
   <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="Version" /></a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="Build Status" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/actions?query=branch%3Amain"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="Build Status" /></a>
   <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="Coverage Status" /></a>
   <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="GITHUB Star" /></a>
   <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="Downloads" /></a>
