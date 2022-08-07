@@ -1,6 +1,6 @@
 <p align="center">
   <h1 align="center">
-    <a href="https://github.com/ZLY201/js-sdsl">js-sdsl</a>
+    <a href="https://js-sdsl.github.io/">Js-sdsl</a>
   </h1 align="center">
 </p>
 
