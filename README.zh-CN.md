@@ -1,9 +1,7 @@
 <p align="center">
-  <h1 align="center">
-    <a href="https://js-sdsl.github.io/">
-      <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" />
-    </a>
-  </h1 align="center">
+  <a href="https://js-sdsl.github.io/">
+    <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
+  </a>
 </p>
 
 <h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
