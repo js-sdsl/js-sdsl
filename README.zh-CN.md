@@ -1,9 +1,7 @@
 <p align="center">
-  <h1 align="center">
-    <a href="https://js-sdsl.github.io/">
-      <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" />
-    </a>
-  </h1 align="center">
+  <a href="https://js-sdsl.github.io/" target="_blank">
+    <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
+  </a>
 </p>
 
 <h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
@@ -55,7 +53,9 @@ npm install js-sdsl
 
 ## 使用说明
 
-我们提供了完整的 [API 文档](https://zly201.github.io/js-sdsl/index.html)供您参考
+您可以[访问我们的主页](https://js-sdsl.github.io/)获取更多信息
+
+并且我们提供了完整的 [API 文档](https://zly201.github.io/js-sdsl/index.html)供您参考
 
 ### 在浏览器中使用
 
