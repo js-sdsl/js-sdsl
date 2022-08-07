@@ -11,14 +11,14 @@
 </p>
 
 <p align="center">
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="npm version" /></a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="action status" /></a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="coverage status" /></a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="stars" /></a>
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="downloads" /></a>
-  <a target="_blank" href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="rate this package"/></a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="license" /></a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="top language" /></a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="Version" /></a>
+  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg" alt="Build Status" /></a>
+  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg" alt="Coverage Status" /></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="GITHUB Star" /></a>
+  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="Downloads" /></a>
+  <a target="_blank" href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
+  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="License" /></a>
+  <a target="_blank" href="https://github.com/zly201/js-sdsl/"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg" alt="GITHUB-language" /></a>
 </p>
 
 <p align="center">English | <a href="https://github.com/ZLY201/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
