@@ -3,7 +3,8 @@ import { ContainerIterator, initContainer } from '@/container/ContainerBase/inde
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
-export class DequeIterator<T> extends ContainerIterator<T, number> {
+export class DequeIterator<T> extends ContainerIterator<T> {
+  private node: number;
   private size: () => number;
   private getElementByPos: (pos: number) => T;
   private setElementByPos: (pos: number, element: T) => void;
@@ -14,7 +15,7 @@ export class DequeIterator<T> extends ContainerIterator<T, number> {
     setElementByPos: (pos: number, element: T) => void,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
-    super(index, iteratorType);
+    super(iteratorType);
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
@@ -56,7 +57,7 @@ export class DequeIterator<T> extends ContainerIterator<T, number> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T, number>) {
+  equals(obj: ContainerIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -68,7 +69,7 @@ export class DequeIterator<T> extends ContainerIterator<T, number> {
   }
 }
 
-class Deque<T> extends SequentialContainer<T, number> {
+class Deque<T> extends SequentialContainer<T> {
   private static sigma = 3;
   private static initBucketSize = (1 << 12);
   private first = 0;
@@ -367,7 +368,7 @@ class Deque<T> extends SequentialContainer<T, number> {
     for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
     this.cut(_length - 1);
   }
-  eraseElementByIterator(iter: ContainerIterator<T, number>) {
+  eraseElementByIterator(iter: ContainerIterator<T>) {
     // @ts-ignore
     const node = iter.node;
     this.eraseElementByPos(node);

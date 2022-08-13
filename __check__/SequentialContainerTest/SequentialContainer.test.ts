@@ -9,8 +9,8 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeSequentialContainer(
-  container: SequentialContainer<number, unknown>,
-  myVector: SequentialContainer<number, unknown>
+  container: SequentialContainer<number>,
+  myVector: SequentialContainer<number>
 ) {
   expect(container.size()).toEqual(myVector.size());
   container.forEach((element, index) => {
@@ -18,7 +18,7 @@ function judgeSequentialContainer(
   });
 }
 
-function testSequentialContainer(container: SequentialContainer<number, unknown>) {
+function testSequentialContainer(container: SequentialContainer<number>) {
   const myVector = new Vector<number>(arr);
 
   if (container.size() !== myVector.size()) {

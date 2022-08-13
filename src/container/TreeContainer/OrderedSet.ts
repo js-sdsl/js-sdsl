@@ -66,13 +66,17 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   }
   getElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
+    let res;
     let index = 0;
     for (const element of this) {
-      if (index === pos) return element;
+      if (index === pos) {
+        res = element;
+      }
       ++index;
     }
+    return res as K;
   }
-  eraseElementByIterator(iter: ContainerIterator<K, TreeNode<K, undefined>>) {
+  eraseElementByIterator(iter: ContainerIterator<K>) {
     // @ts-ignore
     const node = iter.node;
     iter = iter.next();

@@ -1,8 +1,8 @@
-import { Base } from '@/container/ContainerBase/index';
+import { Container } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeNode from './TreeNode';
 
-abstract class TreeBaseContainer<K, V> extends Base {
+abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> = new TreeNode<K, V>();
   protected header: TreeNode<K, V> = new TreeNode<K, V>();
   protected cmp: (x: K, y: K) => number;

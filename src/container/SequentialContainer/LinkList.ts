@@ -12,12 +12,14 @@ export class LinkNode<T> {
   }
 }
 
-export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
+export class LinkListIterator<T> extends ContainerIterator<T> {
+  private node: LinkNode<T>;
   constructor(
     node: LinkNode<T>,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
-    super(node, iteratorType);
+    super(iteratorType);
+    this.node = node;
   }
   get pointer() {
     if (this.node.value === undefined) {
@@ -62,7 +64,7 @@ export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T, LinkNode<T>>) {
+  equals(obj: ContainerIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -74,7 +76,7 @@ export class LinkListIterator<T> extends ContainerIterator<T, LinkNode<T>> {
   }
 }
 
-class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
+class LinkList<T> extends SequentialContainer<T> {
   private header: LinkNode<T> = new LinkNode<T>();
   private head: LinkNode<T> | undefined = undefined;
   private tail: LinkNode<T> | undefined = undefined;
@@ -154,7 +156,7 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
       curNode = curNode.next;
     }
   }
-  eraseElementByIterator(iter: ContainerIterator<T, LinkNode<T>>) {
+  eraseElementByIterator(iter: ContainerIterator<T>) {
     if (this.empty()) {
       throw new RunTimeError();
     }

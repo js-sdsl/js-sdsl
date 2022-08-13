@@ -1,11 +1,9 @@
-export abstract class ContainerIterator<T, P> {
-  protected node: P;
+export abstract class ContainerIterator<T> {
   /**
    * Pointers to element.
    */
   readonly iteratorType: 'normal' | 'reverse';
-  constructor(node: P, iteratorType: 'normal' | 'reverse') {
-    this.node = node;
+  constructor(iteratorType: 'normal' | 'reverse') {
     this.iteratorType = iteratorType;
   }
   abstract get pointer(): T;
@@ -13,16 +11,16 @@ export abstract class ContainerIterator<T, P> {
   /**
    * @return Previous iterator.
    */
-  abstract pre(): ContainerIterator<T, P>;
+  abstract pre(): ContainerIterator<T>;
   /**
    * @return Next iterator.
    */
-  abstract next(): ContainerIterator<T, P>;
+  abstract next(): ContainerIterator<T>;
   /**
    * @param obj The other iterator you want to compare.
    * @return If this equals to obj.
    */
-  abstract equals(obj: ContainerIterator<T, P>): boolean;
+  abstract equals(obj: ContainerIterator<T>): boolean;
 }
 
 export abstract class Base {
@@ -45,23 +43,23 @@ export abstract class Base {
   abstract clear(): void;
 }
 
-export abstract class Container<T, P> extends Base {
+export abstract class Container<T> extends Base {
   /**
    * @return Iterator pointing to the begin element.
    */
-  abstract begin(): ContainerIterator<T, P>;
+  abstract begin(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the super end like c++.
    */
-  abstract end(): ContainerIterator<T, P>;
+  abstract end(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the end element.
    */
-  abstract rBegin(): ContainerIterator<T, P>;
+  abstract rBegin(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the super begin like c++.
    */
-  abstract rEnd(): ContainerIterator<T, P>;
+  abstract rEnd(): ContainerIterator<T>;
   /**
    * @return The first element.
    */
@@ -75,7 +73,7 @@ export abstract class Container<T, P> extends Base {
    * @param element The element you want to find.
    * @return Iterator pointing to the element if found, or super end if not found.
    */
-  abstract find(element: T): ContainerIterator<T, P>;
+  abstract find(element: T): ContainerIterator<T>;
   /**
    * Gets the value of the element at the specified position.
    */
@@ -85,16 +83,12 @@ export abstract class Container<T, P> extends Base {
    */
   abstract eraseElementByPos(pos: number): void;
   /**
-   * Removes the elements of the specified value.
-   */
-  abstract eraseElementByValue(value: T): void;
-  /**
    * @return An iterator point to the next iterator.
    * Removes element by iterator.
    */
   abstract eraseElementByIterator(
-    iter: ContainerIterator<T, P>
-  ): ContainerIterator<T, P>;
+    iter: ContainerIterator<T>
+  ): ContainerIterator<T>;
   /**
    * Using for 'for...of' syntax like Array.
    */

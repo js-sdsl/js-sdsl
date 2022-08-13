@@ -3,7 +3,8 @@ import { ContainerIterator, initContainer } from '@/container/ContainerBase/inde
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
-export class VectorIterator<T> extends ContainerIterator<T, number> {
+export class VectorIterator<T> extends ContainerIterator<T> {
+  private node;
   private size: () => number;
   private getElementByPos: (pos: number) => T;
   private setElementByPos: (pos: number, element: T) => void;
@@ -14,7 +15,8 @@ export class VectorIterator<T> extends ContainerIterator<T, number> {
     setElementByPos: (pos: number, element: T) => void,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
-    super(index, iteratorType);
+    super(iteratorType);
+    this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
@@ -55,7 +57,7 @@ export class VectorIterator<T> extends ContainerIterator<T, number> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T, number>) {
+  equals(obj: ContainerIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
@@ -67,7 +69,7 @@ export class VectorIterator<T> extends ContainerIterator<T, number> {
   }
 }
 
-class Vector<T> extends SequentialContainer<T, number> {
+class Vector<T> extends SequentialContainer<T> {
   private vector: T[] = [];
   constructor(container: initContainer<T> = []) {
     super();
@@ -142,7 +144,7 @@ class Vector<T> extends SequentialContainer<T, number> {
     const newLen = newArr.length;
     while (this.length > newLen) this.popBack();
   }
-  eraseElementByIterator(iter: ContainerIterator<T, number>) {
+  eraseElementByIterator(iter: ContainerIterator<T>) {
     // @ts-ignore
     const node = iter.node;
     iter = iter.next();
