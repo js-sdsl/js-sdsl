@@ -6,9 +6,15 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [UnReleased] - 2022-08-13
 
-## Changed
+### Changed
 
+- Change `if (this.empty())` to `if (!this.length)`.
+- Change some unit test.
 - Change class type and optimized type design
+
+### Fixed
+
+- Fix can push undefined to deque.
 
 ## [4.0.0] - 2022-07-30
 

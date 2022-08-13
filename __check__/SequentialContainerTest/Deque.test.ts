@@ -44,10 +44,10 @@ describe('Deque test', () => {
   });
 
   test('Deque find function test', () => {
-    myDeque.forEach((element, index) => {
-      if (index >= 1000) return;
-      expect(myDeque.find(element).pointer).toEqual(element);
-    });
+    for (let i = 0; i <= 1000; ++i) {
+      const index = Math.floor(Math.random() * myDeque.size());
+      expect(myDeque.find(tmpArr[index]).pointer).toEqual(tmpArr[index]);
+    }
     expect(myDeque.find(tmpArr[tmpArr.length - 1]).pointer).toEqual(tmpArr[tmpArr.length - 1]);
     expect(myDeque.find(tmpArr[tmpArr.length / 2]).pointer).toEqual(tmpArr[tmpArr.length / 2]);
     expect(() => {

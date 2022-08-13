@@ -81,7 +81,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    * @return The first element.
    */
   front() {
-    if (this.empty()) return undefined;
+    if (!this.length) return undefined;
     const minNode = this.header.leftChild as TreeNode<K, V>;
     return [minNode.key, minNode.value] as [K, V];
   }
@@ -89,7 +89,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    * @return The last element.
    */
   back() {
-    if (this.empty()) return undefined;
+    if (!this.length) return undefined;
     const maxNode = this.header.rightChild as TreeNode<K, V>;
     return [maxNode.key, maxNode.value] as [K, V];
   }
@@ -139,7 +139,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
       return;
     }
 
-    if (this.empty()) {
+    if (!this.length) {
       ++this.length;
       this.root.key = key;
       this.root.value = value;

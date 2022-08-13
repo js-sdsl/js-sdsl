@@ -1,6 +1,6 @@
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList, Deque } from '@/index';
-import { RunTimeError, TestError } from '@/utils/error';
+import { RunTimeError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 1000;
@@ -22,15 +22,15 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   const myVector = new Vector<number>(arr);
 
   if (container.size() !== myVector.size()) {
-    throw new TestError('size test failed.');
+    throw new Error('size test failed.');
   }
 
   if (container.front() !== myVector.front()) {
-    throw new TestError('front test failed!');
+    throw new Error('front test failed!');
   }
 
   if (container.back() !== myVector.back()) {
-    throw new TestError('back test failed!');
+    throw new Error('back test failed!');
   }
 
   judgeSequentialContainer(container, myVector);
@@ -54,7 +54,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
     testResult = testResult && (container.getElementByPos(i) === myVector.getElementByPos(i));
   }
   if (!testResult) {
-    throw new TestError('getElementByPos test failed.');
+    throw new Error('getElementByPos test failed.');
   }
 
   for (let i = 0; i < len; ++i) {

@@ -89,7 +89,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   insert(element: K) {
     checkUndefinedParams(element);
 
-    if (this.empty()) {
+    if (!this.length) {
       ++this.length;
       this.root.key = element;
       this.root.color = TreeNode.TreeNodeColorType.black;

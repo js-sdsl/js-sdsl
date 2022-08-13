@@ -7,7 +7,6 @@ function createErrorClass(errorName: string, errorMessage: string) {
   };
 }
 
-export const TestError = createErrorClass('TestError', 'test error');
 export const TypeError = createErrorClass('TypeError', 'type error');
 export const RunTimeError = createErrorClass('RunTimeError', 'access out of bounds');
 export const InternalError = createErrorClass('InternalError', 'internal error');

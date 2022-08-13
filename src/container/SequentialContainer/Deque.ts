@@ -120,13 +120,13 @@ class Deque<T> extends SequentialContainer<T> {
         for (let j = 0; j < this.bucketSize; ++j) {
           newMap[newFirst + i][j] = this.front();
           this.popFront();
-          if (this.empty()) {
+          if (!this.length) {
             newLast = newFirst + i;
             newCurLast = j;
             break;
           }
         }
-        if (this.empty()) break;
+        if (!this.length) break;
       }
     }
     this.map = newMap;
@@ -206,7 +206,8 @@ class Deque<T> extends SequentialContainer<T> {
     );
   }
   pushBack(element: T) {
-    if (!this.empty()) {
+    checkUndefinedParams(element);
+    if (this.length) {
       if (this.last === this.bucketNum - 1 && this.curLast === this.bucketSize - 1) {
         this.reAllocate(this.length);
       }
@@ -221,7 +222,7 @@ class Deque<T> extends SequentialContainer<T> {
     this.map[this.last][this.curLast] = element;
   }
   popBack() {
-    if (this.empty()) return;
+    if (!this.length) return;
     if (this.length !== 1) {
       if (this.curLast > 0) {
         --this.curLast;
@@ -237,7 +238,7 @@ class Deque<T> extends SequentialContainer<T> {
    */
   pushFront(element: T) {
     checkUndefinedParams(element);
-    if (!this.empty()) {
+    if (this.length) {
       if (this.first === 0 && this.curFirst === 0) {
         this.reAllocate(this.length);
       }
@@ -255,7 +256,7 @@ class Deque<T> extends SequentialContainer<T> {
    * Remove the first element.
    */
   popFront() {
-    if (this.empty()) return;
+    if (!this.length) return;
     if (this.size() !== 1) {
       if (this.curFirst < this.bucketSize - 1) {
         ++this.curFirst;
@@ -267,7 +268,7 @@ class Deque<T> extends SequentialContainer<T> {
     if (this.length > 0) --this.length;
   }
   forEach(callback: (element: T, index: number) => void) {
-    if (this.empty()) return;
+    if (!this.length) return;
     let index = 0;
     if (this.first === this.last) {
       for (let i = this.curFirst; i <= this.curLast; ++i) {
@@ -357,7 +358,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   eraseElementByValue(value: T) {
-    if (this.empty()) return;
+    if (!this.length) return;
     const arr: T[] = [];
     this.forEach(element => {
       if (element !== value) {
@@ -419,7 +420,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   unique() {
-    if (this.empty()) return;
+    if (!this.length) return;
     const arr: T[] = [];
     let pre = this.front();
     this.forEach((element, index) => {
@@ -445,7 +446,7 @@ class Deque<T> extends SequentialContainer<T> {
    * Remove as much useless space as possible.
    */
   shrinkToFit() {
-    if (this.empty()) return;
+    if (!this.length) return;
     const arr: T[] = [];
     this.forEach(element => arr.push(element));
     this.bucketNum = Math.max(Math.ceil(this.length / this.bucketSize), 1);
