@@ -38,12 +38,30 @@ jobs:
     - name: build
       run: yarn build
     - name: publish
-      uses: primer/publish@master
+      uses: primer/publish@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       with:
           registry-url: 'https://registry.npmjs.org'
+  release:
+    needs: publish
+    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@master
+    - name: Read package.json
+      uses: tyankatsu0105/read-package-version-actions@v1
+      with:
+        id: package-version
+    - name: release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.package-version.outputs.version }}
+        release_name: v${{ steps.package-version.outputs.version }}
+        prerelease: false
   deploy:
     needs: publish
     runs-on: ubuntu-latest
@@ -59,7 +77,7 @@ jobs:
     - name: install
       run: yarn install
     - name: generate type documentation
-      run: ./node_modules/typedoc/bin/typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs
+      run: yarn generate
     - name: deploy to github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
