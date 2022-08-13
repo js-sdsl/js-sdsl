@@ -48,10 +48,9 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@master
-    - name: Read package.json
+    - name: read package.json
       uses: tyankatsu0105/read-package-version-actions@v1
-      with:
-        id: package-version
+      id: package-version
     - name: release
       uses: actions/create-release@v1
       env:
