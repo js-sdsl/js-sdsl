@@ -60,8 +60,7 @@
   },
   "license": "MIT",
   "files": [
-    "dist/cjs",
-    "dist/esm",
+    "dist",
     "CHANGELOG.md"
   ],
   "keywords": [
