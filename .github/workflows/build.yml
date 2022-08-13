@@ -21,10 +21,10 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-  build:
+  publish:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() }}
+    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
     - name: checkout
       uses: actions/checkout@master
@@ -36,7 +36,28 @@ jobs:
     - name: install
       run: yarn install
     - name: build
-      run: yarn build:umd:min
+      run: yarn build
+    - name: publish
+      uses: primer/publish@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      with:
+          registry-url: 'https://registry.npmjs.org'
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@master
+    - name: use Node.js 16.13.2
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.13.2
+        cache: 'yarn'
+    - name: install
+      run: yarn install
     - name: generate type documentation
       run: ./node_modules/typedoc/bin/typedoc src/index.ts --excludePrivate --excludeProtected && mv dist/umd/* docs
     - name: deploy to github pages
