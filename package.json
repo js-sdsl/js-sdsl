@@ -9,6 +9,7 @@
     "email": "951711127@qq.com",
     "url": "https://github.com/ZLY201/js-sdsl"
   },
+  "homepage": "https://js-sdsl.github.io/",
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
     "build": "rm -rf dist/test && yarn build:cjs && yarn build:umd:min",
