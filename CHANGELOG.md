@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022-08-13
+
+### Changed
+
+- Change `if (this.empty())` to `if (!this.length)`.
+- Change some unit test.
+
+### Fixed
+
+- Fix can push undefined to deque.
+
 ## [4.0.0] - 2022-07-30
 
 ### Changed
