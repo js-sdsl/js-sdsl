@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022-08-13
+
+## Changed
+
+- Change class type and optimized type design
+
 ## [4.0.0] - 2022-07-30
 
 ### Changed
