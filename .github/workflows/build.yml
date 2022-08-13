@@ -46,6 +46,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
   release:
     needs: publish
+    runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
     - name: checkout
