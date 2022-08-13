@@ -1,12 +1,15 @@
 export abstract class ContainerIterator<T> {
-  /**
-   * Pointers to element.
-   */
   readonly iteratorType: 'normal' | 'reverse';
   constructor(iteratorType: 'normal' | 'reverse') {
     this.iteratorType = iteratorType;
   }
+  /**
+   * Pointers to element.
+   */
   abstract get pointer(): T;
+  /**
+   * Pointers to element.
+   */
   abstract set pointer(newValue: T);
   /**
    * @return Previous iterator.

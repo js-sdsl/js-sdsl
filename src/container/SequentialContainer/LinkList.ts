@@ -304,7 +304,7 @@ class LinkList<T> extends SequentialContainer<T> {
     this.head.pre = this.header;
   }
   /**
-   * Removes the last element.
+   * Removes the first element.
    */
   popFront() {
     if (!this.head) return;

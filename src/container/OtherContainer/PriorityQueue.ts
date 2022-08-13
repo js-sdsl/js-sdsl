@@ -58,7 +58,7 @@ class PriorityQueue<T> extends Base {
     this.priorityQueue.length = 0;
   }
   /**
-   * Inserts element and sorts the underlying container.
+   * Insert elements into a container in order.
    */
   push(element: T) {
     this.priorityQueue.push(element);
