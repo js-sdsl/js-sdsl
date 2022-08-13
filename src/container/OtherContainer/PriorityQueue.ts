@@ -76,7 +76,7 @@ class PriorityQueue<T> extends Base {
    * Removes the top element.
    */
   pop() {
-    if (this.empty()) return;
+    if (!this.length) return;
     if (this.length === 1) {
       --this.length;
       return;

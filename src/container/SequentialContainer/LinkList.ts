@@ -155,7 +155,7 @@ class LinkList<T> extends SequentialContainer<T, LinkNode<T>> {
     }
   }
   eraseElementByIterator(iter: ContainerIterator<T, LinkNode<T>>) {
-    if (this.empty()) {
+    if (!this.length) {
       throw new RunTimeError();
     }
     // @ts-ignore

@@ -112,11 +112,11 @@ class Vector<T> extends SequentialContainer<T, number> {
     );
   }
   front() {
-    if (this.empty()) return undefined;
+    if (!this.length) return undefined;
     return this.vector[0];
   }
   back() {
-    if (this.empty()) return undefined;
+    if (!this.length) return undefined;
     return this.vector[this.length - 1];
   }
   forEach(callback: (element: T, index: number) => void) {

@@ -1,7 +1,7 @@
 import { NullValueError, RunTimeError } from './error';
 
-export function checkUndefinedParams(...args: unknown[]) {
-  if (args.includes(undefined) || args.includes(null)) {
+export function checkUndefinedParams(value: unknown) {
+  if (value === undefined || value === null) {
     throw new NullValueError();
   }
 }

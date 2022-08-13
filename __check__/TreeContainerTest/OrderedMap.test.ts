@@ -36,7 +36,7 @@ describe('OrderedMap test', () => {
     expect(() => {
       // @ts-ignore
       // eslint-disable-next-line no-unused-expressions
-      myOrderedMap.begin().next().node.remove();
+      myOrderedMap.root.remove();
     }).toThrowError(InternalError);
     // @ts-ignore
     expect(() => myOrderedMap.setElement(null, null)).toThrowError(NullValueError);
