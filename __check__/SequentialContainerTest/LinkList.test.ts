@@ -3,8 +3,8 @@ import { Vector, LinkList } from '@/index';
 import { RunTimeError } from '@/utils/error';
 
 function judgeSequentialContainer(
-  container: SequentialContainer<number, unknown>,
-  myVector: SequentialContainer<number, unknown>
+  container: SequentialContainer<number>,
+  myVector: SequentialContainer<number>
 ) {
   expect(container.size()).toEqual(myVector.size());
   container.forEach((element, index) => {

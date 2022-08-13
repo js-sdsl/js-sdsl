@@ -83,7 +83,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   front() {
     if (!this.length) return undefined;
     const minNode = this.header.leftChild as TreeNode<K, V>;
-    return [minNode.key, minNode.value];
+    return [minNode.key, minNode.value] as [K, V];
   }
   /**
    * @return The last element.
@@ -91,7 +91,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   back() {
     if (!this.length) return undefined;
     const maxNode = this.header.rightChild as TreeNode<K, V>;
-    return [maxNode.key, maxNode.value];
+    return [maxNode.key, maxNode.value] as [K, V];
   }
   /**
    * @param callback callback function, it's first param is an array which type is [key, value].
@@ -198,17 +198,22 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   }
   getElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
+    let res;
     let index = 0;
     for (const pair of this) {
-      if (index === pos) return pair;
+      if (index === pos) {
+        res = pair;
+        break;
+      }
       ++index;
     }
+    return res as [K, V];
   }
   /**
    * @return An iterator point to the next iterator.
    * Removes element by iterator.
    */
-  eraseElementByIterator(iter: ContainerIterator<[K, V], TreeNode<K, V>>) {
+  eraseElementByIterator(iter: ContainerIterator<[K, V]>) {
     // @ts-ignore
     const node = iter.node;
     iter = iter.next();

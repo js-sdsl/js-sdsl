@@ -33,11 +33,11 @@ describe('iterator test', () => {
   test('normal iterator next function test', () => {
     for (const container of containerArr) {
       let index = 0;
-      for (let it = container.begin() as ContainerIterator<unknown, unknown>;
-        !it.equals(container.end() as ContainerIterator<unknown, unknown>);
+      for (let it = container.begin() as ContainerIterator<unknown>;
+        !it.equals(container.end() as ContainerIterator<unknown>);
         it = it.next()) {
         if (container instanceof OrderedMap) {
-          expect((it as ContainerIterator<[number, number], unknown>).pointer[1])
+          expect((it as ContainerIterator<[number, number]>).pointer[1])
             .toEqual(arr[index++]);
         } else {
           expect(it.pointer).toEqual(arr[index++]);
@@ -49,11 +49,11 @@ describe('iterator test', () => {
   test('normal iterator pre function test', () => {
     for (const container of containerArr) {
       let index = arr.length - 1;
-      for (let it = container.end().pre() as ContainerIterator<unknown, unknown>;
-        !it.equals(container.begin() as ContainerIterator<unknown, unknown>);
+      for (let it = container.end().pre() as ContainerIterator<unknown>;
+        !it.equals(container.begin() as ContainerIterator<unknown>);
         it = it.pre()) {
         if (container instanceof OrderedMap) {
-          expect((it as ContainerIterator<[number, number], unknown>).pointer[1])
+          expect((it as ContainerIterator<[number, number]>).pointer[1])
             .toEqual(arr[index--]);
         } else {
           expect(it.pointer).toEqual(arr[index--]);
@@ -65,11 +65,11 @@ describe('iterator test', () => {
   test('reverse iterator next function test', () => {
     for (const container of containerArr) {
       let index = arr.length - 1;
-      for (let it = container.rBegin() as ContainerIterator<unknown, unknown>;
-        !it.equals(container.rEnd() as ContainerIterator<unknown, unknown>);
+      for (let it = container.rBegin() as ContainerIterator<unknown>;
+        !it.equals(container.rEnd() as ContainerIterator<unknown>);
         it = it.next()) {
         if (container instanceof OrderedMap) {
-          expect((it as ContainerIterator<[number, number], unknown>).pointer[1])
+          expect((it as ContainerIterator<[number, number]>).pointer[1])
             .toEqual(arr[index--]);
         } else {
           expect(it.pointer).toEqual(arr[index--]);
@@ -81,11 +81,11 @@ describe('iterator test', () => {
   test('reverse iterator pre function test', () => {
     for (const container of containerArr) {
       let index = 0;
-      for (let it = container.rEnd().pre() as ContainerIterator<unknown, unknown>;
-        !it.equals(container.rBegin() as ContainerIterator<unknown, unknown>);
+      for (let it = container.rEnd().pre() as ContainerIterator<unknown>;
+        !it.equals(container.rBegin() as ContainerIterator<unknown>);
         it = it.pre()) {
         if (container instanceof OrderedMap) {
-          expect((it as ContainerIterator<[number, number], unknown>).pointer[1])
+          expect((it as ContainerIterator<[number, number]>).pointer[1])
             .toEqual(arr[index++]);
         } else {
           expect(it.pointer).toEqual(arr[index++]);

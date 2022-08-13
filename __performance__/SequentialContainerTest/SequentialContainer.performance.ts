@@ -2,7 +2,7 @@
 import { testReportFormat } from '__performance__/index';
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 
-function testSequentialContainer(container: SequentialContainer<number, unknown>, testNum: number) {
+function testSequentialContainer(container: SequentialContainer<number>, testNum: number) {
   let startTime, endTime;
   const reportList: testReportFormat['reportList'] = [];
 

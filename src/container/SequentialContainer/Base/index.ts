@@ -1,6 +1,6 @@
 import { Container } from '@/container/ContainerBase/index';
 
-abstract class SequentialContainer<T, P> extends Container<T, P> {
+abstract class SequentialContainer<T> extends Container<T> {
   /**
    * Push the element to the back.
    */
@@ -13,6 +13,10 @@ abstract class SequentialContainer<T, P> extends Container<T, P> {
    * Sets element by position.
    */
   abstract setElementByPos(pos: number, element: T): void;
+  /**
+   * Removes the elements of the specified value.
+   */
+  abstract eraseElementByValue(value: T): void;
   /**
    * @param pos The position you want to insert.
    * @param element The element you want to insert.

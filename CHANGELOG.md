@@ -10,6 +10,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Change `if (this.empty())` to `if (!this.length)`.
 - Change some unit test.
+- Change class type and optimized type design
 
 ### Fixed
 
