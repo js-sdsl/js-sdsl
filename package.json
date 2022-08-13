@@ -19,7 +19,8 @@
     "test": "yarn test:check && yarn test:performance",
     "test:check": "jest --coverage",
     "test:performance": "ts-node -r tsconfig-paths/register __performance__/index.ts",
-    "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 ."
+    "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 .",
+    "generate": "typedoc src/index.ts --excludePrivate --excludeProtected"
   },
   "lint-staged": {
     "*.{js,ts}": [
