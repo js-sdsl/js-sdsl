@@ -38,9 +38,8 @@ jobs:
     - name: build
       run: yarn build
     - name: publish
-      uses: primer/publish@v3
+      run: yarn publish
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
       with:
           registry-url: 'https://registry.npmjs.org'
