@@ -369,7 +369,7 @@ abstract class TreeBaseContainer<K, V> extends Base {
    * Removes the elements of the specified key.
    */
   eraseElementByKey(key: K) {
-    if (this.empty()) return;
+    if (!this.length) return;
 
     const curNode = this.findElementNode(this.root, key);
     if (
@@ -384,7 +384,7 @@ abstract class TreeBaseContainer<K, V> extends Base {
    * @return The height of the RB-tree.
    */
   getHeight() {
-    if (this.empty()) return 0;
+    if (!this.length) return 0;
     const traversal:
     (curNode: TreeNode<K, V> | undefined) => number =
     (curNode: TreeNode<K, V> | undefined) => {

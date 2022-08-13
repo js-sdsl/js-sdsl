@@ -9,13 +9,13 @@ import testOrderedMap from './TreeContainerTest/OrderedMap.performance';
 import testOrderedSet from './TreeContainerTest/OrderedSet.performance';
 
 export type testReportFormat = {
-    containerName: string,
-    reportList: {
-        testFunc: string,
-        containerSize: number,
-        testNum: number,
-        runTime: number
-    }[];
+  containerName: string,
+  reportList: {
+      testFunc: string,
+      containerSize: number,
+      testNum: number,
+      runTime: number
+  }[];
 }
 
 type testFunc = (arr: number[], testNum: number) => testReportFormat['reportList'];
