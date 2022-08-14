@@ -163,6 +163,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   protected eraseNode(curNode: TreeNode<K, V>) {
+    if (this.length === 1) {
+      this.clear();
+      return;
+    }
+
     let swapNode = curNode;
 
     while (swapNode.leftChild || swapNode.rightChild) {
@@ -208,31 +213,30 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         if (callback(curNode)) return true;
         return this.inOrderTraversal(curNode.rightChild, callback);
       };
-  protected findInsertPos:
-  (curNode: TreeNode<K, V>, key: K) => TreeNode<K, V> =
-      (curNode: TreeNode<K, V>, key: K) => {
-        const cmpResult = this.cmp(key, curNode.key as K);
-        if (cmpResult < 0) {
-          if (!curNode.leftChild) {
-            curNode.leftChild = new TreeNode<K, V>();
-            curNode.leftChild.parent = curNode;
-            curNode.leftChild.brother = curNode.rightChild;
-            if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
-            return curNode.leftChild;
-          }
-          return this.findInsertPos(curNode.leftChild, key);
-        } else if (cmpResult > 0) {
-          if (!curNode.rightChild) {
-            curNode.rightChild = new TreeNode<K, V>();
-            curNode.rightChild.parent = curNode;
-            curNode.rightChild.brother = curNode.leftChild;
-            if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
-            return curNode.rightChild;
-          }
-          return this.findInsertPos(curNode.rightChild, key);
+  protected findInsertPos(curNode: TreeNode<K, V>, key: K) {
+    while (true) {
+      const cmpResult = this.cmp(key, curNode.key as K);
+      if (cmpResult < 0) {
+        if (!curNode.leftChild) {
+          curNode.leftChild = new TreeNode<K, V>();
+          curNode.leftChild.parent = curNode;
+          curNode.leftChild.brother = curNode.rightChild;
+          if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
+          return curNode.leftChild;
         }
-        return curNode;
-      };
+        curNode = curNode.leftChild;
+      } else if (cmpResult > 0) {
+        if (!curNode.rightChild) {
+          curNode.rightChild = new TreeNode<K, V>();
+          curNode.rightChild.parent = curNode;
+          curNode.rightChild.brother = curNode.leftChild;
+          if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
+          return curNode.rightChild;
+        }
+        curNode = curNode.rightChild;
+      } else return curNode;
+    }
+  }
   protected insertNodeSelfBalance(curNode: TreeNode<K, V>) {
     const parentNode = curNode.parent as TreeNode<K, V>;
 

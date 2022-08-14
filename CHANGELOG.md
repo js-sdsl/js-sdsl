@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.08.14
+
+### Changed
+
+- Change some functions from recursive to loop implementation (don't effect using).
+- Change some iterator function parameter type.
+- Change commonjs target to `es6`.
+
 ## [4.0.3] - 2022-08-13
 
 ### Changed

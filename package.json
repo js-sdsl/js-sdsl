@@ -13,13 +13,13 @@
   "scripts": {
     "setup": "rm -rf node_modules && yarn",
     "build": "rm -rf dist/test && yarn build:cjs && yarn build:umd:min",
-    "build:cjs": "rm -rf dist/cjs && ttsc src/index.ts --downlevelIteration --declaration --module commonjs --target es5 --outDir dist/cjs",
-    "build:esm": "rm -rf dist/esm && ttsc src/index.ts --downlevelIteration --declaration --module es2015 --target es5 --outDir dist/esm",
+    "build:cjs": "rm -rf dist/cjs && ttsc --project tsconfig.cjs.json",
+    "build:esm": "rm -rf dist/esm && ttsc --project tsconfig.esm.json",
     "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name sdsl -o dist/umd/js-sdsl.js",
     "build:umd:min": "yarn build:umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o dist/umd/js-sdsl.min.js -- dist/umd/js-sdsl.js",
     "test": "yarn test:check && yarn test:performance",
     "test:check": "jest --coverage",
-    "test:performance": "ts-node -r tsconfig-paths/register __performance__/index.ts",
+    "test:performance": "rm -rf dist/performance && ttsc --project tsconfig.performance.json && node dist/performance/performance/index.js",
     "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 .",
     "generate": "typedoc src/index.ts --excludePrivate --excludeProtected"
   },
@@ -60,7 +60,9 @@
   },
   "license": "MIT",
   "files": [
-    "dist",
+    "dist/cjs",
+    "dist/esm",
+    "dist/umd",
     "CHANGELOG.md"
   ],
   "keywords": [
