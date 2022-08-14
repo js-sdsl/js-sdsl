@@ -57,18 +57,21 @@ export class DequeIterator<T> extends ContainerIterator<T> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: DequeIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
       throw new TypeError('iterator type error!');
     }
-    // @ts-ignore
     return this.node === obj.node;
   }
 }
 
+/**
+ * TODO: 节省空间利用，变成循环队列
+ * reason: 当不停向后或向前 push 时一旦指针到达末尾就会扩容，即使空间足够
+ */
 class Deque<T> extends SequentialContainer<T> {
   private static sigma = 3;
   private static initBucketSize = (1 << 12);
@@ -104,6 +107,9 @@ class Deque<T> extends SequentialContainer<T> {
     this.first = Math.floor(this.bucketNum / 2) - Math.floor(needBucketNum / 2);
     this.last = this.first;
     container.forEach(element => this.pushBack(element));
+    this.size = this.size.bind(this);
+    this.getElementByPos = this.getElementByPos.bind(this);
+    this.setElementByPos = this.setElementByPos.bind(this);
   }
   private reAllocate(originalSize: number) {
     const newMap = [];
@@ -175,33 +181,33 @@ class Deque<T> extends SequentialContainer<T> {
   begin() {
     return new DequeIterator<T>(
       0,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this)
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos
     );
   }
   end() {
     return new DequeIterator(
       this.length,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this)
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos
     );
   }
   rBegin() {
     return new DequeIterator(
       this.length - 1,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this),
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
       'reverse');
   }
   rEnd() {
     return new DequeIterator(
       -1,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this),
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
       'reverse'
     );
   }
@@ -369,7 +375,7 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
     this.cut(_length - 1);
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
+  eraseElementByIterator(iter: DequeIterator<T>) {
     // @ts-ignore
     const node = iter.node;
     this.eraseElementByPos(node);
@@ -406,8 +412,8 @@ class Deque<T> extends SequentialContainer<T> {
       return undefined;
     })();
     if (resIndex === undefined) return this.end();
-    return new DequeIterator(resIndex, this.size.bind(this),
-      this.getElementByPos.bind(this), this.setElementByPos.bind(this));
+    return new DequeIterator(resIndex, this.size,
+      this.getElementByPos, this.setElementByPos);
   }
   reverse() {
     let l = 0; let r = this.length - 1;

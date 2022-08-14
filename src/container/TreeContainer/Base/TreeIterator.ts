@@ -2,7 +2,7 @@ import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
 import TreeNode from './TreeNode';
 
-abstract class TreeIterator<K, V> extends ContainerIterator<unknown> {
+abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   protected node: TreeNode<K, V>;
   private header: TreeNode<K, V>;
   constructor(
@@ -16,7 +16,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<unknown> {
   }
   private _pre() {
     let preNode: TreeNode<K, V> = this.node;
-    if (preNode.color === TreeNode.TreeNodeColorType.red &&
+    if (preNode.color === TreeNode.red &&
       (preNode.parent as TreeNode<K, V>).parent === preNode) {
       preNode = preNode.rightChild as TreeNode<K, V>;
     } else if (preNode.leftChild) {
@@ -81,14 +81,13 @@ abstract class TreeIterator<K, V> extends ContainerIterator<unknown> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<unknown>) {
+  equals(obj: TreeIterator<K, V>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
       throw new TypeError('iterator type error!');
     }
-    // @ts-ignore
     return this.node === obj.node;
   }
 }

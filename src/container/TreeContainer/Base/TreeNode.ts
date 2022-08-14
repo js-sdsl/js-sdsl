@@ -1,10 +1,8 @@
 import { InternalError } from '@/utils/error';
 
 class TreeNode<K, V> {
-  static TreeNodeColorType = {
-    red: true,
-    black: false
-  } as const;
+  static red = true as const;
+  static black = false as const;
   color = true;
   key: K | undefined = undefined;
   value: V | undefined = undefined;

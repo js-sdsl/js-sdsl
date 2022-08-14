@@ -64,14 +64,13 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: LinkListIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
       throw new TypeError('iterator type error!');
     }
-    // @ts-ignore
     return this.node === obj.node;
   }
 }
@@ -156,7 +155,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode = curNode.next;
     }
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
+  eraseElementByIterator(iter: LinkListIterator<T>) {
     if (!this.length) {
       throw new RunTimeError();
     }

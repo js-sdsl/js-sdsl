@@ -1,5 +1,5 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import { RunTimeError } from '@/utils/error';
 import TreeIterator from './Base/TreeIterator';
@@ -76,13 +76,6 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     }
     return res as K;
   }
-  eraseElementByIterator(iter: ContainerIterator<K>) {
-    // @ts-ignore
-    const node = iter.node;
-    iter = iter.next();
-    this.eraseNode(node);
-    return iter;
-  }
   /**
    * Inserts element to Set.
    */
@@ -92,7 +85,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     if (!this.length) {
       ++this.length;
       this.root.key = element;
-      this.root.color = TreeNode.TreeNodeColorType.black;
+      this.root.color = TreeNode.black;
       this.header.leftChild = this.root;
       this.header.rightChild = this.root;
       return;
@@ -108,21 +101,19 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
 
     if (
       this.header.leftChild === undefined ||
-      this.header.leftChild.key === undefined ||
-      this.cmp(this.header.leftChild.key, element) > 0
+      this.cmp(this.header.leftChild.key as K, element) > 0
     ) {
       this.header.leftChild = curNode;
     }
     if (
       this.header.rightChild === undefined ||
-      this.header.rightChild.key === undefined ||
-      this.cmp(this.header.rightChild.key, element) < 0
+      this.cmp(this.header.rightChild.key as K, element) < 0
     ) {
       this.header.rightChild = curNode;
     }
 
     this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.TreeNodeColorType.black;
+    this.root.color = TreeNode.black;
   }
   find(element: K) {
     const curNode = this.findElementNode(this.root, element);
