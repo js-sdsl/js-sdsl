@@ -11,6 +11,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Change some functions from recursive to loop implementation (don't effect using).
 - Change some iterator function parameter type.
 - Change commonjs target to `es6`.
+- Change `Deque` from sequential queue to circular queue.
 
 ## [4.0.3] - 2022-08-13
 
