@@ -133,47 +133,11 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   setElement(key: K, value: V) {
     checkUndefinedParams(key);
-
     if (value === null || value === undefined) {
       this.eraseElementByKey(key);
       return;
     }
-
-    if (!this.length) {
-      this.length += 1;
-      this.root.key = key;
-      this.root.value = value;
-      this.root.color = TreeNode.black;
-      this.header.leftChild = this.root;
-      this.header.rightChild = this.root;
-      return;
-    }
-
-    const curNode = this.findInsertPos(this.root, key);
-    if (curNode.key !== undefined && this.cmp(curNode.key, key) === 0) {
-      curNode.value = value;
-      return;
-    }
-
-    this.length += 1;
-    curNode.key = key;
-    curNode.value = value;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.cmp(this.header.leftChild.key as K, key) > 0
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.cmp(this.header.rightChild.key as K, key) < 0
-    ) {
-      this.header.rightChild = curNode;
-    }
-
-    this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.black;
+    this.set(key, value);
   }
   /**
    * @param key The key you want to find.

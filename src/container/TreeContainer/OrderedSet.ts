@@ -79,41 +79,9 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   /**
    * Inserts element to Set.
    */
-  insert(element: K) {
-    checkUndefinedParams(element);
-
-    if (!this.length) {
-      this.length += 1;
-      this.root.key = element;
-      this.root.color = TreeNode.black;
-      this.header.leftChild = this.root;
-      this.header.rightChild = this.root;
-      return;
-    }
-
-    const curNode = this.findInsertPos(this.root, element);
-    if (curNode.key !== undefined && this.cmp(curNode.key, element) === 0) {
-      return;
-    }
-
-    this.length += 1;
-    curNode.key = element;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.cmp(this.header.leftChild.key as K, element) > 0
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.cmp(this.header.rightChild.key as K, element) < 0
-    ) {
-      this.header.rightChild = curNode;
-    }
-
-    this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.black;
+  insert(key: K) {
+    checkUndefinedParams(key);
+    this.set(key);
   }
   find(element: K) {
     const curNode = this.findElementNode(this.root, element);
