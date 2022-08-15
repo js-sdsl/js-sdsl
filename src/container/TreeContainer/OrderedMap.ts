@@ -140,7 +140,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     }
 
     if (!this.length) {
-      ++this.length;
+      this.length += 1;
       this.root.key = key;
       this.root.value = value;
       this.root.color = TreeNode.black;
@@ -155,7 +155,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
       return;
     }
 
-    ++this.length;
+    this.length += 1;
     curNode.key = key;
     curNode.value = value;
 
@@ -202,7 +202,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
         res = pair;
         break;
       }
-      ++index;
+      index += 1;
     }
     return res as [K, V];
   }

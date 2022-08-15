@@ -34,12 +34,12 @@ export class VectorIterator<T> extends ContainerIterator<T> {
       if (this.node === this.size() - 1) {
         throw new RunTimeError('Vector iterator access denied!');
       }
-      ++this.node;
+      this.node += 1;
     } else {
       if (this.node === 0) {
         throw new RunTimeError('Vector iterator access denied!');
       }
-      --this.node;
+      this.node -= 1;
     }
     return this;
   }
@@ -48,12 +48,12 @@ export class VectorIterator<T> extends ContainerIterator<T> {
       if (this.node === -1) {
         throw new RunTimeError('Vector iterator access denied!');
       }
-      --this.node;
+      this.node -= 1;
     } else {
       if (this.node === this.size()) {
         throw new RunTimeError('Iterator access denied!');
       }
-      ++this.node;
+      this.node += 1;
     }
     return this;
   }
@@ -155,11 +155,11 @@ class Vector<T> extends SequentialContainer<T> {
   }
   pushBack(element: T) {
     this.vector.push(element);
-    ++this.length;
+    this.length += 1;
   }
   popBack() {
     this.vector.pop();
-    if (this.length > 0) --this.length;
+    if (this.length > 0) this.length -= 1;
   }
   setElementByPos(pos: number, element: T) {
     checkWithinAccessParams(pos, 0, this.length - 1);

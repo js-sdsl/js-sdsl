@@ -201,7 +201,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
 
     this.eraseNodeSelfBalance(swapNode);
     swapNode.remove();
-    --this.length;
+    this.length -= 1;
     this.root.color = TreeNode.black;
   }
   protected inOrderTraversal:
@@ -306,7 +306,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         this.eraseNode(curNode);
         return true;
       }
-      ++index;
+      index += 1;
       return false;
     });
   }

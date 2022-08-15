@@ -62,7 +62,7 @@ class PriorityQueue<T> extends Base {
    */
   push(element: T) {
     this.priorityQueue.push(element);
-    ++this.length;
+    this.length += 1;
     if (this.length === 1) return;
     let curNode = this.length - 1;
     while (curNode > 0) {
@@ -78,11 +78,11 @@ class PriorityQueue<T> extends Base {
   pop() {
     if (!this.length) return;
     if (this.length === 1) {
-      --this.length;
+      this.length -= 1;
       return;
     }
     const last = this.priorityQueue[this.length - 1];
-    --this.length;
+    this.length -= 1;
     let parent = 0;
     while (parent < this.length) {
       const leftChild = parent * 2 + 1;

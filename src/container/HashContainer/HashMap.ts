@@ -85,7 +85,7 @@ class HashMap<K, V> extends HashContainerBase<K> {
     }
     const index = this.hashFunc(key) & (this.bucketNum - 1);
     if ((index in this.hashTable) === false) {
-      ++this.length;
+      this.length += 1;
       this.hashTable[index] = new LinkList<[K, V]>([<[K, V]>[key, value]]);
     } else {
       const preSize = this.hashTable[index].size();
@@ -99,7 +99,7 @@ class HashMap<K, V> extends HashContainerBase<K> {
         (this.hashTable[index] as LinkList<[K, V]>).pushBack([key, value]);
         if (this.bucketNum <= HashMap.minTreeifySize) {
           this.reAllocate(this.bucketNum);
-          ++this.length;
+          this.length += 1;
           return;
         } else if (this.hashTable[index].size() >= HashMap.treeifyThreshold) {
           this.hashTable[index] = new OrderedMap<K, V>(this.hashTable[index]);
@@ -140,13 +140,13 @@ class HashMap<K, V> extends HashContainerBase<K> {
         this.hashTable[index] = new LinkList<[K, V]>(this.hashTable[index]);
       }
     } else {
-      let pos = -1;
+      let pos = 0;
       for (const pair of this.hashTable[index]) {
-        ++pos;
         if (pair[0] === key) {
           this.hashTable[index].eraseElementByPos(pos);
           break;
         }
+        pos += 1;
       }
     }
     const curSize = this.hashTable[index].size();
@@ -174,10 +174,10 @@ class HashMap<K, V> extends HashContainerBase<K> {
     return function * (this: HashMap<K, V>) {
       let index = 0;
       while (index < this.bucketNum) {
-        while (index < this.bucketNum && !this.hashTable[index]) ++index;
+        while (index < this.bucketNum && !this.hashTable[index]) index += 1;
         if (index >= this.bucketNum) break;
         for (const pair of this.hashTable[index]) yield pair;
-        ++index;
+        index += 1;
       }
     }.bind(this)();
   }

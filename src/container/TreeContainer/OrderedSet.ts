@@ -72,7 +72,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
       if (index === pos) {
         res = element;
       }
-      ++index;
+      index += 1;
     }
     return res as K;
   }
@@ -83,7 +83,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     checkUndefinedParams(element);
 
     if (!this.length) {
-      ++this.length;
+      this.length += 1;
       this.root.key = element;
       this.root.color = TreeNode.black;
       this.header.leftChild = this.root;
@@ -96,7 +96,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
       return;
     }
 
-    ++this.length;
+    this.length += 1;
     curNode.key = element;
 
     if (
