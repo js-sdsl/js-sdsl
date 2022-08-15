@@ -68,10 +68,6 @@ export class DequeIterator<T> extends ContainerIterator<T> {
   }
 }
 
-/**
- * TODO: 节省空间利用，变成循环队列
- * reason: 当不停向后或向前 push 时一旦指针到达末尾就会扩容，即使空间足够
- */
 class Deque<T> extends SequentialContainer<T> {
   private static sigma = 2;
   private static initBucketSize = (1 << 12);
