@@ -1,5 +1,5 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import { RunTimeError } from '@/utils/error';
 import TreeIterator from './Base/TreeIterator';
@@ -72,57 +72,16 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
       if (index === pos) {
         res = element;
       }
-      ++index;
+      index += 1;
     }
     return res as K;
-  }
-  eraseElementByIterator(iter: ContainerIterator<K>) {
-    // @ts-ignore
-    const node = iter.node;
-    iter = iter.next();
-    this.eraseNode(node);
-    return iter;
   }
   /**
    * Inserts element to Set.
    */
-  insert(element: K) {
-    checkUndefinedParams(element);
-
-    if (!this.length) {
-      ++this.length;
-      this.root.key = element;
-      this.root.color = TreeNode.TreeNodeColorType.black;
-      this.header.leftChild = this.root;
-      this.header.rightChild = this.root;
-      return;
-    }
-
-    const curNode = this.findInsertPos(this.root, element);
-    if (curNode.key !== undefined && this.cmp(curNode.key, element) === 0) {
-      return;
-    }
-
-    ++this.length;
-    curNode.key = element;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.header.leftChild.key === undefined ||
-      this.cmp(this.header.leftChild.key, element) > 0
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.header.rightChild.key === undefined ||
-      this.cmp(this.header.rightChild.key, element) < 0
-    ) {
-      this.header.rightChild = curNode;
-    }
-
-    this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.TreeNodeColorType.black;
+  insert(key: K) {
+    checkUndefinedParams(key);
+    this.set(key);
   }
   find(element: K) {
     const curNode = this.findElementNode(this.root, element);

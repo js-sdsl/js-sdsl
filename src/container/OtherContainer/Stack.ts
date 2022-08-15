@@ -15,14 +15,14 @@ class Stack<T> extends Base {
    */
   push(element: T) {
     this.stack.push(element);
-    ++this.length;
+    this.length += 1;
   }
   /**
    * Removes the top element.
    */
   pop() {
     this.stack.pop();
-    if (this.length > 0) --this.length;
+    if (this.length > 0) this.length -= 1;
   }
   /**
    * Accesses the top element.

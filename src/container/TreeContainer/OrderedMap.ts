@@ -1,5 +1,5 @@
 import { RunTimeError } from '@/utils/error';
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase/index';
 import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';
@@ -48,9 +48,9 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   private iterationFunc:
   (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
       function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
-        if (!curNode || curNode.key === undefined || curNode.value === undefined) return;
+        if (!curNode || curNode.key === undefined) return;
         yield * this.iterationFunc(curNode.leftChild);
-        yield [curNode.key, curNode.value];
+        yield [curNode.key, curNode.value as V];
         yield * this.iterationFunc(curNode.rightChild);
       };
   /**
@@ -133,49 +133,11 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   setElement(key: K, value: V) {
     checkUndefinedParams(key);
-
     if (value === null || value === undefined) {
       this.eraseElementByKey(key);
       return;
     }
-
-    if (!this.length) {
-      ++this.length;
-      this.root.key = key;
-      this.root.value = value;
-      this.root.color = TreeNode.TreeNodeColorType.black;
-      this.header.leftChild = this.root;
-      this.header.rightChild = this.root;
-      return;
-    }
-
-    const curNode = this.findInsertPos(this.root, key);
-    if (curNode.key !== undefined && this.cmp(curNode.key, key) === 0) {
-      curNode.value = value;
-      return;
-    }
-
-    ++this.length;
-    curNode.key = key;
-    curNode.value = value;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.header.leftChild.key === undefined ||
-      this.cmp(this.header.leftChild.key, key) > 0
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.header.rightChild.key === undefined ||
-      this.cmp(this.header.rightChild.key, key) < 0
-    ) {
-      this.header.rightChild = curNode;
-    }
-
-    this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.TreeNodeColorType.black;
+    this.set(key, value);
   }
   /**
    * @param key The key you want to find.
@@ -193,8 +155,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   getElementByKey(key: K) {
     const curNode = this.findElementNode(this.root, key);
-    if (curNode?.value === undefined) return undefined;
-    return curNode.value;
+    return curNode?.value;
   }
   getElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
@@ -205,20 +166,9 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
         res = pair;
         break;
       }
-      ++index;
+      index += 1;
     }
     return res as [K, V];
-  }
-  /**
-   * @return An iterator point to the next iterator.
-   * Removes element by iterator.
-   */
-  eraseElementByIterator(iter: ContainerIterator<[K, V]>) {
-    // @ts-ignore
-    const node = iter.node;
-    iter = iter.next();
-    this.eraseNode(node);
-    return iter;
   }
   /**
    * Union the other Set to self.

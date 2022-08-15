@@ -64,14 +64,13 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: LinkListIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
       throw new TypeError('iterator type error!');
     }
-    // @ts-ignore
     return this.node === obj.node;
   }
 }
@@ -137,7 +136,7 @@ class LinkList<T> extends SequentialContainer<T> {
       const next = curNode.next as LinkNode<T>;
       next.pre = pre;
       pre.next = next;
-      if (this.length > 0) --this.length;
+      if (this.length > 0) this.length -= 1;
     }
   }
   eraseElementByValue(value: T) {
@@ -151,12 +150,12 @@ class LinkList<T> extends SequentialContainer<T> {
         const next = curNode.next;
         if (next) next.pre = pre;
         if (pre) pre.next = next;
-        if (this.length > 0) --this.length;
+        if (this.length > 0) this.length -= 1;
       }
       curNode = curNode.next;
     }
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
+  eraseElementByIterator(iter: LinkListIterator<T>) {
     if (!this.length) {
       throw new RunTimeError();
     }
@@ -170,13 +169,13 @@ class LinkList<T> extends SequentialContainer<T> {
       const next = node.next;
       if (next) next.pre = pre;
       if (pre) pre.next = next;
-      --this.length;
+      this.length -= 1;
     }
     return iter;
   }
   pushBack(element: T) {
     checkUndefinedParams(element);
-    ++this.length;
+    this.length += 1;
     const newTail = new LinkNode(element);
     if (!this.tail) {
       this.head = this.tail = newTail;
@@ -192,7 +191,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   popBack() {
     if (!this.tail) return;
-    if (this.length > 0) --this.length;
+    if (this.length > 0) this.length -= 1;
     if (this.head === this.tail) {
       this.head = this.tail = undefined;
       this.header.next = undefined;
@@ -254,7 +253,7 @@ class LinkList<T> extends SequentialContainer<T> {
       pTail.value = tmp;
       pHead = pHead.next;
       pTail = pTail.pre;
-      ++cnt;
+      cnt += 1;
     }
   }
   unique() {
@@ -263,7 +262,7 @@ class LinkList<T> extends SequentialContainer<T> {
       let tmpNode = curNode;
       while (tmpNode && tmpNode.next && tmpNode.value === tmpNode.next.value) {
         tmpNode = tmpNode.next;
-        if (this.length > 0) --this.length;
+        if (this.length > 0) this.length -= 1;
       }
       curNode.next = tmpNode.next;
       if (curNode.next) curNode.next.pre = curNode;
@@ -289,7 +288,7 @@ class LinkList<T> extends SequentialContainer<T> {
    */
   pushFront(element: T) {
     checkUndefinedParams(element);
-    ++this.length;
+    this.length += 1;
     const newHead = new LinkNode(element);
     if (!this.head) {
       this.head = this.tail = newHead;
@@ -308,7 +307,7 @@ class LinkList<T> extends SequentialContainer<T> {
    */
   popFront() {
     if (!this.head) return;
-    if (this.length > 0) --this.length;
+    if (this.length > 0) this.length -= 1;
     if (this.head === this.tail) {
       this.head = this.tail = undefined;
       this.header.pre = this.tail;
@@ -339,7 +338,7 @@ class LinkList<T> extends SequentialContainer<T> {
         this.pushFront(element);
         curNode = this.head;
       } else {
-        ++this.length;
+        this.length += 1;
         const pre = (curNode as LinkNode<T>).pre;
         if (pre) {
           pre.next = new LinkNode(element);

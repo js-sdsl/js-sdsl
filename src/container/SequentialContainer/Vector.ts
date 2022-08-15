@@ -32,39 +32,38 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   pre() {
     if (this.iteratorType === 'reverse') {
       if (this.node === this.size() - 1) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RunTimeError('Vector iterator access denied!');
       }
-      ++this.node;
+      this.node += 1;
     } else {
       if (this.node === 0) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RunTimeError('Vector iterator access denied!');
       }
-      --this.node;
+      this.node -= 1;
     }
     return this;
   }
   next() {
     if (this.iteratorType === 'reverse') {
       if (this.node === -1) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RunTimeError('Vector iterator access denied!');
       }
-      --this.node;
+      this.node -= 1;
     } else {
       if (this.node === this.size()) {
         throw new RunTimeError('Iterator access denied!');
       }
-      ++this.node;
+      this.node += 1;
     }
     return this;
   }
-  equals(obj: ContainerIterator<T>) {
+  equals(obj: VectorIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
       throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
       throw new TypeError('iterator type error!');
     }
-    // @ts-ignore
     return this.node === obj.node;
   }
 }
@@ -74,6 +73,9 @@ class Vector<T> extends SequentialContainer<T> {
   constructor(container: initContainer<T> = []) {
     super();
     container.forEach(element => this.pushBack(element));
+    this.size = this.size.bind(this);
+    this.getElementByPos = this.getElementByPos.bind(this);
+    this.setElementByPos = this.setElementByPos.bind(this);
   }
   clear() {
     this.length = 0;
@@ -82,34 +84,34 @@ class Vector<T> extends SequentialContainer<T> {
   begin() {
     return new VectorIterator(
       0,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this)
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos
     );
   }
   end() {
     return new VectorIterator(
       this.length,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this)
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos
     );
   }
   rBegin() {
     return new VectorIterator(
       this.length - 1,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this),
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
       'reverse'
     );
   }
   rEnd() {
     return new VectorIterator(
       -1,
-      this.size.bind(this),
-      this.getElementByPos.bind(this),
-      this.setElementByPos.bind(this),
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
       'reverse'
     );
   }
@@ -144,7 +146,7 @@ class Vector<T> extends SequentialContainer<T> {
     const newLen = newArr.length;
     while (this.length > newLen) this.popBack();
   }
-  eraseElementByIterator(iter: ContainerIterator<T>) {
+  eraseElementByIterator(iter: VectorIterator<T>) {
     // @ts-ignore
     const node = iter.node;
     iter = iter.next();
@@ -153,11 +155,11 @@ class Vector<T> extends SequentialContainer<T> {
   }
   pushBack(element: T) {
     this.vector.push(element);
-    ++this.length;
+    this.length += 1;
   }
   popBack() {
     this.vector.pop();
-    if (this.length > 0) --this.length;
+    if (this.length > 0) this.length -= 1;
   }
   setElementByPos(pos: number, element: T) {
     checkWithinAccessParams(pos, 0, this.length - 1);
@@ -178,9 +180,9 @@ class Vector<T> extends SequentialContainer<T> {
       if (this.vector[i] === element) {
         return new VectorIterator(
           i,
-          this.size.bind(this),
-          this.getElementByPos.bind(this),
-          this.getElementByPos.bind(this)
+          this.size,
+          this.getElementByPos,
+          this.getElementByPos
         );
       }
     }

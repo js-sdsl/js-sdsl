@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "dist/cjs",
+    "module": "CommonJS",
+    "strict": true,
+    "baseUrl": "./",
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "ts-transform-paths",
+        "afterDeclarations": true
+      }
+    ],
+  },
+  "files": [
+    "./src/index.ts"
+  ],
+}

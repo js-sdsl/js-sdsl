@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "outDir": "dist/esm",
+    "module": "ES2015",
+    "strict": true,
+    "baseUrl": "./",
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "transform": "ts-transform-paths",
+        "afterDeclarations": true
+      }
+    ],
+  },
+  "files": [
+    "./src/index.ts"
+  ],
+}

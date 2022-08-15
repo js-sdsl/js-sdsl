@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   roots: [
-    '<rootDir>/__check__'
+    '<rootDir>/check'
   ],
   transform: {
     '^.+\\.(t|j)sx?$': 'ts-jest'

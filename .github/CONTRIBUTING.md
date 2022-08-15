@@ -26,7 +26,7 @@ Hi! I'm really excited that you are interested in contributing to js-sdsl. Befor
 
 - If adding a new feature:
 
-  - Add accompanying test case in folders `__check__` and `__performance__` .
+  - Add accompanying test case in folders `check` and `performance` .
   - Provide a convincing reason to add this feature. Ideally, you should open a suggestion issue first and have it approved before working on it.
 
 - If fixing bug:
@@ -67,8 +67,8 @@ There are some other scripts available in the `scripts` section of the `package.
 
 ## Project Structure
 
-- **`__check__`**: contains all unit tests.
-- **`__performance__`**: contains all performance tests.
+- **`check`**: contains all unit tests.
+- **`performance`**: contains all performance tests.
 - **`src`**: contains the source code.
 
 All our source files are written in typescript, please make sure your submissions have strict type deduction and follow eslint specifications.

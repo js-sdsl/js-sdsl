@@ -17,14 +17,14 @@ class Queue<T> extends Base {
    */
   push(element: T) {
     this.queue.pushBack(element);
-    ++this.length;
+    this.length += 1;
   }
   /**
    * Removes the first element.
    */
   pop() {
     this.queue.popFront();
-    if (this.length) --this.length;
+    if (this.length) this.length -= 1;
   }
   /**
    * Access the first element.

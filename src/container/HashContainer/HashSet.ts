@@ -87,7 +87,7 @@ class HashSet<K> extends HashContainerBase<K> {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
     if (!this.hashTable[index]) {
       this.hashTable[index] = new LinkList<K>([element]);
-      ++this.length;
+      this.length += 1;
     } else {
       const preSize = this.hashTable[index].size();
       if (this.hashTable[index] instanceof LinkList) {
@@ -95,7 +95,7 @@ class HashSet<K> extends HashContainerBase<K> {
           .equals((this.hashTable[index] as LinkList<K>).end())) return;
         (this.hashTable[index] as LinkList<K>).pushBack(element);
         if (this.bucketNum <= HashSet.minTreeifySize) {
-          ++this.length;
+          this.length += 1;
           this.reAllocate(this.bucketNum);
           return;
         } else if (this.hashTable[index].size() >= HashSet.treeifyThreshold) {
@@ -145,10 +145,10 @@ class HashSet<K> extends HashContainerBase<K> {
     return function * (this: HashSet<K>) {
       let index = 0;
       while (index < this.bucketNum) {
-        while (index < this.bucketNum && !this.hashTable[index]) ++index;
+        while (index < this.bucketNum && !this.hashTable[index]) index += 1;
         if (index >= this.bucketNum) break;
         for (const element of this.hashTable[index]) yield element;
-        ++index;
+        index += 1;
       }
     }.bind(this)();
   }
