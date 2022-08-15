@@ -73,6 +73,15 @@ describe('HashMap test', () => {
       myHashMap.eraseElementByKey(i.toString());
       stdMap.delete(i.toString());
     }
+    myHashMap.eraseElementByKey('-1');
+    myHashMap.eraseElementByKey('-2');
+    myHashMap.eraseElementByKey('-3');
+    myHashMap.eraseElementByKey('-4');
+    myHashMap.eraseElementByKey('-5');
+    myHashMap.eraseElementByKey('-6');
+    myHashMap.eraseElementByKey('-7');
+    myHashMap.eraseElementByKey('-8');
+    myHashMap.eraseElementByKey('-9');
     judgeHashMap(myHashMap, stdMap);
   });
 

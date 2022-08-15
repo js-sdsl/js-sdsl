@@ -185,18 +185,10 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
 
     if (this.header.leftChild === swapNode) {
-      if (this.header.leftChild !== this.root) {
-        this.header.leftChild = this.header.leftChild.parent;
-      } else {
-        this.header.leftChild = undefined;
-      }
+      this.header.leftChild = this.header.leftChild.parent;
     }
     if (this.header.rightChild === swapNode) {
-      if (this.header.rightChild !== this.root) {
-        this.header.rightChild = this.header.rightChild.parent;
-      } else {
-        this.header.rightChild = undefined;
-      }
+      this.header.rightChild = this.header.rightChild.parent;
     }
 
     this.eraseNodeSelfBalance(swapNode);
