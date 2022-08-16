@@ -247,7 +247,7 @@ class LinkList<T> extends SequentialContainer<T> {
     let pHead = this.head;
     let pTail = this.tail;
     let cnt = 0;
-    while (pHead && pTail && cnt * 2 < this.length) {
+    while (pHead && pTail && (cnt << 1) < this.length) {
       const tmp = pHead.value;
       pHead.value = pTail.value;
       pTail.value = tmp;

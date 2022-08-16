@@ -84,8 +84,10 @@ describe('Deque test', () => {
     expect(myDeque.size()).toEqual(2);
     expect(myDeque.getElementByPos(0)).toEqual(0);
     expect(myDeque.getElementByPos(1)).toEqual(1);
-    myDeque.popBack();
-    myDeque.popBack();
+    // @ts-ignore
+    myDeque.setElementByPos(0, undefined);
+    // @ts-ignore
+    myDeque.setElementByPos(0, null);
     myDeque.shrinkToFit();
     myDeque.pushBack(1);
     expect(myDeque.find(1).pointer).toBe(1);

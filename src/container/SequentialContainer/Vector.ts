@@ -124,7 +124,9 @@ class Vector<T> extends SequentialContainer<T> {
     return this.vector[this.length - 1];
   }
   forEach(callback: (element: T, index: number) => void) {
-    this.vector.forEach(callback);
+    for (let i = 0; i < this.length; ++i) {
+      callback(this.vector[i], i);
+    }
   }
   getElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
@@ -136,15 +138,13 @@ class Vector<T> extends SequentialContainer<T> {
     this.popBack();
   }
   eraseElementByValue(value: T) {
-    const newArr: T[] = [];
-    this.forEach(element => {
-      if (element !== value) newArr.push(element);
-    });
-    newArr.forEach((element, index) => {
-      this.vector[index] = element;
-    });
-    const newLen = newArr.length;
-    while (this.length > newLen) this.popBack();
+    let index = 0;
+    for (let i = 0; i < this.length; ++i) {
+      if (this.vector[i] !== value) {
+        this.vector[index++] = this.vector[i];
+      }
+    }
+    while (this.length > index) this.popBack();
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
     // @ts-ignore
@@ -192,19 +192,13 @@ class Vector<T> extends SequentialContainer<T> {
     this.vector.reverse();
   }
   unique() {
-    let pre: T;
-    const newArr: T[] = [];
-    this.forEach((element, index) => {
-      if (index === 0 || element !== pre) {
-        newArr.push(element);
-        pre = element;
+    let index = 1;
+    for (let i = 1; i < this.length; ++i) {
+      if (this.vector[i] !== this.vector[i - 1]) {
+        this.vector[index++] = this.vector[i];
       }
-    });
-    newArr.forEach((element, index) => {
-      this.vector[index] = element;
-    });
-    const newLen = newArr.length;
-    while (this.length > newLen) this.popBack();
+    }
+    while (this.length > index) this.popBack();
   }
   sort(cmp?: (x: T, y: T) => number) {
     this.vector.sort(cmp);
