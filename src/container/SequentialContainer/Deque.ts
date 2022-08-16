@@ -77,7 +77,7 @@ class Deque<T> extends SequentialContainer<T> {
   private curLast = 0;
   private bucketNum = 0;
   private bucketSize: number;
-  private map: (T[])[] = [];
+  private map: T[][] = [];
   constructor(container: initContainer<T> = [], bucketSize = Deque.initBucketSize) {
     super();
     let _length;
@@ -332,7 +332,7 @@ class Deque<T> extends SequentialContainer<T> {
       }
       this.cut(pos - 1);
       for (let i = 0; i < num; ++i) this.pushBack(element);
-      arr.forEach(element => this.pushBack(element));
+      for (let i = 0; i < arr.length; ++i) this.pushBack(arr[i]);
     }
   }
   /**
@@ -409,25 +409,23 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   unique() {
-    if (!this.length) return;
-    const arr: T[] = [];
-    let pre = this.front();
-    this.forEach((element, index) => {
-      if (index === 0 || element !== pre) {
-        arr.push(element);
-        pre = element;
+    if (this.length <= 1) return;
+    let index = 1;
+    let pre = this.getElementByPos(0);
+    for (let i = 1; i < this.length; ++i) {
+      const cur = this.getElementByPos(i);
+      if (cur !== pre) {
+        pre = cur;
+        this.setElementByPos(index++, cur);
       }
-    });
-    for (let i = 0; i < this.length; ++i) {
-      this.setElementByPos(i, arr[i]);
     }
-    this.cut(arr.length - 1);
+    while (this.length > index) this.popBack();
   }
   sort(cmp?: (x: T, y: T) => number) {
     const arr: T[] = [];
-    this.forEach(element => {
-      arr.push(element);
-    });
+    for (let i = 0; i < this.length; ++i) {
+      arr.push(this.getElementByPos(i));
+    }
     arr.sort(cmp);
     for (let i = 0; i < this.length; ++i) this.setElementByPos(i, arr[i]);
   }
@@ -444,7 +442,7 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < this.bucketNum; ++i) {
       this.map.push(new Array(this.bucketSize));
     }
-    arr.forEach(element => this.pushBack(element));
+    for (let i = 0; i < arr.length; ++i) this.pushBack(arr[i]);
   }
   [Symbol.iterator]() {
     return function * (this: Deque<T>) {

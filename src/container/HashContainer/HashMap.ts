@@ -15,50 +15,55 @@ class HashMap<K, V> extends HashContainerBase<K> {
   }
   private reAllocate(originalBucketNum: number) {
     if (originalBucketNum >= HashContainerBase.maxBucketNum) return;
-    this.bucketNum = Math.min((originalBucketNum << 1), HashContainerBase.maxBucketNum);
     const newHashTable: (LinkList<[K, V]> | OrderedMap<K, V>)[] = [];
-    this.hashTable.forEach((container, index) => {
-      if (container.empty()) return;
+    this.bucketNum = originalBucketNum << 1;
+    for (let index = 0; index < originalBucketNum; ++index) {
+      const container = this.hashTable[index];
+      if (!container || container.empty()) continue;
       if (container instanceof LinkList && container.size() === 1) {
         const pair = container.front() as [K, V];
-        newHashTable[this.hashFunc(pair[0]) & (this.bucketNum - 1)] = new LinkList<[K, V]>([pair]);
+        newHashTable[this.hashFunc(pair[0]) & (this.bucketNum - 1)] = new LinkList([pair]);
       } else if (container instanceof OrderedMap) {
-        const lowList = new LinkList<[K, V]>();
-        const highList = new LinkList<[K, V]>();
+        const lowList: [K, V][] = [];
+        const highList: [K, V][] = [];
         container.forEach((pair) => {
           const hashCode = this.hashFunc(pair[0]);
           if ((hashCode & originalBucketNum) === 0) {
-            lowList.pushBack(pair);
-          } else highList.pushBack(pair);
+            lowList.push(pair);
+          } else highList.push(pair);
         });
-        if (lowList.size() > HashMap.untreeifyThreshold) {
-          newHashTable[index] = new OrderedMap<K, V>(lowList);
-        } else if (lowList.size()) newHashTable[index] = lowList;
-        if (highList.size() > HashMap.untreeifyThreshold) {
-          newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
-        } else if (highList.size()) newHashTable[index + originalBucketNum] = highList;
+        if (lowList.length > HashMap.untreeifyThreshold) {
+          newHashTable[index] = new OrderedMap(lowList);
+        } else if (lowList.length) {
+          newHashTable[index] = new LinkList(lowList);
+        }
+        if (highList.length > HashMap.untreeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedMap(highList);
+        } else if (highList.length) {
+          newHashTable[index + originalBucketNum] = new LinkList(highList);
+        }
       } else {
-        const lowList = new LinkList<[K, V]>();
-        const highList = new LinkList<[K, V]>();
+        const lowList: [K, V][] = [];
+        const highList: [K, V][] = [];
         container.forEach(pair => {
           const hashCode = this.hashFunc(pair[0]);
           if ((hashCode & originalBucketNum) === 0) {
-            lowList.pushBack(pair);
-          } else highList.pushBack(pair);
+            lowList.push(pair);
+          } else highList.push(pair);
         });
-        if (lowList.size() >= HashMap.treeifyThreshold) {
-          newHashTable[index] = new OrderedMap<K, V>(lowList);
-        } else if (lowList.size()) {
-          newHashTable[index] = lowList;
+        if (lowList.length >= HashMap.treeifyThreshold) {
+          newHashTable[index] = new OrderedMap(lowList);
+        } else if (lowList.length) {
+          newHashTable[index] = new LinkList(lowList);
         }
-        if (highList.size() >= HashMap.treeifyThreshold) {
-          newHashTable[index + originalBucketNum] = new OrderedMap<K, V>(highList);
-        } else if (highList.size()) {
-          newHashTable[index + originalBucketNum] = highList;
+        if (highList.length >= HashMap.treeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedMap(highList);
+        } else if (highList.length) {
+          newHashTable[index + originalBucketNum] = new LinkList(highList);
         }
       }
-      this.hashTable[index].clear();
-    });
+      container.clear();
+    }
     this.hashTable = newHashTable;
   }
   clear() {
@@ -68,11 +73,10 @@ class HashMap<K, V> extends HashContainerBase<K> {
   }
   forEach(callback: (element: [K, V], index: number) => void) {
     let index = 0;
-    this.hashTable.forEach(container => {
-      container.forEach(element => {
-        callback(element, index++);
-      });
-    });
+    for (let i = 0; i < this.bucketNum; ++i) {
+      if (!this.hashTable[i]) continue;
+      this.hashTable[i].forEach(element => callback(element, index++));
+    }
   }
   /**
    * Insert a new key-value pair or set value by key.

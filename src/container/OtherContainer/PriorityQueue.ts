@@ -15,7 +15,7 @@ class PriorityQueue<T> extends Base {
     this.length = this.priorityQueue.length;
     for (let parent = Math.floor((this.length - 1) / 2); parent >= 0; --parent) {
       let curParent = parent;
-      let curChild = curParent * 2 + 1;
+      let curChild = (curParent << 1) | 1;
       while (curChild < this.length) {
         const leftChild = curChild;
         const rightChild = leftChild + 1;
@@ -29,7 +29,7 @@ class PriorityQueue<T> extends Base {
         if (this.cmp(this.priorityQueue[curParent], this.priorityQueue[minChild]) <= 0) break;
         this.swap(curParent, minChild);
         curParent = minChild;
-        curChild = curParent * 2 + 1;
+        curChild = (curParent << 1) | 1;
       }
     }
   }
@@ -39,8 +39,8 @@ class PriorityQueue<T> extends Base {
     this.priorityQueue[y] = tmp;
   }
   private adjust(parent: number) {
-    const leftChild = parent * 2 + 1;
-    const rightChild = parent * 2 + 2;
+    const leftChild = (parent << 1) | 1;
+    const rightChild = (parent << 1) + 2;
     if (
       leftChild < this.length &&
       this.cmp(this.priorityQueue[parent], this.priorityQueue[leftChild]) > 0
@@ -85,8 +85,8 @@ class PriorityQueue<T> extends Base {
     this.length -= 1;
     let parent = 0;
     while (parent < this.length) {
-      const leftChild = parent * 2 + 1;
-      const rightChild = parent * 2 + 2;
+      const leftChild = (parent << 1) | 1;
+      const rightChild = (parent << 1) + 2;
       if (leftChild >= this.length) break;
       let minChild = leftChild;
       if (

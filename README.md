@@ -1,24 +1,20 @@
 <p align="center">
-  <a href="https://js-sdsl.github.io/" target="_blank">
+  <a href="https://js-sdsl.github.io/" target="_blank" rel="noopener noreferrer">
     <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
   </a>
 </p>
 
-<p align="center">
-  <h3 align="center">
-    A javascript standard data structure library which benchmark against C++ STL
-  </h3 align="center">
-</p>
+<h3><p align="center">A javascript standard data structure library which benchmark against C++ STL</p></h3>
 
 <p align="center">
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl?color=blue" alt="Version" /></a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/actions?query=branch%3Adev"><img src="https://github.com/zly201/js-sdsl/workflows/js-sdsl%20CI/badge.svg?branch=dev" alt="Build Status" /></a>
-  <a target="_blank" href="https://coveralls.io/github/ZLY201/js-sdsl"><img src="https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=dev" alt="Coverage Status" /></a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/tree/dev"><img src="https://img.shields.io/github/stars/zly201/js-sdsl.svg" alt="GITHUB Star" /></a>
-  <a target="_blank" href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl" alt="Downloads" /></a>
-  <a target="_blank" href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
-  <a target="_blank" href="https://github.com/ZLY201/js-sdsl/blob/dev/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl?color=%230969da" alt="License" /></a>
-  <a target="_blank" href="https://github.com/zly201/js-sdsl/tree/dev"><img src="https://img.shields.io/github/languages/top/zly201/js-sdsl.svg?branch=dev" alt="GITHUB-language" /></a>
+  <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl" alt="NPM version" /></a>
+  <a href="https://github.com/ZLY201/js-sdsl/actions?query=branch%3Adev"><img src="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml/badge.svg?branch=dev" alt="Build Status" /></a>
+  <a href='https://coveralls.io/github/ZLY201/js-sdsl?branch=dev'><img src='https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=dev' alt='Coverage Status' /></a>
+  <a href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/ZLY201/js-sdsl.svg" alt="GITHUB Star" /></a>
+  <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
+  <a href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
+  <a href="https://github.com/ZLY201/js-sdsl/blob/dev/LICENSE"><img src="https://img.shields.io/npm/l/js-sdsl.svg" alt="MIT-license" /></a>
+  <a href="https://github.com/ZLY201/js-sdsl/"><img src="https://img.shields.io/github/languages/top/ZLY201/js-sdsl.svg?branch=dev" alt="GITHUB-language" /></a>
 </p>
 
 <p align="center">English | <a href="https://github.com/ZLY201/js-sdsl/blob/dev/README.zh-CN.md">简体中文</a></p>
@@ -118,29 +114,29 @@ The following is a partial interception of the performance test:
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1625   │
-│    1    │      'insert'       │ 1000000 │    2000000    │   565   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   340   │
-│    3    │ 'eraseElementByPos' │   10    │    3000000    │   539   │
-│    4    │       'union'       │    1    │    2999998    │  1580   │
-│    5    │    'lowerBound'     │ 1000000 │    2999998    │  1147   │
-│    6    │    'upperBound'     │ 1000000 │    2999998    │  1195   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    2999998    │  1254   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    2999998    │  1423   │
+│    0    │    'constructor'    │    1    │    1000000    │  1699   │
+│    1    │      'insert'       │ 1000000 │    2000000    │   615   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   396   │
+│    3    │ 'eraseElementByPos' │   10    │    3000000    │   847   │
+│    4    │       'union'       │    1    │    2999990    │  1901   │
+│    5    │    'lowerBound'     │ 1000000 │    2999990    │  1328   │
+│    6    │    'upperBound'     │ 1000000 │    2999990    │  1419   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    2999990    │  1390   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    2999990    │  1461   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 =================================== OrderedMap ===================================
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1748   │
-│    1    │    'setElement'     │ 1000000 │    2000000    │   659   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   359   │
-│    3    │ 'eraseElementByPos' │   100   │    1000000    │  4578   │
-│    4    │       'union'       │    1    │    1999900    │  1442   │
-│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1167   │
-│    6    │    'upperBound'     │ 1000000 │    1999900    │  1162   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1143   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1178   │
+│    0    │    'constructor'    │    1    │    1000000    │  1714   │
+│    1    │    'setElement'     │ 1000000 │    2000000    │   581   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   336   │
+│    3    │ 'eraseElementByPos' │   100   │    1000000    │  3483   │
+│    4    │       'union'       │    1    │    1999900    │  1500   │
+│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1165   │
+│    6    │    'upperBound'     │ 1000000 │    1999900    │  1299   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1335   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1417   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 ```
 
