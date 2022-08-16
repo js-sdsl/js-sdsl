@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://js-sdsl.github.io/" target="_blank"  rel="noopener noreferrer">
+  <a href="https://js-sdsl.github.io/" target="_blank" rel="noopener noreferrer">
     <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
   </a>
 </p>
@@ -114,29 +114,29 @@ The following is a partial interception of the performance test:
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1625   │
-│    1    │      'insert'       │ 1000000 │    2000000    │   565   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   340   │
-│    3    │ 'eraseElementByPos' │   10    │    3000000    │   539   │
-│    4    │       'union'       │    1    │    2999998    │  1580   │
-│    5    │    'lowerBound'     │ 1000000 │    2999998    │  1147   │
-│    6    │    'upperBound'     │ 1000000 │    2999998    │  1195   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    2999998    │  1254   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    2999998    │  1423   │
+│    0    │    'constructor'    │    1    │    1000000    │  1699   │
+│    1    │      'insert'       │ 1000000 │    2000000    │   615   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   396   │
+│    3    │ 'eraseElementByPos' │   10    │    3000000    │   847   │
+│    4    │       'union'       │    1    │    2999990    │  1901   │
+│    5    │    'lowerBound'     │ 1000000 │    2999990    │  1328   │
+│    6    │    'upperBound'     │ 1000000 │    2999990    │  1419   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    2999990    │  1390   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    2999990    │  1461   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 =================================== OrderedMap ===================================
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1748   │
-│    1    │    'setElement'     │ 1000000 │    2000000    │   659   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   359   │
-│    3    │ 'eraseElementByPos' │   100   │    1000000    │  4578   │
-│    4    │       'union'       │    1    │    1999900    │  1442   │
-│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1167   │
-│    6    │    'upperBound'     │ 1000000 │    1999900    │  1162   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1143   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1178   │
+│    0    │    'constructor'    │    1    │    1000000    │  1714   │
+│    1    │    'setElement'     │ 1000000 │    2000000    │   581   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   336   │
+│    3    │ 'eraseElementByPos' │   100   │    1000000    │  3483   │
+│    4    │       'union'       │    1    │    1999900    │  1500   │
+│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1165   │
+│    6    │    'upperBound'     │ 1000000 │    1999900    │  1299   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1335   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1417   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 ```
 
