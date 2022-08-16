@@ -17,7 +17,7 @@
   <a href="https://github.com/ZLY201/js-sdsl/"><img src="https://img.shields.io/github/languages/top/ZLY201/js-sdsl.svg?branch=main" alt="GITHUB-language" /></a>
 </p>
 
-<p align="center">English | <a href="https://github.com/zly201/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
+<p align="center">English | <a href="https://github.com/ZLY201/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
 
 ## Included data structures
 
