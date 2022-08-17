@@ -61,103 +61,70 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         return resNode;
       };
   protected eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
-    const parentNode = curNode.parent as TreeNode<K, V>;
-    if (parentNode === this.header) return;
+    while (true) {
+      const parentNode = curNode.parent as TreeNode<K, V>;
+      if (parentNode === this.header) return;
 
-    if (curNode.color === TreeNode.red) {
-      curNode.color = TreeNode.black;
-      return;
-    }
-
-    const brotherNode = curNode.brother as TreeNode<K, V>;
-
-    if (curNode === parentNode.leftChild) {
-      if (brotherNode.color === TreeNode.red) {
-        brotherNode.color = TreeNode.black;
-        parentNode.color = TreeNode.red;
-        parentNode.rotateLeft();
-        this.eraseNodeSelfBalance(curNode);
-      } else if (brotherNode.color === TreeNode.black) {
-        if (brotherNode.rightChild &&
-          brotherNode.rightChild.color === TreeNode.red) {
-          brotherNode.color = parentNode.color;
-          parentNode.color = TreeNode.black;
-          if (brotherNode.rightChild) {
-            brotherNode.rightChild.color = TreeNode.black;
-          }
-          const newRoot = parentNode.rotateLeft();
-          if (parentNode === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
-          }
-          curNode.color = TreeNode.black;
-        } else if ((
-          !brotherNode.rightChild ||
-          brotherNode.rightChild.color === TreeNode.black
-        ) && brotherNode.leftChild &&
-          brotherNode.leftChild.color === TreeNode.red
-        ) {
-          brotherNode.color = TreeNode.red;
-          if (brotherNode.leftChild) {
-            brotherNode.leftChild.color = TreeNode.black;
-          }
-          brotherNode.rotateRight();
-          this.eraseNodeSelfBalance(curNode);
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) && (
-          !brotherNode.rightChild ||
-          brotherNode.rightChild.color === TreeNode.black
-        )) {
-          brotherNode.color = TreeNode.red;
-          this.eraseNodeSelfBalance(parentNode);
-        }
+      if (curNode.color === TreeNode.red) {
+        curNode.color = TreeNode.black;
+        return;
       }
-    } else if (curNode === parentNode.rightChild) {
-      if (brotherNode.color === TreeNode.red) {
-        brotherNode.color = TreeNode.black;
-        parentNode.color = TreeNode.red;
-        parentNode.rotateRight();
-        this.eraseNodeSelfBalance(curNode);
-      } else if (brotherNode.color === TreeNode.black) {
-        if (
-          brotherNode.leftChild &&
-          brotherNode.leftChild.color === TreeNode.red
-        ) {
-          brotherNode.color = parentNode.color;
-          parentNode.color = TreeNode.black;
-          if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.black;
-          const newRoot = parentNode.rotateRight();
-          if (parentNode === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
-          }
-          curNode.color = TreeNode.black;
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) &&
-          brotherNode.rightChild &&
-          brotherNode.rightChild.color === TreeNode.red
-        ) {
-          brotherNode.color = TreeNode.red;
-          if (brotherNode.rightChild) {
+
+      const brotherNode = curNode.brother as TreeNode<K, V>;
+
+      if (curNode === parentNode.leftChild) {
+        if (brotherNode.color === TreeNode.red) {
+          brotherNode.color = TreeNode.black;
+          parentNode.color = TreeNode.red;
+          parentNode.rotateLeft();
+        } else if (brotherNode.color === TreeNode.black) {
+          if (brotherNode.rightChild?.color === TreeNode.red) {
+            brotherNode.color = parentNode.color;
+            parentNode.color = TreeNode.black;
             brotherNode.rightChild.color = TreeNode.black;
+            const newRoot = parentNode.rotateLeft();
+            if (parentNode === this.root) {
+              this.root = newRoot;
+              this.header.parent = this.root;
+              this.root.parent = this.header;
+            }
+            curNode.color = TreeNode.black;
+            return;
+          } else if (brotherNode.leftChild?.color === TreeNode.red) {
+            brotherNode.color = TreeNode.red;
+            brotherNode.leftChild.color = TreeNode.black;
+            brotherNode.rotateRight();
+          } else {
+            brotherNode.color = TreeNode.red;
+            curNode = parentNode;
           }
-          brotherNode.rotateLeft();
-          this.eraseNodeSelfBalance(curNode);
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) && (
-          !brotherNode.rightChild ||
-            brotherNode.rightChild.color === TreeNode.black
-        )) {
-          brotherNode.color = TreeNode.red;
-          this.eraseNodeSelfBalance(parentNode);
+        }
+      } else {
+        if (brotherNode.color === TreeNode.red) {
+          brotherNode.color = TreeNode.black;
+          parentNode.color = TreeNode.red;
+          parentNode.rotateRight();
+        } else {
+          if (brotherNode.leftChild?.color === TreeNode.red) {
+            brotherNode.color = parentNode.color;
+            parentNode.color = TreeNode.black;
+            brotherNode.leftChild.color = TreeNode.black;
+            const newRoot = parentNode.rotateRight();
+            if (parentNode === this.root) {
+              this.root = newRoot;
+              this.header.parent = this.root;
+              this.root.parent = this.header;
+            }
+            curNode.color = TreeNode.black;
+            return;
+          } else if (brotherNode.rightChild?.color === TreeNode.red) {
+            brotherNode.color = TreeNode.red;
+            brotherNode.rightChild.color = TreeNode.black;
+            brotherNode.rotateLeft();
+          } else {
+            brotherNode.color = TreeNode.red;
+            curNode = parentNode;
+          }
         }
       }
     }
@@ -206,44 +173,46 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         return this.inOrderTraversal(curNode.rightChild, callback);
       };
   protected insertNodeSelfBalance(curNode: TreeNode<K, V>) {
-    const parentNode = curNode.parent as TreeNode<K, V>;
-
-    if (parentNode.color === TreeNode.black) return;
-
-    const uncleNode = parentNode.brother;
-    const grandParent = parentNode.parent as TreeNode<K, V>;
-
-    if (uncleNode && uncleNode.color === TreeNode.red) {
-      uncleNode.color = parentNode.color = TreeNode.black;
-      grandParent.color = TreeNode.red;
-      this.insertNodeSelfBalance(grandParent);
-    } else if (!uncleNode || uncleNode.color === TreeNode.black) {
-      if (parentNode === grandParent.leftChild) {
-        if (curNode === parentNode.leftChild) {
-          parentNode.color = TreeNode.black;
-          grandParent.color = TreeNode.red;
-          const newRoot = grandParent.rotateRight();
-          if (grandParent === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
+    while (true) {
+      const parentNode = curNode.parent as TreeNode<K, V>;
+      if (parentNode.color === TreeNode.black) return;
+      const uncleNode = parentNode.brother;
+      const grandParent = parentNode.parent as TreeNode<K, V>;
+      if (uncleNode?.color === TreeNode.red) {
+        uncleNode.color = parentNode.color = TreeNode.black;
+        if (grandParent === this.root) return;
+        grandParent.color = TreeNode.red;
+        curNode = grandParent;
+      } else {
+        if (parentNode === grandParent.leftChild) {
+          if (curNode === parentNode.leftChild) {
+            parentNode.color = TreeNode.black;
+            grandParent.color = TreeNode.red;
+            const newRoot = grandParent.rotateRight();
+            if (grandParent === this.root) {
+              this.root = newRoot;
+              this.header.parent = this.root;
+              this.root.parent = this.header;
+            }
+            return;
+          } else {
+            parentNode.rotateLeft();
+            curNode = parentNode;
           }
-        } else if (curNode === parentNode.rightChild) {
-          parentNode.rotateLeft();
-          this.insertNodeSelfBalance(parentNode);
-        }
-      } else if (parentNode === grandParent.rightChild) {
-        if (curNode === parentNode.leftChild) {
-          parentNode.rotateRight();
-          this.insertNodeSelfBalance(parentNode);
-        } else if (curNode === parentNode.rightChild) {
-          parentNode.color = TreeNode.black;
-          grandParent.color = TreeNode.red;
-          const newRoot = grandParent.rotateLeft();
-          if (grandParent === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
+        } else {
+          if (curNode === parentNode.leftChild) {
+            parentNode.rotateRight();
+            curNode = parentNode;
+          } else {
+            parentNode.color = TreeNode.black;
+            grandParent.color = TreeNode.red;
+            const newRoot = grandParent.rotateLeft();
+            if (grandParent === this.root) {
+              this.root = newRoot;
+              this.header.parent = this.root;
+              this.root.parent = this.header;
+            }
+            return;
           }
         }
       }
