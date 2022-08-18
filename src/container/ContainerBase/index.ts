@@ -1,6 +1,6 @@
 export abstract class ContainerIterator<T> {
   readonly iteratorType: 'normal' | 'reverse';
-  constructor(iteratorType: 'normal' | 'reverse') {
+  protected constructor(iteratorType: 'normal' | 'reverse') {
     this.iteratorType = iteratorType;
   }
   /**

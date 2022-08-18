@@ -4,8 +4,8 @@ import TreeNode from './TreeNode';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   protected node: TreeNode<K, V>;
-  private header: TreeNode<K, V>;
-  constructor(
+  protected header: TreeNode<K, V>;
+  protected constructor(
     node: TreeNode<K, V>,
     header: TreeNode<K, V>,
     iteratorType: 'normal' | 'reverse'
@@ -14,7 +14,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     this.node = node;
     this.header = header;
   }
-  private _pre() {
+  protected _pre() {
     let preNode: TreeNode<K, V> = this.node;
     if (preNode.color === TreeNode.red &&
       (preNode.parent as TreeNode<K, V>).parent === preNode) {
@@ -34,7 +34,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     return preNode as TreeNode<K, V>;
   }
-  private _next() {
+  protected _next() {
     let nextNode: TreeNode<K, V> = this.node;
     if (nextNode.rightChild) {
       nextNode = nextNode.rightChild;

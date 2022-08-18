@@ -7,7 +7,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> = new TreeNode<K, V>();
   protected header: TreeNode<K, V> = new TreeNode<K, V>();
   protected cmp: (x: K, y: K) => number;
-  constructor(cmp: (x: K, y: K) => number = (x: K, y: K) => {
+  protected constructor(cmp: (x: K, y: K) => number = (x: K, y: K) => {
     if (x < y) return -1;
     if (x > y) return 1;
     return 0;

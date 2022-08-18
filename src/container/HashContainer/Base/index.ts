@@ -11,7 +11,7 @@ abstract class HashContainerBase<K> extends Base {
   protected initBucketNum: number;
   protected bucketNum: number;
   protected hashFunc: (x: K) => number;
-  constructor(
+  protected constructor(
     initBucketNum = HashContainerBase.initBucketNum,
     hashFunc: (x: K) => number =
     (x: K) => {
