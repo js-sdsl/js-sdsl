@@ -1,6 +1,5 @@
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList, Deque } from '@/index';
-import { RunTimeError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 1000;
@@ -130,7 +129,7 @@ describe('SequentialContainer test', () => {
     myVector.setElementByPos(0, undefined);
     expect(() => {
       myVector.find(0).pointer = 1;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
   });
 
   test('LinkList standard test', () => {

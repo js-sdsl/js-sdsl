@@ -1,6 +1,5 @@
 import HashContainerBase from '@/container/HashContainer/Base/index';
 import { LinkList, HashSet } from '@/index';
-import { ContainerInitError } from '@/utils/error';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -26,7 +25,7 @@ describe('HashSet test', () => {
   HashContainerBase.untreeifyThreshold = 1;
   test('constructor test', () => {
     // eslint-disable-next-line no-new
-    expect(() => new HashSet([], 28)).toThrow(ContainerInitError);
+    expect(() => new HashSet([], 28)).toThrow(RangeError);
     expect(new HashSet().size()).toBe(0);
   });
 

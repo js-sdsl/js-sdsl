@@ -1,6 +1,5 @@
-import { RunTimeError } from '@/utils/error';
 import { initContainer } from '@/container/ContainerBase/index';
-import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
+import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
@@ -14,20 +13,20 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     super(node, header, iteratorType);
   }
   get pointer() {
-    if (this.node.key === undefined) {
-      throw new RunTimeError('OrderedMap iterator access denied');
+    if (this.node === this.header) {
+      throw new RangeError('OrderedMap iterator access denied');
     }
-    return new Proxy([this.node.key, this.node.value] as [K, V], {
-      get: (_, prop) => {
-        const index = Number(prop);
+    return new Proxy([] as unknown as [K, V], {
+      get: (_, prop: string) => {
+        const index = parseInt(prop);
         if (Number.isNaN(index)) {
           throw new TypeError('prop must be number');
         }
         checkWithinAccessParams(index, 0, 1);
         return index === 0 ? this.node.key : this.node.value;
       },
-      set: (_, prop, newValue: V) => {
-        const index = Number(prop);
+      set: (_, prop: string, newValue: V) => {
+        const index = parseInt(prop);
         if (Number.isNaN(index)) {
           throw new TypeError('prop must be number');
         }
@@ -48,9 +47,9 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   private iterationFunc:
   (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
       function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
-        if (!curNode || curNode.key === undefined) return;
+        if (curNode === undefined) return;
         yield * this.iterationFunc(curNode.leftChild);
-        yield [curNode.key, curNode.value as V];
+        yield [curNode.key, curNode.value] as [K, V];
         yield * this.iterationFunc(curNode.rightChild);
       };
   /**
@@ -105,38 +104,33 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   lowerBound(key: K) {
     const resNode = this._lowerBound(this.root, key);
-    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
+    return new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element greater than the given key.
    */
   upperBound(key: K) {
     const resNode = this._upperBound(this.root, key);
-    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
+    return new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element not greater than the given key.
    */
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this.root, key);
-    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
+    return new OrderedMapIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element less than the given key.
    */
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this.root, key);
-    return resNode === undefined ? this.end() : new OrderedMapIterator(resNode, this.header);
+    return new OrderedMapIterator(resNode, this.header);
   }
   /**
    * Insert a new key-value pair or set value by key.
    */
   setElement(key: K, value: V) {
-    checkUndefinedParams(key);
-    if (value === null || value === undefined) {
-      this.eraseElementByKey(key);
-      return;
-    }
     this.set(key, value);
   }
   /**
@@ -145,7 +139,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   find(key: K) {
     const curNode = this.findElementNode(this.root, key);
-    if (curNode !== undefined && curNode.key !== undefined) {
+    if (curNode !== undefined) {
       return new OrderedMapIterator(curNode, this.header);
     }
     return this.end();

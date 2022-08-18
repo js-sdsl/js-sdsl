@@ -1,6 +1,5 @@
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, Deque } from '@/index';
-import { ContainerInitError, RunTimeError } from '@/utils/error';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -53,7 +52,7 @@ describe('Deque test', () => {
     expect(() => {
       const a = myDeque.find(-1).pointer;
       return a;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     myDeque.pushBack(-1);
     expect(myDeque.find(-1).pointer).toEqual(-1);
     myDeque.popBack();
@@ -72,7 +71,7 @@ describe('Deque test', () => {
   });
 
   test('Deque run time error test', () => {
-    expect(() => myDeque.getElementByPos(myDeque.size())).toThrowError(RunTimeError);
+    expect(() => myDeque.getElementByPos(myDeque.size())).toThrowError(RangeError);
   });
 
   test('Deque empty test', () => {
@@ -96,12 +95,12 @@ describe('Deque test', () => {
     expect(new Deque(new Set([2])).size()).toBe(1);
     expect(new Deque(new Vector([2])).size()).toBe(1);
     // @ts-ignore
-    expect(() => new Deque({})).toThrowError(ContainerInitError);
+    expect(() => new Deque({})).toThrowError(RangeError);
     myDeque.cut(-1);
     myDeque.popBack();
     myDeque.popFront();
     expect(myDeque.size()).toBe(0);
-    expect(() => myDeque.eraseElementByPos(-1)).toThrowError(RunTimeError);
+    expect(() => myDeque.eraseElementByPos(-1)).toThrowError(RangeError);
     myDeque.eraseElementByValue(0);
     expect(myDeque.find(0).equals(myDeque.end())).toEqual(true);
     myDeque.unique();

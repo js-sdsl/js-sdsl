@@ -10,7 +10,6 @@ import {
   OrderedSetIterator,
   OrderedMapIterator
 } from '@/index';
-import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
 
 let arr: number[] = [];
@@ -96,19 +95,19 @@ describe('iterator test', () => {
 
   for (const container of containerArr) {
     test('normal iterator next run time error test', () => {
-      expect(() => container.end().next()).toThrowError(RunTimeError);
+      expect(() => container.end().next()).toThrowError(RangeError);
     });
 
     test('normal iterator pre run time error test', () => {
-      expect(() => container.begin().pre()).toThrowError(RunTimeError);
+      expect(() => container.begin().pre()).toThrowError(RangeError);
     });
 
     test('reverse iterator next run time error test', () => {
-      expect(() => container.rEnd().next()).toThrowError(RunTimeError);
+      expect(() => container.rEnd().next()).toThrowError(RangeError);
     });
 
     test('reverse iterator pre run time error test', () => {
-      expect(() => container.rBegin().pre()).toThrowError(RunTimeError);
+      expect(() => container.rBegin().pre()).toThrowError(RangeError);
     });
 
     test('normal iterator type error test', () => {

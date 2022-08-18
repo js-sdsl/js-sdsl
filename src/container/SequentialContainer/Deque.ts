@@ -1,4 +1,3 @@
-import { ContainerInitError, RunTimeError } from '@/utils/error';
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
@@ -32,12 +31,12 @@ export class DequeIterator<T> extends ContainerIterator<T> {
   pre() {
     if (this.iteratorType === 'reverse') {
       if (this.node === this.size() - 1) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RangeError('Deque iterator access denied!');
       }
       this.node += 1;
     } else {
       if (this.node === 0) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RangeError('Deque iterator access denied!');
       }
       this.node -= 1;
     }
@@ -46,12 +45,12 @@ export class DequeIterator<T> extends ContainerIterator<T> {
   next() {
     if (this.iteratorType === 'reverse') {
       if (this.node === -1) {
-        throw new RunTimeError('Deque iterator access denied!');
+        throw new RangeError('Deque iterator access denied!');
       }
       this.node -= 1;
     } else {
       if (this.node === this.size()) {
-        throw new RunTimeError('Iterator access denied!');
+        throw new RangeError('Deque Iterator access denied!');
       }
       this.node += 1;
     }
@@ -88,7 +87,7 @@ class Deque<T> extends SequentialContainer<T> {
     } else if ('length' in container) {
       _length = container.length;
     } else {
-      throw new ContainerInitError('Can\'t get container\'s size!');
+      throw new RangeError('Can\'t get container\'s size!');
     }
     this.bucketSize = bucketSize;
     this.bucketNum = Math.max(Math.ceil(_length / this.bucketSize), 1);
@@ -168,7 +167,8 @@ class Deque<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      'reverse');
+      'reverse'
+    );
   }
   rEnd() {
     return new DequeIterator(

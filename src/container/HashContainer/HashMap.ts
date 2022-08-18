@@ -1,7 +1,6 @@
 import { initContainer } from '@/container/ContainerBase/index';
 import LinkList from '../SequentialContainer/LinkList';
 import OrderedMap from '../TreeContainer/OrderedMap';
-import { checkUndefinedParams } from '@/utils/checkParams';
 import HashContainerBase from './Base/index';
 
 class HashMap<K, V> extends HashContainerBase<K> {
@@ -82,11 +81,6 @@ class HashMap<K, V> extends HashContainerBase<K> {
    * Insert a new key-value pair or set value by key.
    */
   setElement(key: K, value: V) {
-    checkUndefinedParams(key);
-    if (value === null || value === undefined) {
-      this.eraseElementByKey(key);
-      return;
-    }
     const index = this.hashFunc(key) & (this.bucketNum - 1);
     if ((index in this.hashTable) === false) {
       this.length += 1;

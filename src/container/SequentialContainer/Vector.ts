@@ -1,6 +1,5 @@
-import { RunTimeError } from '@/utils/error';
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
-import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
+import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
 export class VectorIterator<T> extends ContainerIterator<T> {
@@ -32,12 +31,12 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   pre() {
     if (this.iteratorType === 'reverse') {
       if (this.node === this.size() - 1) {
-        throw new RunTimeError('Vector iterator access denied!');
+        throw new RangeError('Vector iterator access denied!');
       }
       this.node += 1;
     } else {
       if (this.node === 0) {
-        throw new RunTimeError('Vector iterator access denied!');
+        throw new RangeError('Vector iterator access denied!');
       }
       this.node -= 1;
     }
@@ -46,12 +45,12 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   next() {
     if (this.iteratorType === 'reverse') {
       if (this.node === -1) {
-        throw new RunTimeError('Vector iterator access denied!');
+        throw new RangeError('Vector iterator access denied!');
       }
       this.node -= 1;
     } else {
       if (this.node === this.size()) {
-        throw new RunTimeError('Iterator access denied!');
+        throw new RangeError('Vector Iterator access denied!');
       }
       this.node += 1;
     }
@@ -170,7 +169,6 @@ class Vector<T> extends SequentialContainer<T> {
     this.vector[pos] = element;
   }
   insert(pos: number, element: T, num = 1) {
-    checkUndefinedParams(element);
     checkWithinAccessParams(pos, 0, this.length);
     this.vector.splice(pos, 0, ...new Array<T>(num).fill(element));
     this.length += num;

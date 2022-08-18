@@ -1,4 +1,3 @@
-import { RunTimeError } from '@/utils/error';
 import { ContainerIterator } from '@/container/ContainerBase/index';
 import TreeNode from './TreeNode';
 
@@ -16,8 +15,10 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   }
   protected _pre() {
     let preNode: TreeNode<K, V> = this.node;
-    if (preNode.color === TreeNode.red &&
-      (preNode.parent as TreeNode<K, V>).parent === preNode) {
+    if (
+      preNode.color === TreeNode.red &&
+      (preNode.parent as TreeNode<K, V>).parent === preNode
+    ) {
       preNode = preNode.rightChild as TreeNode<K, V>;
     } else if (preNode.leftChild) {
       preNode = preNode.leftChild;
@@ -56,12 +57,12 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   pre() {
     if (this.iteratorType === 'reverse') {
       if (this.node === this.header.rightChild) {
-        throw new RunTimeError('Tree iterator access denied!');
+        throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._next();
     } else {
       if (this.node === this.header.leftChild) {
-        throw new RunTimeError('Tree iterator access denied!');
+        throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._pre();
     }
@@ -70,12 +71,12 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   next() {
     if (this.iteratorType === 'reverse') {
       if (this.node === this.header) {
-        throw new RunTimeError('Tree iterator access denied!');
+        throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._pre();
     } else {
       if (this.node === this.header) {
-        throw new RunTimeError('Tree iterator access denied!');
+        throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._next();
     }

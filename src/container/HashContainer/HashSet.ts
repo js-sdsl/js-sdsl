@@ -1,7 +1,6 @@
 import { initContainer } from '@/container/ContainerBase/index';
 import OrderedSet from '../TreeContainer/OrderedSet';
 import LinkList from '../SequentialContainer/LinkList';
-import { checkUndefinedParams } from '@/utils/checkParams';
 import HashContainerBase from './Base/index';
 
 class HashSet<K> extends HashContainerBase<K> {
@@ -83,7 +82,6 @@ class HashSet<K> extends HashContainerBase<K> {
    * Inserts element to Set.
    */
   insert(element: K) {
-    checkUndefinedParams(element);
     const index = this.hashFunc(element) & (this.bucketNum - 1);
     if (!this.hashTable[index]) {
       this.hashTable[index] = new LinkList<K>([element]);

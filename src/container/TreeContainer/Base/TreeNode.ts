@@ -1,5 +1,3 @@
-import { InternalError } from '@/utils/error';
-
 class TreeNode<K, V> {
   static red = true as const;
   static black = false as const;
@@ -23,10 +21,8 @@ class TreeNode<K, V> {
     const R = V.leftChild;
     const X = V.rightChild;
 
-    if (PP && PP.key !== undefined) {
-      if (PP.leftChild === this) PP.leftChild = V;
-      else if (PP.rightChild === this) PP.rightChild = V;
-    }
+    if (PP?.leftChild === this) PP.leftChild = V;
+    else if (PP?.rightChild === this) PP.rightChild = V;
 
     V.parent = PP;
     V.brother = PB;
@@ -66,10 +62,8 @@ class TreeNode<K, V> {
     const D = F.leftChild;
     const K = F.rightChild;
 
-    if (PP && PP.key !== undefined) {
-      if (PP.leftChild === this) PP.leftChild = F;
-      else if (PP.rightChild === this) PP.rightChild = F;
-    }
+    if (PP?.leftChild === this) PP.leftChild = F;
+    else if (PP?.rightChild === this) PP.rightChild = F;
 
     F.parent = PP;
     F.brother = PB;
@@ -101,12 +95,10 @@ class TreeNode<K, V> {
     return F;
   }
   remove() {
-    if (this.leftChild || this.rightChild) {
-      throw new InternalError('can only remove leaf node');
-    }
-    if (this.parent) {
-      if (this === this.parent.leftChild) this.parent.leftChild = undefined;
-      else if (this === this.parent.rightChild) this.parent.rightChild = undefined;
+    if (this === this.parent?.leftChild) {
+      this.parent.leftChild = undefined;
+    } else if (this === this.parent?.rightChild) {
+      this.parent.rightChild = undefined;
     }
     if (this.brother) this.brother.brother = undefined;
     this.key = undefined;

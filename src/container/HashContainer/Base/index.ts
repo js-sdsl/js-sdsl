@@ -1,5 +1,4 @@
 import { Base } from '@/container/ContainerBase/index';
-import { ContainerInitError } from '@/utils/error';
 
 abstract class HashContainerBase<K> extends Base {
   protected static maxBucketNum: number = (1 << 30);
@@ -30,7 +29,7 @@ abstract class HashContainerBase<K> extends Base {
     }) {
     super();
     if ((initBucketNum & (initBucketNum - 1)) !== 0) {
-      throw new ContainerInitError('initBucketNum must be 2 to the power of n');
+      throw new RangeError('initBucketNum must be 2 to the power of n');
     }
     this.initBucketNum = Math.max(initBucketNum, HashContainerBase.initBucketNum);
     this.bucketNum = this.initBucketNum;

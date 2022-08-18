@@ -94,11 +94,6 @@ describe('HashMap test', () => {
   test('HashMap empty test', () => {
     expect(myHashMap.eraseElementByKey('1')).toEqual(undefined);
     expect(myHashMap.find('1')).toEqual(false);
-    myHashMap.setElement('1', 1);
-    expect(myHashMap.size()).toBe(1);
-    // @ts-ignore
-    myHashMap.setElement('1', undefined);
-    expect(myHashMap.size()).toBe(0);
     for (let i = -1; i >= -1000; --i) {
       expect(myHashMap.getElementByKey(i.toString())).toEqual(undefined);
       expect(myHashMap.find(i.toString())).toEqual(false);
