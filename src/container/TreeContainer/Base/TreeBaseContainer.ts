@@ -133,9 +133,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       this.clear();
       return;
     }
-
     let swapNode = curNode;
-
     while (swapNode.leftChild || swapNode.rightChild) {
       if (swapNode.rightChild) {
         swapNode = swapNode.rightChild;
@@ -156,7 +154,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     if (this.header.rightChild === swapNode) {
       this.header.rightChild = this.header.rightChild.parent;
     }
-
     this.eraseNodeSelfBalance(swapNode);
     swapNode.remove();
     this.length -= 1;
@@ -240,51 +237,64 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       this.header.rightChild = this.root;
       return;
     }
-
-    let curNode = this.root;
-    while (true) {
-      const cmpResult = this.cmp(key, curNode.key as K);
-      if (cmpResult < 0) {
-        if (!curNode.leftChild) {
-          curNode.leftChild = new TreeNode<K, V>(key, value);
-          curNode.leftChild.parent = curNode;
-          curNode.leftChild.brother = curNode.rightChild;
-          if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
-          curNode = curNode.leftChild;
-          break;
-        }
-        curNode = curNode.leftChild;
-      } else if (cmpResult > 0) {
-        if (!curNode.rightChild) {
-          curNode.rightChild = new TreeNode<K, V>(key, value);
-          curNode.rightChild.parent = curNode;
-          curNode.rightChild.brother = curNode.leftChild;
-          if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
-          curNode = curNode.rightChild;
-          break;
-        }
-        curNode = curNode.rightChild;
-      } else {
-        curNode.value = value;
+    let curNode;
+    const minNode = this.header.leftChild as TreeNode<K, V>;
+    const compareToMin = this.cmp(minNode.key as K, key);
+    if (compareToMin === 0) {
+      minNode.value = value;
+      return;
+    } else if (compareToMin > 0) {
+      minNode.leftChild = new TreeNode(key, value);
+      minNode.leftChild.parent = minNode;
+      minNode.leftChild.brother = minNode.rightChild;
+      if (minNode.rightChild) minNode.rightChild.brother = minNode.leftChild;
+      curNode = minNode.leftChild;
+      this.header.leftChild = curNode;
+    } else {
+      const maxNode = this.header.rightChild as TreeNode<K, V>;
+      const compareToMax = this.cmp(maxNode.key as K, key);
+      if (compareToMax === 0) {
+        maxNode.value = value;
         return;
+      } else if (compareToMax < 0) {
+        maxNode.rightChild = new TreeNode<K, V>(key, value);
+        maxNode.rightChild.parent = maxNode;
+        maxNode.rightChild.brother = maxNode.leftChild;
+        if (maxNode.leftChild) maxNode.leftChild.brother = maxNode.rightChild;
+        curNode = maxNode.rightChild;
+        this.header.rightChild = curNode;
+      } else {
+        curNode = this.root;
+        while (true) {
+          const cmpResult = this.cmp(curNode.key as K, key);
+          if (cmpResult > 0) {
+            if (!curNode.leftChild) {
+              curNode.leftChild = new TreeNode<K, V>(key, value);
+              curNode.leftChild.parent = curNode;
+              curNode.leftChild.brother = curNode.rightChild;
+              if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
+              curNode = curNode.leftChild;
+              break;
+            }
+            curNode = curNode.leftChild;
+          } else if (cmpResult < 0) {
+            if (!curNode.rightChild) {
+              curNode.rightChild = new TreeNode<K, V>(key, value);
+              curNode.rightChild.parent = curNode;
+              curNode.rightChild.brother = curNode.leftChild;
+              if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
+              curNode = curNode.rightChild;
+              break;
+            }
+            curNode = curNode.rightChild;
+          } else {
+            curNode.value = value;
+            return;
+          }
+        }
       }
     }
-
     this.length += 1;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.header.leftChild.leftChild === curNode
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.header.rightChild.rightChild === curNode
-    ) {
-      this.header.rightChild = curNode;
-    }
-
     this.insertNodeSelfBalance(curNode);
   }
   clear() {
@@ -310,13 +320,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
    */
   eraseElementByKey(key: K) {
     if (!this.length) return;
-
     const curNode = this.findElementNode(this.root, key);
     if (
       curNode === undefined ||
       this.cmp(curNode.key as K, key) !== 0
     ) return;
-
     this.eraseNode(curNode);
   }
   /**
