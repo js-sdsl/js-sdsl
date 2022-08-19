@@ -170,5 +170,11 @@ describe('OrderedSet test', () => {
     expect(myOrderedSet.getElementByPos(0)).toBe(1);
     myOrderedSet.insert(3);
     expect(myOrderedSet.getElementByPos(1)).toBe(3);
+    myOrderedSet.clear();
+    myOrderedSet.insert(1);
+    expect(myOrderedSet.front()).toEqual(1);
+    myOrderedSet.eraseElementByKey(1);
+    expect(myOrderedSet.size()).toEqual(0);
+    expect(() => myOrderedSet.eraseElementByIterator(myOrderedSet.begin())).toThrow(RangeError);
   });
 });

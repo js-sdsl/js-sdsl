@@ -64,6 +64,9 @@ function testSequentialContainer(container: SequentialContainer<number>) {
 
   for (let i = 0; i < testNum; ++i) {
     const pos = Math.floor(Math.random() * myVector.size());
+    if (pos >= container.size()) {
+      console.error(1);
+    }
     container.eraseElementByPos(pos);
     myVector.eraseElementByPos(pos);
   }
@@ -116,7 +119,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
 
 describe('SequentialContainer test', () => {
   test('Vector test', () => {
-    const myVector = new Vector([1]);
+    const myVector = new Vector([1], false);
     myVector.begin().pointer = 0;
     expect(myVector.front()).toBe(0);
     expect(myVector.find(0).pointer).toBe(0);
@@ -125,11 +128,11 @@ describe('SequentialContainer test', () => {
     expect(myVector.front()).toEqual(undefined);
     expect(myVector.back()).toEqual(undefined);
     myVector.insert(0, 100);
-    // @ts-ignore
-    myVector.setElementByPos(0, undefined);
     expect(() => {
       myVector.find(0).pointer = 1;
     }).toThrowError(RangeError);
+    myVector.clear();
+    myVector.popBack();
   });
 
   test('LinkList standard test', () => {

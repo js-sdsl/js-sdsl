@@ -82,6 +82,24 @@ describe('HashMap test', () => {
     myHashMap.eraseElementByKey('-7');
     myHashMap.eraseElementByKey('-8');
     myHashMap.eraseElementByKey('-9');
+    expect(myHashMap.getElementByKey('-1')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-2')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-3')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-4')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-5')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-6')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-7')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-8')).toBe(undefined);
+    expect(myHashMap.getElementByKey('-9')).toBe(undefined);
+    expect(myHashMap.find('-1')).toBe(false);
+    expect(myHashMap.find('-2')).toBe(false);
+    expect(myHashMap.find('-3')).toBe(false);
+    expect(myHashMap.find('-4')).toBe(false);
+    expect(myHashMap.find('-5')).toBe(false);
+    expect(myHashMap.find('-6')).toBe(false);
+    expect(myHashMap.find('-7')).toBe(false);
+    expect(myHashMap.find('-8')).toBe(false);
+    expect(myHashMap.find('-9')).toBe(false);
     judgeHashMap(myHashMap, stdMap);
   });
 
@@ -99,7 +117,9 @@ describe('HashMap test', () => {
       expect(myHashMap.find(i.toString())).toEqual(false);
     }
     // @ts-ignore
-    expect(myHashMap.reAllocate(HashContainerBase.maxBucketNum)).toEqual(undefined);
+    myHashMap.bucketNum = HashContainerBase.maxBucketNum;
+    // @ts-ignore
+    expect(myHashMap.reAllocate()).toEqual(undefined);
     // @ts-ignore
     myHashMap.hashTable[0] = new LinkList();
     // @ts-ignore

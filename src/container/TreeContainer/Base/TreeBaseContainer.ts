@@ -129,8 +129,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   protected eraseNode(curNode: TreeNode<K, V>) {
-    if (this.root === undefined) return;
-
     if (this.length === 1) {
       this.clear();
       return;
@@ -328,6 +326,9 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByIterator(iter: TreeIterator<K, V>) {
     // @ts-ignore
     const node = iter.node;
+    if (node === this.header) {
+      throw new RangeError('Invalid iterator');
+    }
     iter = iter.next();
     this.eraseNode(node);
     return iter;

@@ -95,10 +95,11 @@ class TreeNode<K, V> {
     return F;
   }
   remove() {
-    if (this === this.parent?.leftChild) {
-      this.parent.leftChild = undefined;
-    } else if (this === this.parent?.rightChild) {
-      this.parent.rightChild = undefined;
+    const parent = this.parent as TreeNode<K, V>;
+    if (this === parent.leftChild) {
+      parent.leftChild = undefined;
+    } else {
+      parent.rightChild = undefined;
     }
     if (this.brother) this.brother.brother = undefined;
     this.key = undefined;

@@ -58,10 +58,10 @@ export class DequeIterator<T> extends ContainerIterator<T> {
   }
   equals(obj: DequeIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
+      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('iterator type error!');
+      throw new TypeError('Iterator type error!');
     }
     return this.node === obj.node;
   }
@@ -307,9 +307,7 @@ class Deque<T> extends SequentialContainer<T> {
     this.length = pos + 1;
   }
   eraseElementByPos(pos: number) {
-    if (pos < 0 || pos > this.length) {
-      checkWithinAccessParams(pos, 0, this.length - 1);
-    }
+    checkWithinAccessParams(pos, 0, this.length - 1);
     if (pos === 0) this.popFront();
     else if (pos === this.length - 1) this.popBack();
     else {

@@ -1,17 +1,16 @@
 import { Base } from '@/container/ContainerBase/index';
 
 abstract class HashContainerBase<K> extends Base {
-  protected static maxBucketNum: number = (1 << 30);
-  protected static initBucketNum: number = (1 << 4);
   protected static sigma = 0.75;
   protected static treeifyThreshold = 8;
   protected static untreeifyThreshold = 6;
   protected static minTreeifySize = 64;
-  protected initBucketNum: number;
+  protected static maxBucketNum: number = (1 << 30);
   protected bucketNum: number;
+  protected initBucketNum: number;
   protected hashFunc: (x: K) => number;
   protected constructor(
-    initBucketNum = HashContainerBase.initBucketNum,
+    initBucketNum = 16,
     hashFunc: (x: K) => number =
     (x: K) => {
       let hashCode = 0;
@@ -28,11 +27,10 @@ abstract class HashContainerBase<K> extends Base {
       return hashCode;
     }) {
     super();
-    if ((initBucketNum & (initBucketNum - 1)) !== 0) {
-      throw new RangeError('initBucketNum must be 2 to the power of n');
+    if (initBucketNum < 16 || (initBucketNum & (initBucketNum - 1)) !== 0) {
+      throw new RangeError('InitBucketNum range error');
     }
-    this.initBucketNum = Math.max(initBucketNum, HashContainerBase.initBucketNum);
-    this.bucketNum = this.initBucketNum;
+    this.bucketNum = this.initBucketNum = initBucketNum;
     this.hashFunc = hashFunc;
   }
 }

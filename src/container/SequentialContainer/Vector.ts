@@ -58,20 +58,26 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   }
   equals(obj: VectorIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
+      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('iterator type error!');
+      throw new TypeError('Iterator type error!');
     }
     return this.node === obj.node;
   }
 }
 
 class Vector<T> extends SequentialContainer<T> {
-  private vector: T[] = [];
-  constructor(container: initContainer<T> = []) {
+  private vector: T[];
+  constructor(container: initContainer<T> = [], copy = true) {
     super();
-    container.forEach(element => this.pushBack(element));
+    if (Array.isArray(container)) {
+      this.vector = copy ? [...container] : container;
+      this.length = container.length;
+    } else {
+      this.vector = [];
+      container.forEach(element => this.pushBack(element));
+    }
     this.size = this.size.bind(this);
     this.getElementByPos = this.getElementByPos.bind(this);
     this.setElementByPos = this.setElementByPos.bind(this);
@@ -115,11 +121,11 @@ class Vector<T> extends SequentialContainer<T> {
     );
   }
   front() {
-    if (!this.length) return undefined;
+    if (!this.length) return;
     return this.vector[0];
   }
   back() {
-    if (!this.length) return undefined;
+    if (!this.length) return;
     return this.vector[this.length - 1];
   }
   forEach(callback: (element: T, index: number) => void) {
@@ -133,8 +139,8 @@ class Vector<T> extends SequentialContainer<T> {
   }
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
-    for (let i = pos; i < this.length - 1; ++i) this.vector[i] = this.vector[i + 1];
-    this.popBack();
+    this.vector.splice(pos, 1);
+    this.length -= 1;
   }
   eraseElementByValue(value: T) {
     let index = 0;
@@ -143,7 +149,7 @@ class Vector<T> extends SequentialContainer<T> {
         this.vector[index++] = this.vector[i];
       }
     }
-    while (this.length > index) this.popBack();
+    this.length = this.vector.length = index;
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
     // @ts-ignore
@@ -157,15 +163,12 @@ class Vector<T> extends SequentialContainer<T> {
     this.length += 1;
   }
   popBack() {
+    if (!this.length) return;
     this.vector.pop();
-    if (this.length > 0) this.length -= 1;
+    this.length -= 1;
   }
   setElementByPos(pos: number, element: T) {
     checkWithinAccessParams(pos, 0, this.length - 1);
-    if (element === undefined || element === null) {
-      this.eraseElementByPos(pos);
-      return;
-    }
     this.vector[pos] = element;
   }
   insert(pos: number, element: T, num = 1) {
@@ -196,7 +199,7 @@ class Vector<T> extends SequentialContainer<T> {
         this.vector[index++] = this.vector[i];
       }
     }
-    while (this.length > index) this.popBack();
+    this.length = this.vector.length = index;
   }
   sort(cmp?: (x: T, y: T) => number) {
     this.vector.sort(cmp);

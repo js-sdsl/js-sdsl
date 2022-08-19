@@ -1,11 +1,11 @@
 import { Base, initContainer } from '@/container/ContainerBase/index';
-import LinkList from '../SequentialContainer/LinkList';
+import Deque from '../SequentialContainer/Deque';
 
 class Queue<T> extends Base {
-  private queue: LinkList<T>;
+  private queue: Deque<T>;
   constructor(container: initContainer<T> = []) {
     super();
-    this.queue = new LinkList(container);
+    this.queue = new Deque(container);
     this.length = this.queue.size();
   }
   clear() {

@@ -20,7 +20,7 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
       get: (_, prop: string) => {
         const index = parseInt(prop);
         if (Number.isNaN(index)) {
-          throw new TypeError('prop must be number');
+          throw new TypeError('Prop must be number');
         }
         checkWithinAccessParams(index, 0, 1);
         return index === 0 ? this.node.key : this.node.value;
@@ -28,7 +28,7 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
       set: (_, prop: string, newValue: V) => {
         const index = parseInt(prop);
         if (Number.isNaN(index)) {
-          throw new TypeError('prop must be number');
+          throw new TypeError('Prop must be number');
         }
         checkWithinAccessParams(index, 1, 1);
         this.node.value = newValue;

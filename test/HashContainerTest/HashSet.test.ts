@@ -1,5 +1,5 @@
 import HashContainerBase from '@/container/HashContainer/Base/index';
-import { LinkList, HashSet } from '@/index';
+import { Vector, HashSet } from '@/index';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -86,11 +86,13 @@ describe('HashSet test', () => {
     myHashSet.insert(arr[0]);
     expect(myHashSet.size()).toBe(1);
     // @ts-ignore
-    expect(myHashSet.reAllocate(HashContainerBase.maxBucketNum)).toEqual(undefined);
+    myHashSet.bucketNum = HashContainerBase.maxBucketNum;
     // @ts-ignore
-    myHashSet.hashTable[0] = new LinkList();
+    expect(myHashSet.reAllocate()).toEqual(undefined);
     // @ts-ignore
-    myHashSet.hashTable[myHashSet.bucketNum - 5] = new LinkList();
+    myHashSet.hashTable[0] = new Vector();
+    // @ts-ignore
+    myHashSet.hashTable[myHashSet.bucketNum - 5] = new Vector();
     // @ts-ignore
     expect(myHashSet.reAllocate(myHashSet.bucketNum)).toEqual(undefined);
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty

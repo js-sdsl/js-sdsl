@@ -64,10 +64,10 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
   }
   equals(obj: LinkListIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
+      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('iterator type error!');
+      throw new TypeError('Iterator type error!');
     }
     return this.node === obj.node;
   }
@@ -154,11 +154,11 @@ class LinkList<T> extends SequentialContainer<T> {
     }
   }
   eraseElementByIterator(iter: LinkListIterator<T>) {
-    if (!this.length) {
-      throw new RangeError();
-    }
     // @ts-ignore
     const node = iter.node;
+    if (node === this.header) {
+      throw new RangeError('Invalid iterator');
+    }
     iter = iter.next();
     if (this.head === node) this.popFront();
     else if (this.tail === node) this.popBack();
