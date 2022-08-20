@@ -68,53 +68,53 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         return;
       }
 
-      const brotherNode = curNode.brother as TreeNode<K, V>;
-
       if (curNode === parentNode.left) {
-        if (brotherNode.color === TreeNode.red) {
-          brotherNode.color = TreeNode.black;
+        const brother = parentNode.right as TreeNode<K, V>;
+        if (brother.color === TreeNode.red) {
+          brother.color = TreeNode.black;
           parentNode.color = TreeNode.red;
           parentNode.rotateLeft();
-        } else if (brotherNode.color === TreeNode.black) {
-          if (brotherNode.right && brotherNode.right.color === TreeNode.red) {
-            brotherNode.color = parentNode.color;
+        } else if (brother.color === TreeNode.black) {
+          if (brother.right && brother.right.color === TreeNode.red) {
+            brother.color = parentNode.color;
             parentNode.color = TreeNode.black;
-            brotherNode.right.color = TreeNode.black;
+            brother.right.color = TreeNode.black;
             if (parentNode === this.root) {
               this.root = parentNode.rotateLeft();
             } else parentNode.rotateLeft();
             curNode.color = TreeNode.black;
             return;
-          } else if (brotherNode.left && brotherNode.left.color === TreeNode.red) {
-            brotherNode.color = TreeNode.red;
-            brotherNode.left.color = TreeNode.black;
-            brotherNode.rotateRight();
+          } else if (brother.left && brother.left.color === TreeNode.red) {
+            brother.color = TreeNode.red;
+            brother.left.color = TreeNode.black;
+            brother.rotateRight();
           } else {
-            brotherNode.color = TreeNode.red;
+            brother.color = TreeNode.red;
             curNode = parentNode;
           }
         }
       } else {
-        if (brotherNode.color === TreeNode.red) {
-          brotherNode.color = TreeNode.black;
+        const brother = parentNode.left as TreeNode<K, V>;
+        if (brother.color === TreeNode.red) {
+          brother.color = TreeNode.black;
           parentNode.color = TreeNode.red;
           parentNode.rotateRight();
         } else {
-          if (brotherNode.left && brotherNode.left.color === TreeNode.red) {
-            brotherNode.color = parentNode.color;
+          if (brother.left && brother.left.color === TreeNode.red) {
+            brother.color = parentNode.color;
             parentNode.color = TreeNode.black;
-            brotherNode.left.color = TreeNode.black;
+            brother.left.color = TreeNode.black;
             if (parentNode === this.root) {
               this.root = parentNode.rotateRight();
             } else parentNode.rotateRight();
             curNode.color = TreeNode.black;
             return;
-          } else if (brotherNode.right && brotherNode.right.color === TreeNode.red) {
-            brotherNode.color = TreeNode.red;
-            brotherNode.right.color = TreeNode.black;
-            brotherNode.rotateLeft();
+          } else if (brother.right && brother.right.color === TreeNode.red) {
+            brother.color = TreeNode.red;
+            brother.right.color = TreeNode.black;
+            brother.rotateLeft();
           } else {
-            brotherNode.color = TreeNode.red;
+            brother.color = TreeNode.red;
             curNode = parentNode;
           }
         }
@@ -164,38 +164,42 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     while (true) {
       const parentNode = curNode.parent as TreeNode<K, V>;
       if (parentNode.color === TreeNode.black) return;
-      const uncleNode = parentNode.brother;
       const grandParent = parentNode.parent as TreeNode<K, V>;
-      if (uncleNode && uncleNode.color === TreeNode.red) {
-        uncleNode.color = parentNode.color = TreeNode.black;
-        if (grandParent === this.root) return;
-        grandParent.color = TreeNode.red;
-        curNode = grandParent;
-      } else {
-        if (parentNode === grandParent.left) {
-          if (curNode === parentNode.left) {
-            parentNode.color = TreeNode.black;
-            grandParent.color = TreeNode.red;
-            if (grandParent === this.root) {
-              this.root = grandParent.rotateRight();
-            } else grandParent.rotateRight();
-            return;
-          } else {
-            parentNode.rotateLeft();
-            curNode = parentNode;
-          }
+      if (parentNode === grandParent.left) {
+        const uncle = grandParent.right;
+        if (uncle && uncle.color === TreeNode.red) {
+          uncle.color = parentNode.color = TreeNode.black;
+          if (grandParent === this.root) return;
+          grandParent.color = TreeNode.red;
+          curNode = grandParent;
+        } else if (curNode === parentNode.left) {
+          parentNode.color = TreeNode.black;
+          grandParent.color = TreeNode.red;
+          if (grandParent === this.root) {
+            this.root = grandParent.rotateRight();
+          } else grandParent.rotateRight();
+          return;
         } else {
-          if (curNode === parentNode.left) {
-            parentNode.rotateRight();
-            curNode = parentNode;
-          } else {
-            parentNode.color = TreeNode.black;
-            grandParent.color = TreeNode.red;
-            if (grandParent === this.root) {
-              this.root = grandParent.rotateLeft();
-            } else grandParent.rotateLeft();
-            return;
-          }
+          parentNode.rotateLeft();
+          curNode = parentNode;
+        }
+      } else {
+        const uncle = grandParent.left;
+        if (uncle && uncle.color === TreeNode.red) {
+          uncle.color = parentNode.color = TreeNode.black;
+          if (grandParent === this.root) return;
+          grandParent.color = TreeNode.red;
+          curNode = grandParent;
+        } else if (curNode === parentNode.left) {
+          parentNode.rotateRight();
+          curNode = parentNode;
+        } else {
+          parentNode.color = TreeNode.black;
+          grandParent.color = TreeNode.red;
+          if (grandParent === this.root) {
+            this.root = grandParent.rotateLeft();
+          } else grandParent.rotateLeft();
+          return;
         }
       }
     }
@@ -231,8 +235,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     } else if (compareToMin > 0) {
       minNode.left = new TreeNode(key, value);
       minNode.left.parent = minNode;
-      minNode.left.brother = minNode.right;
-      if (minNode.right) minNode.right.brother = minNode.left;
       curNode = minNode.left;
       this.header.left = curNode;
     } else {
@@ -244,8 +246,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       } else if (compareToMax < 0) {
         maxNode.right = new TreeNode<K, V>(key, value);
         maxNode.right.parent = maxNode;
-        maxNode.right.brother = maxNode.left;
-        if (maxNode.left) maxNode.left.brother = maxNode.right;
         curNode = maxNode.right;
         this.header.right = curNode;
       } else {
@@ -256,8 +256,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             if (!curNode.left) {
               curNode.left = new TreeNode<K, V>(key, value);
               curNode.left.parent = curNode;
-              curNode.left.brother = curNode.right;
-              if (curNode.right) curNode.right.brother = curNode.left;
               curNode = curNode.left;
               break;
             }
@@ -266,8 +264,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             if (!curNode.right) {
               curNode.right = new TreeNode<K, V>(key, value);
               curNode.right.parent = curNode;
-              curNode.right.brother = curNode.left;
-              if (curNode.left) curNode.left.brother = curNode.right;
               curNode = curNode.right;
               break;
             }
