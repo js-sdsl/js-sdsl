@@ -172,17 +172,15 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           if (grandParent === this.root) return;
           grandParent.color = TreeNode.red;
           curNode = grandParent;
-        } else if (curNode === parentNode.left) {
-          parentNode.color = TreeNode.black;
-          grandParent.color = TreeNode.red;
-          if (grandParent === this.root) {
-            this.root = grandParent.rotateRight();
-          } else grandParent.rotateRight();
-          return;
-        } else {
+          continue;
+        } else if (curNode === parentNode.right) {
           parentNode.rotateLeft();
-          curNode = parentNode;
-        }
+          curNode.color = TreeNode.black;
+        } else parentNode.color = TreeNode.black;
+        grandParent.color = TreeNode.red;
+        if (grandParent === this.root) {
+          this.root = grandParent.rotateRight();
+        } else grandParent.rotateRight();
       } else {
         const uncle = grandParent.left;
         if (uncle && uncle.color === TreeNode.red) {
@@ -190,18 +188,17 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           if (grandParent === this.root) return;
           grandParent.color = TreeNode.red;
           curNode = grandParent;
+          continue;
         } else if (curNode === parentNode.left) {
           parentNode.rotateRight();
-          curNode = parentNode;
-        } else {
-          parentNode.color = TreeNode.black;
-          grandParent.color = TreeNode.red;
-          if (grandParent === this.root) {
-            this.root = grandParent.rotateLeft();
-          } else grandParent.rotateLeft();
-          return;
-        }
+          curNode.color = TreeNode.black;
+        } else parentNode.color = TreeNode.black;
+        grandParent.color = TreeNode.red;
+        if (grandParent === this.root) {
+          this.root = grandParent.rotateLeft();
+        } else grandParent.rotateLeft();
       }
+      return;
     }
   }
   protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
