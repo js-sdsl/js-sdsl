@@ -250,7 +250,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         while (true) {
           const cmpResult = this.cmp(curNode.key as K, key);
           if (cmpResult > 0) {
-            if (!curNode.left) {
+            if (curNode.left === undefined) {
               curNode.left = new TreeNode<K, V>(key, value);
               curNode.left.parent = curNode;
               curNode = curNode.left;
@@ -258,7 +258,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             }
             curNode = curNode.left;
           } else if (cmpResult < 0) {
-            if (!curNode.right) {
+            if (curNode.right === undefined) {
               curNode.right = new TreeNode<K, V>(key, value);
               curNode.right.parent = curNode;
               curNode = curNode.right;
