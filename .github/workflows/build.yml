@@ -16,7 +16,7 @@ jobs:
     - name: install
       run: yarn install
     - name: test
-      run: yarn test:check
+      run: yarn test
     - name: coveralls
       uses: coverallsapp/github-action@master
       with:
