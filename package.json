@@ -18,7 +18,7 @@
     "build:umd": "yarn build:esm && rm -rf dist/umd && mkdir dist/umd && rollup dist/esm/index.js --format umd --name sdsl -o dist/umd/js-sdsl.js",
     "build:umd:min": "yarn build:umd && uglifyjs --compress --mangle --source-map --ie8 --comments -o dist/umd/js-sdsl.min.js -- dist/umd/js-sdsl.js",
     "test": "yarn test:check && yarn test:performance",
-    "test:check": "jest --coverage",
+    "test:unit": "jest --coverage",
     "test:performance": "rm -rf dist/performance && ttsc --project tsconfig.performance.json && node dist/performance/performance/index.js",
     "lint": "eslint .eslintrc.js --fix --color --cache --max-warnings=0 .",
     "generate": "typedoc src/index.ts --excludePrivate --excludeProtected"

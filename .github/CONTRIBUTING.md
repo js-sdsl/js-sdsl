@@ -54,7 +54,7 @@ Please follow the commit specification. See [`commitlint.config.js`](https://git
 # run all tests
 $ yarn test
 # run unit tests
-$ yarn test:check
+$ yarn test:unit
 # run performance tests
 $ yarn test:performance
 # build all dist files
