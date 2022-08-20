@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES5",
     "outDir": "dist/performance",
     "module": "CommonJS",
     "strict": true,
     "baseUrl": "./",
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
