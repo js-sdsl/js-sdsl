@@ -6,7 +6,6 @@
     "strict": true,
     "baseUrl": "./",
     "declaration": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,

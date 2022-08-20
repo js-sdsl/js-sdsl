@@ -46,7 +46,7 @@ $ yarn install
 
 ### Committing Changes
 
-Please follow the commit specification. See [`commitlint.config.js`](https://github.com/ZLY201/js-sdsl/blob/main/commitlint.config.js) get help.
+Please follow the commit specification. See [`.commitlintrc.json`](https://github.com/ZLY201/js-sdsl/blob/main/commitlint.config.js) get help.
 
 ### Commonly used NPM scripts
 
@@ -67,7 +67,7 @@ There are some other scripts available in the `scripts` section of the `package.
 
 ## Project Structure
 
-- **`check`**: contains all unit tests.
+- **`test`**: contains all unit tests.
 - **`performance`**: contains all performance tests.
 - **`src`**: contains the source code.
 

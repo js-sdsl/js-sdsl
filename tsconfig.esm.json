@@ -6,9 +6,9 @@
     "strict": true,
     "baseUrl": "./",
     "declaration": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
