@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/container/ContainerBase';
+import { Base, initContainer } from '@/container/ContainerBase/index';
 
 class Stack<T> extends Base {
   private stack: T[] = [];

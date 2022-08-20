@@ -1,4 +1,4 @@
-import { initContainer } from '@/container/ContainerBase';
+import { initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';

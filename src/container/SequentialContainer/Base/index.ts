@@ -1,4 +1,4 @@
-import { Container } from '@/container/ContainerBase';
+import { Container } from '@/container/ContainerBase/index';
 
 abstract class SequentialContainer<T> extends Container<T> {
   /**

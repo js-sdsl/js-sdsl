@@ -1,4 +1,4 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 

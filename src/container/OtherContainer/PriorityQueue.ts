@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/container/ContainerBase';
+import { Base, initContainer } from '@/container/ContainerBase/index';
 
 class PriorityQueue<T> extends Base {
   private readonly priorityQueue: T[];

@@ -1,5 +1,5 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { initContainer } from '@/container/ContainerBase';
+import { initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';

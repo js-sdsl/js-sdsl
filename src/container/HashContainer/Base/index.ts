@@ -1,4 +1,4 @@
-import { Base } from '@/container/ContainerBase';
+import { Base } from '@/container/ContainerBase/index';
 
 abstract class HashContainerBase<K> extends Base {
   protected static sigma = 0.75;
