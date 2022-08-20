@@ -149,7 +149,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   getElementByKey(key: K) {
     const curNode = this.findElementNode(this.root, key);
-    return curNode?.value;
+    return curNode ? curNode.value : undefined;
   }
   getElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);

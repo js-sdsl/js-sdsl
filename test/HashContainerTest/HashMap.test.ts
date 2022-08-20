@@ -117,6 +117,8 @@ describe('HashMap test', () => {
       expect(myHashMap.find(i.toString())).toEqual(false);
     }
     // @ts-ignore
+    const bucketNum = myHashMap.bucketNum;
+    // @ts-ignore
     myHashMap.bucketNum = HashContainerBase.maxBucketNum;
     // @ts-ignore
     myHashMap.reAllocate();
@@ -126,6 +128,8 @@ describe('HashMap test', () => {
     myHashMap.hashTable[myHashMap.bucketNum - 5] = new LinkList();
     // @ts-ignore
     myHashMap.reAllocate(myHashMap.bucketNum);
+    // @ts-ignore
+    myHashMap.bucketNum = bucketNum;
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashMap) {}
   });

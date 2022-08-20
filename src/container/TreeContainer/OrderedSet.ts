@@ -54,10 +54,10 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return new OrderedSetIterator(this.header, this.header, 'reverse');
   }
   front() {
-    return this.header.left?.key;
+    return this.header.left ? this.header.left.key : undefined;
   }
   back() {
-    return this.header.right?.key;
+    return this.header.right ? this.header.right.key : undefined;
   }
   forEach(callback: (element: K, index: number) => void) {
     let index = 0;

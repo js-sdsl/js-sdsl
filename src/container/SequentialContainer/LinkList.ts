@@ -99,10 +99,10 @@ class LinkList<T> extends SequentialContainer<T> {
     return new LinkListIterator(this.header, this.header, 'reverse');
   }
   front() {
-    return this.head?.value;
+    return this.head ? this.head.value : undefined;
   }
   back() {
-    return this.tail?.value;
+    return this.tail ? this.tail.value : undefined;
   }
   forEach(callback: (element: T, index: number) => void) {
     let curNode = this.head;
