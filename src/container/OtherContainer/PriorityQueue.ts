@@ -23,14 +23,14 @@ class PriorityQueue<T> extends Base {
       let curParent = parent;
       let curChild = (curParent << 1) | 1;
       while (curChild < this.length) {
-        const leftChild = curChild;
-        const rightChild = leftChild + 1;
-        let minChild = leftChild;
+        const left = curChild;
+        const right = left + 1;
+        let minChild = left;
         if (
-          rightChild < this.length &&
-          this.cmp(this.priorityQueue[leftChild], this.priorityQueue[rightChild]) > 0
+          right < this.length &&
+          this.cmp(this.priorityQueue[left], this.priorityQueue[right]) > 0
         ) {
-          minChild = rightChild;
+          minChild = right;
         }
         if (this.cmp(this.priorityQueue[curParent], this.priorityQueue[minChild]) <= 0) break;
         [this.priorityQueue[curParent], this.priorityQueue[minChild]] =
@@ -89,15 +89,15 @@ class PriorityQueue<T> extends Base {
     this.length -= 1;
     let parent = 0;
     while (parent < this.length) {
-      const leftChild = (parent << 1) | 1;
-      const rightChild = (parent << 1) + 2;
-      if (leftChild >= this.length) break;
-      let minChild = leftChild;
+      const left = (parent << 1) | 1;
+      const right = (parent << 1) + 2;
+      if (left >= this.length) break;
+      let minChild = left;
       if (
-        rightChild < this.length &&
-        this.cmp(this.priorityQueue[leftChild], this.priorityQueue[rightChild]) > 0
+        right < this.length &&
+        this.cmp(this.priorityQueue[left], this.priorityQueue[right]) > 0
       ) {
-        minChild = rightChild;
+        minChild = right;
       }
       if (this.cmp(this.priorityQueue[minChild], last) >= 0) break;
       this.priorityQueue[parent] = this.priorityQueue[minChild];

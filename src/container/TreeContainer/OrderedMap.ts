@@ -48,15 +48,15 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
       function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
         if (curNode === undefined) return;
-        yield * this.iterationFunc(curNode.leftChild);
+        yield * this.iterationFunc(curNode.left);
         yield [curNode.key, curNode.value] as [K, V];
-        yield * this.iterationFunc(curNode.rightChild);
+        yield * this.iterationFunc(curNode.right);
       };
   /**
    * @return Iterator pointing to the beginning element.
    */
   begin() {
-    return new OrderedMapIterator(this.header.leftChild || this.header, this.header);
+    return new OrderedMapIterator(this.header.left || this.header, this.header);
   }
   /**
    * @return Iterator pointing to the super end like c++.
@@ -68,7 +68,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    * @return Iterator pointing to the end element.
    */
   rBegin() {
-    return new OrderedMapIterator(this.header.rightChild || this.header, this.header, 'reverse');
+    return new OrderedMapIterator(this.header.right || this.header, this.header, 'reverse');
   }
   /**
    * @return Iterator pointing to the super begin like c++.
@@ -81,7 +81,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   front() {
     if (!this.length) return undefined;
-    const minNode = this.header.leftChild as TreeNode<K, V>;
+    const minNode = this.header.left as TreeNode<K, V>;
     return [minNode.key, minNode.value] as [K, V];
   }
   /**
@@ -89,7 +89,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
    */
   back() {
     if (!this.length) return undefined;
-    const maxNode = this.header.rightChild as TreeNode<K, V>;
+    const maxNode = this.header.right as TreeNode<K, V>;
     return [maxNode.key, maxNode.value] as [K, V];
   }
   /**

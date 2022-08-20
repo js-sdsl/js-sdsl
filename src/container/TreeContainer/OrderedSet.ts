@@ -30,13 +30,13 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   (curNode: TreeNode<K, undefined> | undefined) => Generator<K, void, undefined> =
       function * (this: OrderedSet<K>, curNode: TreeNode<K, undefined> | undefined) {
         if (curNode === undefined) return;
-        yield * this.iterationFunc(curNode.leftChild);
+        yield * this.iterationFunc(curNode.left);
         yield curNode.key as K;
-        yield * this.iterationFunc(curNode.rightChild);
+        yield * this.iterationFunc(curNode.right);
       };
   begin() {
     return new OrderedSetIterator(
-      this.header.leftChild || this.header,
+      this.header.left || this.header,
       this.header
     );
   }
@@ -45,7 +45,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   }
   rBegin() {
     return new OrderedSetIterator(
-      this.header.rightChild || this.header,
+      this.header.right || this.header,
       this.header,
       'reverse'
     );
@@ -54,10 +54,10 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return new OrderedSetIterator(this.header, this.header, 'reverse');
   }
   front() {
-    return this.header.leftChild?.key;
+    return this.header.left?.key;
   }
   back() {
-    return this.header.rightChild?.key;
+    return this.header.right?.key;
   }
   forEach(callback: (element: K, index: number) => void) {
     let index = 0;

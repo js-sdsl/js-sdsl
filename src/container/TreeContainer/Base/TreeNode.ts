@@ -1,50 +1,43 @@
 class TreeNode<K, V> {
-  static red = true as const;
-  static black = false as const;
+  static readonly red = true;
+  static readonly black = false;
   color = true;
   key: K | undefined = undefined;
   value: V | undefined = undefined;
+  left: TreeNode<K, V> | undefined = undefined;
+  right: TreeNode<K, V> | undefined = undefined;
   parent: TreeNode<K, V> | undefined = undefined;
   brother: TreeNode<K, V> | undefined = undefined;
-  leftChild: TreeNode<K, V> | undefined = undefined;
-  rightChild: TreeNode<K, V> | undefined = undefined;
   constructor(key?: K, value?: V) {
     this.key = key;
     this.value = value;
   }
   rotateLeft() {
-    const PP = this.parent;
+    const PP = this.parent as TreeNode<K, V>;
     const PB = this.brother;
-    const F = this.leftChild;
-    const V = this.rightChild as TreeNode<K, V>;
+    const F = this.left;
+    const V = this.right as TreeNode<K, V>;
 
-    const R = V.leftChild;
-    const X = V.rightChild;
+    const R = V.left;
+    const X = V.right;
 
-    if (PP?.leftChild === this) PP.leftChild = V;
-    else if (PP?.rightChild === this) PP.rightChild = V;
+    if (PP.parent === this) PP.parent = V;
+    else if (PP.left === this) PP.left = V;
+    else PP.right = V;
 
     V.parent = PP;
     V.brother = PB;
-    V.leftChild = this;
-    V.rightChild = X;
+    V.left = this;
 
     if (PB) PB.brother = V;
 
     this.parent = V;
     this.brother = X;
-    this.leftChild = F;
-    this.rightChild = R;
+    this.right = R;
 
-    if (X) {
-      X.parent = V;
-      X.brother = this;
-    }
+    if (X) X.brother = this;
 
-    if (F) {
-      F.parent = this;
-      F.brother = R;
-    }
+    if (F) F.brother = R;
 
     if (R) {
       R.parent = this;
@@ -54,52 +47,45 @@ class TreeNode<K, V> {
     return V;
   }
   rotateRight() {
-    const PP = this.parent;
+    const PP = this.parent as TreeNode<K, V>;
     const PB = this.brother;
-    const F = this.leftChild as TreeNode<K, V>;
+    const F = this.left as TreeNode<K, V>;
+    const V = this.right;
 
-    const V = this.rightChild;
-    const D = F.leftChild;
-    const K = F.rightChild;
+    const D = F.left;
+    const K = F.right;
 
-    if (PP?.leftChild === this) PP.leftChild = F;
-    else if (PP?.rightChild === this) PP.rightChild = F;
+    if (PP.parent === this) PP.parent = F;
+    else if (PP.left === this) PP.left = F;
+    else PP.right = F;
 
     F.parent = PP;
     F.brother = PB;
-    F.leftChild = D;
-    F.rightChild = this;
+    F.right = this;
 
     if (PB) PB.brother = F;
 
-    if (D) {
-      D.parent = F;
-      D.brother = this;
-    }
+    if (D) D.brother = this;
 
     this.parent = F;
     this.brother = D;
-    this.leftChild = K;
-    this.rightChild = V;
+    this.left = K;
 
     if (K) {
       K.parent = this;
       K.brother = V;
     }
 
-    if (V) {
-      V.parent = this;
-      V.brother = K;
-    }
+    if (V) V.brother = K;
 
     return F;
   }
   remove() {
     const parent = this.parent as TreeNode<K, V>;
-    if (this === parent.leftChild) {
-      parent.leftChild = undefined;
+    if (this === parent.left) {
+      parent.left = undefined;
     } else {
-      parent.rightChild = undefined;
+      parent.right = undefined;
     }
     if (this.brother) this.brother.brother = undefined;
     this.key = undefined;

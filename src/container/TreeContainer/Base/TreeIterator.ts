@@ -19,15 +19,15 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
       preNode.color === TreeNode.red &&
       (preNode.parent as TreeNode<K, V>).parent === preNode
     ) {
-      preNode = preNode.rightChild as TreeNode<K, V>;
-    } else if (preNode.leftChild) {
-      preNode = preNode.leftChild;
-      while (preNode.rightChild) {
-        preNode = preNode.rightChild;
+      preNode = preNode.right as TreeNode<K, V>;
+    } else if (preNode.left) {
+      preNode = preNode.left;
+      while (preNode.right) {
+        preNode = preNode.right;
       }
     } else {
       let pre = preNode.parent as TreeNode<K, V>;
-      while (pre.leftChild === preNode) {
+      while (pre.left === preNode) {
         preNode = pre;
         pre = preNode.parent as TreeNode<K, V>;
       }
@@ -37,18 +37,18 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   }
   protected _next() {
     let nextNode: TreeNode<K, V> = this.node;
-    if (nextNode.rightChild) {
-      nextNode = nextNode.rightChild;
-      while (nextNode.leftChild) {
-        nextNode = nextNode.leftChild;
+    if (nextNode.right) {
+      nextNode = nextNode.right;
+      while (nextNode.left) {
+        nextNode = nextNode.left;
       }
     } else {
       let pre = nextNode.parent as TreeNode<K, V>;
-      while (pre.rightChild === nextNode) {
+      while (pre.right === nextNode) {
         nextNode = pre;
         pre = nextNode.parent as TreeNode<K, V>;
       }
-      if (nextNode.rightChild !== pre) {
+      if (nextNode.right !== pre) {
         nextNode = pre;
       }
     }
@@ -56,12 +56,12 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   }
   pre() {
     if (this.iteratorType === 'reverse') {
-      if (this.node === this.header.rightChild) {
+      if (this.node === this.header.right) {
         throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._next();
     } else {
-      if (this.node === this.header.leftChild) {
+      if (this.node === this.header.left) {
         throw new RangeError('Tree iterator access denied!');
       }
       this.node = this._pre();
