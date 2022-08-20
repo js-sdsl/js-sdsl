@@ -1,4 +1,4 @@
-import { ContainerIterator } from '@/container/ContainerBase/index';
+import { ContainerIterator } from '@/container/ContainerBase';
 import TreeNode from './TreeNode';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {

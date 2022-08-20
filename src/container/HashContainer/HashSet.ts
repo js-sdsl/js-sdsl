@@ -1,4 +1,4 @@
-import { initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase';
 import OrderedSet from '../TreeContainer/OrderedSet';
 import HashContainerBase from './Base/index';
 import Vector from '../SequentialContainer/Vector';

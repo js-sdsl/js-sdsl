@@ -48,4 +48,22 @@ describe('PriorityQueue test', () => {
     myVector.clear();
     expect(judge(myQueue, myVector)).toEqual(true);
   });
+
+  test('init test', () => {
+    const q = new PriorityQueue([1, 2, 3], undefined, false);
+    expect(q.top()).toEqual(3);
+    q.pop();
+    expect(q.top()).toEqual(2);
+    q.pop();
+    expect(q.top()).toEqual(1);
+    q.pop();
+    const que = new PriorityQueue(new Vector([1, 2, 3]));
+    expect(que.size()).toEqual(3);
+    expect(que.top()).toEqual(3);
+    que.pop();
+    expect(que.top()).toEqual(2);
+    que.pop();
+    expect(que.top()).toEqual(1);
+    que.pop();
+  });
 });

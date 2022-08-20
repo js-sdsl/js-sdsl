@@ -18,7 +18,7 @@ Hi! I'm really excited that you are interested in contributing to js-sdsl. Befor
 
 - Checkout a topic branch from the relevant branch, e.g. `dev`, and merge back against that branch.
 
-- Work in the `src` folder and **DO NOT** checkin `dist` in the commits.
+- Work in the `src` folder and **DO NOT** check in `dist` in the commits.
 
 - It's OK to have multiple small commits as you work on the PR - GitHub will automatically squash it before merging.
 

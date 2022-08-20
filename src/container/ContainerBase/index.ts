@@ -48,7 +48,7 @@ export abstract class Base {
 
 export abstract class Container<T> extends Base {
   /**
-   * @return Iterator pointing to the begin element.
+   * @return Iterator pointing to the beginning element.
    */
   abstract begin(): ContainerIterator<T>;
   /**

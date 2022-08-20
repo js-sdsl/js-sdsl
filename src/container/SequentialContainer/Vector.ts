@@ -1,12 +1,12 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
 export class VectorIterator<T> extends ContainerIterator<T> {
   private node;
-  private size: () => number;
-  private getElementByPos: (pos: number) => T;
-  private setElementByPos: (pos: number, element: T) => void;
+  private readonly size: () => number;
+  private readonly getElementByPos: (pos: number) => T;
+  private readonly setElementByPos: (pos: number, element: T) => void;
   constructor(
     index: number,
     size: () => number,
@@ -68,7 +68,7 @@ export class VectorIterator<T> extends ContainerIterator<T> {
 }
 
 class Vector<T> extends SequentialContainer<T> {
-  private vector: T[];
+  private readonly vector: T[];
   constructor(container: initContainer<T> = [], copy = true) {
     super();
     if (Array.isArray(container)) {

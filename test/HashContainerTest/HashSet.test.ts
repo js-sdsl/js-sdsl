@@ -88,13 +88,13 @@ describe('HashSet test', () => {
     // @ts-ignore
     myHashSet.bucketNum = HashContainerBase.maxBucketNum;
     // @ts-ignore
-    expect(myHashSet.reAllocate()).toEqual(undefined);
+    myHashSet.reAllocate();
     // @ts-ignore
     myHashSet.hashTable[0] = new Vector();
     // @ts-ignore
     myHashSet.hashTable[myHashSet.bucketNum - 5] = new Vector();
     // @ts-ignore
-    expect(myHashSet.reAllocate(myHashSet.bucketNum)).toEqual(undefined);
+    myHashSet.reAllocate(myHashSet.bucketNum);
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashSet) {}
   });

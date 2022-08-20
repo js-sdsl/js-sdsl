@@ -1,4 +1,4 @@
-import { Container } from '@/container/ContainerBase/index';
+import { Container } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './TreeIterator';
 import TreeNode from './TreeNode';
@@ -81,8 +81,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             brotherNode.rightChild.color = TreeNode.black;
             if (parentNode === this.root) {
               parentNode.parent = undefined;
-              const newRoot = parentNode.rotateLeft();
-              this.root = newRoot;
+              this.root = parentNode.rotateLeft();
               this.header.parent = this.root;
               this.root.parent = this.header;
             } else parentNode.rotateLeft();
@@ -109,8 +108,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             brotherNode.leftChild.color = TreeNode.black;
             if (parentNode === this.root) {
               parentNode.parent = undefined;
-              const newRoot = parentNode.rotateRight();
-              this.root = newRoot;
+              this.root = parentNode.rotateRight();
               this.header.parent = this.root;
               this.root.parent = this.header;
             } else parentNode.rotateRight();
@@ -185,8 +183,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             grandParent.color = TreeNode.red;
             if (grandParent === this.root) {
               grandParent.parent = undefined;
-              const newRoot = grandParent.rotateRight();
-              this.root = newRoot;
+              this.root = grandParent.rotateRight();
               this.header.parent = this.root;
               this.root.parent = this.header;
             } else grandParent.rotateRight();
@@ -204,8 +201,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             grandParent.color = TreeNode.red;
             if (grandParent === this.root) {
               grandParent.parent = undefined;
-              const newRoot = grandParent.rotateLeft();
-              this.root = newRoot;
+              this.root = grandParent.rotateLeft();
               this.header.parent = this.root;
               this.root.parent = this.header;
             } else grandParent.rotateLeft();

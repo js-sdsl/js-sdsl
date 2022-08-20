@@ -1,12 +1,12 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
 export class DequeIterator<T> extends ContainerIterator<T> {
   private node: number;
-  private size: () => number;
-  private getElementByPos: (pos: number) => T;
-  private setElementByPos: (pos: number, element: T) => void;
+  private readonly size: () => number;
+  private readonly getElementByPos: (pos: number) => T;
+  private readonly setElementByPos: (pos: number, element: T) => void;
   constructor(
     index: number,
     size: () => number,
@@ -73,7 +73,7 @@ class Deque<T> extends SequentialContainer<T> {
   private last = 0;
   private curLast = 0;
   private bucketNum = 0;
-  private bucketSize: number;
+  private readonly bucketSize: number;
   private map: T[][] = [];
   constructor(container: initContainer<T> = [], bucketSize = (1 << 12)) {
     super();

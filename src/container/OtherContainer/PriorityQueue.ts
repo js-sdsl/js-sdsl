@@ -1,19 +1,25 @@
-import { Base, initContainer } from '@/container/ContainerBase/index';
+import { Base, initContainer } from '@/container/ContainerBase';
 
 class PriorityQueue<T> extends Base {
-  private priorityQueue: T[] = [];
-  private cmp: (x: T, y: T) => number;
+  private readonly priorityQueue: T[];
+  private readonly cmp: (x: T, y: T) => number;
   constructor(container: initContainer<T> = [],
-    cmp: (x: T, y: T) => number = (x: T, y: T) => {
+    cmp: (x: T, y: T) => number =
+    (x: T, y: T) => {
       if (x > y) return -1;
       if (x < y) return 1;
       return 0;
-    }) {
+    }, copy = true) {
     super();
     this.cmp = cmp;
-    container.forEach(element => this.priorityQueue.push(element));
+    if (Array.isArray(container)) {
+      this.priorityQueue = copy ? [...container] : container;
+    } else {
+      this.priorityQueue = [];
+      container.forEach(element => this.priorityQueue.push(element));
+    }
     this.length = this.priorityQueue.length;
-    for (let parent = Math.floor((this.length - 1) / 2); parent >= 0; --parent) {
+    for (let parent = (this.length - 1) >> 1; parent >= 0; --parent) {
       let curParent = parent;
       let curChild = (curParent << 1) | 1;
       while (curChild < this.length) {
@@ -27,30 +33,28 @@ class PriorityQueue<T> extends Base {
           minChild = rightChild;
         }
         if (this.cmp(this.priorityQueue[curParent], this.priorityQueue[minChild]) <= 0) break;
-        this.swap(curParent, minChild);
+        [this.priorityQueue[curParent], this.priorityQueue[minChild]] =
+          [this.priorityQueue[minChild], this.priorityQueue[curParent]];
         curParent = minChild;
         curChild = (curParent << 1) | 1;
       }
     }
   }
-  private swap(x: number, y: number) {
-    const tmp = this.priorityQueue[x];
-    this.priorityQueue[x] = this.priorityQueue[y];
-    this.priorityQueue[y] = tmp;
-  }
   private adjust(parent: number) {
-    const leftChild = (parent << 1) | 1;
-    const rightChild = (parent << 1) + 2;
+    const left = (parent << 1) | 1;
+    const right = (parent << 1) + 2;
     if (
-      leftChild < this.length &&
-      this.cmp(this.priorityQueue[parent], this.priorityQueue[leftChild]) > 0
+      left < this.length &&
+      this.cmp(this.priorityQueue[parent], this.priorityQueue[left]) > 0
     ) {
-      this.swap(parent, leftChild);
+      [this.priorityQueue[parent], this.priorityQueue[left]] =
+        [this.priorityQueue[left], this.priorityQueue[parent]];
     }
-    if (rightChild < this.length &&
-      this.cmp(this.priorityQueue[parent], this.priorityQueue[rightChild]) > 0
+    if (right < this.length &&
+      this.cmp(this.priorityQueue[parent], this.priorityQueue[right]) > 0
     ) {
-      this.swap(parent, rightChild);
+      [this.priorityQueue[parent], this.priorityQueue[right]] =
+        [this.priorityQueue[right], this.priorityQueue[parent]];
     }
   }
   clear() {
@@ -66,7 +70,7 @@ class PriorityQueue<T> extends Base {
     if (this.length === 1) return;
     let curNode = this.length - 1;
     while (curNode > 0) {
-      const parent = Math.floor((curNode - 1) / 2);
+      const parent = (curNode - 1) >> 1;
       if (this.cmp(this.priorityQueue[parent], element) <= 0) break;
       this.adjust(parent);
       curNode = parent;

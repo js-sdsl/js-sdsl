@@ -1,4 +1,4 @@
-import { initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';
@@ -44,7 +44,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     this.iterationFunc = this.iterationFunc.bind(this);
     container.forEach(([key, value]) => this.setElement(key, value));
   }
-  private iterationFunc:
+  private readonly iterationFunc:
   (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
       function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
         if (curNode === undefined) return;
@@ -53,7 +53,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
         yield * this.iterationFunc(curNode.rightChild);
       };
   /**
-   * @return Iterator pointing to the begin element.
+   * @return Iterator pointing to the beginning element.
    */
   begin() {
     return new OrderedMapIterator(this.header.leftChild || this.header, this.header);

@@ -110,7 +110,7 @@ describe('HashMap test', () => {
   });
 
   test('HashMap empty test', () => {
-    expect(myHashMap.eraseElementByKey('1')).toEqual(undefined);
+    myHashMap.eraseElementByKey('1');
     expect(myHashMap.find('1')).toEqual(false);
     for (let i = -1; i >= -1000; --i) {
       expect(myHashMap.getElementByKey(i.toString())).toEqual(undefined);
@@ -119,13 +119,13 @@ describe('HashMap test', () => {
     // @ts-ignore
     myHashMap.bucketNum = HashContainerBase.maxBucketNum;
     // @ts-ignore
-    expect(myHashMap.reAllocate()).toEqual(undefined);
+    myHashMap.reAllocate();
     // @ts-ignore
     myHashMap.hashTable[0] = new LinkList();
     // @ts-ignore
     myHashMap.hashTable[myHashMap.bucketNum - 5] = new LinkList();
     // @ts-ignore
-    expect(myHashMap.reAllocate(myHashMap.bucketNum)).toEqual(undefined);
+    myHashMap.reAllocate(myHashMap.bucketNum);
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashMap) {}
   });

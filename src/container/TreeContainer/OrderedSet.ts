@@ -1,5 +1,5 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
@@ -26,7 +26,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     container.forEach((element) => this.insert(element));
     this.iterationFunc = this.iterationFunc.bind(this);
   }
-  private iterationFunc:
+  private readonly iterationFunc:
   (curNode: TreeNode<K, undefined> | undefined) => Generator<K, void, undefined> =
       function * (this: OrderedSet<K>, curNode: TreeNode<K, undefined> | undefined) {
         if (curNode === undefined) return;

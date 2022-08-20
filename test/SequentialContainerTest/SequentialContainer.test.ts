@@ -137,11 +137,13 @@ describe('SequentialContainer test', () => {
 
   test('LinkList standard test', () => {
     const myLinkList = new LinkList(arr);
-    expect(testSequentialContainer(myLinkList)).toEqual(undefined);
+    expect(() => {
+      testSequentialContainer(myLinkList);
+    }).not.toThrowError(Error);
   });
 
   test('Deque standard test', () => {
     const myDeque = new Deque(arr);
-    expect(testSequentialContainer(myDeque)).toEqual(undefined);
+    expect(() => testSequentialContainer(myDeque)).not.toThrowError(Error);
   });
 });

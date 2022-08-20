@@ -39,7 +39,7 @@ const testFuncMap: Record<string, testFunc> = {
 function testContainer(containerName: string) {
   return {
     containerName,
-    reportList: testFuncMap[containerName](arr, testNum)
+    reportList: testFuncMap[containerName]([...arr], testNum)
   };
 }
 

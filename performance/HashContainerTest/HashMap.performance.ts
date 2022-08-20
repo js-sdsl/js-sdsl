@@ -1,5 +1,5 @@
 import { HashMap } from '@/index';
-import { testReportFormat } from 'performance/index';
+import { testReportFormat } from '../index';
 
 function testHashMap(arr: number[], testNum: number) {
   let startTime, endTime;

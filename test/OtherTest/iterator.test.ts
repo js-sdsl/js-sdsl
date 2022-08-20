@@ -10,7 +10,7 @@ import {
   OrderedSetIterator,
   OrderedMapIterator
 } from '@/index';
-import { ContainerIterator } from '@/container/ContainerBase/index';
+import { ContainerIterator } from '@/container/ContainerBase';
 
 let arr: number[] = [];
 const testNum = 10000;

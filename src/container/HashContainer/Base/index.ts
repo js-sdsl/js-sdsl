@@ -1,4 +1,4 @@
-import { Base } from '@/container/ContainerBase/index';
+import { Base } from '@/container/ContainerBase';
 
 abstract class HashContainerBase<K> extends Base {
   protected static sigma = 0.75;
@@ -14,7 +14,7 @@ abstract class HashContainerBase<K> extends Base {
     hashFunc: (x: K) => number =
     (x: K) => {
       let hashCode = 0;
-      let str = '';
+      let str: string;
       if (typeof x !== 'string') {
         str = JSON.stringify(x);
       } else str = x;
