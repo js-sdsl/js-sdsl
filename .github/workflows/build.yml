@@ -5,21 +5,24 @@ on: ["push", "pull_request"]
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 12.x, 14.x, 16.x ]
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: lint test
-      run: yarn lint
-    - name: use Node.js 16.13.2
+    - name: Use node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: 16.13.2
+        node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: test
+    - name: Lint code
+      run: yarn lint
+    - name: Run test
       run: yarn test
-    - name: coveralls
+    - name: Coveralls report
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -28,18 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: use Node.js 16.13.2
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.13.2
-        cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: build
+    - name: Build
       run: yarn build
-    - name: publish
+    - name: Publish to npm
       run: yarn publish
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -48,12 +46,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: read package.json
+    - name: Read package.json
       uses: tyankatsu0105/read-package-version-actions@v1
       id: package-version
-    - name: release
+    - name: Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,18 +64,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: use Node.js 16.13.2
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.13.2
-        cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: generate type documentation
+    - name: Generate type documentation
       run: yarn generate
-    - name: deploy to github pages
+    - name: Deploy to github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: docs
