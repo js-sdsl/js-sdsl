@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 12.x, 14.x, 16.x ]
+        node-version: [ 6.x, 10.x, 12.x, 16.x ]
     steps:
     - name: Checkout code
       uses: actions/checkout@master
@@ -23,6 +23,7 @@ jobs:
     - name: Run test
       run: yarn test
     - name: Coveralls report
+      if: ${{ matrix.node-version === '16.x' }}
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -44,7 +45,6 @@ jobs:
   release:
     needs: publish
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
     - name: Checkout code
       uses: actions/checkout@master
@@ -62,7 +62,6 @@ jobs:
   deploy:
     needs: publish
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
     - name: Checkout code
       uses: actions/checkout@master
