@@ -11,13 +11,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@master
+    - name: Install dependencies
+      run: yarn install
     - name: Use node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - name: Install dependencies
-      run: yarn install
     - name: Lint code
       run: yarn lint
     - name: Run test
