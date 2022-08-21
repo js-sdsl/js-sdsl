@@ -5,26 +5,21 @@ on: ["push", "pull_request"]
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 6.x, 10.x, 12.x, 16.x ]
     steps:
     - name: Checkout code
       uses: actions/checkout@master
     - name: Install dependencies
       run: yarn install
-    - name: Use node.js ${{ matrix.node-version }}
+    - name: Use node.js lts/Gallium
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: lts/Gallium
         cache: 'yarn'
     - name: Lint code
-      if: ${{ matrix.node-version == '16.x' }}
       run: yarn lint
     - name: Run test
       run: yarn test
     - name: Coveralls report
-      if: ${{ matrix.node-version == '16.x' }}
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
