@@ -16,25 +16,21 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     if (this.node === this.header) {
       throw new RangeError('OrderedMap iterator access denied');
     }
-    return new Proxy([] as unknown as [K, V], {
-      get: (_, prop: string) => {
-        const index = parseInt(prop);
-        if (Number.isNaN(index)) {
-          throw new TypeError('Prop must be number');
+    return Object.defineProperties({}, {
+      0: {
+        get: () => {
+          return this.node.key;
         }
-        checkWithinAccessParams(index, 0, 1);
-        return index === 0 ? this.node.key : this.node.value;
       },
-      set: (_, prop: string, newValue: V) => {
-        const index = parseInt(prop);
-        if (Number.isNaN(index)) {
-          throw new TypeError('Prop must be number');
+      1: {
+        get: () => {
+          return this.node.value;
+        },
+        set: (newValue: V) => {
+          this.node.value = newValue;
         }
-        checkWithinAccessParams(index, 1, 1);
-        this.node.value = newValue;
-        return true;
       }
-    });
+    }) as [K, V];
   }
 }
 

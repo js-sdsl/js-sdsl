@@ -122,20 +122,12 @@ describe('OrderedMap test', () => {
   });
 
   test('OrderedMap iterator error test', () => {
-    expect(() => {
-      // @ts-ignore
-      myOrderedMap.begin().pointer.a = 2;
-    }).toThrow(TypeError);
     myOrderedMap.begin().pointer['1'] = 2;
     expect(myOrderedMap.front()).toEqual([myOrderedMap.begin().pointer[0], 2]);
     expect(() => {
       // @ts-ignore
       myOrderedMap.begin().pointer['0'] = 2;
-    }).toThrow(RangeError);
-    expect(() => {
-      // @ts-ignore
-      myOrderedMap.begin().pointer['3'] = 2;
-    }).toThrow(RangeError);
+    }).toThrow(TypeError);
   });
 
   test('OrderedMap clear function test', () => {
@@ -171,11 +163,6 @@ describe('OrderedMap test', () => {
       myOrderedMap.rBegin().pointer.a;
     }).toThrowError(RangeError);
     myOrderedMap.setElement(1, 1);
-    expect(() => {
-      // @ts-ignore
-      // eslint-disable-next-line no-unused-expressions
-      myOrderedMap.begin().pointer.a;
-    }).toThrowError(TypeError);
     expect(myOrderedMap.getElementByKey(0)).toEqual(undefined);
   });
 });

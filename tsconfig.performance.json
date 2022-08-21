@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES6",
     "outDir": "dist/performance",
     "module": "CommonJS",
     "strict": true,

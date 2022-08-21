@@ -8,6 +8,8 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@master
+    - name: lint test
+      run: yarn lint
     - name: use Node.js 16.13.2
       uses: actions/setup-node@v3
       with:

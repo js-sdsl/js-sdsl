@@ -9,9 +9,15 @@
     "email": "951711127@qq.com",
     "url": "https://github.com/ZLY201/js-sdsl"
   },
+  "browserslist": [
+    "last 2 version",
+    "> 1%",
+    "not dead",
+    "maintained node versions"
+  ],
   "homepage": "https://js-sdsl.github.io/",
   "scripts": {
-    "setup": "rm -rf node_modules && yarn",
+    "setup": "rm -rf node_modules && yarn install",
     "build": "yarn build:esm && yarn build:cjs && yarn build:umd:min",
     "build:cjs": "rm -rf dist/cjs && ttsc --project tsconfig.cjs.json",
     "build:esm": "rm -rf dist/esm && ttsc --project tsconfig.esm.json",
@@ -21,7 +27,7 @@
     "test:unit": "jest --coverage",
     "test:performance": "rm -rf dist/performance && ttsc --project tsconfig.performance.json && node dist/performance/performance/index.js",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
-    "generate": "typedoc src/index.ts --excludePrivate --excludeProtected",
+    "generate": "typedoc src/index.ts",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -35,10 +41,13 @@
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "all-contributors-cli": "^6.20.0",
+    "browserslist": "^4.21.3",
+    "caniuse-lite": "^1.0.30001380",
     "commitlint": "^17.0.3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "coveralls": "^3.1.1",
     "eslint": "^8.4.1",
+    "eslint-plugin-compat": "^4.0.2",
     "gh-pages": "^3.2.3",
     "husky": "^8.0.1",
     "jest": "^28.1.3",

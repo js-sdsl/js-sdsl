@@ -6,6 +6,7 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:compat/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -14,6 +15,7 @@
     "sourceType": "module"
   },
   "plugins": [
+    "compat",
     "@typescript-eslint"
   ],
   "ignorePatterns": [
@@ -21,6 +23,7 @@
     "dist/"
   ],
   "rules": {
+    "compat/compat": "error",
     "no-var": "error",
     "object-shorthand": [
       "error",
