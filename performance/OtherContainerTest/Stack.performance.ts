@@ -1,5 +1,5 @@
 import { Stack } from '@/index';
-import { testReportFormat } from 'performance/index';
+import { testReportFormat } from '../index';
 
 function testStack(arr: number[], testNum: number) {
   const myStack = new Stack(arr);

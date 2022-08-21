@@ -1,12 +1,12 @@
 import { PriorityQueue } from '@/index';
-import { testReportFormat } from 'performance/index';
+import { testReportFormat } from '../index';
 
 function testPriorityQueue(arr: number[], testNum: number) {
   let startTime, endTime;
   const reportList: testReportFormat['reportList'] = [];
 
   startTime = Date.now();
-  const myPriority = new PriorityQueue(arr, (x: number, y: number) => y - x);
+  const myPriority = new PriorityQueue(arr, (x: number, y: number) => y - x, false);
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',

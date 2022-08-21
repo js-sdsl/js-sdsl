@@ -5,8 +5,8 @@
     "module": "CommonJS",
     "strict": true,
     "baseUrl": "./",
-    "skipLibCheck": true,
     "esModuleInterop": true,
+    "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [

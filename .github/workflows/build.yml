@@ -6,18 +6,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: use Node.js 16.13.2
+    - name: Use node.js lts/Gallium
       uses: actions/setup-node@v3
       with:
-        node-version: 16.13.2
+        node-version: lts/Gallium
         cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: test
-      run: yarn test:check
-    - name: coveralls
+    - name: Lint code
+      run: yarn lint
+    - name: Run test
+      run: yarn test
+    - name: Coveralls report
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -26,32 +28,26 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: use Node.js 16.13.2
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.13.2
-        cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: build
+    - name: Build
       run: yarn build
-    - name: publish
+    - name: Publish to npm
       run: yarn publish
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
     needs: publish
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: read package.json
+    - name: Read package.json
       uses: tyankatsu0105/read-package-version-actions@v1
       id: package-version
-    - name: release
+    - name: Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,20 +58,14 @@ jobs:
   deploy:
     needs: publish
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: checkout
+    - name: Checkout code
       uses: actions/checkout@master
-    - name: use Node.js 16.13.2
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.13.2
-        cache: 'yarn'
-    - name: install
+    - name: Install dependencies
       run: yarn install
-    - name: generate type documentation
+    - name: Generate type documentation
       run: yarn generate
-    - name: deploy to github pages
+    - name: Deploy to github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: docs

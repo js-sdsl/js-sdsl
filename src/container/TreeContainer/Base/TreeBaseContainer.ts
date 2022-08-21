@@ -4,160 +4,119 @@ import TreeIterator from './TreeIterator';
 import TreeNode from './TreeNode';
 
 abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
-  protected root: TreeNode<K, V> = new TreeNode<K, V>();
+  protected root: TreeNode<K, V> | undefined = undefined;
   protected header: TreeNode<K, V> = new TreeNode<K, V>();
   protected cmp: (x: K, y: K) => number;
-  constructor(cmp: (x: K, y: K) => number = (x: K, y: K) => {
+  protected constructor(cmp: (x: K, y: K) => number =
+  (x: K, y: K) => {
     if (x < y) return -1;
     if (x > y) return 1;
     return 0;
   }) {
     super();
-    this.root.color = TreeNode.black;
-    this.header.parent = this.root;
-    this.root.parent = this.header;
     this.cmp = cmp;
   }
   protected _lowerBound:
-  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined =
+  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> =
       (curNode: TreeNode<K, V> | undefined, key: K) => {
-        if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = this.cmp(curNode.key, key);
+        if (curNode === undefined) return this.header;
+        const cmpResult = this.cmp(curNode.key as K, key);
         if (cmpResult === 0) return curNode;
-        if (cmpResult < 0) return this._lowerBound(curNode.rightChild, key);
-        const resNode = this._lowerBound(curNode.leftChild, key);
-        if (resNode === undefined) return curNode;
+        if (cmpResult < 0) return this._lowerBound(curNode.right, key);
+        const resNode = this._lowerBound(curNode.left, key);
+        if (resNode === this.header) return curNode;
         return resNode;
       };
   protected _upperBound:
-  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined =
+  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> =
       (curNode: TreeNode<K, V> | undefined, key: K) => {
-        if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = this.cmp(curNode.key, key);
-        if (cmpResult <= 0) return this._upperBound(curNode.rightChild, key);
-        const resNode = this._upperBound(curNode.leftChild, key);
-        if (resNode === undefined) return curNode;
+        if (curNode === undefined) return this.header;
+        const cmpResult = this.cmp(curNode.key as K, key);
+        if (cmpResult <= 0) return this._upperBound(curNode.right, key);
+        const resNode = this._upperBound(curNode.left, key);
+        if (resNode === this.header) return curNode;
         return resNode;
       };
   protected _reverseLowerBound:
-  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined =
+  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> =
       (curNode: TreeNode<K, V> | undefined, key: K) => {
-        if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = this.cmp(curNode.key, key);
+        if (curNode === undefined) return this.header;
+        const cmpResult = this.cmp(curNode.key as K, key);
         if (cmpResult === 0) return curNode;
-        if (cmpResult > 0) return this._reverseLowerBound(curNode.leftChild, key);
-        const resNode = this._reverseLowerBound(curNode.rightChild, key);
-        if (resNode === undefined) return curNode;
+        if (cmpResult > 0) return this._reverseLowerBound(curNode.left, key);
+        const resNode = this._reverseLowerBound(curNode.right, key);
+        if (resNode === this.header) return curNode;
         return resNode;
       };
   protected _reverseUpperBound:
-  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> | undefined =
+  (curNode: TreeNode<K, V> | undefined, key: K) => TreeNode<K, V> =
       (curNode: TreeNode<K, V> | undefined, key: K) => {
-        if (!curNode || curNode.key === undefined) return undefined;
-        const cmpResult = this.cmp(curNode.key, key);
-        if (cmpResult >= 0) return this._reverseUpperBound(curNode.leftChild, key);
-        const resNode = this._reverseUpperBound(curNode.rightChild, key);
-        if (resNode === undefined) return curNode;
+        if (curNode === undefined) return this.header;
+        const cmpResult = this.cmp(curNode.key as K, key);
+        if (cmpResult >= 0) return this._reverseUpperBound(curNode.left, key);
+        const resNode = this._reverseUpperBound(curNode.right, key);
+        if (resNode === this.header) return curNode;
         return resNode;
       };
   protected eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
-    const parentNode = curNode.parent as TreeNode<K, V>;
-    if (parentNode === this.header) return;
+    while (true) {
+      const parentNode = curNode.parent as TreeNode<K, V>;
+      if (parentNode === this.header) return;
 
-    if (curNode.color === TreeNode.red) {
-      curNode.color = TreeNode.black;
-      return;
-    }
-
-    const brotherNode = curNode.brother as TreeNode<K, V>;
-
-    if (curNode === parentNode.leftChild) {
-      if (brotherNode.color === TreeNode.red) {
-        brotherNode.color = TreeNode.black;
-        parentNode.color = TreeNode.red;
-        parentNode.rotateLeft();
-        this.eraseNodeSelfBalance(curNode);
-      } else if (brotherNode.color === TreeNode.black) {
-        if (brotherNode.rightChild &&
-          brotherNode.rightChild.color === TreeNode.red) {
-          brotherNode.color = parentNode.color;
-          parentNode.color = TreeNode.black;
-          if (brotherNode.rightChild) {
-            brotherNode.rightChild.color = TreeNode.black;
-          }
-          const newRoot = parentNode.rotateLeft();
-          if (parentNode === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
-          }
-          curNode.color = TreeNode.black;
-        } else if ((
-          !brotherNode.rightChild ||
-          brotherNode.rightChild.color === TreeNode.black
-        ) && brotherNode.leftChild &&
-          brotherNode.leftChild.color === TreeNode.red
-        ) {
-          brotherNode.color = TreeNode.red;
-          if (brotherNode.leftChild) {
-            brotherNode.leftChild.color = TreeNode.black;
-          }
-          brotherNode.rotateRight();
-          this.eraseNodeSelfBalance(curNode);
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) && (
-          !brotherNode.rightChild ||
-          brotherNode.rightChild.color === TreeNode.black
-        )) {
-          brotherNode.color = TreeNode.red;
-          this.eraseNodeSelfBalance(parentNode);
-        }
+      if (curNode.color === TreeNode.red) {
+        curNode.color = TreeNode.black;
+        return;
       }
-    } else if (curNode === parentNode.rightChild) {
-      if (brotherNode.color === TreeNode.red) {
-        brotherNode.color = TreeNode.black;
-        parentNode.color = TreeNode.red;
-        parentNode.rotateRight();
-        this.eraseNodeSelfBalance(curNode);
-      } else if (brotherNode.color === TreeNode.black) {
-        if (
-          brotherNode.leftChild &&
-          brotherNode.leftChild.color === TreeNode.red
-        ) {
-          brotherNode.color = parentNode.color;
-          parentNode.color = TreeNode.black;
-          if (brotherNode.leftChild) brotherNode.leftChild.color = TreeNode.black;
-          const newRoot = parentNode.rotateRight();
-          if (parentNode === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
+
+      if (curNode === parentNode.left) {
+        const brother = parentNode.right as TreeNode<K, V>;
+        if (brother.color === TreeNode.red) {
+          brother.color = TreeNode.black;
+          parentNode.color = TreeNode.red;
+          parentNode.rotateLeft();
+        } else if (brother.color === TreeNode.black) {
+          if (brother.right && brother.right.color === TreeNode.red) {
+            brother.color = parentNode.color;
+            parentNode.color = TreeNode.black;
+            brother.right.color = TreeNode.black;
+            if (parentNode === this.root) {
+              this.root = parentNode.rotateLeft();
+            } else parentNode.rotateLeft();
+            curNode.color = TreeNode.black;
+            return;
+          } else if (brother.left && brother.left.color === TreeNode.red) {
+            brother.color = TreeNode.red;
+            brother.left.color = TreeNode.black;
+            brother.rotateRight();
+          } else {
+            brother.color = TreeNode.red;
+            curNode = parentNode;
           }
-          curNode.color = TreeNode.black;
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) &&
-          brotherNode.rightChild &&
-          brotherNode.rightChild.color === TreeNode.red
-        ) {
-          brotherNode.color = TreeNode.red;
-          if (brotherNode.rightChild) {
-            brotherNode.rightChild.color = TreeNode.black;
+        }
+      } else {
+        const brother = parentNode.left as TreeNode<K, V>;
+        if (brother.color === TreeNode.red) {
+          brother.color = TreeNode.black;
+          parentNode.color = TreeNode.red;
+          parentNode.rotateRight();
+        } else {
+          if (brother.left && brother.left.color === TreeNode.red) {
+            brother.color = parentNode.color;
+            parentNode.color = TreeNode.black;
+            brother.left.color = TreeNode.black;
+            if (parentNode === this.root) {
+              this.root = parentNode.rotateRight();
+            } else parentNode.rotateRight();
+            curNode.color = TreeNode.black;
+            return;
+          } else if (brother.right && brother.right.color === TreeNode.red) {
+            brother.color = TreeNode.red;
+            brother.right.color = TreeNode.black;
+            brother.rotateLeft();
+          } else {
+            brother.color = TreeNode.red;
+            curNode = parentNode;
           }
-          brotherNode.rotateLeft();
-          this.eraseNodeSelfBalance(curNode);
-        } else if ((
-          !brotherNode.leftChild ||
-          brotherNode.leftChild.color === TreeNode.black
-        ) && (
-          !brotherNode.rightChild ||
-            brotherNode.rightChild.color === TreeNode.black
-        )) {
-          brotherNode.color = TreeNode.red;
-          this.eraseNodeSelfBalance(parentNode);
         }
       }
     }
@@ -167,162 +126,160 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       this.clear();
       return;
     }
-
     let swapNode = curNode;
-
-    while (swapNode.leftChild || swapNode.rightChild) {
-      if (swapNode.rightChild) {
-        swapNode = swapNode.rightChild;
-        while (swapNode.leftChild) swapNode = swapNode.leftChild;
+    while (swapNode.left || swapNode.right) {
+      if (swapNode.right) {
+        swapNode = swapNode.right;
+        while (swapNode.left) swapNode = swapNode.left;
       }
-      if (swapNode.leftChild) {
-        swapNode = swapNode.leftChild;
-        while (swapNode.rightChild) swapNode = swapNode.rightChild;
+      if (swapNode.left) {
+        swapNode = swapNode.left;
+        while (swapNode.right) swapNode = swapNode.right;
       }
       [curNode.key, swapNode.key] = [swapNode.key, curNode.key];
       [curNode.value, swapNode.value] = [swapNode.value, curNode.value];
       curNode = swapNode;
     }
 
-    if (this.header.leftChild === swapNode) {
-      this.header.leftChild = this.header.leftChild.parent;
+    if (this.header.left === swapNode) {
+      this.header.left = this.header.left.parent;
     }
-    if (this.header.rightChild === swapNode) {
-      this.header.rightChild = this.header.rightChild.parent;
+    if (this.header.right === swapNode) {
+      this.header.right = this.header.right.parent;
     }
-
     this.eraseNodeSelfBalance(swapNode);
     swapNode.remove();
     this.length -= 1;
-    this.root.color = TreeNode.black;
   }
   protected inOrderTraversal:
   (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
       (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => {
-        if (!curNode || curNode.key === undefined) return false;
-        const ifReturn = this.inOrderTraversal(curNode.leftChild, callback);
+        if (curNode === undefined) return false;
+        const ifReturn = this.inOrderTraversal(curNode.left, callback);
         if (ifReturn) return true;
         if (callback(curNode)) return true;
-        return this.inOrderTraversal(curNode.rightChild, callback);
+        return this.inOrderTraversal(curNode.right, callback);
       };
   protected insertNodeSelfBalance(curNode: TreeNode<K, V>) {
-    const parentNode = curNode.parent as TreeNode<K, V>;
-
-    if (parentNode.color === TreeNode.black) return;
-
-    const uncleNode = parentNode.brother;
-    const grandParent = parentNode.parent as TreeNode<K, V>;
-
-    if (uncleNode && uncleNode.color === TreeNode.red) {
-      uncleNode.color = parentNode.color = TreeNode.black;
-      grandParent.color = TreeNode.red;
-      this.insertNodeSelfBalance(grandParent);
-    } else if (!uncleNode || uncleNode.color === TreeNode.black) {
-      if (parentNode === grandParent.leftChild) {
-        if (curNode === parentNode.leftChild) {
-          parentNode.color = TreeNode.black;
+    while (true) {
+      const parentNode = curNode.parent as TreeNode<K, V>;
+      if (parentNode.color === TreeNode.black) return;
+      const grandParent = parentNode.parent as TreeNode<K, V>;
+      if (parentNode === grandParent.left) {
+        const uncle = grandParent.right;
+        if (uncle && uncle.color === TreeNode.red) {
+          uncle.color = parentNode.color = TreeNode.black;
+          if (grandParent === this.root) return;
           grandParent.color = TreeNode.red;
-          const newRoot = grandParent.rotateRight();
-          if (grandParent === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
-          }
-        } else if (curNode === parentNode.rightChild) {
+          curNode = grandParent;
+          continue;
+        } else if (curNode === parentNode.right) {
           parentNode.rotateLeft();
-          this.insertNodeSelfBalance(parentNode);
-        }
-      } else if (parentNode === grandParent.rightChild) {
-        if (curNode === parentNode.leftChild) {
-          parentNode.rotateRight();
-          this.insertNodeSelfBalance(parentNode);
-        } else if (curNode === parentNode.rightChild) {
-          parentNode.color = TreeNode.black;
+          curNode.color = TreeNode.black;
+        } else parentNode.color = TreeNode.black;
+        grandParent.color = TreeNode.red;
+        if (grandParent === this.root) {
+          this.root = grandParent.rotateRight();
+        } else grandParent.rotateRight();
+      } else {
+        const uncle = grandParent.left;
+        if (uncle && uncle.color === TreeNode.red) {
+          uncle.color = parentNode.color = TreeNode.black;
+          if (grandParent === this.root) return;
           grandParent.color = TreeNode.red;
-          const newRoot = grandParent.rotateLeft();
-          if (grandParent === this.root) {
-            this.root = newRoot;
-            this.header.parent = this.root;
-            this.root.parent = this.header;
-          }
-        }
+          curNode = grandParent;
+          continue;
+        } else if (curNode === parentNode.left) {
+          parentNode.rotateRight();
+          curNode.color = TreeNode.black;
+        } else parentNode.color = TreeNode.black;
+        grandParent.color = TreeNode.red;
+        if (grandParent === this.root) {
+          this.root = grandParent.rotateLeft();
+        } else grandParent.rotateLeft();
       }
+      return;
     }
   }
   protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
     while (curNode) {
       const cmpResult = this.cmp(curNode.key as K, key);
       if (cmpResult < 0) {
-        curNode = curNode.rightChild;
+        curNode = curNode.right;
       } else if (cmpResult > 0) {
-        curNode = curNode.leftChild;
+        curNode = curNode.left;
       } else return curNode;
     }
     return curNode;
   }
   protected set(key: K, value?: V) {
-    if (!this.length) {
+    if (this.root === undefined) {
       this.length += 1;
-      this.root.key = key;
-      this.root.value = value;
+      this.root = new TreeNode<K, V>(key, value);
       this.root.color = TreeNode.black;
-      this.header.leftChild = this.root;
-      this.header.rightChild = this.root;
+      this.root.parent = this.header;
+      this.header.parent = this.root;
+      this.header.left = this.root;
+      this.header.right = this.root;
       return;
     }
-
-    let curNode = this.root;
-    while (true) {
-      const cmpResult = this.cmp(key, curNode.key as K);
-      if (cmpResult < 0) {
-        if (!curNode.leftChild) {
-          curNode.leftChild = new TreeNode<K, V>(key, value);
-          curNode.leftChild.parent = curNode;
-          curNode.leftChild.brother = curNode.rightChild;
-          if (curNode.rightChild) curNode.rightChild.brother = curNode.leftChild;
-          curNode = curNode.leftChild;
-          break;
-        }
-        curNode = curNode.leftChild;
-      } else if (cmpResult > 0) {
-        if (!curNode.rightChild) {
-          curNode.rightChild = new TreeNode<K, V>(key, value);
-          curNode.rightChild.parent = curNode;
-          curNode.rightChild.brother = curNode.leftChild;
-          if (curNode.leftChild) curNode.leftChild.brother = curNode.rightChild;
-          curNode = curNode.rightChild;
-          break;
-        }
-        curNode = curNode.rightChild;
-      } else {
-        curNode.value = value;
+    let curNode;
+    const minNode = this.header.left as TreeNode<K, V>;
+    const compareToMin = this.cmp(minNode.key as K, key);
+    if (compareToMin === 0) {
+      minNode.value = value;
+      return;
+    } else if (compareToMin > 0) {
+      minNode.left = new TreeNode(key, value);
+      minNode.left.parent = minNode;
+      curNode = minNode.left;
+      this.header.left = curNode;
+    } else {
+      const maxNode = this.header.right as TreeNode<K, V>;
+      const compareToMax = this.cmp(maxNode.key as K, key);
+      if (compareToMax === 0) {
+        maxNode.value = value;
         return;
+      } else if (compareToMax < 0) {
+        maxNode.right = new TreeNode<K, V>(key, value);
+        maxNode.right.parent = maxNode;
+        curNode = maxNode.right;
+        this.header.right = curNode;
+      } else {
+        curNode = this.root;
+        while (true) {
+          const cmpResult = this.cmp(curNode.key as K, key);
+          if (cmpResult > 0) {
+            if (curNode.left === undefined) {
+              curNode.left = new TreeNode<K, V>(key, value);
+              curNode.left.parent = curNode;
+              curNode = curNode.left;
+              break;
+            }
+            curNode = curNode.left;
+          } else if (cmpResult < 0) {
+            if (curNode.right === undefined) {
+              curNode.right = new TreeNode<K, V>(key, value);
+              curNode.right.parent = curNode;
+              curNode = curNode.right;
+              break;
+            }
+            curNode = curNode.right;
+          } else {
+            curNode.value = value;
+            return;
+          }
+        }
       }
     }
-
     this.length += 1;
-
-    if (
-      this.header.leftChild === undefined ||
-      this.header.leftChild.leftChild === curNode
-    ) {
-      this.header.leftChild = curNode;
-    }
-    if (
-      this.header.rightChild === undefined ||
-      this.header.rightChild.rightChild === curNode
-    ) {
-      this.header.rightChild = curNode;
-    }
-
     this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.black;
   }
   clear() {
     this.length = 0;
-    this.root.key = this.root.value = undefined;
-    this.root.leftChild = this.root.rightChild = this.root.brother = undefined;
-    this.header.leftChild = this.header.rightChild = undefined;
+    this.root = undefined;
+    this.header.parent = undefined;
+    this.header.left = this.header.right = undefined;
   }
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
@@ -341,13 +298,8 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
    */
   eraseElementByKey(key: K) {
     if (!this.length) return;
-
     const curNode = this.findElementNode(this.root, key);
-    if (
-      curNode === undefined ||
-      this.cmp(curNode.key as K, key) !== 0
-    ) return;
-
+    if (curNode === undefined) return;
     this.eraseNode(curNode);
   }
   /**
@@ -357,6 +309,9 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByIterator(iter: TreeIterator<K, V>) {
     // @ts-ignore
     const node = iter.node;
+    if (node === this.header) {
+      throw new RangeError('Invalid iterator');
+    }
     iter = iter.next();
     this.eraseNode(node);
     return iter;
@@ -370,7 +325,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     (curNode: TreeNode<K, V> | undefined) => number =
     (curNode: TreeNode<K, V> | undefined) => {
       if (!curNode) return 1;
-      return Math.max(traversal(curNode.leftChild), traversal(curNode.rightChild)) + 1;
+      return Math.max(traversal(curNode.left), traversal(curNode.right)) + 1;
     };
     return traversal(this.root);
   }

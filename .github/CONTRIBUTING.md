@@ -18,7 +18,7 @@ Hi! I'm really excited that you are interested in contributing to js-sdsl. Befor
 
 - Checkout a topic branch from the relevant branch, e.g. `dev`, and merge back against that branch.
 
-- Work in the `src` folder and **DO NOT** checkin `dist` in the commits.
+- Work in the `src` folder and **DO NOT** check in `dist` in the commits.
 
 - It's OK to have multiple small commits as you work on the PR - GitHub will automatically squash it before merging.
 
@@ -46,7 +46,7 @@ $ yarn install
 
 ### Committing Changes
 
-Please follow the commit specification. See [`commitlint.config.js`](https://github.com/ZLY201/js-sdsl/blob/main/commitlint.config.js) get help.
+Please follow the commit specification. See [`.commitlintrc.json`](https://github.com/ZLY201/js-sdsl/blob/main/commitlint.config.js) get help.
 
 ### Commonly used NPM scripts
 
@@ -54,7 +54,7 @@ Please follow the commit specification. See [`commitlint.config.js`](https://git
 # run all tests
 $ yarn test
 # run unit tests
-$ yarn test:check
+$ yarn test:unit
 # run performance tests
 $ yarn test:performance
 # build all dist files
@@ -67,7 +67,7 @@ There are some other scripts available in the `scripts` section of the `package.
 
 ## Project Structure
 
-- **`check`**: contains all unit tests.
+- **`test`**: contains all unit tests.
 - **`performance`**: contains all performance tests.
 - **`src`**: contains the source code.
 

@@ -1,6 +1,5 @@
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList } from '@/index';
-import { RunTimeError } from '@/utils/error';
 
 function judgeSequentialContainer(
   container: SequentialContainer<number>,
@@ -75,7 +74,7 @@ describe('LinkList test', () => {
   });
 
   test('LinkList run time error test', () => {
-    expect(() => myLinkList.getElementByPos(myLinkList.size())).toThrowError(RunTimeError);
+    expect(() => myLinkList.getElementByPos(myLinkList.size())).toThrowError(RangeError);
   });
 
   test('LinkList pushFront function test', () => {
@@ -85,25 +84,25 @@ describe('LinkList test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.begin().pointer;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.end().pointer;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rBegin().pointer;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rEnd().pointer;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     expect(() => {
       myLinkList.eraseElementByIterator(myLinkList.begin());
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     expect(() => {
       myLinkList.begin().pointer = 0;
-    }).toThrowError(RunTimeError);
+    }).toThrowError(RangeError);
     myLinkList.popBack();
     expect(myLinkList.size()).toBe(0);
     myLinkList.pushBack(1);
@@ -124,10 +123,16 @@ describe('LinkList test', () => {
     myLinkList.merge(new LinkList([2]));
     expect(myLinkList.size()).toBe(2);
     myLinkList.clear();
+    myLinkList.eraseElementByValue(0);
+    expect(myLinkList.find(0).equals(myLinkList.end())).toBe(true);
     myLinkList.merge(new LinkList([2]));
     expect(myLinkList.size()).toBe(1);
     expect(myLinkList.front()).toBe(2);
     myLinkList.insert(1, 1, 0);
+    expect(myLinkList.size()).toBe(1);
+    myLinkList.pushFront(0);
+    expect(myLinkList.size()).toBe(2);
+    myLinkList.eraseElementByValue(0);
     expect(myLinkList.size()).toBe(1);
   });
 });

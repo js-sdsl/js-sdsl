@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.08.15
+## [UnReleased] - 2022.08.21
 
 ### Changed
 
@@ -12,7 +12,11 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Change some iterator function parameter type.
 - Change commonjs target to `es6`.
 - Change `Deque` from sequential queue to circular queue.
-- Optimize `Deque` and tree container (don't effect using).
+- Optimize so many places (don't affect using).
+
+### Fixed
+
+- Fix `Vector` length bugs.
 
 ## [4.0.3] - 2022-08-13
 
@@ -30,9 +34,9 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ### Changed
 
-- Remove InternalError error as much as possible (don't effect using).
+- Remove InternalError error as much as possible (don't affect using).
 - Change `HashSet` api `eraseElementByValue`'s name to `eraseElementByKey`.
-- Change some unit tests to improve coverage (don't effect using).
+- Change some unit tests to improve coverage (don't affect using).
 
 ## [4.0.0-beta.0] - 2022-07-24
 
@@ -43,7 +47,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ### Changed
 
-- Refactor all container from function to class (don't effect using).
+- Refactor all container from function to class (don't affect using).
 - Abstracting tree containers and hash containers, change `Set`'s and `Map`'s name to `OrderedSet` and `OrderedMap` to distinguish it from the official container.
 - Change `OrderedSet` api `eraseElementByValue`'s name to `eraseElementByKey`.
 
@@ -61,7 +65,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ### Changed
 
-- Changed Pair type `T, K` to `K, V` (don't effect using).
+- Changed Pair type `T, K` to `K, V` (don't affect using).
 - Changed `find`, `lowerBound`, `upperBound`, `reverseLowerBound` and `reverseUpperBound` function's returned value to `Iterator`.
 
 ### Fixed

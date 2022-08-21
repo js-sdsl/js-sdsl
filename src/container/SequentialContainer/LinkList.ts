@@ -1,6 +1,5 @@
-import { RunTimeError } from '@/utils/error';
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
-import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
+import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
 
 export class LinkNode<T> {
@@ -14,62 +13,61 @@ export class LinkNode<T> {
 
 export class LinkListIterator<T> extends ContainerIterator<T> {
   private node: LinkNode<T>;
+  private readonly header: LinkNode<T>;
   constructor(
     node: LinkNode<T>,
+    header: LinkNode<T>,
     iteratorType: 'normal' | 'reverse' = 'normal'
   ) {
     super(iteratorType);
     this.node = node;
+    this.header = header;
   }
   get pointer() {
-    if (this.node.value === undefined) {
-      throw new RunTimeError('LinkList iterator access denied!');
+    if (this.node === this.header) {
+      throw new RangeError('LinkList iterator access denied!');
     }
-    return this.node.value;
+    return this.node.value as T;
   }
   set pointer(newValue: T) {
-    if (this.node.value === undefined) {
-      throw new RunTimeError('LinkList iterator access denied!');
+    if (this.node === this.header) {
+      throw new RangeError('LinkList iterator access denied!');
     }
-    checkUndefinedParams(newValue);
     this.node.value = newValue;
   }
   pre() {
     if (this.iteratorType === 'reverse') {
       this.node.next = this.node.next as LinkNode<T>;
-      if (this.node.next.value === undefined) {
-        throw new RunTimeError('LinkList iterator access denied!');
+      if (this.node.next === this.header) {
+        throw new RangeError('LinkList iterator access denied!');
       }
       this.node = this.node.next;
     } else {
       this.node.pre = this.node.pre as LinkNode<T>;
-      if (this.node.pre.value === undefined) {
-        throw new RunTimeError('LinkList iterator access denied!');
+      if (this.node.pre === this.header) {
+        throw new RangeError('LinkList iterator access denied!');
       }
       this.node = this.node.pre;
     }
     return this;
   }
   next() {
+    if (this.node === this.header) {
+      throw new RangeError('LinkList iterator access denied!');
+    }
     if (this.iteratorType === 'reverse') {
-      if (this.node.value === undefined) {
-        throw new RunTimeError('LinkList iterator access denied!');
-      }
       this.node = this.node.pre as LinkNode<T>;
     } else {
-      if (this.node.value === undefined) {
-        throw new RunTimeError('LinkList iterator access denied!');
-      }
       this.node = this.node.next as LinkNode<T>;
     }
     return this;
   }
   equals(obj: LinkListIterator<T>) {
     if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`obj's constructor is not ${this.constructor.name}!`);
+      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
     }
     if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('iterator type error!');
+      throw new TypeError('Iterator type error!');
     }
     return this.node === obj.node;
   }
@@ -89,22 +87,22 @@ class LinkList<T> extends SequentialContainer<T> {
     this.header.pre = this.header.next = undefined;
   }
   begin() {
-    return new LinkListIterator(this.head || this.header);
+    return new LinkListIterator(this.head || this.header, this.header);
   }
   end() {
-    return new LinkListIterator(this.header);
+    return new LinkListIterator(this.header, this.header);
   }
   rBegin() {
-    return new LinkListIterator(this.tail || this.header, 'reverse');
+    return new LinkListIterator(this.tail || this.header, this.header, 'reverse');
   }
   rEnd() {
-    return new LinkListIterator(this.header, 'reverse');
+    return new LinkListIterator(this.header, this.header, 'reverse');
   }
   front() {
-    return this.head?.value;
+    return this.head ? this.head.value : undefined;
   }
   back() {
-    return this.tail?.value;
+    return this.tail ? this.tail.value : undefined;
   }
   forEach(callback: (element: T, index: number) => void) {
     let curNode = this.head;
@@ -156,11 +154,11 @@ class LinkList<T> extends SequentialContainer<T> {
     }
   }
   eraseElementByIterator(iter: LinkListIterator<T>) {
-    if (!this.length) {
-      throw new RunTimeError();
-    }
     // @ts-ignore
     const node = iter.node;
+    if (node === this.header) {
+      throw new RangeError('Invalid iterator');
+    }
     iter = iter.next();
     if (this.head === node) this.popFront();
     else if (this.tail === node) this.popBack();
@@ -174,7 +172,6 @@ class LinkList<T> extends SequentialContainer<T> {
     return iter;
   }
   pushBack(element: T) {
-    checkUndefinedParams(element);
     this.length += 1;
     const newTail = new LinkNode(element);
     if (!this.tail) {
@@ -203,7 +200,6 @@ class LinkList<T> extends SequentialContainer<T> {
     if (this.tail) this.tail.next = this.header;
   }
   setElementByPos(pos: number, element: T) {
-    checkUndefinedParams(element);
     checkWithinAccessParams(pos, 0, this.length - 1);
     let curNode = this.head;
     while (pos--) {
@@ -212,7 +208,6 @@ class LinkList<T> extends SequentialContainer<T> {
     if (curNode) curNode.value = element;
   }
   insert(pos: number, element: T, num = 1) {
-    checkUndefinedParams(element);
     checkWithinAccessParams(pos, 0, this.length);
     if (num <= 0) return;
     if (pos === 0) {
@@ -238,7 +233,9 @@ class LinkList<T> extends SequentialContainer<T> {
   find(element: T) {
     let curNode = this.head;
     while (curNode && curNode !== this.header) {
-      if (curNode.value === element) return new LinkListIterator(curNode);
+      if (curNode.value === element) {
+        return new LinkListIterator(curNode, this.header);
+      }
       curNode = curNode.next;
     }
     return this.end();
@@ -287,7 +284,6 @@ class LinkList<T> extends SequentialContainer<T> {
    * Inserts an element to the beginning.
    */
   pushFront(element: T) {
-    checkUndefinedParams(element);
     this.length += 1;
     const newHead = new LinkNode(element);
     if (!this.head) {
@@ -326,8 +322,7 @@ class LinkList<T> extends SequentialContainer<T> {
       while (
         curNode &&
         curNode !== this.header &&
-        curNode.value !== undefined &&
-        curNode.value <= element
+        (curNode.value as T) <= element
       ) {
         curNode = curNode.next;
       }

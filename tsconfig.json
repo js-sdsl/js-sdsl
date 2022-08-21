@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ES6",
     "outDir": "dist",
     "strict": true,
     "baseUrl": "./",
-    "skipLibCheck": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
@@ -18,6 +18,6 @@
         "transform": "ts-transform-paths",
         "afterDeclarations": true
       }
-    ],
+    ]
   }
 }

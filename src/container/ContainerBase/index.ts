@@ -1,6 +1,6 @@
 export abstract class ContainerIterator<T> {
   readonly iteratorType: 'normal' | 'reverse';
-  constructor(iteratorType: 'normal' | 'reverse') {
+  protected constructor(iteratorType: 'normal' | 'reverse') {
     this.iteratorType = iteratorType;
   }
   /**
@@ -48,7 +48,7 @@ export abstract class Base {
 
 export abstract class Container<T> extends Base {
   /**
-   * @return Iterator pointing to the begin element.
+   * @return Iterator pointing to the beginning element.
    */
   abstract begin(): ContainerIterator<T>;
   /**

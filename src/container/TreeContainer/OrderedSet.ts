@@ -1,7 +1,6 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import { initContainer } from '@/container/ContainerBase/index';
-import { checkUndefinedParams, checkWithinAccessParams } from '@/utils/checkParams';
-import { RunTimeError } from '@/utils/error';
+import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 
@@ -14,10 +13,10 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
     super(node, header, iteratorType);
   }
   get pointer() {
-    if (this.node.key === undefined) {
-      throw new RunTimeError('OrderedSet iterator access denied!');
+    if (this.node === this.header) {
+      throw new RangeError('OrderedSet iterator access denied!');
     }
-    return this.node.key;
+    return this.node.key as K;
   }
 }
 
@@ -27,17 +26,17 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     container.forEach((element) => this.insert(element));
     this.iterationFunc = this.iterationFunc.bind(this);
   }
-  private iterationFunc:
+  private readonly iterationFunc:
   (curNode: TreeNode<K, undefined> | undefined) => Generator<K, void, undefined> =
       function * (this: OrderedSet<K>, curNode: TreeNode<K, undefined> | undefined) {
-        if (!curNode || curNode.key === undefined) return;
-        yield * this.iterationFunc(curNode.leftChild);
-        yield curNode.key;
-        yield * this.iterationFunc(curNode.rightChild);
+        if (curNode === undefined) return;
+        yield * this.iterationFunc(curNode.left);
+        yield curNode.key as K;
+        yield * this.iterationFunc(curNode.right);
       };
   begin() {
     return new OrderedSetIterator(
-      this.header.leftChild || this.header,
+      this.header.left || this.header,
       this.header
     );
   }
@@ -46,7 +45,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   }
   rBegin() {
     return new OrderedSetIterator(
-      this.header.rightChild || this.header,
+      this.header.right || this.header,
       this.header,
       'reverse'
     );
@@ -55,10 +54,10 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return new OrderedSetIterator(this.header, this.header, 'reverse');
   }
   front() {
-    return this.header.leftChild?.key;
+    return this.header.left ? this.header.left.key : undefined;
   }
   back() {
-    return this.header.rightChild?.key;
+    return this.header.right ? this.header.right.key : undefined;
   }
   forEach(callback: (element: K, index: number) => void) {
     let index = 0;
@@ -80,12 +79,11 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
    * Inserts element to Set.
    */
   insert(key: K) {
-    checkUndefinedParams(key);
     this.set(key);
   }
   find(element: K) {
     const curNode = this.findElementNode(this.root, element);
-    if (curNode !== undefined && curNode.key !== undefined) {
+    if (curNode !== undefined) {
       return new OrderedSetIterator(curNode, this.header);
     }
     return this.end();
@@ -95,36 +93,28 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
    */
   lowerBound(key: K) {
     const resNode = this._lowerBound(this.root, key);
-    return resNode === undefined
-      ? this.end()
-      : new OrderedSetIterator(resNode, this.header);
+    return new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element greater than the given key.
    */
   upperBound(key: K) {
     const resNode = this._upperBound(this.root, key);
-    return resNode === undefined
-      ? this.end()
-      : new OrderedSetIterator(resNode, this.header);
+    return new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element not greater than the given key.
    */
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this.root, key);
-    return resNode === undefined
-      ? this.end()
-      : new OrderedSetIterator(resNode, this.header);
+    return new OrderedSetIterator(resNode, this.header);
   }
   /**
    * @return An iterator to the first element less than the given key.
    */
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this.root, key);
-    return resNode === undefined
-      ? this.end()
-      : new OrderedSetIterator(resNode, this.header);
+    return new OrderedSetIterator(resNode, this.header);
   }
   /**
    * Union the other Set to self.
