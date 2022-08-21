@@ -12,6 +12,7 @@
   <a href='https://coveralls.io/github/ZLY201/js-sdsl?branch=dev'><img src='https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=dev' alt='Coverage Status' /></a>
   <a href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/ZLY201/js-sdsl.svg" alt="GITHUB star" /></a>
   <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
+  <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.badgesize.io/https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js?compression=gzip&style=flat-square/" alt="Gzip Size"></a>
   <a href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/js-sdsl.svg" alt="MIT-license" /></a>
   <a href="https://github.com/ZLY201/js-sdsl/"><img src="https://img.shields.io/github/languages/top/ZLY201/js-sdsl.svg" alt="GITHUB-language" /></a>
@@ -42,8 +43,8 @@
 
 Download directly
 
-- [js-sdsl.js](https://zly201.github.io/js-sdsl/js-sdsl.js) (for development)
-- [js-sdsl.min.js](https://zly201.github.io/js-sdsl/js-sdsl.min.js) (for production)
+- [js-sdsl.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.js) (for development)
+- [js-sdsl.min.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js) (for production)
 
 Or install js-sdsl using npm
 
@@ -61,7 +62,7 @@ To help you have a better use, we also provide this [API document](https://zly20
 
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
-<script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
+<script src="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"></script>
 <script>
     const {
       Vector,
@@ -114,29 +115,29 @@ The following is a partial interception of the performance test:
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1699   │
-│    1    │      'insert'       │ 1000000 │    2000000    │   615   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   396   │
-│    3    │ 'eraseElementByPos' │   10    │    3000000    │   847   │
-│    4    │       'union'       │    1    │    2999990    │  1901   │
-│    5    │    'lowerBound'     │ 1000000 │    2999990    │  1328   │
-│    6    │    'upperBound'     │ 1000000 │    2999990    │  1419   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    2999990    │  1390   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    2999990    │  1461   │
+│    0    │    'constructor'    │    1    │    1000000    │  1667   │
+│    1    │      'insert'       │ 1000000 │    2000000    │   558   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   362   │
+│    3    │ 'eraseElementByPos' │   10    │    3000000    │   633   │
+│    4    │       'union'       │    1    │    2999998    │  1949   │
+│    5    │    'lowerBound'     │ 1000000 │    2999998    │  1665   │
+│    6    │    'upperBound'     │ 1000000 │    2999998    │  1722   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    2999998    │  1690   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    2999998    │  1713   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 =================================== OrderedMap ===================================
 ┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
 │ (index) │      testFunc       │ testNum │ containerSize │ runTime │
 ├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1714   │
-│    1    │    'setElement'     │ 1000000 │    2000000    │   581   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   336   │
-│    3    │ 'eraseElementByPos' │   100   │    1000000    │  3483   │
-│    4    │       'union'       │    1    │    1999900    │  1500   │
-│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1165   │
-│    6    │    'upperBound'     │ 1000000 │    1999900    │  1299   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1335   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1417   │
+│    0    │    'constructor'    │    1    │    1000000    │  1574   │
+│    1    │    'setElement'     │ 1000000 │    2000000    │   643   │
+│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   344   │
+│    3    │ 'eraseElementByPos' │   100   │    1000000    │  6082   │
+│    4    │       'union'       │    1    │    1999900    │  1888   │
+│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1615   │
+│    6    │    'upperBound'     │ 1000000 │    1999900    │  1666   │
+│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1619   │
+│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1665   │
 └─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
 ```
 
