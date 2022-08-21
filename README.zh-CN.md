@@ -7,11 +7,12 @@
 <h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM version" /></a>
-  <a href="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/ZLY201/js-sdsl/js-sdsl%20CI" alt="Build status" /></a>
+  <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM Version" /></a>
+  <a href="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/ZLY201/js-sdsl/js-sdsl%20CI" alt="Build Status" /></a>
   <a href='https://coveralls.io/github/ZLY201/js-sdsl?branch=main'><img src='https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=main' alt='Coverage Status' /></a>
-  <a href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/ZLY201/js-sdsl.svg" alt="GITHUB star" /></a>
+  <a href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/ZLY201/js-sdsl.svg" alt="GITHUB Star" /></a>
   <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
+  <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.badgesize.io/https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js?compression=gzip&style=flat-square" alt="Gzip Size"></a>
   <a href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/js-sdsl.svg" alt="MIT-license" /></a>
   <a href="https://github.com/ZLY201/js-sdsl/"><img src="https://img.shields.io/github/languages/top/ZLY201/js-sdsl.svg" alt="GITHUB-language" /></a>
@@ -42,8 +43,8 @@
 
 使用 cdn 直接引入
 
-- [js-sdsl.js](https://zly201.github.io/js-sdsl/js-sdsl.js) (for development)
-- [js-sdsl.min.js](https://zly201.github.io/js-sdsl/js-sdsl.min.js) (for production)
+- [js-sdsl.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.js) (for development)
+- [js-sdsl.min.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js) (for production)
 
 使用 npm 下载
 
@@ -61,7 +62,7 @@ npm install js-sdsl
 
 ```html
 <!-- you can download the file locally and import it or import it dynamically by using url. -->
-<script src="https://zly201.github.io/js-sdsl/js-sdsl.min.js"></script>
+<script src="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"></script>
 <script>
     const { 
       Vector,
