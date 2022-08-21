@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM version" /></a>
-  <a href="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml"><img src="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml/badge.svg?branch=main" alt="js-sdsl CI" /></a>
+  <a href="https://github.com/ZLY201/js-sdsl/actions/workflows/build.yml"><img src="https://img.shields.io/github/workflow/status/ZLY201/js-sdsl/js-sdsl%20CI" alt="Build status" /></a>
   <a href='https://coveralls.io/github/ZLY201/js-sdsl?branch=main'><img src='https://coveralls.io/repos/github/ZLY201/js-sdsl/badge.svg?branch=main' alt='Coverage Status' /></a>
   <a href="https://github.com/ZLY201/js-sdsl"><img src="https://img.shields.io/github/stars/ZLY201/js-sdsl.svg" alt="GITHUB star" /></a>
   <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
