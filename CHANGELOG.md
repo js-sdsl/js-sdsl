@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.8.23
+
+### Fixed
+
+- Forgot to reset root node on rotation in red-black tree delete operation.
+- Fix iterator invalidation after tree container removes iterator.
+
 ## [4.1.0] - 2022.08.21
 
 ### Changed

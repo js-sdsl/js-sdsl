@@ -64,9 +64,6 @@ function testSequentialContainer(container: SequentialContainer<number>) {
 
   for (let i = 0; i < testNum; ++i) {
     const pos = Math.floor(Math.random() * myVector.size());
-    if (pos >= container.size()) {
-      console.error(1);
-    }
     container.eraseElementByPos(pos);
     myVector.eraseElementByPos(pos);
   }

@@ -19,7 +19,7 @@ function judgeMap(myOrderedMap: OrderedMap<number, number>, stdMap: Map<number, 
   }
   stdMap.forEach((value, key) => {
     const _value = myOrderedMap.getElementByKey(key);
-    expect(_value).toEqual(stdMap.get(key));
+    expect(_value).toEqual(value);
   });
   myOrderedMap.forEach(([key, value]) => {
     const _value = stdMap.get(key);
@@ -33,9 +33,7 @@ describe('OrderedMap test', () => {
 
   test('OrderedMap eraseElementByKey function test', () => {
     const eraseArr: number[] = [];
-    myOrderedMap.forEach(([key, value]) => {
-      const v = stdMap.get(key);
-      expect(v).toBe(value);
+    stdMap.forEach((value, key) => {
       if (Math.random() > 0.5) {
         eraseArr.push(key);
       }
@@ -56,7 +54,7 @@ describe('OrderedMap test', () => {
   });
 
   test('OrderedMap eraseElementByPos function test', () => {
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < 10; ++i) {
       const pos = Math.floor(Math.random() * myOrderedMap.size());
       const pair = myOrderedMap.getElementByPos(pos);
       myOrderedMap.eraseElementByPos(pos);
@@ -113,10 +111,13 @@ describe('OrderedMap test', () => {
   });
 
   test('OrderedMap eraseElementByIterator function test', () => {
+    const v = new Vector<[number, number]>(myOrderedMap);
+    v.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < testNum / 10; ++i) {
       const begin = myOrderedMap.begin();
       stdMap.delete(begin.pointer[0]);
       myOrderedMap.eraseElementByIterator(begin);
+      expect(begin.pointer[0]).toBe(v.getElementByPos(i + 1)[0]);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -134,9 +135,24 @@ describe('OrderedMap test', () => {
     myOrderedMap.clear();
     stdMap.clear();
     judgeMap(myOrderedMap, stdMap);
+
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random() * testNum * 2;
+      myOrderedMap.setElement(random, i);
+      stdMap.set(random, i);
+    }
+    let i = testNum;
+    stdMap.forEach((value, key) => {
+      --i;
+      myOrderedMap.eraseElementByKey(key);
+      expect(myOrderedMap.size()).toEqual(i);
+    });
+    expect(myOrderedMap.size()).toEqual(0);
+    stdMap.clear();
   });
 
   test('OrderedMap empty test', () => {
+    const myOrderedMap = new OrderedMap();
     expect(myOrderedMap.front()).toEqual(undefined);
     expect(myOrderedMap.back()).toEqual(undefined);
     expect(() => {
