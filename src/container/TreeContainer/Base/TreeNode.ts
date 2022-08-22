@@ -11,6 +11,47 @@ class TreeNode<K, V> {
     this.key = key;
     this.value = value;
   }
+  pre() {
+    let preNode: TreeNode<K, V> = this;
+    if (
+      preNode.color === TreeNode.red &&
+      (preNode.parent as TreeNode<K, V>).parent === preNode
+    ) {
+      preNode = preNode.right as TreeNode<K, V>;
+    } else if (preNode.left) {
+      preNode = preNode.left;
+      while (preNode.right) {
+        preNode = preNode.right;
+      }
+    } else {
+      let pre = preNode.parent as TreeNode<K, V>;
+      while (pre.left === preNode) {
+        preNode = pre;
+        pre = preNode.parent as TreeNode<K, V>;
+      }
+      preNode = pre;
+    }
+    return preNode;
+  }
+  next() {
+    let nextNode: TreeNode<K, V> = this;
+    if (nextNode.right) {
+      nextNode = nextNode.right;
+      while (nextNode.left) {
+        nextNode = nextNode.left;
+      }
+    } else {
+      let pre = nextNode.parent as TreeNode<K, V>;
+      while (pre.right === nextNode) {
+        nextNode = pre;
+        pre = nextNode.parent as TreeNode<K, V>;
+      }
+      if (nextNode.right !== pre) {
+        nextNode = pre;
+      }
+    }
+    return nextNode;
+  }
   rotateLeft() {
     const PP = this.parent as TreeNode<K, V>;
     const V = this.right as TreeNode<K, V>;
