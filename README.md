@@ -33,6 +33,10 @@
 - HashSet
 - HashMap
 
+## Benchmark
+
+We are benchmarking against other popular data structure libraries. In some ways we're better than the best library. See [benchmark](https://js-sdsl.github.io/#/test/benchmark).
+
 ## Supported platforms
 
 - node.js (using commonjs)
