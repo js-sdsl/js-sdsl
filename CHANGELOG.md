@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [4.1.1] - 2022.8.23
+## [UnReleased] - 2022.08.23
+
+### Changed
+
+- Change rbTree binary search from recursive to loop implementation (don't effect using).
+
+## [4.1.1] - 2022.08.23
 
 ### Fixed
 

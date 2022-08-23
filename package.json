@@ -18,6 +18,7 @@
   "homepage": "https://js-sdsl.github.io/",
   "scripts": {
     "setup": "rm -rf node_modules && yarn install",
+    "dev": "ttsc --project tsconfig.cjs.json --watch",
     "build": "yarn build:esm && yarn build:cjs && yarn build:umd:min",
     "build:cjs": "rm -rf dist/cjs && ttsc --project tsconfig.cjs.json",
     "build:esm": "rm -rf dist/esm && ttsc --project tsconfig.esm.json",
