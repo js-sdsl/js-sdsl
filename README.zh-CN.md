@@ -100,9 +100,9 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 ## 测试
 
-### 对于正确性的校验
+### 单元测试
 
-我们使用 `jest` 库来编写我们的单元测试，并将结果同步到了 [coveralls](https://coveralls.io/github/ZLY201/js-sdsl) 上，你可以使用 `yarn test:check` 命令来重建它
+我们使用 `jest` 库来编写我们的单元测试，并将结果同步到了 [coveralls](https://coveralls.io/github/ZLY201/js-sdsl) 上，你可以使用 `yarn test:unit` 命令来重建它
 
 ### 对于性能的校验
 

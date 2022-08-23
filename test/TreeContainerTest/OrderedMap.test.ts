@@ -137,9 +137,8 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
-      const random = Math.random() * testNum * 2;
-      myOrderedMap.setElement(random, i);
-      stdMap.set(random, i);
+      myOrderedMap.setElement(testNum - i, i);
+      stdMap.set(testNum - i, i);
     }
     let i = testNum;
     stdMap.forEach((value, key) => {

@@ -129,7 +129,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       return this.header;
     }
     let swapNode = curNode;
-    const nextNode = swapNode.right ? curNode : curNode.next();
     while (swapNode.left || swapNode.right) {
       if (swapNode.right) {
         swapNode = swapNode.right;
@@ -151,7 +150,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     swapNode.remove();
     this.length -= 1;
     (this.root as TreeNode<K, V>).color = TreeNode.black;
-    return nextNode;
   }
   protected inOrderTraversal:
   (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
@@ -314,8 +312,10 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     if (node === this.header) {
       throw new RangeError('Invalid iterator');
     }
-    // @ts-ignore
-    iter.node = this.eraseNode(node);
+    if (node.right === undefined) {
+      iter = iter.next();
+    }
+    this.eraseNode(node);
     return iter;
   }
   /**
