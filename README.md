@@ -98,11 +98,11 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 You can pull this repository and run `yarn build` to rebuild this library.
 
-## Unit test
+## Test
 
-### For check
+### Unit test
 
-We use jest library to write unit tests, you can see test coverage on [coveralls](https://coveralls.io/github/ZLY201/js-sdsl). You can run `yarn test:check` command to reproduce it.
+We use jest library to write unit tests, you can see test coverage on [coveralls](https://coveralls.io/github/ZLY201/js-sdsl). You can run `yarn test:unit` command to reproduce it.
 
 ### For performance
 

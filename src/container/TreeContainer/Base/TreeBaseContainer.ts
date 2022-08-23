@@ -73,7 +73,9 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         if (brother.color === TreeNode.red) {
           brother.color = TreeNode.black;
           parentNode.color = TreeNode.red;
-          parentNode.rotateLeft();
+          if (parentNode === this.root) {
+            this.root = parentNode.rotateLeft();
+          } else parentNode.rotateLeft();
         } else if (brother.color === TreeNode.black) {
           if (brother.right && brother.right.color === TreeNode.red) {
             brother.color = parentNode.color;
@@ -82,7 +84,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             if (parentNode === this.root) {
               this.root = parentNode.rotateLeft();
             } else parentNode.rotateLeft();
-            curNode.color = TreeNode.black;
             return;
           } else if (brother.left && brother.left.color === TreeNode.red) {
             brother.color = TreeNode.red;
@@ -98,7 +99,9 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         if (brother.color === TreeNode.red) {
           brother.color = TreeNode.black;
           parentNode.color = TreeNode.red;
-          parentNode.rotateRight();
+          if (parentNode === this.root) {
+            this.root = parentNode.rotateRight();
+          } else parentNode.rotateRight();
         } else {
           if (brother.left && brother.left.color === TreeNode.red) {
             brother.color = parentNode.color;
@@ -107,7 +110,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
             if (parentNode === this.root) {
               this.root = parentNode.rotateRight();
             } else parentNode.rotateRight();
-            curNode.color = TreeNode.black;
             return;
           } else if (brother.right && brother.right.color === TreeNode.red) {
             brother.color = TreeNode.red;
@@ -124,15 +126,14 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   protected eraseNode(curNode: TreeNode<K, V>) {
     if (this.length === 1) {
       this.clear();
-      return;
+      return this.header;
     }
     let swapNode = curNode;
     while (swapNode.left || swapNode.right) {
       if (swapNode.right) {
         swapNode = swapNode.right;
         while (swapNode.left) swapNode = swapNode.left;
-      }
-      if (swapNode.left) {
+      } else if (swapNode.left) {
         swapNode = swapNode.left;
         while (swapNode.right) swapNode = swapNode.right;
       }
@@ -140,16 +141,15 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       [curNode.value, swapNode.value] = [swapNode.value, curNode.value];
       curNode = swapNode;
     }
-
     if (this.header.left === swapNode) {
-      this.header.left = this.header.left.parent;
-    }
-    if (this.header.right === swapNode) {
-      this.header.right = this.header.right.parent;
+      this.header.left = swapNode.parent;
+    } else if (this.header.right === swapNode) {
+      this.header.right = swapNode.parent;
     }
     this.eraseNodeSelfBalance(swapNode);
     swapNode.remove();
     this.length -= 1;
+    (this.root as TreeNode<K, V>).color = TreeNode.black;
   }
   protected inOrderTraversal:
   (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
@@ -312,7 +312,9 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     if (node === this.header) {
       throw new RangeError('Invalid iterator');
     }
-    iter = iter.next();
+    if (node.right === undefined) {
+      iter = iter.next();
+    }
     this.eraseNode(node);
     return iter;
   }
