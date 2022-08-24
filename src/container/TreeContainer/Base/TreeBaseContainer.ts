@@ -177,6 +177,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         const uncle = grandParent.right;
         if (uncle && uncle.color === TreeNode.RED) {
           uncle.color = parentNode.color = TreeNode.BLACK;
+          if (grandParent === this.root) return;
           grandParent.color = TreeNode.RED;
           curNode = grandParent;
           continue;
@@ -192,6 +193,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         const uncle = grandParent.left;
         if (uncle && uncle.color === TreeNode.RED) {
           uncle.color = parentNode.color = TreeNode.BLACK;
+          if (grandParent === this.root) return;
           grandParent.color = TreeNode.RED;
           curNode = grandParent;
           continue;
@@ -280,7 +282,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     this.length += 1;
     this.insertNodeSelfBalance(curNode);
-    this.root.color = TreeNode.BLACK;
   }
   clear() {
     this.length = 0;
