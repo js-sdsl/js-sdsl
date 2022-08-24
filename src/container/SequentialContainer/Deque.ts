@@ -148,10 +148,10 @@ class Deque<T> extends SequentialContainer<T> {
     this.curFirst = this.curLast = this.bucketSize >> 1;
   }
   front() {
-    return this.map[this.first][this.curFirst];
+    return this.map[this.first][this.curFirst] as (T | undefined);
   }
   back() {
-    return this.map[this.last][this.curLast];
+    return this.map[this.last][this.curLast] as (T | undefined);
   }
   begin() {
     return new DequeIterator<T>(

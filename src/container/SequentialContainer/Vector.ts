@@ -121,12 +121,10 @@ class Vector<T> extends SequentialContainer<T> {
     );
   }
   front() {
-    if (!this.length) return;
-    return this.vector[0];
+    return this.vector[0] as (T | undefined);
   }
   back() {
-    if (!this.length) return;
-    return this.vector[this.length - 1];
+    return this.vector[this.length - 1] as (T | undefined);
   }
   forEach(callback: (element: T, index: number) => void) {
     for (let i = 0; i < this.length; ++i) {

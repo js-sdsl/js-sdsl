@@ -57,6 +57,7 @@ describe('PriorityQueue test', () => {
     q.pop();
     expect(q.top()).toEqual(1);
     q.pop();
+    expect(q.top()).toBe(undefined);
     const que = new PriorityQueue(new Vector([1, 2, 3]));
     expect(que.size()).toEqual(3);
     expect(que.top()).toEqual(3);
@@ -65,5 +66,6 @@ describe('PriorityQueue test', () => {
     que.pop();
     expect(que.top()).toEqual(1);
     que.pop();
+    expect(q.top()).toBe(undefined);
   });
 });

@@ -11,6 +11,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Change rbTree binary search from recursive to loop implementation (don't effect using).
 - Reduce memory waste during deque initialization.
 
+## Fixed
+
+- Fixed priority queue not dereference on pop.
+
 ## [4.1.1] - 2022.08.23
 
 ### Fixed
