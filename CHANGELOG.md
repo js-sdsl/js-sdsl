@@ -9,6 +9,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Changed
 
 - Change rbTree binary search from recursive to loop implementation (don't effect using).
+- Reduce memory waste during deque initialization.
 
 ## [4.1.1] - 2022.08.23
 
