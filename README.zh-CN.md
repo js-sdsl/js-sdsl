@@ -37,7 +37,7 @@
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
-查看 [benchmark](https://js-sdsl.github.io/#/zh-cn/test/benchmark) 以获取更多信息
+查看 [benchmark](https://js-sdsl.github.io/#/zh-cn/test/benchmark-analyze) 以获取更多信息
 
 ## 支持的平台
 
