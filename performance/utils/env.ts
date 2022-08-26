@@ -16,7 +16,7 @@ V8 ${v8Version}`;
     return o;
   }, {} as { [key: string]: number });
 
-  return `This is Js-sdsl performance test. To get source code you can go to [github](https://github.com/ZLY201/js-sdsl/tree/main/performance.
+  return `This is Js-sdsl performance test. To get source code you can go to [github](https://github.com/ZLY201/js-sdsl/tree/main/performance).
 
 ## Environment
 
