@@ -110,40 +110,9 @@ We use jest library to write unit tests, you can see test coverage on [coveralls
 
 ### For performance
 
-We tested most of the functions for efficiency. You can go to `testResult.txt` to see our running results or reproduce it with `yarn test:performance` command.
+We tested most of the functions for efficiency. You can go to [`gh-pages/performance.md`](https://github.com/ZLY201/js-sdsl/blob/gh-pages/performance.md) to see our running results or reproduce it with `yarn test:performance` command.
 
-The following is a partial interception of the performance test:
-
-```bash
-=================================== OrderedSet ===================================
-┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
-│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
-├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1667   │
-│    1    │      'insert'       │ 1000000 │    2000000    │   558   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    3000000    │   362   │
-│    3    │ 'eraseElementByPos' │   10    │    3000000    │   633   │
-│    4    │       'union'       │    1    │    2999998    │  1949   │
-│    5    │    'lowerBound'     │ 1000000 │    2999998    │  1665   │
-│    6    │    'upperBound'     │ 1000000 │    2999998    │  1722   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    2999998    │  1690   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    2999998    │  1713   │
-└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
-=================================== OrderedMap ===================================
-┌─────────┬─────────────────────┬─────────┬───────────────┬─────────┐
-│ (index) │      testFunc       │ testNum │ containerSize │ runTime │
-├─────────┼─────────────────────┼─────────┼───────────────┼─────────┤
-│    0    │    'constructor'    │    1    │    1000000    │  1574   │
-│    1    │    'setElement'     │ 1000000 │    2000000    │   643   │
-│    2    │ 'eraseElementByKey' │ 1000000 │    2000000    │   344   │
-│    3    │ 'eraseElementByPos' │   100   │    1000000    │  6082   │
-│    4    │       'union'       │    1    │    1999900    │  1888   │
-│    5    │    'lowerBound'     │ 1000000 │    1999900    │  1615   │
-│    6    │    'upperBound'     │ 1000000 │    1999900    │  1666   │
-│    7    │ 'reverseLowerBound' │ 1000000 │    1999900    │  1619   │
-│    8    │ 'reverseUpperBound' │ 1000000 │    1999900    │  1665   │
-└─────────┴─────────────────────┴─────────┴───────────────┴─────────┘
-```
+You can also visit [here](https://js-sdsl.github.io/#/zh-cn/test/performance-test) to get the result.
 
 ## Maintainers
 
