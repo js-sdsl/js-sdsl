@@ -112,7 +112,7 @@ We use jest library to write unit tests, you can see test coverage on [coveralls
 
 We tested most of the functions for efficiency. You can go to [`gh-pages/performance.md`](https://github.com/ZLY201/js-sdsl/blob/gh-pages/performance.md) to see our running results or reproduce it with `yarn test:performance` command.
 
-You can also visit [here](https://js-sdsl.github.io/#/zh-cn/test/performance-test) to get the result.
+You can also visit [here](https://js-sdsl.github.io/#/test/performance-test) to get the result.
 
 ## Maintainers
 
