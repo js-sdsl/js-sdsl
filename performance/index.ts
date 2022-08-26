@@ -7,14 +7,17 @@ import testDeque from './SequentialContainerTest/Deque.performance';
 import testLinkList from './SequentialContainerTest/LinkList.performance';
 import testOrderedMap from './TreeContainerTest/OrderedMap.performance';
 import testOrderedSet from './TreeContainerTest/OrderedSet.performance';
+import path from 'path';
+import env from './utils/env';
+import { writeFileSync } from 'fs';
 
 export type testReportFormat = {
   containerName: string,
   reportList: {
-      testFunc: string,
-      containerSize: number,
-      testNum: number,
-      runTime: number
+    testFunc: string,
+    containerSize: number,
+    testNum: number,
+    runTime: number
   }[];
 }
 
@@ -58,14 +61,43 @@ function main(taskQueue: string[]) {
   console.log('All container performance test end.');
   console.clear();
 
-  if (testReport.length) {
-    console.log('='.repeat(35), 'Report', '='.repeat(35));
-    testReport.forEach(report => {
-      console.log('='.repeat(35), report.containerName, '='.repeat(35));
-      console.table(report.reportList);
-    });
-    console.log('='.repeat(35), 'Report', '='.repeat(35));
-  }
+  console.log('='.repeat(35), 'Report', '='.repeat(35));
+  testReport.forEach(report => {
+    console.log('='.repeat(35), report.containerName, '='.repeat(35));
+    console.table(report.reportList);
+  });
+  console.log('='.repeat(35), 'Report', '='.repeat(35));
+
+  console.log('saving result...');
+  let content = env();
+  content += '\n## Result\n\n';
+  const savePath = path.resolve(__dirname, '../performance.md');
+  content += testReport.map(report => {
+    const { containerName, reportList } = report;
+    let str = `### ${containerName}
+
+<table>
+  <tr>
+    <td>testFunc</td>
+    <td>testNum</td>
+    <td>containerSize</td>
+    <td>runTime</td>
+  </tr>
+`;
+    for (const json of reportList) {
+      str += `  <tr>
+    <td>${json.testFunc}</td>
+    <td>${json.testNum}</td>
+    <td>${json.containerSize}</td>
+    <td>${json.runTime}</td>
+  </tr>
+`;
+    }
+    str += '</table>\n';
+    return str;
+  }).join('\n');
+  writeFileSync(savePath, content);
+  console.log('saved!');
 }
 
 main(process.argv.slice(2));

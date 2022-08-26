@@ -3,7 +3,15 @@ import { Base, initContainer } from '@/container/ContainerBase/index';
 class PriorityQueue<T> extends Base {
   private readonly priorityQueue: T[];
   private readonly cmp: (x: T, y: T) => number;
-  constructor(container: initContainer<T> = [],
+  /**
+   *
+   * @param container initialize container, must have a forEach function
+   * @param cmp compare function
+   * @param copy When the container is an array, you can choose to directly operate on the original object of
+   *             the array or perform a shallow copy. The default is shallow copy.
+   */
+  constructor(
+    container: initContainer<T> = [],
     cmp: (x: T, y: T) => number =
     (x: T, y: T) => {
       if (x > y) return -1;
@@ -81,10 +89,6 @@ class PriorityQueue<T> extends Base {
    */
   pop() {
     if (!this.length) return;
-    if (this.length === 1) {
-      this.length -= 1;
-      return;
-    }
     const last = this.priorityQueue[this.length - 1];
     this.length -= 1;
     let parent = 0;
@@ -104,12 +108,13 @@ class PriorityQueue<T> extends Base {
       parent = minChild;
     }
     this.priorityQueue[parent] = last;
+    this.priorityQueue.pop();
   }
   /**
    * Accesses the top element.
    */
   top() {
-    return this.priorityQueue[0];
+    return this.priorityQueue[0] as (T | undefined);
   }
 }
 

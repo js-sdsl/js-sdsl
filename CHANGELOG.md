@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.08.23
+## [UnReleased] - 2022.08.27
+
+### Added
+
+- Make `SequentialContainer` and `TreeBaseContainer` export in the index.
 
 ### Changed
 
 - Change rbTree binary search from recursive to loop implementation (don't effect using).
+- Reduce memory waste during deque initialization.
+
+## Fixed
+
+- Fixed priority queue not dereference on pop.
 
 ## [4.1.1] - 2022.08.23
 

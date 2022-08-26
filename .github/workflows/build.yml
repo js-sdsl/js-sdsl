@@ -19,6 +19,12 @@ jobs:
       run: yarn lint
     - name: Run test
       run: yarn test
+    - name: Save performance test result
+      if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'publish@') }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance.md
+        path: dist/performance
     - name: Coveralls report
       uses: coverallsapp/github-action@master
       with:
@@ -63,8 +69,12 @@ jobs:
       uses: actions/checkout@master
     - name: Install dependencies
       run: yarn install
+    - name: Download performance test result
+      uses: actions/download-artifact@v3
+      with:
+        name: performance.md
     - name: Generate type documentation
-      run: yarn generate
+      run: yarn generate && mv README.md README.zh-CN.md performance.md docs/
     - name: Deploy to github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:

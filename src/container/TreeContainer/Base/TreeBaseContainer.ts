@@ -143,7 +143,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         while (swapNode.left) swapNode = swapNode.left;
       } else if (swapNode.left) {
         swapNode = swapNode.left;
-        while (swapNode.right) swapNode = swapNode.right;
       }
       [curNode.key, swapNode.key] = [swapNode.key, curNode.key];
       [curNode.value, swapNode.value] = [swapNode.value, curNode.value];
@@ -182,13 +181,32 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           curNode = grandParent;
           continue;
         } else if (curNode === parentNode.right) {
-          parentNode.rotateLeft();
           curNode.color = TreeNode.BLACK;
-        } else parentNode.color = TreeNode.BLACK;
+          if (curNode.left) curNode.left.parent = parentNode;
+          if (curNode.right) curNode.right.parent = grandParent;
+          parentNode.right = curNode.left;
+          grandParent.left = curNode.right;
+          curNode.left = parentNode;
+          curNode.right = grandParent;
+          if (grandParent === this.root) {
+            this.root = curNode;
+            this.header.parent = curNode;
+          } else {
+            const GP = grandParent.parent as TreeNode<K, V>;
+            if (GP.left === grandParent) {
+              GP.left = curNode;
+            } else GP.right = curNode;
+          }
+          curNode.parent = grandParent.parent;
+          parentNode.parent = curNode;
+          grandParent.parent = curNode;
+        } else {
+          parentNode.color = TreeNode.BLACK;
+          if (grandParent === this.root) {
+            this.root = grandParent.rotateRight();
+          } else grandParent.rotateRight();
+        }
         grandParent.color = TreeNode.RED;
-        if (grandParent === this.root) {
-          this.root = grandParent.rotateRight();
-        } else grandParent.rotateRight();
       } else {
         const uncle = grandParent.left;
         if (uncle && uncle.color === TreeNode.RED) {
@@ -198,13 +216,32 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           curNode = grandParent;
           continue;
         } else if (curNode === parentNode.left) {
-          parentNode.rotateRight();
           curNode.color = TreeNode.BLACK;
-        } else parentNode.color = TreeNode.BLACK;
+          if (curNode.left) curNode.left.parent = grandParent;
+          if (curNode.right) curNode.right.parent = parentNode;
+          grandParent.right = curNode.left;
+          parentNode.left = curNode.right;
+          curNode.left = grandParent;
+          curNode.right = parentNode;
+          if (grandParent === this.root) {
+            this.root = curNode;
+            this.header.parent = curNode;
+          } else {
+            const GP = grandParent.parent as TreeNode<K, V>;
+            if (GP.left === grandParent) {
+              GP.left = curNode;
+            } else GP.right = curNode;
+          }
+          curNode.parent = grandParent.parent;
+          parentNode.parent = curNode;
+          grandParent.parent = curNode;
+        } else {
+          parentNode.color = TreeNode.BLACK;
+          if (grandParent === this.root) {
+            this.root = grandParent.rotateLeft();
+          } else grandParent.rotateLeft();
+        }
         grandParent.color = TreeNode.RED;
-        if (grandParent === this.root) {
-          this.root = grandParent.rotateLeft();
-        } else grandParent.rotateLeft();
       }
       return;
     }

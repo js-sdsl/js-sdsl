@@ -1,5 +1,5 @@
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
 import { Vector, LinkList } from '@/index';
+import SequentialContainer from '@/container/SequentialContainer/Base/index';
 
 function judgeSequentialContainer(
   container: SequentialContainer<number>,
@@ -57,6 +57,7 @@ describe('LinkList test', () => {
       if (index >= 1000) return;
       expect(myLinkList.find(element).pointer).toEqual(element);
     });
+    expect(myLinkList.find(-1).equals(myLinkList.end())).toBe(true);
   });
 
   test('LinkList eraseElementByIterator function test', () => {
@@ -79,6 +80,7 @@ describe('LinkList test', () => {
 
   test('LinkList pushFront function test', () => {
     const myLinkList = new LinkList();
+    myLinkList.reverse();
     expect(myLinkList.front()).toEqual(undefined);
     expect(myLinkList.back()).toEqual(undefined);
     expect(() => {
@@ -134,5 +136,13 @@ describe('LinkList test', () => {
     expect(myLinkList.size()).toBe(2);
     myLinkList.eraseElementByValue(0);
     expect(myLinkList.size()).toBe(1);
+    myLinkList.clear();
+    myLinkList.sort();
+    myLinkList.unique();
+    expect(myLinkList.size()).toBe(0);
+    const newLink = new LinkList([1, 2, 3]);
+    myLinkList.pushBack(4);
+    myLinkList.merge(newLink);
+    myLinkList.forEach((element, index) => expect(element).toBe(index + 1));
   });
 });

@@ -28,7 +28,7 @@ class Stack<T> extends Base {
    * Accesses the top element.
    */
   top() {
-    return this.stack[this.length - 1];
+    return this.stack[this.length - 1] as (T | undefined);
   }
 }
 
