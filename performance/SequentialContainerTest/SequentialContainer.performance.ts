@@ -1,4 +1,3 @@
-
 import { testReportFormat } from '../index';
 import SequentialContainer from '@/container/SequentialContainer/Base/index';
 
