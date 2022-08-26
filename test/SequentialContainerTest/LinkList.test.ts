@@ -137,6 +137,7 @@ describe('LinkList test', () => {
     myLinkList.eraseElementByValue(0);
     expect(myLinkList.size()).toBe(1);
     myLinkList.clear();
+    myLinkList.sort();
     myLinkList.unique();
     expect(myLinkList.size()).toBe(0);
     const newLink = new LinkList([1, 2, 3]);

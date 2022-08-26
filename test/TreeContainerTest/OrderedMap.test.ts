@@ -137,10 +137,23 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
+      myOrderedMap.setElement(i, i);
+      stdMap.set(i, i);
+    }
+    let i = testNum;
+    stdMap.forEach((value, key) => {
+      --i;
+      myOrderedMap.eraseElementByKey(key);
+      expect(myOrderedMap.size()).toEqual(i);
+    });
+    expect(myOrderedMap.size()).toEqual(0);
+    stdMap.clear();
+
+    for (let i = 0; i < testNum; ++i) {
       myOrderedMap.setElement(testNum - i, i);
       stdMap.set(testNum - i, i);
     }
-    let i = testNum;
+    i = testNum;
     stdMap.forEach((value, key) => {
       --i;
       myOrderedMap.eraseElementByKey(key);
