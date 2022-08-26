@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.08.24
+## [UnReleased] - 2022.08.27
+
+### Added
+
+- Make `SequentialContainer` and `TreeBaseContainer` export in the index.
 
 ### Changed
 
