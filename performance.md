@@ -1,4 +1,4 @@
-This is Js-sdsl performance test. To get source code you can go to [github](https://github.com/ZLY201/js-sdsl/tree/main/performance.
+This is Js-sdsl performance test. To get source code you can go to [github](https://github.com/ZLY201/js-sdsl/tree/main/performance).
 
 ## Environment
 
