@@ -90,21 +90,13 @@ class Deque<T> extends SequentialContainer<T> {
       throw new RangeError('Can\'t get container\'s size!');
     }
     this.bucketSize = bucketSize;
-    const needSize = _length * 3;
-    if (needSize < this.bucketSize) {
-      this.bucketNum = 1;
-      this.map.push(new Array(needSize));
-      this.first = this.last = 0;
-      this.curFirst = this.curLast = _length;
-    } else {
-      this.bucketNum = Math.max(Math.ceil(_length / this.bucketSize), 1);
-      for (let i = 0; i < this.bucketNum; ++i) {
-        this.map.push(new Array(this.bucketSize));
-      }
-      const needBucketNum = Math.ceil(_length / this.bucketSize);
-      this.first = this.last = (this.bucketNum >> 1) - (needBucketNum >> 1);
-      this.curFirst = this.curLast = (this.bucketSize - _length % this.bucketSize) >> 1;
+    this.bucketNum = Math.max(Math.ceil(_length / this.bucketSize), 1);
+    for (let i = 0; i < this.bucketNum; ++i) {
+      this.map.push(new Array(this.bucketSize));
     }
+    const needBucketNum = Math.ceil(_length / this.bucketSize);
+    this.first = this.last = (this.bucketNum >> 1) - (needBucketNum >> 1);
+    this.curFirst = this.curLast = (this.bucketSize - _length % this.bucketSize) >> 1;
     container.forEach(element => this.pushBack(element));
     this.size = this.size.bind(this);
     this.getElementByPos = this.getElementByPos.bind(this);
