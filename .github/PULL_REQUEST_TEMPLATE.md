@@ -1,6 +1,6 @@
 <!--
 Please make sure to read the Pull Request Guidelines:
-https://github.com/ZLY201/js-sdsl/blob/main/.github/CONTRIBUTING.md
+https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md
 -->
 
 <!-- PULL REQUEST TEMPLATE -->

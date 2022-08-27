@@ -2,7 +2,7 @@
 
 Hi! I'm really excited that you are interested in contributing to js-sdsl. Before submitting your contribution, please make sure to take a moment and read through the following guidelines:
 
-- [Code of Conduct](https://github.com/ZLY201/js-sdsl/blob/main/CODE_OF_CONDUCT.md)
+- [Code of Conduct](https://github.com/js-sdsl/js-sdsl/blob/main/CODE_OF_CONDUCT.md)
 - [Issue Reporting Guidelines](#issue-reporting-guidelines)
 - [Pull Request Guidelines](#pull-request-guidelines)
 - [Development Setup](#development-setup)
@@ -46,7 +46,7 @@ $ yarn install
 
 ### Committing Changes
 
-Please follow the commit specification. See [`.commitlintrc.json`](https://github.com/ZLY201/js-sdsl/blob/main/commitlint.config.js) get help.
+Please follow the commit specification. See [`.commitlintrc.json`](https://github.com/js-sdsl/js-sdsl/blob/main/.commitlintrc.json) get help.
 
 ### Commonly used NPM scripts
 
@@ -77,4 +77,4 @@ All our source files are written in typescript, please make sure your submission
 
 Thank you to all the people who have already contributed to js-sdsl!
 
-<a href="https://github.com/zly201/js-sdsl/graphs/contributors"><img src="https://contrib.rocks/image?repo=zly201/js-sdsl" /></a>
+<a href="https://github.com/js-sdsl/js-sdsl/graphs/contributors"><img src="https://contrib.rocks/image?repo=js-sdsl/js-sdsl" /></a>

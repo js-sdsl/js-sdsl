@@ -7,7 +7,7 @@
   "author": {
     "name": "ZLY201",
     "email": "951711127@qq.com",
-    "url": "https://github.com/ZLY201/js-sdsl"
+    "url": "https://github.com/js-sdsl/js-sdsl"
   },
   "browserslist": [
     "last 2 version",
@@ -68,7 +68,7 @@
   },
   "repository": {
     "type": "github",
-    "url": "https://github.com/ZLY201/js-sdsl.git"
+    "url": "https://github.com/js-sdsl/js-sdsl.git"
   },
   "license": "MIT",
   "files": [
@@ -102,7 +102,7 @@
   ],
   "bugs": {
     "email": "951711127@qq.com",
-    "url": "https://github.com/ZLY201/js-sdsl/issues"
+    "url": "https://github.com/js-sdsl/js-sdsl/issues"
   },
   "dependencies": {}
 }
