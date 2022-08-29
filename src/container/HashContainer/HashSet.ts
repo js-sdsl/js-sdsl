@@ -13,6 +13,10 @@ class HashSet<K> extends HashContainerBase<K> {
     super(initBucketNum, hashFunc);
     container.forEach(element => this.insert(element));
   }
+  /**
+   * @description Growth the hash table.
+   * @private
+   */
   private reAllocate() {
     if (this.bucketNum >= HashSet.maxBucketNum) return;
     const newHashTable: (Vector<K> | OrderedSet<K>)[] = [];
@@ -75,7 +79,8 @@ class HashSet<K> extends HashContainerBase<K> {
     }
   }
   /**
-   * Inserts element to Set.
+   * @description Insert element to hash set.
+   * @param element The element you want to insert.
    */
   insert(element: K) {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
@@ -104,7 +109,8 @@ class HashSet<K> extends HashContainerBase<K> {
     }
   }
   /**
-   * Removes the elements of the specified value.
+   * @description Remove the elements of the specified value.
+   * @param element The element you want to remove.
    */
   eraseElementByKey(element: K) {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
@@ -124,7 +130,8 @@ class HashSet<K> extends HashContainerBase<K> {
     this.length += curSize - preSize;
   }
   /**
-   * @return If the specified element in the HashSet.
+   * @param element The element you want to find.
+   * @return Boolean about if the specified element in the hash set.
    */
   find(element: K) {
     const index = this.hashFunc(element) & (this.bucketNum - 1);
@@ -132,9 +139,6 @@ class HashSet<K> extends HashContainerBase<K> {
     return !(this.hashTable[index] as Vector<K>).find(element)
       .equals((this.hashTable[index] as Vector<K>).end());
   }
-  /**
-   * Using for 'for...of' syntax like Array.
-   */
   [Symbol.iterator]() {
     return function * (this: HashSet<K>) {
       let index = 0;

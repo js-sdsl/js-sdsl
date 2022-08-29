@@ -76,7 +76,7 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return res as K;
   }
   /**
-   * Inserts element to Set.
+   * @description Insert element to set.
    */
   insert(key: K) {
     this.set(key);
@@ -117,9 +117,14 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return new OrderedSetIterator(resNode, this.header);
   }
   /**
-   * Union the other Set to self.
-   * Waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
-   * More information => https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations
+   * @description Union the other Set to self.
+   *              <br/>
+   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
+   *              but we expect it to be O(mlog(n/m+1)).<br/>
+   *              More information =>
+   *              https://en.wikipedia.org/wiki/Red_black_tree
+   *              <br/>
+   * @param other The other set you want to merge.
    */
   union(other: OrderedSet<K>) {
     other.forEach((element) => this.insert(element));

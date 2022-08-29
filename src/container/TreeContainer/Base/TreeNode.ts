@@ -11,6 +11,10 @@ class TreeNode<K, V> {
     this.key = key;
     this.value = value;
   }
+  /**
+   * @description Get the pre node.
+   * @return TreeNode about the pre node.
+   */
   pre() {
     let preNode: TreeNode<K, V> = this;
     if (
@@ -33,6 +37,10 @@ class TreeNode<K, V> {
     }
     return preNode;
   }
+  /**
+   * @description Get the next node.
+   * @return TreeNode about the next node.
+   */
   next() {
     let nextNode: TreeNode<K, V> = this;
     if (nextNode.right) {
@@ -52,6 +60,10 @@ class TreeNode<K, V> {
     }
     return nextNode;
   }
+  /**
+   * @description Rotate left.
+   * @return TreeNode about moved to original position after rotation.
+   */
   rotateLeft() {
     const PP = this.parent as TreeNode<K, V>;
     const V = this.right as TreeNode<K, V>;
@@ -71,6 +83,10 @@ class TreeNode<K, V> {
 
     return V;
   }
+  /**
+   * @description Rotate left.
+   * @return TreeNode about moved to original position after rotation.
+   */
   rotateRight() {
     const PP = this.parent as TreeNode<K, V>;
     const F = this.left as TreeNode<K, V>;
@@ -90,6 +106,9 @@ class TreeNode<K, V> {
 
     return F;
   }
+  /**
+   * @description Remove this.
+   */
   remove() {
     const parent = this.parent as TreeNode<K, V>;
     if (this === parent.left) {
