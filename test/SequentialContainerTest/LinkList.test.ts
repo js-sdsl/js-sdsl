@@ -66,7 +66,7 @@ describe('LinkList test', () => {
       myLinkList.eraseElementByIterator(myLinkList.begin());
       tmpArr.shift();
       tmpArr.shift();
-      myLinkList.eraseElementByIterator(myLinkList.rBegin().pre());
+      myLinkList.eraseElementByIterator(myLinkList.rBegin().next());
       myLinkList.eraseElementByIterator(myLinkList.rBegin());
       tmpArr.pop();
       tmpArr.pop();
@@ -94,6 +94,10 @@ describe('LinkList test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rBegin().pointer;
+    }).toThrowError(RangeError);
+    expect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      myLinkList.rEnd().pointer;
     }).toThrowError(RangeError);
     expect(() => {
       myLinkList.eraseElementByIterator(myLinkList.begin());

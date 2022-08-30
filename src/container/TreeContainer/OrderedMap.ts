@@ -1,4 +1,4 @@
-import { initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';
@@ -42,12 +42,31 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
   begin() {
     return new OrderedMapIterator(this.header.left || this.header, this.header);
   }
-  rBegin() {
-    return new OrderedMapIterator(this.header.right || this.header, this.header);
-  }
+  /**
+   * @return Iterator pointing to the super end like c++.
+   */
   end() {
     return new OrderedMapIterator(this.header, this.header);
   }
+  /**
+   * @return Iterator pointing to the end element.
+   */
+  rBegin() {
+    return new OrderedMapIterator(
+      this.header.right || this.header,
+      this.header,
+      ContainerIterator.REVERSE
+    );
+  }
+  /**
+   * @return Iterator pointing to the super begin like c++.
+   */
+  rEnd() {
+    return new OrderedMapIterator(this.header, this.header, ContainerIterator.REVERSE);
+  }
+  /**
+   * @return The first element.
+   */
   front() {
     if (!this.length) return undefined;
     const minNode = this.header.left as TreeNode<K, V>;

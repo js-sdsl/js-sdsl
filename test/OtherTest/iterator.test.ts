@@ -65,7 +65,7 @@ describe('iterator test', () => {
     for (const container of containerArr) {
       let index = arr.length - 1;
       for (let it = container.rBegin() as ContainerIterator<unknown>;
-        !it.equals(container.end());
+        !it.equals(container.rEnd() as ContainerIterator<unknown>);
         it = it.next()) {
         if (container instanceof OrderedMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
@@ -80,7 +80,7 @@ describe('iterator test', () => {
   test('reverse iterator pre function test', () => {
     for (const container of containerArr) {
       let index = 0;
-      for (let it = container.end().pre() as ContainerIterator<unknown>;
+      for (let it = container.rEnd().pre() as ContainerIterator<unknown>;
         !it.equals(container.rBegin() as ContainerIterator<unknown>);
         it = it.pre()) {
         if (container instanceof OrderedMap) {
@@ -100,6 +100,14 @@ describe('iterator test', () => {
 
     test('normal iterator pre run time error test', () => {
       expect(() => container.begin().pre()).toThrowError(RangeError);
+    });
+
+    test('reverse iterator next run time error test', () => {
+      expect(() => container.rEnd().next()).toThrowError(RangeError);
+    });
+
+    test('reverse iterator pre run time error test', () => {
+      expect(() => container.rBegin().pre()).toThrowError(RangeError);
     });
   }
 

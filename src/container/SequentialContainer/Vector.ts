@@ -7,17 +7,52 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   private readonly size: () => number;
   private readonly getElementByPos: (pos: number) => T;
   private readonly setElementByPos: (pos: number, element: T) => void;
+  pre: () => this;
+  next: () => this;
   constructor(
     index: number,
     size: () => number,
     getElementByPos: (pos: number) => T,
-    setElementByPos: (pos: number, element: T) => void
+    setElementByPos: (pos: number, element: T) => void,
+    iteratorType?: boolean
   ) {
-    super();
+    super(iteratorType);
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
+
+    if (this.iteratorType === ContainerIterator.NORMAL) {
+      this.pre = function () {
+        if (this.node === 0) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node -= 1;
+        return this;
+      };
+      this.next = function () {
+        if (this.node === this.size()) {
+          throw new RangeError('Deque Iterator access denied!');
+        }
+        this.node += 1;
+        return this;
+      };
+    } else {
+      this.pre = function () {
+        if (this.node === this.size() - 1) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node += 1;
+        return this;
+      };
+      this.next = function () {
+        if (this.node === -1) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node -= 1;
+        return this;
+      };
+    }
   }
   get pointer() {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
@@ -26,20 +61,6 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   set pointer(newValue: T) {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
     this.setElementByPos(this.node, newValue);
-  }
-  pre() {
-    if (this.node === 0) {
-      throw new RangeError('Vector iterator access denied!');
-    }
-    this.node -= 1;
-    return this;
-  }
-  next() {
-    if (this.node === this.size()) {
-      throw new RangeError('Vector Iterator access denied!');
-    }
-    this.node += 1;
-    return this;
   }
   equals(obj: VectorIterator<T>) {
     return this.node === obj.node;
@@ -79,20 +100,30 @@ class Vector<T> extends SequentialContainer<T> {
       this.setElementByPos
     );
   }
-  rBegin() {
-    return new VectorIterator(
-      this.length - 1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
-  }
   end() {
     return new VectorIterator(
       this.length,
       this.size,
       this.getElementByPos,
       this.setElementByPos
+    );
+  }
+  rBegin() {
+    return new VectorIterator(
+      this.length - 1,
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
+      ContainerIterator.REVERSE
+    );
+  }
+  rEnd() {
+    return new VectorIterator(
+      -1,
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
+      ContainerIterator.REVERSE
     );
   }
   front() {

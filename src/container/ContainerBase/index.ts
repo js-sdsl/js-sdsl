@@ -1,4 +1,10 @@
 export abstract class ContainerIterator<T> {
+  static readonly NORMAL = false;
+  static readonly REVERSE = true;
+  readonly iteratorType: boolean;
+  protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
+    this.iteratorType = iteratorType;
+  }
   /**
    * @description Pointers to element.
    * @return The value of the pointer's element.
@@ -12,11 +18,11 @@ export abstract class ContainerIterator<T> {
   /**
    * @description Move `this` iterator to pre.
    */
-  abstract pre(): ContainerIterator<T>;
+  abstract pre(): this;
   /**
    * @description Move `this` iterator to next.
    */
-  abstract next(): ContainerIterator<T>;
+  abstract next(): this;
   /**
    * @param obj The other iterator you want to compare.
    * @return Boolean about if this equals to obj.
@@ -55,13 +61,17 @@ export abstract class Container<T> extends Base {
    */
   abstract begin(): ContainerIterator<T>;
   /**
+   * @return Iterator pointing to the super end like c++.
+   */
+  abstract end(): ContainerIterator<T>;
+  /**
    * @return Iterator pointing to the end element.
    */
   abstract rBegin(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the super end like c++.
+   * @return Iterator pointing to the super begin like c++.
    */
-  abstract end(): ContainerIterator<T>;
+  abstract rEnd(): ContainerIterator<T>;
   /**
    * @return The first element of the container.
    */

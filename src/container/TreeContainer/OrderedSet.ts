@@ -1,5 +1,5 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
@@ -33,11 +33,18 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
       this.header
     );
   }
-  rBegin() {
-    return new OrderedSetIterator(this.header.right || this.header, this.header);
-  }
   end() {
     return new OrderedSetIterator(this.header, this.header);
+  }
+  rBegin() {
+    return new OrderedSetIterator(
+      this.header.right || this.header,
+      this.header,
+      ContainerIterator.REVERSE
+    );
+  }
+  rEnd() {
+    return new OrderedSetIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     return this.header.left ? this.header.left.key : undefined;
