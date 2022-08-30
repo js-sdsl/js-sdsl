@@ -5,13 +5,6 @@ import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 
 export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
-  constructor(
-    node: TreeNode<K, V>,
-    header: TreeNode<K, V>,
-    iteratorType: 'normal' | 'reverse' = 'normal'
-  ) {
-    super(node, header, iteratorType);
-  }
   get pointer() {
     if (this.node === this.header) {
       throw new RangeError('OrderedMap iterator access denied');
@@ -28,7 +21,7 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
         this.node.value = newValue;
         return true;
       }
-    }) as [K, V];
+    });
   }
 }
 
@@ -53,22 +46,16 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return new OrderedMapIterator(this.header.left || this.header, this.header);
   }
   /**
+   * @return Iterator pointing to the end element.
+   */
+  rBegin() {
+    return new OrderedMapIterator(this.header.right || this.header, this.header);
+  }
+  /**
    * @return Iterator pointing to the super end like c++.
    */
   end() {
     return new OrderedMapIterator(this.header, this.header);
-  }
-  /**
-   * @return Iterator pointing to the end element.
-   */
-  rBegin() {
-    return new OrderedMapIterator(this.header.right || this.header, this.header, 'reverse');
-  }
-  /**
-   * @return Iterator pointing to the super begin like c++.
-   */
-  rEnd() {
-    return new OrderedMapIterator(this.header, this.header, 'reverse');
   }
   /**
    * @return The first element.

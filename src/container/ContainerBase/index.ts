@@ -1,8 +1,4 @@
 export abstract class ContainerIterator<T> {
-  readonly iteratorType: 'normal' | 'reverse';
-  protected constructor(iteratorType: 'normal' | 'reverse') {
-    this.iteratorType = iteratorType;
-  }
   /**
    * Pointers to element.
    */
@@ -52,17 +48,13 @@ export abstract class Container<T> extends Base {
    */
   abstract begin(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the super end like c++.
-   */
-  abstract end(): ContainerIterator<T>;
-  /**
    * @return Iterator pointing to the end element.
    */
   abstract rBegin(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the super begin like c++.
+   * @return Iterator pointing to the super end like c++.
    */
-  abstract rEnd(): ContainerIterator<T>;
+  abstract end(): ContainerIterator<T>;
   /**
    * @return The first element.
    */

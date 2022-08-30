@@ -11,10 +11,9 @@ export class VectorIterator<T> extends ContainerIterator<T> {
     index: number,
     size: () => number,
     getElementByPos: (pos: number) => T,
-    setElementByPos: (pos: number, element: T) => void,
-    iteratorType: 'normal' | 'reverse' = 'normal'
+    setElementByPos: (pos: number, element: T) => void
   ) {
-    super(iteratorType);
+    super();
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
@@ -29,40 +28,20 @@ export class VectorIterator<T> extends ContainerIterator<T> {
     this.setElementByPos(this.node, newValue);
   }
   pre() {
-    if (this.iteratorType === 'reverse') {
-      if (this.node === this.size() - 1) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node += 1;
-    } else {
-      if (this.node === 0) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node -= 1;
+    if (this.node === 0) {
+      throw new RangeError('Vector iterator access denied!');
     }
+    this.node -= 1;
     return this;
   }
   next() {
-    if (this.iteratorType === 'reverse') {
-      if (this.node === -1) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node -= 1;
-    } else {
-      if (this.node === this.size()) {
-        throw new RangeError('Vector Iterator access denied!');
-      }
-      this.node += 1;
+    if (this.node === this.size()) {
+      throw new RangeError('Vector Iterator access denied!');
     }
+    this.node += 1;
     return this;
   }
   equals(obj: VectorIterator<T>) {
-    if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
-    }
-    if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('Iterator type error!');
-    }
     return this.node === obj.node;
   }
 }
@@ -94,30 +73,20 @@ class Vector<T> extends SequentialContainer<T> {
       this.setElementByPos
     );
   }
+  rBegin() {
+    return new VectorIterator(
+      this.length - 1,
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos
+    );
+  }
   end() {
     return new VectorIterator(
       this.length,
       this.size,
       this.getElementByPos,
       this.setElementByPos
-    );
-  }
-  rBegin() {
-    return new VectorIterator(
-      this.length - 1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      'reverse'
-    );
-  }
-  rEnd() {
-    return new VectorIterator(
-      -1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      'reverse'
     );
   }
   front() {

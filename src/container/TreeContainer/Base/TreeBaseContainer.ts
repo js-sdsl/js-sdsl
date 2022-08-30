@@ -134,7 +134,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   protected eraseNode(curNode: TreeNode<K, V>) {
     if (this.length === 1) {
       this.clear();
-      return this.header;
+      return;
     }
     let swapNode = curNode;
     while (swapNode.left || swapNode.right) {
