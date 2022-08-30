@@ -11,21 +11,21 @@ class Stack<T> extends Base {
     this.stack.length = 0;
   }
   /**
-   * Inserts element at the top.
+   * @description Insert element to stack's end.
    */
   push(element: T) {
     this.stack.push(element);
     this.length += 1;
   }
   /**
-   * Removes the top element.
+   * @description Removes the end element.
    */
   pop() {
     this.stack.pop();
     if (this.length > 0) this.length -= 1;
   }
   /**
-   * Accesses the top element.
+   * @description Accesses the end element.
    */
   top() {
     return this.stack[this.length - 1] as (T | undefined);

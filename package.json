@@ -29,6 +29,7 @@
     "test:performance": "rm -rf dist/performance && ttsc --project tsconfig.performance.json && node dist/performance/performance/index.js",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
     "generate": "typedoc src/index.ts",
+    "generate:dev": "typedoc src/index.ts --watch",
     "prepare": "husky install"
   },
   "lint-staged": {

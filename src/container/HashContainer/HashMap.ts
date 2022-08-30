@@ -74,7 +74,10 @@ class HashMap<K, V> extends HashContainerBase<K> {
     }
   }
   /**
-   * Insert a new key-value pair or set value by key.
+   * @description Insert a new key-value pair to hash map or set value by key.
+   * @param key The key you want to insert.
+   * @param value The value you want to insert.
+   * @example HashMap.setElement(1, 2); // insert a key-value pair [1, 2]
    */
   setElement(key: K, value: V) {
     const index = this.hashFunc(key) & (this.bucketNum - 1);
@@ -108,7 +111,8 @@ class HashMap<K, V> extends HashContainerBase<K> {
     }
   }
   /**
-   * Gets the value of the element which has the specified key.
+   * @description Get the value of the element which has the specified key.
+   * @param key The key you want to get.
    */
   getElementByKey(key: K) {
     const index = this.hashFunc(key) & (this.bucketNum - 1);
@@ -123,7 +127,8 @@ class HashMap<K, V> extends HashContainerBase<K> {
     }
   }
   /**
-   * Removes the element of the specified key.
+   * @description Removes the element of the specified key.
+   * @param key The key you want to remove.
    */
   eraseElementByKey(key: K) {
     const index = this.hashFunc(key) & (this.bucketNum - 1);
@@ -148,7 +153,8 @@ class HashMap<K, V> extends HashContainerBase<K> {
     this.length += curSize - preSize;
   }
   /**
-   * @return If the specified element in the HashSet.
+   * @param key The key you want to find.
+   * @return Boolean about if the specified element in the hash map.
    */
   find(key: K) {
     const index = this.hashFunc(key) & (this.bucketNum - 1);
@@ -162,9 +168,6 @@ class HashMap<K, V> extends HashContainerBase<K> {
     }
     return false;
   }
-  /**
-   * Using for 'for...of' syntax like Array.
-   */
   [Symbol.iterator]() {
     return function * (this: HashMap<K, V>) {
       let index = 0;

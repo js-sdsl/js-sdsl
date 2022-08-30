@@ -46,49 +46,28 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
         yield [curNode.key, curNode.value] as [K, V];
         yield * this.iterationFunc(curNode.right);
       };
-  /**
-   * @return Iterator pointing to the beginning element.
-   */
   begin() {
     return new OrderedMapIterator(this.header.left || this.header, this.header);
   }
-  /**
-   * @return Iterator pointing to the super end like c++.
-   */
   end() {
     return new OrderedMapIterator(this.header, this.header);
   }
-  /**
-   * @return Iterator pointing to the end element.
-   */
   rBegin() {
     return new OrderedMapIterator(this.header.right || this.header, this.header, 'reverse');
   }
-  /**
-   * @return Iterator pointing to the super begin like c++.
-   */
   rEnd() {
     return new OrderedMapIterator(this.header, this.header, 'reverse');
   }
-  /**
-   * @return The first element.
-   */
   front() {
     if (!this.length) return undefined;
     const minNode = this.header.left as TreeNode<K, V>;
     return [minNode.key, minNode.value] as [K, V];
   }
-  /**
-   * @return The last element.
-   */
   back() {
     if (!this.length) return undefined;
     const maxNode = this.header.right as TreeNode<K, V>;
     return [maxNode.key, maxNode.value] as [K, V];
   }
-  /**
-   * @param callback callback function, it's first param is an array which type is [key, value].
-   */
   forEach(callback: (element: [K, V], index: number) => void) {
     let index = 0;
     for (const pair of this) callback(pair, index++);
@@ -122,15 +101,11 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return new OrderedMapIterator(resNode, this.header);
   }
   /**
-   * Insert a new key-value pair or set value by key.
+   * @description Insert a new key-value pair or set value by key.
    */
   setElement(key: K, value: V) {
     this.set(key, value);
   }
-  /**
-   * @param key The key you want to find.
-   * @return Iterator pointing to the element if found, or super end if not found.
-   */
   find(key: K) {
     const curNode = this.findElementNode(this.root, key);
     if (curNode !== undefined) {
@@ -139,7 +114,7 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return this.end();
   }
   /**
-   * Gets the value of the element of the specified key.
+   * @description Get the value of the element of the specified key.
    */
   getElementByKey(key: K) {
     const curNode = this.findElementNode(this.root, key);
@@ -159,16 +134,18 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return res as [K, V];
   }
   /**
-   * Union the other Set to self.
-   * waiting for optimization, this is O(mlog(n+m)) algorithm now, but we expect it to be O(mlog(n/m+1)).
-   * More information => https://en.wikipedia.org/wiki/Red%E2%80%93black_tree#Set_operations_and_bulk_operations
+   * @description Union the other Set to self.
+   *              <br/>
+   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
+   *              but we expect it to be O(mlog(n/m+1)).<br/>
+   *              More information =>
+   *              https://en.wikipedia.org/wiki/Red_black_tree
+   *              <br/>
+   * @param other The other set you want to merge.
    */
   union(other: OrderedMap<K, V>) {
     other.forEach(([key, value]) => this.setElement(key, value));
   }
-  /**
-   * Using for 'for...of' syntax like Array.
-   */
   [Symbol.iterator]() {
     return this.iterationFunc(this.root);
   }
