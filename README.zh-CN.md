@@ -8,8 +8,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM Version" /></a>
-  <a href="https://github.com/js-sdsl/js-sdsl/actions/workflows/build.yml?branch=dev"><img src="https://img.shields.io/github/workflow/status/js-sdsl/js-sdsl/js-sdsl%20CI?branch=dev" alt="Build Status" /></a>
-  <a href='https://coveralls.io/github/js-sdsl/js-sdsl?branch=dev'><img src='https://coveralls.io/repos/github/js-sdsl/js-sdsl/badge.svg?branch=dev' alt='Coverage Status' /></a>
+  <a href="https://github.com/js-sdsl/js-sdsl/actions/workflows/build.yml?branch=main"><img src="https://img.shields.io/github/workflow/status/js-sdsl/js-sdsl/js-sdsl%20CI?branch=main" alt="Build Status" /></a>
+  <a href='https://coveralls.io/github/js-sdsl/js-sdsl?branch=main'><img src='https://coveralls.io/repos/github/js-sdsl/js-sdsl/badge.svg?branch=main' alt='Coverage Status' /></a>
   <a href="https://github.com/js-sdsl/js-sdsl"><img src="https://img.shields.io/github/stars/js-sdsl/js-sdsl.svg" alt="GITHUB Star" /></a>
   <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
   <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.badgesize.io/https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js?compression=gzip&style=flat-square/" alt="Gzip Size"></a>
@@ -18,7 +18,7 @@
   <a href="https://github.com/js-sdsl/js-sdsl/"><img src="https://img.shields.io/github/languages/top/js-sdsl/js-sdsl.svg" alt="GITHUB-language" /></a>
 </p>
 
-<p align="center"><a href="https://github.com/js-sdsl/js-sdsl/blob/dev/README.md">English</a> | 简体中文</p>
+<p align="center"><a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.md">English</a> | 简体中文</p>
 
 ## 包含的数据结构
 
