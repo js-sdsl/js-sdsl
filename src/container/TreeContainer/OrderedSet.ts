@@ -18,6 +18,9 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
     }
     return this.node.key as K;
   }
+  copy() {
+    return new OrderedSetIterator(this.node, this.header, this.iteratorType);
+  }
 }
 
 class OrderedSet<K> extends TreeBaseContainer<K, undefined> {

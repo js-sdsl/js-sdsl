@@ -21,7 +21,7 @@ function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, nu
 
 describe('HashMap test', () => {
   // @ts-ignore
-  HashContainerBase.treeifyThreshold = 2;
+  HashContainerBase.treeifyThreshold = 1;
   // @ts-ignore
   HashContainerBase.untreeifyThreshold = 1;
   const myHashMap = new HashMap(arr.map((element, index) => [element, index]));

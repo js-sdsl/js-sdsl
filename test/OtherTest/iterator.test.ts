@@ -131,6 +131,41 @@ describe('iterator test', () => {
     });
   }
 
+  test('copy test', () => {
+    for (const container of containerArr) {
+      const iter = container.begin() as ContainerIterator<unknown>;
+      const copy = iter.copy() as ContainerIterator<unknown>;
+      iter.next();
+      expect(iter.equals(copy)).toBe(false);
+      copy.next();
+      expect(iter.equals(copy)).toBe(true);
+    }
+    for (const container of containerArr) {
+      const iter = container.end() as ContainerIterator<unknown>;
+      const copy = iter.copy() as ContainerIterator<unknown>;
+      iter.pre();
+      expect(iter.equals(copy)).toBe(false);
+      copy.pre();
+      expect(iter.equals(copy)).toBe(true);
+    }
+    for (const container of containerArr) {
+      const iter = container.rBegin() as ContainerIterator<unknown>;
+      const copy = iter.copy() as ContainerIterator<unknown>;
+      iter.next();
+      expect(iter.equals(copy)).toBe(false);
+      copy.next();
+      expect(iter.equals(copy)).toBe(true);
+    }
+    for (const container of containerArr) {
+      const iter = container.rEnd() as ContainerIterator<unknown>;
+      const copy = iter.copy() as ContainerIterator<unknown>;
+      iter.pre();
+      expect(iter.equals(copy)).toBe(false);
+      copy.pre();
+      expect(iter.equals(copy)).toBe(true);
+    }
+  });
+
   test('export test', () => {
     expect(() => {
       // eslint-disable-next-line no-new

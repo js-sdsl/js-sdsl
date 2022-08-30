@@ -65,6 +65,15 @@ export class VectorIterator<T> extends ContainerIterator<T> {
     }
     return this.node === obj.node;
   }
+  copy() {
+    return new VectorIterator(
+      this.node,
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
+      this.iteratorType
+    );
+  }
 }
 
 class Vector<T> extends SequentialContainer<T> {

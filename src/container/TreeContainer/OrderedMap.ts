@@ -32,6 +32,9 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
       }
     }) as [K, V];
   }
+  copy() {
+    return new OrderedMapIterator(this.node, this.header, this.iteratorType);
+  }
 }
 
 class OrderedMap<K, V> extends TreeBaseContainer<K, V> {

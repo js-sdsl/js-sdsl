@@ -65,6 +65,15 @@ export class DequeIterator<T> extends ContainerIterator<T> {
     }
     return this.node === obj.node;
   }
+  copy() {
+    return new DequeIterator(
+      this.node,
+      this.size,
+      this.getElementByPos,
+      this.setElementByPos,
+      this.iteratorType
+    );
+  }
 }
 
 class Deque<T> extends SequentialContainer<T> {

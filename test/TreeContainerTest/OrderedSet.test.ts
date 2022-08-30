@@ -122,6 +122,31 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
+  test('OrderedSet updateKeyByIterator function test', () => {
+    const st = new OrderedSet();
+    st.insert(1);
+    expect(st.updateKeyByIterator(st.begin(), 2)).toBe(true);
+    expect(st.front()).toEqual(2);
+    st.eraseElementByKey(2);
+    expect(st.size()).toEqual(0);
+    expect(() => st.updateKeyByIterator(st.begin(), 1)).toThrowError(TypeError);
+    for (let i = 0; i < testNum; ++i) {
+      st.insert(i * 2);
+    }
+    expect(() => st.updateKeyByIterator(st.end(), 1)).toThrowError(TypeError);
+    for (let i = 0; i < testNum; ++i) {
+      const iter = st.lowerBound(i * 2);
+      expect(st.updateKeyByIterator(iter, i * 2 + 1)).toBe(true);
+      expect(iter.pointer).toEqual(i * 2 + 1);
+      if (i !== testNum - 1) {
+        expect(st.updateKeyByIterator(iter, testNum * 3)).toBe(false);
+      }
+      if (i !== 0) {
+        expect(st.updateKeyByIterator(iter, -1)).toBe(false);
+      }
+    }
+  });
+
   test('OrderedSet clear function test', () => {
     myOrderedSet.clear();
     myVector.clear();

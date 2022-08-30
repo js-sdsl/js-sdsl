@@ -131,6 +131,32 @@ describe('OrderedMap test', () => {
     }).toThrow(TypeError);
   });
 
+  test('OrderedMap updateKeyByIterator function test', () => {
+    const mp = new OrderedMap();
+    mp.setElement(1, 1);
+    expect(mp.updateKeyByIterator(mp.begin(), 2)).toBe(true);
+    expect(mp.front()).toEqual([2, 1]);
+    mp.eraseElementByKey(2);
+    expect(mp.size()).toEqual(0);
+    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).toThrowError(TypeError);
+    for (let i = 0; i < testNum; ++i) {
+      mp.setElement(i * 2, i);
+    }
+    expect(() => mp.updateKeyByIterator(mp.end(), 1)).toThrowError(TypeError);
+    for (let i = 0; i < testNum; ++i) {
+      const iter = mp.lowerBound(i * 2);
+      expect(mp.updateKeyByIterator(iter, i * 2 + 1)).toBe(true);
+      expect(iter.pointer[0]).toEqual(i * 2 + 1);
+      expect(iter.pointer[1]).toEqual(i);
+      if (i !== testNum - 1) {
+        expect(mp.updateKeyByIterator(iter, testNum * 3)).toBe(false);
+      }
+      if (i !== 0) {
+        expect(mp.updateKeyByIterator(iter, -1)).toBe(false);
+      }
+    }
+  });
+
   test('OrderedMap clear function test', () => {
     myOrderedMap.clear();
     stdMap.clear();

@@ -381,6 +381,44 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     this.header.parent = undefined;
     this.header.left = this.header.right = undefined;
   }
+  /**
+   * @description Update node's key by iterator.
+   * @param iter The iterator you want to change.
+   * @param key The key you want to update.
+   * @return boolean about if the modification is successful.
+   */
+  updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
+    // @ts-ignore
+    const node = iter.node;
+    if (node === this.header) {
+      throw new TypeError('Invalid iterator!');
+    }
+    if (this.length === 1) {
+      node.key = key;
+      return true;
+    }
+    if (node === this.header.left) {
+      if (this.cmp(node.next().key as K, key) > 0) {
+        node.key = key;
+        return true;
+      }
+      return false;
+    }
+    if (node === this.header.right) {
+      if (this.cmp(node.pre().key as K, key) < 0) {
+        node.key = key;
+        return true;
+      }
+      return false;
+    }
+    const preKey = node.pre().key as K;
+    if (this.cmp(preKey, key) >= 0) return false;
+    const nextKey = node.next().key as K;
+    if (this.cmp(nextKey, key) <= 0) return false;
+    node.key = key;
+    return true;
+  }
+  // abstract updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean;
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
     let index = 0;
