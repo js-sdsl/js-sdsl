@@ -1,7 +1,4 @@
 export abstract class ContainerIterator<T> {
-  protected constructor(iteratorType: 'normal' | 'reverse') {
-    this.iteratorType = iteratorType;
-  }
   /**
    * @description Pointers to element.
    * @return The value of the pointer's element.
