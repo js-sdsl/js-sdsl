@@ -1,6 +1,9 @@
 export abstract class ContainerIterator<T> {
   static readonly NORMAL = false;
   static readonly REVERSE = true;
+  /**
+   * @description Iterator's type.
+   */
   readonly iteratorType: boolean;
   protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
     this.iteratorType = iteratorType;
