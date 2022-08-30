@@ -418,7 +418,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     node.key = key;
     return true;
   }
-  // abstract updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean;
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);
     let index = 0;
