@@ -81,6 +81,10 @@ class Deque<T> extends SequentialContainer<T> {
     this.getElementByPos = this.getElementByPos.bind(this);
     this.setElementByPos = this.setElementByPos.bind(this);
   }
+  /**
+   * @description Growth the Deque.
+   * @private
+   */
   private reAllocate() {
     const newMap = [];
     const addBucketNum = Math.max(this.bucketNum >> 1, 1);
@@ -102,6 +106,11 @@ class Deque<T> extends SequentialContainer<T> {
     this.map = newMap;
     this.bucketNum = newMap.length;
   }
+  /**
+   * @description Get the bucket position of the element and the pointer position by index.
+   * @param pos The element's index.
+   * @private
+   */
   private getElementIndex(pos: number) {
     const offset = this.curFirst + pos + 1;
     const offsetRemainder = offset % this.bucketSize;
@@ -183,7 +192,8 @@ class Deque<T> extends SequentialContainer<T> {
     this.length -= 1;
   }
   /**
-   * Push the element to the front.
+   * @description Push the element to the front.
+   * @param element The element you want to push.
    */
   pushFront(element: T) {
     if (this.length) {
@@ -205,7 +215,7 @@ class Deque<T> extends SequentialContainer<T> {
     this.map[this.first][this.curFirst] = element;
   }
   /**
-   * Remove the first element.
+   * @description Remove the first element.
    */
   popFront() {
     if (!this.length) return;
@@ -260,7 +270,9 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   /**
-   * Remove all elements after the specified position (excluding the specified position).
+   * @description Remove all elements after the specified position (excluding the specified position).
+   * @param pos The previous position of the first removed element.
+   * @example deque.cut(1); // Then deque's size will be 2. deque -> [0, 1]
    */
   cut(pos: number) {
     if (pos < 0) {
@@ -352,7 +364,7 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < this.length; ++i) this.setElementByPos(i, arr[i]);
   }
   /**
-   * Remove as much useless space as possible.
+   * @description Remove as much useless space as possible.
    */
   shrinkToFit() {
     if (!this.length) return;

@@ -4,9 +4,9 @@ class PriorityQueue<T> extends Base {
   private readonly priorityQueue: T[];
   private readonly cmp: (x: T, y: T) => number;
   /**
-   *
-   * @param container initialize container, must have a forEach function
-   * @param cmp compare function
+   * @description PriorityQueue's constructor.
+   * @param container Initialize container, must have a forEach function.
+   * @param cmp Compare function.
    * @param copy When the container is an array, you can choose to directly operate on the original object of
    *             the array or perform a shallow copy. The default is shallow copy.
    */
@@ -48,6 +48,11 @@ class PriorityQueue<T> extends Base {
       }
     }
   }
+  /**
+   * @description Adjusting parent's children to suit the nature of the heap.
+   * @param parent Parent's index.
+   * @private
+   */
   private adjust(parent: number) {
     const left = (parent << 1) | 1;
     const right = (parent << 1) + 2;
@@ -70,7 +75,8 @@ class PriorityQueue<T> extends Base {
     this.priorityQueue.length = 0;
   }
   /**
-   * Insert elements into a container in order.
+   * @description Push element into a container in order.
+   * @param element The element you want to push.
    */
   push(element: T) {
     this.priorityQueue.push(element);
@@ -85,7 +91,7 @@ class PriorityQueue<T> extends Base {
     }
   }
   /**
-   * Removes the top element.
+   * @description Removes the top element.
    */
   pop() {
     if (!this.length) return;
@@ -111,7 +117,7 @@ class PriorityQueue<T> extends Base {
     this.priorityQueue.pop();
   }
   /**
-   * Accesses the top element.
+   * @description Accesses the top element.
    */
   top() {
     return this.priorityQueue[0] as (T | undefined);

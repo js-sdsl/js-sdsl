@@ -16,6 +16,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     super();
     this.cmp = cmp;
   }
+  /**
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @return TreeNode which key is greater than or equals to the given key.
+   * @protected
+   */
   protected _lowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
     let resNode;
     while (curNode) {
@@ -29,6 +35,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @return TreeNode which key is greater than the given key.
+   * @protected
+   */
   protected _upperBound(curNode: TreeNode<K, V> | undefined, key: K) {
     let resNode;
     while (curNode) {
@@ -42,6 +54,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @return TreeNode which key is less than or equals to the given key.
+   * @protected
+   */
   protected _reverseLowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
     let resNode;
     while (curNode) {
@@ -55,6 +73,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @return TreeNode which key is less than the given key.
+   * @protected
+   */
   protected _reverseUpperBound(curNode: TreeNode<K, V> | undefined, key: K) {
     let resNode;
     while (curNode) {
@@ -68,6 +92,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @description Make self balance after erase a node.
+   * @param curNode The node want to remove.
+   * @protected
+   */
   protected eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode.parent as TreeNode<K, V>;
@@ -131,6 +160,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       }
     }
   }
+  /**
+   * @description Remove a node.
+   * @param curNode The node you want to remove.
+   * @protected
+   */
   protected eraseNode(curNode: TreeNode<K, V>) {
     if (this.length === 1) {
       this.clear();
@@ -158,6 +192,10 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     this.length -= 1;
     (this.root as TreeNode<K, V>).color = TreeNode.BLACK;
   }
+  /**
+   * @description InOrder traversal the tree.
+   * @protected
+   */
   protected inOrderTraversal:
   (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
       (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => {
@@ -167,6 +205,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         if (callback(curNode)) return true;
         return this.inOrderTraversal(curNode.right, callback);
       };
+  /**
+   * @description Make self balance after insert a node.
+   * @param curNode The node want to insert.
+   * @protected
+   */
   protected insertNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode.parent as TreeNode<K, V>;
@@ -246,6 +289,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       return;
     }
   }
+  /**
+   * @description Find node which key is equals to the given key.
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @protected
+   */
   protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
     while (curNode) {
       const cmpResult = this.cmp(curNode.key as K, key);
@@ -257,6 +306,12 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return curNode;
   }
+  /**
+   * @description Insert a key-value pair or set value by the given key.
+   * @param key The key want to insert.
+   * @param value The value want to set.
+   * @protected
+   */
   protected set(key: K, value?: V) {
     if (this.root === undefined) {
       this.length += 1;
@@ -339,7 +394,8 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     });
   }
   /**
-   * Removes the elements of the specified key.
+   * @description Remove the element of the specified key.
+   * @param key The key you want to remove.
    */
   eraseElementByKey(key: K) {
     if (!this.length) return;
@@ -347,10 +403,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     if (curNode === undefined) return;
     this.eraseNode(curNode);
   }
-  /**
-   * @return An iterator point to the next iterator.
-   * Removes element by iterator.
-   */
   eraseElementByIterator(iter: TreeIterator<K, V>) {
     // @ts-ignore
     const node = iter.node;
@@ -364,7 +416,8 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     return iter;
   }
   /**
-   * @return The height of the RB-tree.
+   * @description Get the height of the tree.
+   * @return Number about the height of the RB-tree.
    */
   getHeight() {
     if (!this.length) return 0;

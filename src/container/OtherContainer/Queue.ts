@@ -13,21 +13,21 @@ class Queue<T> extends Base {
     this.length = 0;
   }
   /**
-   * Inserts element at the end.
+   * @description Inserts element to queue's end.
    */
   push(element: T) {
     this.queue.pushBack(element);
     this.length += 1;
   }
   /**
-   * Removes the first element.
+   * @description Removes the first element.
    */
   pop() {
     this.queue.popFront();
     if (this.length) this.length -= 1;
   }
   /**
-   * Access the first element.
+   * @description Access the first element.
    */
   front() {
     return this.queue.front();
