@@ -6,77 +6,78 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@master
-    - name: Use node.js lts/Gallium
-      uses: actions/setup-node@v3
-      with:
-        node-version: lts/Gallium
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn install
-    - name: Lint code
-      run: yarn lint
-    - name: Run test
-      run: yarn test
-    - name: Save performance test result
-      if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'publish@') }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: performance.md
-        path: dist/performance
-    - name: Coveralls report
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint code
+        run: yarn lint
+      - name: Run test
+        run: yarn test
+      - name: Save performance test result
+        if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'publish@') }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance.md
+          path: dist/performance
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' && success() }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn install
+      - name: Download performance test result
+        uses: actions/download-artifact@v3
+        with:
+          name: performance.md
+      - name: Generate type documentation
+        run: yarn generate && mv README.md README.zh-CN.md performance.md docs/
+      - name: Deploy to github pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
+          branch: gh-pages
   publish:
     needs: test
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@master
-    - name: Install dependencies
-      run: yarn install
-    - name: Build
-      run: yarn build
-    - name: Publish to npm
-      run: yarn publish
-      env:
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Publish to npm
+        run: yarn publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
     needs: publish
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@master
-    - name: Read package.json
-      uses: tyankatsu0105/read-package-version-actions@v1
-      id: package-version
-    - name: Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ steps.package-version.outputs.version }}
-        release_name: v${{ steps.package-version.outputs.version }}
-        prerelease: false
-  deploy:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@master
-    - name: Install dependencies
-      run: yarn install
-    - name: Download performance test result
-      uses: actions/download-artifact@v3
-      with:
-        name: performance.md
-    - name: Generate type documentation
-      run: yarn generate && mv README.md README.zh-CN.md performance.md docs/
-    - name: Deploy to github pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: docs
-        branch: gh-pages
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Read package.json
+        uses: tyankatsu0105/read-package-version-actions@v1
+        id: package-version
+      - name: Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package-version.outputs.version }}
+          release_name: v${{ steps.package-version.outputs.version }}
+          prerelease: false

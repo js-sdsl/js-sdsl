@@ -282,7 +282,8 @@ class LinkList<T> extends SequentialContainer<T> {
     });
   }
   /**
-   * Inserts an element to the beginning.
+   * @description Push an element to the front.
+   * @param element The element you want to push.
    */
   pushFront(element: T) {
     this.length += 1;
@@ -300,7 +301,7 @@ class LinkList<T> extends SequentialContainer<T> {
     this.head.pre = this.header;
   }
   /**
-   * Removes the first element.
+   * @description Removes the first element.
    */
   popFront() {
     if (!this.head) return;
@@ -315,7 +316,8 @@ class LinkList<T> extends SequentialContainer<T> {
     this.header.next = this.head;
   }
   /**
-   * Merges two sorted lists.
+   * @description Merges two sorted lists.
+   * @param list The other list you want to merge (must be sorted).
    */
   merge(list: LinkList<T>) {
     if (!this.head) {
