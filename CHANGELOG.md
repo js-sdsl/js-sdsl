@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.08.30
+
+### Added
+
+- Add function update key by iterator.
+
 ## [4.1.2-beta.0] - 2022.08.27
 
 ### Added
