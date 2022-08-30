@@ -25,7 +25,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">Vector</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L70">src/container/SequentialContainer/Vector.ts:70</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L70">src/container/SequentialContainer/Vector.ts:70</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -73,6 +73,9 @@
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="constructor.new_Vector">new <wbr/>Vector<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span>, copy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Vector.html" class="tsd-signature-type" data-tsd-kind="Class">Vector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_Vector" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Vector&#39;s constructor.</p>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -82,26 +85,34 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>container: <a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5></li>
+<h5>container: <a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5>
+<div class="tsd-comment tsd-typography"><p>Initialize container, must have a forEach function.</p>
+</div></li>
 <li>
-<h5>copy: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5></li></ul></div>
+<h5>copy: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
+<div class="tsd-comment tsd-typography"><p>When the container is an array, you can choose to directly operate on the original object of
+            the array or perform a shallow copy. The default is shallow copy.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Vector.html" class="tsd-signature-type" data-tsd-kind="Class">Vector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L72">src/container/SequentialContainer/Vector.ts:72</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L78">src/container/SequentialContainer/Vector.ts:78</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="length" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>length</span><a href="#length" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div><aside class="tsd-sources">
+<div class="tsd-signature">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Container&#39;s size.</p>
+</div><aside class="tsd-sources">
 <p>Inherited from <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#length">length</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/ContainerBase/index.ts#L30">src/container/ContainerBase/index.ts:30</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/ContainerBase/index.ts#L40">src/container/ContainerBase/index.ts:40</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="vector" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>vector</span><a href="#vector" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">vector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L71">src/container/SequentialContainer/Vector.ts:71</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L71">src/container/SequentialContainer/Vector.ts:71</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="_iterator_" class="tsd-anchor"></a>
@@ -109,24 +120,25 @@
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="_iterator_._iterator_-1">[iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_internal_.Generator.html" class="tsd-signature-type" data-tsd-kind="Interface">Generator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#_iterator_._iterator_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Using for &#39;for...of&#39; syntax like Array.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Using for &#39;for...of&#39; syntax like Array.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/_internal_.Generator.html" class="tsd-signature-type" data-tsd-kind="Interface">Generator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#_iterator_">[iterator]</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L205">src/container/SequentialContainer/Vector.ts:205</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L211">src/container/SequentialContainer/Vector.ts:211</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="back" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>back</span><a href="#back" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="back.back-1">back<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#back.back-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>The last element.</p>
+<h3>Returns</h3><p>The last element of the container.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#back">back</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L126">src/container/SequentialContainer/Vector.ts:126</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L132">src/container/SequentialContainer/Vector.ts:132</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="begin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>begin</span><a href="#begin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -138,30 +150,31 @@
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#begin">begin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L89">src/container/SequentialContainer/Vector.ts:89</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L95">src/container/SequentialContainer/Vector.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="clear" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clear</span><a href="#clear" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="clear.clear-1">clear<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#clear.clear-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Clear the container.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Clear the container.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#clear">clear</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L85">src/container/SequentialContainer/Vector.ts:85</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L91">src/container/SequentialContainer/Vector.ts:91</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="empty" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>empty</span><a href="#empty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 <li class="tsd-signature tsd-anchor-link" id="empty.empty-1">empty<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#empty.empty-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>Is the container empty.</p>
+<h3>Returns</h3><p>Boolean about if the container is empty.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#empty">empty</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/ContainerBase/index.ts#L40">src/container/ContainerBase/index.ts:40</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/ContainerBase/index.ts#L50">src/container/ContainerBase/index.ts:50</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="end" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>end</span><a href="#end" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -173,64 +186,74 @@
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#end">end</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L97">src/container/SequentialContainer/Vector.ts:97</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L103">src/container/SequentialContainer/Vector.ts:103</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="eraseElementByIterator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Iterator</span><a href="#eraseElementByIterator" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="eraseElementByIterator.eraseElementByIterator-1">erase<wbr/>Element<wbr/>By<wbr/>Iterator<span class="tsd-signature-symbol">(</span>iter<span class="tsd-signature-symbol">: </span><a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#eraseElementByIterator.eraseElementByIterator-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>An iterator point to the next iterator.
-Removes element by iterator.</p>
+<h3>Description</h3><p>Removes element by iterator and move <code>iter</code> to next.</p>
+
+<h3>Example</h3><pre><code class="language-ts"><span class="hl-9">container</span><span class="hl-0">.</span><span class="hl-10">eraseElementByIterator</span><span class="hl-0">(</span><span class="hl-9">container</span><span class="hl-0">.</span><span class="hl-10">begin</span><span class="hl-0">());</span>
+</code></pre>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>iter: <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
+<h5>iter: <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+<div class="tsd-comment tsd-typography"><p>The iterator you want to erase.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#eraseElementByIterator">eraseElementByIterator</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L152">src/container/SequentialContainer/Vector.ts:152</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L158">src/container/SequentialContainer/Vector.ts:158</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="eraseElementByPos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Pos</span><a href="#eraseElementByPos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="eraseElementByPos.eraseElementByPos-1">erase<wbr/>Element<wbr/>By<wbr/>Pos<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#eraseElementByPos.eraseElementByPos-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Removes the element at the specified position.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Removes the element at the specified position.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>pos: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5>pos: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The element&#39;s position you want to remove.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#eraseElementByPos">eraseElementByPos</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L138">src/container/SequentialContainer/Vector.ts:138</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L144">src/container/SequentialContainer/Vector.ts:144</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="eraseElementByValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Value</span><a href="#eraseElementByValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="eraseElementByValue.eraseElementByValue-1">erase<wbr/>Element<wbr/>By<wbr/>Value<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#eraseElementByValue.eraseElementByValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Removes the elements of the specified value.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Removes the elements of the specified value.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>value: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li></ul></div>
+<h5>value: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>The value you want to remove.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#eraseElementByValue">eraseElementByValue</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L143">src/container/SequentialContainer/Vector.ts:143</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L149">src/container/SequentialContainer/Vector.ts:149</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="find" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>find</span><a href="#find" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="find.find-1">find<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#find.find-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>Iterator pointing to the element if found, or super end if not found.</p>
+<h3>Returns</h3><p>An iterator pointing to the element if found, or super end if not found.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -242,17 +265,22 @@ Removes element by iterator.</p>
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#find">find</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L177">src/container/SequentialContainer/Vector.ts:177</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L183">src/container/SequentialContainer/Vector.ts:183</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forEach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>for<wbr/>Each</span><a href="#forEach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="forEach.forEach-1">for<wbr/>Each<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#forEach.forEach-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>I terate over all elements in the container.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>callback: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></h5>
+<div class="tsd-comment tsd-typography"><p>callback function like Array.forEach.</p>
+</div>
 <ul class="tsd-parameters">
 <li class="tsd-parameter-signature">
 <ul class="tsd-signatures tsd-kind-type-literal">
@@ -269,25 +297,26 @@ Removes element by iterator.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#forEach">forEach</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L129">src/container/SequentialContainer/Vector.ts:129</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L135">src/container/SequentialContainer/Vector.ts:135</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="front" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>front</span><a href="#front" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="front.front-1">front<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#front.front-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>The first element.</p>
+<h3>Returns</h3><p>The first element of the container.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#front">front</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L123">src/container/SequentialContainer/Vector.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L129">src/container/SequentialContainer/Vector.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getElementByPos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Element<wbr/>By<wbr/>Pos</span><a href="#getElementByPos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getElementByPos.getElementByPos-1">get<wbr/>Element<wbr/>By<wbr/>Pos<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getElementByPos.getElementByPos-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Gets the value of the element at the specified position.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Gets the value of the element at the specified position.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -297,12 +326,15 @@ Removes element by iterator.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#getElementByPos">getElementByPos</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L134">src/container/SequentialContainer/Vector.ts:134</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L140">src/container/SequentialContainer/Vector.ts:140</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="insert" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="insert.insert-1">insert<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, num<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Insert several elements after the specified position.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
@@ -316,40 +348,43 @@ Removes element by iterator.</p>
 </div></li>
 <li>
 <h5>num: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></h5>
-<div class="tsd-comment tsd-typography"><p>The number of elements you want to insert (default 1).
-Insert several elements after the specified position.</p>
+<div class="tsd-comment tsd-typography"><p>The number of elements you want to insert (default 1).</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#insert">insert</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L172">src/container/SequentialContainer/Vector.ts:172</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L178">src/container/SequentialContainer/Vector.ts:178</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="popBack" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pop<wbr/>Back</span><a href="#popBack" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="popBack.popBack-1">pop<wbr/>Back<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#popBack.popBack-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Removes the last element.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Removes the last element.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#popBack">popBack</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L163">src/container/SequentialContainer/Vector.ts:163</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L169">src/container/SequentialContainer/Vector.ts:169</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="pushBack" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>push<wbr/>Back</span><a href="#pushBack" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="pushBack.pushBack-1">push<wbr/>Back<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#pushBack.pushBack-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Push the element to the back.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Push the element to the back.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li></ul></div>
+<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>The element you want to push.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#pushBack">pushBack</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L159">src/container/SequentialContainer/Vector.ts:159</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L165">src/container/SequentialContainer/Vector.ts:165</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rBegin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>r<wbr/>Begin</span><a href="#rBegin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -361,7 +396,7 @@ Insert several elements after the specified position.</p>
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#rBegin">rBegin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L105">src/container/SequentialContainer/Vector.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L111">src/container/SequentialContainer/Vector.ts:111</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rEnd" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>r<wbr/>End</span><a href="#rEnd" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -373,36 +408,42 @@ Insert several elements after the specified position.</p>
 <h4 class="tsd-returns-title">Returns <a href="VectorIterator.html" class="tsd-signature-type" data-tsd-kind="Class">VectorIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#rEnd">rEnd</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L114">src/container/SequentialContainer/Vector.ts:114</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L120">src/container/SequentialContainer/Vector.ts:120</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="reverse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reverse</span><a href="#reverse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="reverse.reverse-1">reverse<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#reverse.reverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Reverses the container.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Reverses the container.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#reverse">reverse</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L190">src/container/SequentialContainer/Vector.ts:190</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L196">src/container/SequentialContainer/Vector.ts:196</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="setElementByPos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Element<wbr/>By<wbr/>Pos</span><a href="#setElementByPos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="setElementByPos.setElementByPos-1">set<wbr/>Element<wbr/>By<wbr/>Pos<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setElementByPos.setElementByPos-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Sets element by position.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Sets element by position.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>pos: <span class="tsd-signature-type">number</span></h5></li>
+<h5>pos: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>The position you want to change.</p>
+</div></li>
 <li>
-<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li></ul></div>
+<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>The element&#39;s value you want to update.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#setElementByPos">setElementByPos</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L168">src/container/SequentialContainer/Vector.ts:168</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L174">src/container/SequentialContainer/Vector.ts:174</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="size" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>size</span><a href="#size" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -414,19 +455,21 @@ Insert several elements after the specified position.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#size">size</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/ContainerBase/index.ts#L34">src/container/ContainerBase/index.ts:34</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/ContainerBase/index.ts#L44">src/container/ContainerBase/index.ts:44</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="sort" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sort</span><a href="#sort" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="sort.sort-1">sort<span class="tsd-signature-symbol">(</span>cmp<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#sort.sort-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Sort the container.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> cmp: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span></h5>
-<div class="tsd-comment tsd-typography"><p>Comparison function.
-Sort the container.</p>
+<div class="tsd-comment tsd-typography"><p>Comparison function.</p>
 </div>
 <ul class="tsd-parameters">
 <li class="tsd-parameter-signature">
@@ -444,18 +487,19 @@ Sort the container.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#sort">sort</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L202">src/container/SequentialContainer/Vector.ts:202</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L208">src/container/SequentialContainer/Vector.ts:208</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="unique" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>unique</span><a href="#unique" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="unique.unique-1">unique<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#unique.unique-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Removes the duplication of elements in the container.</p>
+<div class="tsd-comment tsd-typography">
+<h3>Description</h3><p>Removes the duplication of elements in the container.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="SequentialContainer.html">SequentialContainer</a>.<a href="SequentialContainer.html#unique">unique</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/95510c2/src/container/SequentialContainer/Vector.ts#L193">src/container/SequentialContainer/Vector.ts:193</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/3adb636/src/container/SequentialContainer/Vector.ts#L199">src/container/SequentialContainer/Vector.ts:199</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
