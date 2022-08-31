@@ -9,8 +9,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Changed
 
 - Changed OrderedMap's iterator pointer get from `Object.defineProperty'` to  `Proxy`.
-- Remove 'reverse' iterator because it is unnecessary.
-- Improve iterator performance by remove some judge.
+- Improve iterator performance by remove some judgment.
+- Change iterator type description from `normal` and `reverse` to boolean.
 
 ## [4.1.2-beta.0] - 2022.08.27
 
