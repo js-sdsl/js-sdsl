@@ -140,9 +140,11 @@ describe('OrderedSet test', () => {
       expect(iter.pointer).toEqual(i * 2 + 1);
       if (i !== testNum - 1) {
         expect(st.updateKeyByIterator(iter, testNum * 3)).toBe(false);
+        expect(iter.pointer).toEqual(i * 2 + 1);
       }
       if (i !== 0) {
         expect(st.updateKeyByIterator(iter, -1)).toBe(false);
+        expect(iter.pointer).toEqual(i * 2 + 1);
       }
     }
   });

@@ -150,9 +150,13 @@ describe('OrderedMap test', () => {
       expect(iter.pointer[1]).toEqual(i);
       if (i !== testNum - 1) {
         expect(mp.updateKeyByIterator(iter, testNum * 3)).toBe(false);
+        expect(iter.pointer[0]).toEqual(i * 2 + 1);
+        expect(iter.pointer[1]).toEqual(i);
       }
       if (i !== 0) {
         expect(mp.updateKeyByIterator(iter, -1)).toBe(false);
+        expect(iter.pointer[0]).toEqual(i * 2 + 1);
+        expect(iter.pointer[1]).toEqual(i);
       }
     }
   });
