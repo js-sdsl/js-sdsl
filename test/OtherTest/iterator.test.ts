@@ -109,26 +109,6 @@ describe('iterator test', () => {
     test('reverse iterator pre run time error test', () => {
       expect(() => container.rBegin().pre()).toThrowError(RangeError);
     });
-
-    test('normal iterator type error test', () => {
-      // @ts-ignore
-      expect(() => container.begin().equals(container.rBegin())).toThrowError(TypeError);
-    });
-
-    test('reverse iterator next type error test', () => {
-      // @ts-ignore
-      expect(() => container.rEnd().equals(container.begin())).toThrowError(TypeError);
-    });
-
-    test('normal iterator type error test', () => {
-      // @ts-ignore
-      expect(() => container.begin().equals({})).toThrowError(TypeError);
-    });
-
-    test('reverse iterator next type error test', () => {
-      // @ts-ignore
-      expect(() => container.rEnd().equals({})).toThrowError(TypeError);
-    });
   }
 
   test('copy test', () => {

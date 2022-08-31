@@ -14,14 +14,50 @@ export class LinkNode<T> {
 export class LinkListIterator<T> extends ContainerIterator<T> {
   private node: LinkNode<T>;
   private readonly header: LinkNode<T>;
+  pre: () => this;
+  next: () => this;
   constructor(
     node: LinkNode<T>,
     header: LinkNode<T>,
-    iteratorType: 'normal' | 'reverse' = 'normal'
+    iteratorType?: boolean
   ) {
     super(iteratorType);
     this.node = node;
     this.header = header;
+
+    if (this.iteratorType === ContainerIterator.NORMAL) {
+      this.pre = function () {
+        if (this.node.pre === this.header) {
+          throw new RangeError('LinkList iterator access denied!');
+        }
+        this.node = this.node.pre as LinkNode<T>;
+        return this;
+      };
+
+      this.next = function () {
+        if (this.node === this.header) {
+          throw new RangeError('LinkList iterator access denied!');
+        }
+        this.node = this.node.next as LinkNode<T>;
+        return this;
+      };
+    } else {
+      this.pre = function () {
+        if (this.node.next === this.header) {
+          throw new RangeError('LinkList iterator access denied!');
+        }
+        this.node = this.node.next as LinkNode<T>;
+        return this;
+      };
+
+      this.next = function () {
+        if (this.node === this.header) {
+          throw new RangeError('LinkList iterator access denied!');
+        }
+        this.node = this.node.pre as LinkNode<T>;
+        return this;
+      };
+    }
   }
   get pointer() {
     if (this.node === this.header) {
@@ -35,40 +71,7 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
     }
     this.node.value = newValue;
   }
-  pre() {
-    if (this.iteratorType === 'reverse') {
-      this.node.next = this.node.next as LinkNode<T>;
-      if (this.node.next === this.header) {
-        throw new RangeError('LinkList iterator access denied!');
-      }
-      this.node = this.node.next;
-    } else {
-      this.node.pre = this.node.pre as LinkNode<T>;
-      if (this.node.pre === this.header) {
-        throw new RangeError('LinkList iterator access denied!');
-      }
-      this.node = this.node.pre;
-    }
-    return this;
-  }
-  next() {
-    if (this.node === this.header) {
-      throw new RangeError('LinkList iterator access denied!');
-    }
-    if (this.iteratorType === 'reverse') {
-      this.node = this.node.pre as LinkNode<T>;
-    } else {
-      this.node = this.node.next as LinkNode<T>;
-    }
-    return this;
-  }
   equals(obj: LinkListIterator<T>) {
-    if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
-    }
-    if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('Iterator type error!');
-    }
     return this.node === obj.node;
   }
   copy() {
@@ -100,10 +103,10 @@ class LinkList<T> extends SequentialContainer<T> {
     return new LinkListIterator(this.header, this.header);
   }
   rBegin() {
-    return new LinkListIterator(this.tail || this.header, this.header, 'reverse');
+    return new LinkListIterator(this.tail || this.header, this.header, ContainerIterator.REVERSE);
   }
   rEnd() {
-    return new LinkListIterator(this.header, this.header, 'reverse');
+    return new LinkListIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     return this.head ? this.head.value : undefined;

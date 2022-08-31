@@ -1,9 +1,11 @@
 export abstract class ContainerIterator<T> {
+  static readonly NORMAL = false;
+  static readonly REVERSE = true;
   /**
-   * @description Iterator type.
+   * @description Iterator's type.
    */
-  readonly iteratorType: 'normal' | 'reverse';
-  protected constructor(iteratorType: 'normal' | 'reverse') {
+  readonly iteratorType: boolean;
+  protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
     this.iteratorType = iteratorType;
   }
   /**
@@ -19,11 +21,11 @@ export abstract class ContainerIterator<T> {
   /**
    * @description Move `this` iterator to pre.
    */
-  abstract pre(): ContainerIterator<T>;
+  abstract pre(): this;
   /**
    * @description Move `this` iterator to next.
    */
-  abstract next(): ContainerIterator<T>;
+  abstract next(): this;
   /**
    * @param obj The other iterator you want to compare.
    * @return Boolean about if this equals to obj.

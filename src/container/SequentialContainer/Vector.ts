@@ -7,18 +7,52 @@ export class VectorIterator<T> extends ContainerIterator<T> {
   private readonly size: () => number;
   private readonly getElementByPos: (pos: number) => T;
   private readonly setElementByPos: (pos: number, element: T) => void;
+  pre: () => this;
+  next: () => this;
   constructor(
     index: number,
     size: () => number,
     getElementByPos: (pos: number) => T,
     setElementByPos: (pos: number, element: T) => void,
-    iteratorType: 'normal' | 'reverse' = 'normal'
+    iteratorType?: boolean
   ) {
     super(iteratorType);
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
+
+    if (this.iteratorType === ContainerIterator.NORMAL) {
+      this.pre = function () {
+        if (this.node === 0) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node -= 1;
+        return this;
+      };
+      this.next = function () {
+        if (this.node === this.size()) {
+          throw new RangeError('Deque Iterator access denied!');
+        }
+        this.node += 1;
+        return this;
+      };
+    } else {
+      this.pre = function () {
+        if (this.node === this.size() - 1) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node += 1;
+        return this;
+      };
+      this.next = function () {
+        if (this.node === -1) {
+          throw new RangeError('Deque iterator access denied!');
+        }
+        this.node -= 1;
+        return this;
+      };
+    }
   }
   get pointer() {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
@@ -28,41 +62,7 @@ export class VectorIterator<T> extends ContainerIterator<T> {
     checkWithinAccessParams(this.node, 0, this.size() - 1);
     this.setElementByPos(this.node, newValue);
   }
-  pre() {
-    if (this.iteratorType === 'reverse') {
-      if (this.node === this.size() - 1) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node += 1;
-    } else {
-      if (this.node === 0) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node -= 1;
-    }
-    return this;
-  }
-  next() {
-    if (this.iteratorType === 'reverse') {
-      if (this.node === -1) {
-        throw new RangeError('Vector iterator access denied!');
-      }
-      this.node -= 1;
-    } else {
-      if (this.node === this.size()) {
-        throw new RangeError('Vector Iterator access denied!');
-      }
-      this.node += 1;
-    }
-    return this;
-  }
   equals(obj: VectorIterator<T>) {
-    if (obj.constructor.name !== this.constructor.name) {
-      throw new TypeError(`Obj's constructor is not ${this.constructor.name}!`);
-    }
-    if (this.iteratorType !== obj.iteratorType) {
-      throw new TypeError('Iterator type error!');
-    }
     return this.node === obj.node;
   }
   copy() {
@@ -123,7 +123,7 @@ class Vector<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      'reverse'
+      ContainerIterator.REVERSE
     );
   }
   rEnd() {
@@ -132,7 +132,7 @@ class Vector<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      'reverse'
+      ContainerIterator.REVERSE
     );
   }
   front() {

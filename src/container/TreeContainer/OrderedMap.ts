@@ -1,36 +1,27 @@
-import { initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeBaseContainer from './Base/TreeBaseContainer';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 
 export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
-  constructor(
-    node: TreeNode<K, V>,
-    header: TreeNode<K, V>,
-    iteratorType: 'normal' | 'reverse' = 'normal'
-  ) {
-    super(node, header, iteratorType);
-  }
   get pointer() {
     if (this.node === this.header) {
       throw new RangeError('OrderedMap iterator access denied');
     }
-    return Object.defineProperties({}, {
-      0: {
-        get: () => {
-          return this.node.key;
-        }
+    return new Proxy([] as unknown as [K, V], {
+      get: (_, props: '0' | '1') => {
+        if (props === '0') return this.node.key;
+        else if (props === '1') return this.node.value;
       },
-      1: {
-        get: () => {
-          return this.node.value;
-        },
-        set: (newValue: V) => {
-          this.node.value = newValue;
+      set: (_, props: '1', newValue: V) => {
+        if (props !== '1') {
+          throw new TypeError('props must be 1');
         }
+        this.node.value = newValue;
+        return true;
       }
-    }) as [K, V];
+    });
   }
   copy() {
     return new OrderedMapIterator(this.node, this.header, this.iteratorType);
@@ -58,10 +49,14 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return new OrderedMapIterator(this.header, this.header);
   }
   rBegin() {
-    return new OrderedMapIterator(this.header.right || this.header, this.header, 'reverse');
+    return new OrderedMapIterator(
+      this.header.right || this.header,
+      this.header,
+      ContainerIterator.REVERSE
+    );
   }
   rEnd() {
-    return new OrderedMapIterator(this.header, this.header, 'reverse');
+    return new OrderedMapIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     if (!this.length) return undefined;
