@@ -10,6 +10,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Add function update key by iterator.
 - Add iterator copy function to get a copy of itself.
+- Add insert by iterator hint function in tree container.
 
 ## [4.1.2-beta.0] - 2022.08.27
 
