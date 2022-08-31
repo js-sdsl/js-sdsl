@@ -6,7 +6,7 @@ This is Js-sdsl performance test. To get source code you can go to [github](http
 Linux 5.15.0-1017-azure x64
 Node.JS 16.17.0
 V8 9.4.146.26-node.22
-Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
+Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz × 2
 ```
 
 ## Result
@@ -24,7 +24,7 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>push</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>38</td>
+    <td>41</td>
   </tr>
   <tr>
     <td>clear</td>
@@ -47,7 +47,7 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>push</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>28</td>
+    <td>26</td>
   </tr>
   <tr>
     <td>clear</td>
@@ -70,19 +70,19 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>constructor</td>
     <td>1</td>
     <td>1000000</td>
-    <td>26</td>
+    <td>27</td>
   </tr>
   <tr>
     <td>push</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>64</td>
+    <td>62</td>
   </tr>
   <tr>
     <td>pop all</td>
     <td>1</td>
     <td>2000000</td>
-    <td>490</td>
+    <td>455</td>
   </tr>
 </table>
 
@@ -99,43 +99,43 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>pushBack</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>356</td>
+    <td>366</td>
   </tr>
   <tr>
     <td>popBack</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>33</td>
+    <td>30</td>
   </tr>
   <tr>
     <td>getElementByPos</td>
     <td>1000</td>
     <td>2000000</td>
-    <td>5</td>
+    <td>6</td>
   </tr>
   <tr>
     <td>setElementByPos</td>
     <td>1000</td>
     <td>2000000</td>
-    <td>5</td>
+    <td>6</td>
   </tr>
   <tr>
     <td>eraseElementByPos</td>
     <td>50</td>
     <td>2000000</td>
-    <td>707</td>
+    <td>619</td>
   </tr>
   <tr>
     <td>insert</td>
     <td>50</td>
     <td>2000050</td>
-    <td>707</td>
+    <td>691</td>
   </tr>
   <tr>
     <td>eraseElementByValue</td>
     <td>1</td>
     <td>2000050</td>
-    <td>26</td>
+    <td>28</td>
   </tr>
   <tr>
     <td>reverse</td>
@@ -147,13 +147,13 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>unique</td>
     <td>1</td>
     <td>2000050</td>
-    <td>51</td>
+    <td>46</td>
   </tr>
   <tr>
     <td>sort</td>
     <td>1</td>
     <td>3000000</td>
-    <td>3470</td>
+    <td>3506</td>
   </tr>
   <tr>
     <td>clear</td>
@@ -165,19 +165,19 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>pushFront</td>
     <td>1000000</td>
     <td>1000000</td>
-    <td>145</td>
+    <td>153</td>
   </tr>
   <tr>
     <td>popFront</td>
     <td>1000000</td>
     <td>1000000</td>
-    <td>21</td>
+    <td>23</td>
   </tr>
   <tr>
     <td>merge</td>
     <td>1</td>
     <td>1000000</td>
-    <td>134</td>
+    <td>150</td>
   </tr>
 </table>
 
@@ -194,85 +194,85 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>pushBack</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>69</td>
+    <td>79</td>
   </tr>
   <tr>
     <td>popBack</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>72</td>
+    <td>84</td>
   </tr>
   <tr>
     <td>getElementByPos</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>72</td>
+    <td>76</td>
   </tr>
   <tr>
     <td>setElementByPos</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>44</td>
+    <td>51</td>
   </tr>
   <tr>
     <td>eraseElementByPos</td>
     <td>50</td>
     <td>2000000</td>
-    <td>2645</td>
+    <td>2812</td>
   </tr>
   <tr>
     <td>insert</td>
     <td>50</td>
     <td>2000050</td>
-    <td>2595</td>
+    <td>2558</td>
   </tr>
   <tr>
     <td>eraseElementByValue</td>
     <td>1</td>
     <td>2000050</td>
-    <td>119</td>
+    <td>120</td>
   </tr>
   <tr>
     <td>reverse</td>
     <td>1</td>
     <td>1999950</td>
-    <td>50</td>
+    <td>61</td>
   </tr>
   <tr>
     <td>unique</td>
     <td>1</td>
     <td>2000050</td>
-    <td>66</td>
+    <td>60</td>
   </tr>
   <tr>
     <td>sort</td>
     <td>1</td>
     <td>3000000</td>
-    <td>2182</td>
+    <td>2218</td>
   </tr>
   <tr>
     <td>clear</td>
     <td>1</td>
     <td>3000000</td>
-    <td>1</td>
+    <td>0</td>
   </tr>
   <tr>
     <td>pushFront</td>
     <td>2000000</td>
     <td>2000000</td>
-    <td>60</td>
+    <td>67</td>
   </tr>
   <tr>
     <td>popFront</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>9</td>
+    <td>10</td>
   </tr>
   <tr>
     <td>shrinkToFit</td>
     <td>1</td>
     <td>1000000</td>
-    <td>90</td>
+    <td>92</td>
   </tr>
 </table>
 
@@ -289,55 +289,55 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>constructor</td>
     <td>1</td>
     <td>1000000</td>
-    <td>2224</td>
+    <td>2048</td>
   </tr>
   <tr>
     <td>insert</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>835</td>
+    <td>834</td>
   </tr>
   <tr>
     <td>eraseElementByKey</td>
     <td>1000000</td>
     <td>3000000</td>
-    <td>433</td>
+    <td>436</td>
   </tr>
   <tr>
     <td>eraseElementByPos</td>
     <td>10</td>
     <td>3000000</td>
-    <td>1189</td>
+    <td>1547</td>
   </tr>
   <tr>
     <td>union</td>
     <td>1</td>
     <td>2999990</td>
-    <td>2400</td>
+    <td>2471</td>
   </tr>
   <tr>
     <td>lowerBound</td>
     <td>1000000</td>
     <td>2999990</td>
-    <td>1646</td>
+    <td>1765</td>
   </tr>
   <tr>
     <td>upperBound</td>
     <td>1000000</td>
     <td>2999990</td>
-    <td>1716</td>
+    <td>1845</td>
   </tr>
   <tr>
     <td>reverseLowerBound</td>
     <td>1000000</td>
     <td>2999990</td>
-    <td>1697</td>
+    <td>1765</td>
   </tr>
   <tr>
     <td>reverseUpperBound</td>
     <td>1000000</td>
     <td>2999990</td>
-    <td>1735</td>
+    <td>1742</td>
   </tr>
 </table>
 
@@ -354,55 +354,55 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>constructor</td>
     <td>1</td>
     <td>1000000</td>
-    <td>2237</td>
+    <td>2111</td>
   </tr>
   <tr>
     <td>setElement</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>813</td>
+    <td>841</td>
   </tr>
   <tr>
     <td>eraseElementByKey</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>387</td>
+    <td>432</td>
   </tr>
   <tr>
     <td>eraseElementByPos</td>
     <td>100</td>
     <td>1000000</td>
-    <td>6101</td>
+    <td>6134</td>
   </tr>
   <tr>
     <td>union</td>
     <td>1</td>
     <td>1999900</td>
-    <td>3611</td>
+    <td>2058</td>
   </tr>
   <tr>
     <td>lowerBound</td>
     <td>1000000</td>
     <td>1999900</td>
-    <td>1619</td>
+    <td>1682</td>
   </tr>
   <tr>
     <td>upperBound</td>
     <td>1000000</td>
     <td>1999900</td>
-    <td>1636</td>
+    <td>1713</td>
   </tr>
   <tr>
     <td>reverseLowerBound</td>
     <td>1000000</td>
     <td>1999900</td>
-    <td>1655</td>
+    <td>1701</td>
   </tr>
   <tr>
     <td>reverseUpperBound</td>
     <td>1000000</td>
     <td>1999900</td>
-    <td>1631</td>
+    <td>1684</td>
   </tr>
 </table>
 
@@ -419,25 +419,25 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>constructor</td>
     <td>1</td>
     <td>1000000</td>
-    <td>2245</td>
+    <td>2229</td>
   </tr>
   <tr>
     <td>insert</td>
     <td>1000000</td>
     <td>2000000</td>
-    <td>8234</td>
+    <td>6799</td>
   </tr>
   <tr>
     <td>find</td>
     <td>2000000</td>
     <td>2000000</td>
-    <td>1489</td>
+    <td>1568</td>
   </tr>
   <tr>
     <td>eraseElementByKey</td>
     <td>2000000</td>
     <td>2000000</td>
-    <td>2300</td>
+    <td>2465</td>
   </tr>
 </table>
 
@@ -454,24 +454,24 @@ Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
     <td>constructor</td>
     <td>1</td>
     <td>1000000</td>
-    <td>3552</td>
+    <td>3968</td>
   </tr>
   <tr>
     <td>setElement</td>
     <td>1000000</td>
     <td>1000000</td>
-    <td>3919</td>
+    <td>5546</td>
   </tr>
   <tr>
     <td>getElementByKey</td>
     <td>1000000</td>
     <td>1000000</td>
-    <td>5347</td>
+    <td>3581</td>
   </tr>
   <tr>
     <td>eraseElementByKey</td>
     <td>1000000</td>
     <td>1000000</td>
-    <td>4537</td>
+    <td>5353</td>
   </tr>
 </table>
