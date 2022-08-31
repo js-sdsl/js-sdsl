@@ -350,24 +350,26 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         if (hint !== undefined) {
           // @ts-ignore
           const iterNode = hint.node;
-          const iterCmpRes = this.cmp(iterNode.key as K, key);
-          if (iterCmpRes === 0) {
-            iterNode.value = value;
-            return;
-          } else if (iterCmpRes > 0) {
-            const preNode = iterNode.pre();
-            const preCmpRes = this.cmp(preNode.key as K, key);
-            if (preCmpRes === 0) {
-              preNode.value = value;
+          if (iterNode !== this.header) {
+            const iterCmpRes = this.cmp(iterNode.key as K, key);
+            if (iterCmpRes === 0) {
+              iterNode.value = value;
               return;
-            } else if (preCmpRes < 0) {
-              curNode = new TreeNode(key, value);
-              if (preNode.right === undefined) {
-                preNode.right = curNode;
-                curNode.parent = preNode;
-              } else {
-                iterNode.left = curNode;
-                curNode.parent = iterNode;
+            } else if (iterCmpRes > 0) {
+              const preNode = iterNode.pre();
+              const preCmpRes = this.cmp(preNode.key as K, key);
+              if (preCmpRes === 0) {
+                preNode.value = value;
+                return;
+              } else if (preCmpRes < 0) {
+                curNode = new TreeNode(key, value);
+                if (preNode.right === undefined) {
+                  preNode.right = curNode;
+                  curNode.parent = preNode;
+                } else {
+                  iterNode.left = curNode;
+                  curNode.parent = iterNode;
+                }
               }
             }
           }

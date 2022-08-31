@@ -160,6 +160,7 @@ describe('OrderedSet test', () => {
       st.insert(i * 3, iter);
       st.insert(i * 3 - 1, iter);
       st.insert(i * 3 - 2, iter);
+      st.insert(i * 3 - 1, st.end());
       v.pushBack(i * 3 - 2);
       v.pushBack(i * 3 - 1);
       expect(st.find(i * 3).equals(st.end())).toEqual(false);
