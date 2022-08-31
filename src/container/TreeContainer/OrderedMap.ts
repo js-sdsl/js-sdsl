@@ -23,6 +23,9 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
       }
     });
   }
+  copy() {
+    return new OrderedMapIterator(this.node, this.header, this.iteratorType);
+  }
 }
 
 class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
@@ -98,10 +101,13 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     return new OrderedMapIterator(resNode, this.header);
   }
   /**
-   * @description Insert a new key-value pair or set value by key.
+   * @description Insert a key-value pair or set value by the given key.
+   * @param key The key want to insert.
+   * @param value The value want to set.
+   * @param hint You can give an iterator hint to improve insertion efficiency.
    */
-  setElement(key: K, value: V) {
-    this.set(key, value);
+  setElement(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
+    this.set(key, value, hint);
   }
   find(key: K) {
     const curNode = this.findElementNode(this.root, key);

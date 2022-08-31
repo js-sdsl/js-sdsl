@@ -310,9 +310,10 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
    * @description Insert a key-value pair or set value by the given key.
    * @param key The key want to insert.
    * @param value The value want to set.
+   * @param hint You can give an iterator hint to improve insertion efficiency.
    * @protected
    */
-  protected set(key: K, value?: V) {
+  protected set(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this.root === undefined) {
       this.length += 1;
       this.root = new TreeNode<K, V>(key, value);
@@ -346,28 +347,57 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         curNode = maxNode.right;
         this.header.right = curNode;
       } else {
-        curNode = this.root;
-        while (true) {
-          const cmpResult = this.cmp(curNode.key as K, key);
-          if (cmpResult > 0) {
-            if (curNode.left === undefined) {
-              curNode.left = new TreeNode<K, V>(key, value);
-              curNode.left.parent = curNode;
+        if (hint !== undefined) {
+          // @ts-ignore
+          const iterNode = hint.node;
+          if (iterNode !== this.header) {
+            const iterCmpRes = this.cmp(iterNode.key as K, key);
+            if (iterCmpRes === 0) {
+              iterNode.value = value;
+              return;
+            } else if (iterCmpRes > 0) {
+              const preNode = iterNode.pre();
+              const preCmpRes = this.cmp(preNode.key as K, key);
+              if (preCmpRes === 0) {
+                preNode.value = value;
+                return;
+              } else if (preCmpRes < 0) {
+                curNode = new TreeNode(key, value);
+                if (preNode.right === undefined) {
+                  preNode.right = curNode;
+                  curNode.parent = preNode;
+                } else {
+                  iterNode.left = curNode;
+                  curNode.parent = iterNode;
+                }
+              }
+            }
+          }
+        }
+        if (curNode === undefined) {
+          curNode = this.root;
+          while (true) {
+            const cmpResult = this.cmp(curNode.key as K, key);
+            if (cmpResult > 0) {
+              if (curNode.left === undefined) {
+                curNode.left = new TreeNode<K, V>(key, value);
+                curNode.left.parent = curNode;
+                curNode = curNode.left;
+                break;
+              }
               curNode = curNode.left;
-              break;
-            }
-            curNode = curNode.left;
-          } else if (cmpResult < 0) {
-            if (curNode.right === undefined) {
-              curNode.right = new TreeNode<K, V>(key, value);
-              curNode.right.parent = curNode;
+            } else if (cmpResult < 0) {
+              if (curNode.right === undefined) {
+                curNode.right = new TreeNode<K, V>(key, value);
+                curNode.right.parent = curNode;
+                curNode = curNode.right;
+                break;
+              }
               curNode = curNode.right;
-              break;
+            } else {
+              curNode.value = value;
+              return;
             }
-            curNode = curNode.right;
-          } else {
-            curNode.value = value;
-            return;
           }
         }
       }
@@ -380,6 +410,43 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     this.root = undefined;
     this.header.parent = undefined;
     this.header.left = this.header.right = undefined;
+  }
+  /**
+   * @description Update node's key by iterator.
+   * @param iter The iterator you want to change.
+   * @param key The key you want to update.
+   * @return Boolean about if the modification is successful.
+   */
+  updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
+    // @ts-ignore
+    const node = iter.node;
+    if (node === this.header) {
+      throw new TypeError('Invalid iterator!');
+    }
+    if (this.length === 1) {
+      node.key = key;
+      return true;
+    }
+    if (node === this.header.left) {
+      if (this.cmp(node.next().key as K, key) > 0) {
+        node.key = key;
+        return true;
+      }
+      return false;
+    }
+    if (node === this.header.right) {
+      if (this.cmp(node.pre().key as K, key) < 0) {
+        node.key = key;
+        return true;
+      }
+      return false;
+    }
+    const preKey = node.pre().key as K;
+    if (this.cmp(preKey, key) >= 0) return false;
+    const nextKey = node.next().key as K;
+    if (this.cmp(nextKey, key) <= 0) return false;
+    node.key = key;
+    return true;
   }
   eraseElementByPos(pos: number) {
     checkWithinAccessParams(pos, 0, this.length - 1);

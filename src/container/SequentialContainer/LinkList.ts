@@ -74,6 +74,13 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
   equals(obj: LinkListIterator<T>) {
     return this.node === obj.node;
   }
+  copy() {
+    return new LinkListIterator(
+      this.node,
+      this.header,
+      this.iteratorType
+    );
+  }
 }
 
 class LinkList<T> extends SequentialContainer<T> {

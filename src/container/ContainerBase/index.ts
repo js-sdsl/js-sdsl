@@ -32,6 +32,13 @@ export abstract class ContainerIterator<T> {
    * @example container.find(1).equals(container.end());
    */
   abstract equals(obj: ContainerIterator<T>): boolean;
+  /**
+   * @description Get a copy of itself.<br/>
+   *              We do not guarantee the safety of this function.<br/>
+   *              Please ensure that the iterator will not fail.
+   * @return The copy of self.
+   */
+  abstract copy(): ContainerIterator<T>;
 }
 
 export abstract class Base {

@@ -11,6 +11,9 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
     }
     return this.node.key as K;
   }
+  copy() {
+    return new OrderedSetIterator(this.node, this.header, this.iteratorType);
+  }
 }
 
 class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
@@ -70,9 +73,11 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
+   * @param key The key want to insert.
+   * @param hint You can give an iterator hint to improve insertion efficiency.
    */
-  insert(key: K) {
-    this.set(key);
+  insert(key: K, hint?: OrderedSetIterator<K>) {
+    this.set(key, undefined, hint);
   }
   find(element: K) {
     const curNode = this.findElementNode(this.root, element);

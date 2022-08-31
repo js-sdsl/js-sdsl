@@ -20,7 +20,7 @@ function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
 
 describe('HashSet test', () => {
   // @ts-ignore
-  HashContainerBase.treeifyThreshold = 2;
+  HashContainerBase.treeifyThreshold = 1;
   // @ts-ignore
   HashContainerBase.untreeifyThreshold = 1;
   test('constructor test', () => {

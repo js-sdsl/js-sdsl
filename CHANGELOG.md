@@ -6,6 +6,12 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [UnReleased] - 2022.08.30
 
+### Added
+
+- Add function update key by iterator.
+- Add iterator copy function to get a copy of itself.
+- Add insert by iterator hint function in tree container.
+
 ### Changed
 
 - Changed OrderedMap's iterator pointer get from `Object.defineProperty'` to  `Proxy`.
