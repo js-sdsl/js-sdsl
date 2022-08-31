@@ -147,6 +147,29 @@ describe('OrderedSet test', () => {
     }
   });
 
+  test('OrderedSet insert by hint function test', () => {
+    const st = new OrderedSet<number>();
+    const v = new Vector<number>();
+    for (let i = 0; i < testNum; ++i) {
+      st.insert(i * 3);
+      v.pushBack(i * 3);
+    }
+    for (let i = 0; i < testNum; ++i) {
+      const iter = st.lowerBound(i * 3);
+      st.insert(i * 3 - 1, iter);
+      st.insert(i * 3, iter);
+      st.insert(i * 3 - 1, iter);
+      st.insert(i * 3 - 2, iter);
+      v.pushBack(i * 3 - 2);
+      v.pushBack(i * 3 - 1);
+      expect(st.find(i * 3).equals(st.end())).toEqual(false);
+      expect(st.find(i * 3 - 1).equals(st.end())).toEqual(false);
+      expect(st.find(i * 3 - 2).equals(st.end())).toEqual(false);
+    }
+    v.sort((x, y) => x - y);
+    judgeSet(st, v);
+  });
+
   test('OrderedSet clear function test', () => {
     myOrderedSet.clear();
     myVector.clear();

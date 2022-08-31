@@ -310,9 +310,10 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
    * @description Insert a key-value pair or set value by the given key.
    * @param key The key want to insert.
    * @param value The value want to set.
+   * @param hint You can give an iterator hint to improve insertion efficiency.
    * @protected
    */
-  protected set(key: K, value?: V) {
+  protected set(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this.root === undefined) {
       this.length += 1;
       this.root = new TreeNode<K, V>(key, value);
@@ -346,28 +347,55 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
         curNode = maxNode.right;
         this.header.right = curNode;
       } else {
-        curNode = this.root;
-        while (true) {
-          const cmpResult = this.cmp(curNode.key as K, key);
-          if (cmpResult > 0) {
-            if (curNode.left === undefined) {
-              curNode.left = new TreeNode<K, V>(key, value);
-              curNode.left.parent = curNode;
-              curNode = curNode.left;
-              break;
-            }
-            curNode = curNode.left;
-          } else if (cmpResult < 0) {
-            if (curNode.right === undefined) {
-              curNode.right = new TreeNode<K, V>(key, value);
-              curNode.right.parent = curNode;
-              curNode = curNode.right;
-              break;
-            }
-            curNode = curNode.right;
-          } else {
-            curNode.value = value;
+        if (hint !== undefined) {
+          // @ts-ignore
+          const iterNode = hint.node;
+          const iterCmpRes = this.cmp(iterNode.key as K, key);
+          if (iterCmpRes === 0) {
+            iterNode.value = value;
             return;
+          } else if (iterCmpRes > 0) {
+            const preNode = iterNode.pre();
+            const preCmpRes = this.cmp(preNode.key as K, key);
+            if (preCmpRes === 0) {
+              preNode.value = value;
+              return;
+            } else if (preCmpRes < 0) {
+              curNode = new TreeNode(key, value);
+              if (preNode.right === undefined) {
+                preNode.right = curNode;
+                curNode.parent = preNode;
+              } else {
+                iterNode.left = curNode;
+                curNode.parent = iterNode;
+              }
+            }
+          }
+        }
+        if (curNode === undefined) {
+          curNode = this.root;
+          while (true) {
+            const cmpResult = this.cmp(curNode.key as K, key);
+            if (cmpResult > 0) {
+              if (curNode.left === undefined) {
+                curNode.left = new TreeNode<K, V>(key, value);
+                curNode.left.parent = curNode;
+                curNode = curNode.left;
+                break;
+              }
+              curNode = curNode.left;
+            } else if (cmpResult < 0) {
+              if (curNode.right === undefined) {
+                curNode.right = new TreeNode<K, V>(key, value);
+                curNode.right.parent = curNode;
+                curNode = curNode.right;
+                break;
+              }
+              curNode = curNode.right;
+            } else {
+              curNode.value = value;
+              return;
+            }
           }
         }
       }
