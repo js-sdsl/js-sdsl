@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.08.30
+
+### Changed
+
+- Changed OrderedMap's iterator pointer get from `Object.defineProperty'` to  `Proxy`.
+- Improve iterator performance by remove some judgment.
+- Change iterator type description from `normal` and `reverse` to boolean.
+
 ## [4.1.2-beta.0] - 2022.08.27
 
 ### Added

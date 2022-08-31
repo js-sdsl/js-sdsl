@@ -1,17 +1,10 @@
 import TreeBaseContainer from './Base/TreeBaseContainer';
-import { initContainer } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 
 export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
-  constructor(
-    node: TreeNode<K, undefined>,
-    header: TreeNode<K, undefined>,
-    iteratorType: 'normal' | 'reverse' = 'normal'
-  ) {
-    super(node, header, iteratorType);
-  }
   get pointer() {
     if (this.node === this.header) {
       throw new RangeError('OrderedSet iterator access denied!');
@@ -47,11 +40,11 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     return new OrderedSetIterator(
       this.header.right || this.header,
       this.header,
-      'reverse'
+      ContainerIterator.REVERSE
     );
   }
   rEnd() {
-    return new OrderedSetIterator(this.header, this.header, 'reverse');
+    return new OrderedSetIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     return this.header.left ? this.header.left.key : undefined;
