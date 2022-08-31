@@ -385,7 +385,7 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
    * @description Update node's key by iterator.
    * @param iter The iterator you want to change.
    * @param key The key you want to update.
-   * @return boolean about if the modification is successful.
+   * @return Boolean about if the modification is successful.
    */
   updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
     // @ts-ignore
