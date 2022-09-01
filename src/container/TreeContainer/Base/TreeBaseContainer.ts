@@ -188,7 +188,15 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       this.header.right = swapNode.parent;
     }
     this.eraseNodeSelfBalance(swapNode);
-    swapNode.remove();
+    let p = swapNode.parent as TreeNode<K, V>;
+    while (p !== this.header) {
+      p.subTreeSize -= 1;
+      p = p.parent as TreeNode<K, V>;
+    }
+    const parent = swapNode.parent as TreeNode<K, V>;
+    if (swapNode === parent.left) {
+      parent.left = undefined;
+    } else parent.right = undefined;
     this.length -= 1;
     (this.root as TreeNode<K, V>).color = TreeNode.BLACK;
   }
@@ -229,8 +237,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           if (curNode.right) curNode.right.parent = grandParent;
           parentNode.right = curNode.left;
           grandParent.left = curNode.right;
+          parentNode.recount();
+          grandParent.recount();
           curNode.left = parentNode;
           curNode.right = grandParent;
+          curNode.recount();
           if (grandParent === this.root) {
             this.root = curNode;
             this.header.parent = curNode;
@@ -264,8 +275,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
           if (curNode.right) curNode.right.parent = parentNode;
           grandParent.right = curNode.left;
           parentNode.left = curNode.right;
+          grandParent.recount();
+          parentNode.recount();
           curNode.left = grandParent;
           curNode.right = parentNode;
+          curNode.recount();
           if (grandParent === this.root) {
             this.root = curNode;
             this.header.parent = curNode;
@@ -403,6 +417,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       }
     }
     this.length += 1;
+    let p = curNode.parent as TreeNode<K, V>;
+    while (p !== this.header) {
+      p.subTreeSize += 1;
+      p = p.parent as TreeNode<K, V>;
+    }
     this.insertNodeSelfBalance(curNode);
   }
   clear() {
@@ -496,6 +515,16 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       };
     return traversal(this.root);
   }
+  judgeSubTreeSize: (curNode: TreeNode<K, V> | undefined) => number =
+    (curNode: TreeNode<K, V> | undefined) => {
+      if (curNode === undefined) return 0;
+      const subTreeSize =
+        this.judgeSubTreeSize(curNode.left) + this.judgeSubTreeSize(curNode.right) + 1;
+      if (curNode.subTreeSize !== subTreeSize) {
+        throw new Error(`${curNode.subTreeSize} ${subTreeSize}`);
+      }
+      return subTreeSize;
+    };
 }
 
 export default TreeBaseContainer;

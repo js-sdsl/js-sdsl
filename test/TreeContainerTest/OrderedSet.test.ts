@@ -13,6 +13,8 @@ function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
   myOrderedSet.forEach((element, index) => {
     expect(element).toEqual(myVector.getElementByPos(index));
   });
+  // @ts-ignore
+  myOrderedSet.judgeSubTreeSize(myOrderedSet.root);
 }
 
 describe('OrderedSet test', () => {

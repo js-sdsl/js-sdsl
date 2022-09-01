@@ -7,6 +7,7 @@ class TreeNode<K, V> {
   left: TreeNode<K, V> | undefined = undefined;
   right: TreeNode<K, V> | undefined = undefined;
   parent: TreeNode<K, V> | undefined = undefined;
+  subTreeSize = 1;
   constructor(key?: K, value?: V) {
     this.key = key;
     this.value = value;
@@ -81,6 +82,9 @@ class TreeNode<K, V> {
 
     if (R) R.parent = this;
 
+    this.recount();
+    V.recount();
+
     return V;
   }
   /**
@@ -104,16 +108,15 @@ class TreeNode<K, V> {
 
     if (K) K.parent = this;
 
+    this.recount();
+    F.recount();
+
     return F;
   }
-  /**
-   * @description Remove this.
-   */
-  remove() {
-    const parent = this.parent as TreeNode<K, V>;
-    if (this === parent.left) {
-      parent.left = undefined;
-    } else parent.right = undefined;
+  recount() {
+    this.subTreeSize = 1;
+    if (this.left) this.subTreeSize += this.left.subTreeSize;
+    if (this.right) this.subTreeSize += this.right.subTreeSize;
   }
 }
 

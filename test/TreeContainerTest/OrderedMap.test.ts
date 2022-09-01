@@ -25,6 +25,8 @@ function judgeMap(myOrderedMap: OrderedMap<number, number>, stdMap: Map<number, 
     const _value = stdMap.get(key);
     expect(value).toEqual(_value);
   });
+  // @ts-ignore
+  myOrderedMap.judgeSubTreeSize(myOrderedMap.root);
 }
 
 describe('OrderedMap test', () => {
