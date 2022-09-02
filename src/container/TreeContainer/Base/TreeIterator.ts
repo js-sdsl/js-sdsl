@@ -50,13 +50,22 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
   }
   get index() {
-    if (this.node === this.header) {
-      if (this.node.parent) {
-        return this.node.parent.subTreeSize;
-      }
-      return 0;
+    let node = this.node;
+    let index = 0;
+    if (node.left) {
+      index += node.left.subTreeSize;
     }
-    return this.node.subTreeSize;
+    while (node !== this.header) {
+      const parent = node.parent as TreeNode<K, V>;
+      if (node === parent.right) {
+        index += 1;
+        if (parent.left) {
+          index += parent.left.subTreeSize;
+        }
+      }
+      node = parent;
+    }
+    return index;
   }
   equals(obj: TreeIterator<K, V>) {
     return this.node === obj.node;

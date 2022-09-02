@@ -13,8 +13,6 @@ function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
   myOrderedSet.forEach((element, index) => {
     expect(element).toEqual(myVector.getElementByPos(index));
   });
-  // @ts-ignore
-  myOrderedSet.judgeSubTreeSize(myOrderedSet.root);
 }
 
 describe('OrderedSet test', () => {
@@ -148,6 +146,20 @@ describe('OrderedSet test', () => {
         expect(st.updateKeyByIterator(iter, -1)).toBe(false);
         expect(iter.pointer).toEqual(i * 2 + 1);
       }
+    }
+  });
+
+  test('OrderedSet getIndexByIterator function test', () => {
+    const st = new OrderedSet<number>();
+    const v = new Vector<number>();
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random() * 10000000;
+      st.insert(random);
+      v.pushBack(random);
+    }
+    v.sort((x, y) => x - y);
+    for (let i = 0; i < testNum; ++i) {
+      expect(st.lowerBound(v.getElementByPos(i)).index).toEqual(i);
     }
   });
 

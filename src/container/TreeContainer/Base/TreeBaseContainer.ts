@@ -515,16 +515,6 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
       };
     return traversal(this.root);
   }
-  judgeSubTreeSize: (curNode: TreeNode<K, V> | undefined) => number =
-    (curNode: TreeNode<K, V> | undefined) => {
-      if (curNode === undefined) return 0;
-      const subTreeSize =
-        this.judgeSubTreeSize(curNode.left) + this.judgeSubTreeSize(curNode.right) + 1;
-      if (curNode.subTreeSize !== subTreeSize) {
-        throw new Error(`${curNode.subTreeSize} ${subTreeSize}`);
-      }
-      return subTreeSize;
-    };
 }
 
 export default TreeBaseContainer;
