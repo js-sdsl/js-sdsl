@@ -22,7 +22,10 @@ class HashSet<K> extends HashContainerBase<K> {
     const newHashTable: (Vector<K> | OrderedSet<K>)[] = [];
     const originalBucketNum = this.bucketNum;
     this.bucketNum <<= 1;
-    for (let index = 0; index < originalBucketNum; ++index) {
+    const keys = Object.keys(this.hashTable);
+    const keyNums = keys.length;
+    for (let i = 0; i < keyNums; ++i) {
+      const index = parseInt(keys[i]);
       const container = this.hashTable[index];
       if (!container || container.empty()) continue;
       if (container.size() === 1) {
@@ -72,10 +75,12 @@ class HashSet<K> extends HashContainerBase<K> {
     this.hashTable = [];
   }
   forEach(callback: (element: K, index: number) => void) {
-    let index = 0;
-    for (let i = 0; i < this.bucketNum; ++i) {
-      if (!this.hashTable[i]) continue;
-      this.hashTable[i].forEach(element => callback(element, index++));
+    const keys = Object.keys(this.hashTable);
+    const keyNums = keys.length;
+    for (let i = 0; i < keyNums; ++i) {
+      const index = parseInt(keys[i]);
+      const container = this.hashTable[index];
+      container.forEach(callback);
     }
   }
   /**
@@ -118,11 +123,19 @@ class HashSet<K> extends HashContainerBase<K> {
     const preSize = this.hashTable[index].size();
     if (this.hashTable[index] instanceof Vector) {
       (this.hashTable[index] as Vector<K>).eraseElementByValue(element);
+      if (this.hashTable[index].empty()) {
+        this.length -= preSize;
+        Reflect.deleteProperty(this.hashTable, index);
+        return;
+      }
     } else {
       (this.hashTable[index] as OrderedSet<K>).eraseElementByKey(element);
-    }
-    if (this.hashTable[index] instanceof OrderedSet) {
-      if (this.hashTable[index].size() <= HashSet.untreeifyThreshold) {
+      const size = this.hashTable[index].size();
+      if (size === 0) {
+        this.length -= preSize;
+        Reflect.deleteProperty(this.hashTable, index);
+        return;
+      } else if (size <= HashSet.untreeifyThreshold) {
         this.hashTable[index] = new Vector<K>(this.hashTable[index]);
       }
     }
@@ -141,12 +154,14 @@ class HashSet<K> extends HashContainerBase<K> {
   }
   [Symbol.iterator]() {
     return function * (this: HashSet<K>) {
-      let index = 0;
-      while (index < this.bucketNum) {
-        while (index < this.bucketNum && !this.hashTable[index]) index += 1;
-        if (index >= this.bucketNum) break;
-        for (const element of this.hashTable[index]) yield element;
-        index += 1;
+      const keys = Object.keys(this.hashTable);
+      const keysNum = keys.length;
+      for (let i = 0; i < keysNum; ++i) {
+        const index = parseInt(keys[i]);
+        const container = this.hashTable[index];
+        for (const element of container) {
+          yield element;
+        }
       }
     }.bind(this)();
   }
