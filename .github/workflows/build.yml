@@ -28,7 +28,7 @@ jobs:
       - name: Coveralls report
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ github.token }}
   deploy:
     needs: test
     runs-on: ubuntu-latest
