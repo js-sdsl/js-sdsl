@@ -113,7 +113,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   abstract reverseUpperBound(key: K): TreeIterator<K, V>;
   /**
-   * @description Union the other Set to self.
+   * @description Union the other tree to self.
    *              <br/>
    *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
    *              but we expect it to be O(mlog(n/m+1)).<br/>
