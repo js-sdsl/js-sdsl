@@ -149,7 +149,7 @@ describe('OrderedSet test', () => {
     }
   });
 
-  test('OrderedSet getIndexByIterator function test', () => {
+  test('OrderedSet iterator index function test', () => {
     const st = new OrderedSet<number>();
     const v = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
@@ -161,11 +161,13 @@ describe('OrderedSet test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(st.lowerBound(v.getElementByPos(i)).index).toEqual(i);
     }
+    expect(st.end().index).toEqual(st.size() - 1);
   });
 
   test('OrderedSet insert by hint function test', () => {
     const st = new OrderedSet<number>();
     const v = new Vector<number>();
+    expect(st.begin().index).toEqual(0);
     for (let i = 0; i < testNum; ++i) {
       st.insert(i * 3);
       v.pushBack(i * 3);
