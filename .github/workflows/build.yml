@@ -25,20 +25,6 @@ jobs:
         with:
           name: performance.md
           path: dist/performance
-      - name: Coveralls report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ github.token }}
-          parallel: true
-  finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ github.token }}
-          parallel-finished: true
   deploy:
     needs: test
     runs-on: ubuntu-latest
