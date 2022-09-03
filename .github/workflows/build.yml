@@ -26,7 +26,7 @@ jobs:
           name: performance.md
           path: dist/performance
       - name: Coveralls report
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@1.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
   deploy:
