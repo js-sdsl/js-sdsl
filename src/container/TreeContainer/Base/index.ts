@@ -3,7 +3,7 @@ import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './TreeIterator';
 import TreeNode from './TreeNode';
 
-abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
+abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> | undefined = undefined;
   protected header: TreeNode<K, V> = new TreeNode<K, V>();
   protected cmp: (x: K, y: K) => number;
@@ -36,6 +36,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     return resNode === undefined ? this.header : resNode;
   }
   /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element not less than the given key.
+   */
+  abstract lowerBound(key: K): TreeIterator<K, V>;
+  /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
    * @return TreeNode which key is greater than the given key.
@@ -54,6 +59,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element greater than the given key.
+   */
+  abstract upperBound(key: K): TreeIterator<K, V>;
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
@@ -74,6 +84,11 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     return resNode === undefined ? this.header : resNode;
   }
   /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element not greater than the given key.
+   */
+  abstract reverseLowerBound(key: K): TreeIterator<K, V>;
+  /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
    * @return TreeNode which key is less than the given key.
@@ -92,6 +107,22 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this.header : resNode;
   }
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element less than the given key.
+   */
+  abstract reverseUpperBound(key: K): TreeIterator<K, V>;
+  /**
+   * @description Union the other Set to self.
+   *              <br/>
+   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
+   *              but we expect it to be O(mlog(n/m+1)).<br/>
+   *              More information =>
+   *              https://en.wikipedia.org/wiki/Red_black_tree
+   *              <br/>
+   * @param other The other tree container you want to merge.
+   */
+  abstract union(other: TreeContainer<K, V>): void;
   /**
    * @description Make self balance after erase a node.
    * @param curNode The node want to remove.
@@ -498,4 +529,4 @@ abstract class TreeBaseContainer<K, V> extends Container<K | [K, V]> {
   }
 }
 
-export default TreeBaseContainer;
+export default TreeContainer;

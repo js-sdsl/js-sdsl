@@ -4,13 +4,14 @@ import {
   Deque,
   OrderedSet,
   OrderedMap,
+  Container,
+  ContainerIterator,
   VectorIterator,
   LinkListIterator,
   DequeIterator,
   OrderedSetIterator,
   OrderedMapIterator
 } from '@/index';
-import { ContainerIterator } from '@/container/ContainerBase';
 
 let arr: number[] = [];
 const testNum = 10000;
@@ -20,7 +21,7 @@ for (let i = 0; i < testNum; ++i) {
 arr = Array.from(new Set(arr));
 arr.sort((x, y) => x - y);
 
-const containerArr = [
+const containerArr: Container<unknown>[] = [
   new Vector(arr),
   new LinkList(arr),
   new Deque(arr),
@@ -157,6 +158,12 @@ describe('iterator test', () => {
         }, function () {
           return 0;
         });
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new Container();
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new ContainerIterator();
       // @ts-ignore
       // eslint-disable-next-line no-new
       new LinkListIterator<number>(containerArr[0].begin().node);

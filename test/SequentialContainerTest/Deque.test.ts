@@ -1,5 +1,4 @@
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
-import { Vector, Deque } from '@/index';
+import { Vector, Deque, SequentialContainer } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;

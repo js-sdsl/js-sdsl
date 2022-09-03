@@ -1,6 +1,6 @@
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
-import TreeBaseContainer from './Base/TreeBaseContainer';
+import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 
@@ -28,7 +28,7 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   }
 }
 
-class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
+class OrderedMap<K, V> extends TreeContainer<K, V> {
   constructor(container: initContainer<[K, V]> = [], cmp?: (x: K, y: K) => number) {
     super(cmp);
     this.iterationFunc = this.iterationFunc.bind(this);
@@ -72,30 +72,18 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     let index = 0;
     for (const pair of this) callback(pair, index++);
   }
-  /**
-   * @return An iterator to the first element not less than the given key.
-   */
   lowerBound(key: K) {
     const resNode = this._lowerBound(this.root, key);
     return new OrderedMapIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element greater than the given key.
-   */
   upperBound(key: K) {
     const resNode = this._upperBound(this.root, key);
     return new OrderedMapIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element not greater than the given key.
-   */
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this.root, key);
     return new OrderedMapIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element less than the given key.
-   */
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this.root, key);
     return new OrderedMapIterator(resNode, this.header);
@@ -136,16 +124,6 @@ class OrderedMap<K, V> extends TreeBaseContainer<K, V> {
     }
     return res as [K, V];
   }
-  /**
-   * @description Union the other Set to self.
-   *              <br/>
-   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
-   *              but we expect it to be O(mlog(n/m+1)).<br/>
-   *              More information =>
-   *              https://en.wikipedia.org/wiki/Red_black_tree
-   *              <br/>
-   * @param other The other set you want to merge.
-   */
   union(other: OrderedMap<K, V>) {
     other.forEach(([key, value]) => this.setElement(key, value));
   }

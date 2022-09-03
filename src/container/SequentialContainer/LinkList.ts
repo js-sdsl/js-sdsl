@@ -12,7 +12,7 @@ export class LinkNode<T> {
 }
 
 export class LinkListIterator<T> extends ContainerIterator<T> {
-  private node: LinkNode<T>;
+  protected node: LinkNode<T>;
   private readonly header: LinkNode<T>;
   pre: () => this;
   next: () => this;

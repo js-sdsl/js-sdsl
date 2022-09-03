@@ -1,5 +1,4 @@
-import { Vector, LinkList } from '@/index';
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
+import { Vector, LinkList, SequentialContainer } from '@/index';
 
 function judgeSequentialContainer(
   container: SequentialContainer<number>,
@@ -80,6 +79,8 @@ describe('LinkList test', () => {
 
   test('LinkList pushFront function test', () => {
     const myLinkList = new LinkList();
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
+    for (const _ of myLinkList) {}
     myLinkList.reverse();
     expect(myLinkList.front()).toEqual(undefined);
     expect(myLinkList.back()).toEqual(undefined);

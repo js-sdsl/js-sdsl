@@ -5,6 +5,7 @@ export abstract class ContainerIterator<T> {
    * @description Iterator's type.
    */
   readonly iteratorType: boolean;
+  protected node: unknown;
   protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
     this.iteratorType = iteratorType;
   }

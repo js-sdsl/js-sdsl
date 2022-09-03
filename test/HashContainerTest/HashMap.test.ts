@@ -1,5 +1,4 @@
-import HashContainerBase from '@/container/HashContainer/Base/index';
-import { LinkList, HashMap } from '@/index';
+import { Vector, HashMap, HashContainer } from '@/index';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -21,9 +20,9 @@ function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, nu
 
 describe('HashMap test', () => {
   // @ts-ignore
-  HashContainerBase.treeifyThreshold = 1;
+  HashContainer.treeifyThreshold = 1;
   // @ts-ignore
-  HashContainerBase.untreeifyThreshold = 1;
+  HashContainer.untreeifyThreshold = 1;
   const myHashMap = new HashMap(arr.map((element, index) => [element, index]));
   const stdMap = new Map(arr.map((element, index) => [element, index]));
 
@@ -119,18 +118,38 @@ describe('HashMap test', () => {
     // @ts-ignore
     const bucketNum = myHashMap.bucketNum;
     // @ts-ignore
-    myHashMap.bucketNum = HashContainerBase.maxBucketNum;
+    myHashMap.bucketNum = HashContainer.maxBucketNum;
     // @ts-ignore
     myHashMap.reAllocate();
     // @ts-ignore
-    myHashMap.hashTable[0] = new LinkList();
+    myHashMap.hashTable[0] = new Vector();
     // @ts-ignore
-    myHashMap.hashTable[myHashMap.bucketNum - 5] = new LinkList();
+    myHashMap.hashTable[myHashMap.bucketNum - 5] = new Vector();
     // @ts-ignore
     myHashMap.reAllocate(myHashMap.bucketNum);
     // @ts-ignore
     myHashMap.bucketNum = bucketNum;
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashMap) {}
+  });
+
+  test('HashMap normal test', () => {
+    // @ts-ignore
+    HashContainer.treeifyThreshold = 6;
+    // @ts-ignore
+    HashContainer.untreeifyThreshold = 8;
+    const mp = new HashMap<string, number>();
+    const stdMap = new Map();
+    for (let i = 0; i < testNum; ++i) {
+      mp.setElement(i.toString(), i);
+      stdMap.set(i.toString(), i);
+    }
+    judgeHashMap(mp, stdMap);
+    let size = testNum;
+    for (let i = 0; i < testNum; ++i) {
+      mp.eraseElementByKey(i.toString());
+      expect(mp.size()).toEqual(--size);
+    }
+    expect(mp.size()).toEqual(0);
   });
 });
