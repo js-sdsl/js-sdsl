@@ -25,6 +25,10 @@ jobs:
         with:
           name: performance.md
           path: dist/performance
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ github.token }}
   deploy:
     needs: test
     runs-on: ubuntu-latest
