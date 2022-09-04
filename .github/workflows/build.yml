@@ -1,6 +1,9 @@
 name: js-sdsl CI
 
-on: ["push", "pull_request"]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -15,12 +18,9 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Lint code
-        run: yarn lint
       - name: Run test
         run: yarn test
       - name: Save performance test result
-        if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/upload-artifact@v3
         with:
           name: performance.md
@@ -32,7 +32,6 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -52,7 +51,7 @@ jobs:
   publish:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && success() && contains(github.event.head_commit.message, 'publish@') }}
+    if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -65,8 +64,9 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
-    needs: publish
+    needs: test
     runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -76,7 +76,7 @@ jobs:
       - name: Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
           release_name: v${{ steps.package-version.outputs.version }}
