@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: yarn install
       - name: Lint code
@@ -16,3 +18,4 @@ jobs:
         uses: wagoid/commitlint-github-action@v5
         with:
           configFile: .commitlintrc.json
+          failOnWarnings: true
