@@ -14,3 +14,5 @@ jobs:
         run: yarn lint
       - name: Lint commit
         uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: .commitlintrc.json
