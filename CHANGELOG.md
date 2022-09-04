@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.09.04
+
+### Added
+
+- Add some notes.
+
+### Changed
+
+- Optimize hash container.
+- Abstracting out the hash container.
+
 ## [4.1.4-beta.0] - 2022.08.31
 
 ### Added
