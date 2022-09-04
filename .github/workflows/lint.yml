@@ -1,6 +1,10 @@
 name: lint-code
 
-on: ['push', 'pull_request']
+on:
+  push:
+    ['main', 'dev']
+  pull_request:
+    ['main', 'dev']
 
 jobs:
   lint:

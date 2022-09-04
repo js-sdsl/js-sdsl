@@ -1,0 +1,27 @@
+name: Js-sdsl test CI
+
+on:
+  push:
+    ['dev']
+  pull_request:
+    ['main', 'dev']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run test
+        run: yarn test
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ github.token }}

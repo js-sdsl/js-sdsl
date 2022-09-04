@@ -1,6 +1,8 @@
 name: js-sdsl CI
 
-on: ['push', 'pull_request']
+on:
+  push:
+    ['main']
 
 jobs:
   test:
@@ -18,7 +20,6 @@ jobs:
       - name: Run test
         run: yarn test
       - name: Save performance test result
-        if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/upload-artifact@v3
         with:
           name: performance.md
@@ -30,7 +31,6 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -50,7 +50,7 @@ jobs:
   publish:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'publish@') }}
+    if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -65,7 +65,7 @@ jobs:
   release:
     needs: test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'publish@') }}
+    if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
