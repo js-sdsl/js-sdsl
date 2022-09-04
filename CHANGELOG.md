@@ -15,6 +15,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Optimize hash container.
 - Abstracting out the hash container.
 
+### Fixed
+
+- Fixed tree get height function return one larger than the real height.
+
 ## [4.1.4-beta.0] - 2022.08.31
 
 ### Added

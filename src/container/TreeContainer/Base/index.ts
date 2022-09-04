@@ -522,7 +522,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     const traversal:
       (curNode: TreeNode<K, V> | undefined) => number =
       (curNode: TreeNode<K, V> | undefined) => {
-        if (!curNode) return 1;
+        if (!curNode) return 0;
         return Math.max(traversal(curNode.left), traversal(curNode.right)) + 1;
       };
     return traversal(this.root);
