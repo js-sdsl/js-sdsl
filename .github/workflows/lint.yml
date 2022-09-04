@@ -2,9 +2,13 @@ name: lint-code
 
 on:
   push:
-    ['main', 'dev']
+    branches:
+      - dev
+      - main
   pull_request:
-    ['main', 'dev']
+    branches:
+      - dev
+      - main
 
 jobs:
   lint:

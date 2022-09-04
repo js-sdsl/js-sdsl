@@ -2,7 +2,8 @@ name: js-sdsl CI
 
 on:
   push:
-    ['main']
+    branches:
+      - main
 
 jobs:
   test:
