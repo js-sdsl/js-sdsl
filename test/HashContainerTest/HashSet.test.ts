@@ -121,4 +121,43 @@ describe('HashSet test', () => {
     }
     expect(st.size()).toEqual(0);
   });
+
+  test('HashSet insert and erase', () => {
+    // @ts-ignore
+    HashContainer.treeifyThreshold = 6;
+    // @ts-ignore
+    HashContainer.untreeifyThreshold = 8;
+    const st = new HashSet<string>();
+    const stdSet = new Set<string>();
+    const arr: string[] = [];
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      st.insert(random);
+      stdSet.add(random);
+      arr.push(random);
+    }
+    judgeHashSet(st, stdSet);
+    for (let i = 0; i < testNum; ++i) {
+      if (Math.random() > 0.5) {
+        st.eraseElementByKey(arr[i]);
+        stdSet.delete(arr[i]);
+      }
+    }
+    judgeHashSet(st, stdSet);
+    arr.length = 0;
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      st.insert(random);
+      stdSet.add(random);
+      arr.push(random);
+    }
+    judgeHashSet(st, stdSet);
+    for (let i = 0; i < testNum; ++i) {
+      if (Math.random() > 0.5) {
+        st.eraseElementByKey(arr[i]);
+        stdSet.delete(arr[i]);
+      }
+    }
+    judgeHashSet(st, stdSet);
+  });
 });

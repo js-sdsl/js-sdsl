@@ -69,8 +69,9 @@ describe('HashMap test', () => {
 
   test('HashMap eraseElementByKey function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myHashMap.eraseElementByKey(i.toString());
-      stdMap.delete(i.toString());
+      const str = i.toString();
+      myHashMap.eraseElementByKey(str);
+      stdMap.delete(str);
     }
     myHashMap.eraseElementByKey('-1');
     myHashMap.eraseElementByKey('-2');
@@ -141,8 +142,9 @@ describe('HashMap test', () => {
     const mp = new HashMap<string, number>();
     const stdMap = new Map();
     for (let i = 0; i < testNum; ++i) {
-      mp.setElement(i.toString(), i);
-      stdMap.set(i.toString(), i);
+      const str = i.toString();
+      mp.setElement(str, i);
+      stdMap.set(str, i);
     }
     judgeHashMap(mp, stdMap);
     let size = testNum;
@@ -151,5 +153,44 @@ describe('HashMap test', () => {
       expect(mp.size()).toEqual(--size);
     }
     expect(mp.size()).toEqual(0);
+  });
+
+  test('HashSet insert and erase', () => {
+    // @ts-ignore
+    HashContainer.treeifyThreshold = 6;
+    // @ts-ignore
+    HashContainer.untreeifyThreshold = 8;
+    const mp = new HashMap<string, number>();
+    const stdMap = new Map<string, number>();
+    const arr: string[] = [];
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      mp.setElement(random, i);
+      stdMap.set(random, i);
+      arr.push(random);
+    }
+    judgeHashMap(mp, stdMap);
+    for (let i = 0; i < testNum; ++i) {
+      if (Math.random() > 0.5) {
+        mp.eraseElementByKey(arr[i]);
+        stdMap.delete(arr[i]);
+      }
+    }
+    judgeHashMap(mp, stdMap);
+    arr.length = 0;
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      mp.setElement(random, i);
+      stdMap.set(random, i);
+      arr.push(random);
+    }
+    judgeHashMap(mp, stdMap);
+    for (let i = 0; i < testNum; ++i) {
+      if (Math.random() > 0.5) {
+        mp.eraseElementByKey(arr[i]);
+        stdMap.delete(arr[i]);
+      }
+    }
+    judgeHashMap(mp, stdMap);
   });
 });
