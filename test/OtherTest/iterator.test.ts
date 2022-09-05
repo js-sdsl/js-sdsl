@@ -10,7 +10,9 @@ import {
   LinkListIterator,
   DequeIterator,
   OrderedSetIterator,
-  OrderedMapIterator
+  OrderedMapIterator,
+  SequentialContainer,
+  TreeContainer
 } from '@/index';
 
 let arr: number[] = [];
@@ -164,6 +166,12 @@ describe('iterator test', () => {
       // @ts-ignore
       // eslint-disable-next-line no-new
       new ContainerIterator();
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new SequentialContainer();
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      new TreeContainer();
       // @ts-ignore
       // eslint-disable-next-line no-new
       new LinkListIterator<number>(containerArr[0].begin().node);

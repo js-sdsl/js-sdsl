@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.09.04
+## [UnReleased] - 2022.09.05
 
 ### Added
 
@@ -18,6 +18,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Fixed
 
 - Fixed tree get height function return one larger than the real height.
+- Tree-shaking not work in ES module.
 
 ## [4.1.4-beta.0] - 2022.08.31
 
