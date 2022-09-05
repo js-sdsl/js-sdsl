@@ -15,6 +15,7 @@
     "not dead",
     "maintained node versions"
   ],
+  "sideEffects": false,
   "homepage": "https://js-sdsl.github.io",
   "scripts": {
     "setup": "rm -rf node_modules && yarn install",
