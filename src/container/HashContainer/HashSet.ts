@@ -1,7 +1,7 @@
-import { Container, initContainer } from '@/container/ContainerBase/index';
-import OrderedSet from '../TreeContainer/OrderedSet';
 import HashContainer from './Base/index';
 import Vector from '../SequentialContainer/Vector';
+import OrderedSet from '../TreeContainer/OrderedSet';
+import { Container, initContainer } from '@/container/ContainerBase/index';
 
 class HashSet<K> extends HashContainer<K> {
   protected hashTable: (Vector<K> | OrderedSet<K>)[] = [];

@@ -1,6 +1,6 @@
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
-import TreeContainer from './Base';
+import TreeContainer from './Base/index';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
 

@@ -1,7 +1,7 @@
+import TreeNode from './TreeNode';
+import TreeIterator from './TreeIterator';
 import { Container } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
-import TreeIterator from './TreeIterator';
-import TreeNode from './TreeNode';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> | undefined = undefined;

@@ -1,5 +1,5 @@
-import { ContainerIterator } from '@/container/ContainerBase';
 import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator } from '@/container/ContainerBase/index';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   protected node: number;

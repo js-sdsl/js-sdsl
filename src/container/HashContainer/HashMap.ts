@@ -1,7 +1,7 @@
-import { initContainer } from '@/container/ContainerBase/index';
+import HashContainer from './Base/index';
 import Vector from '../SequentialContainer/Vector';
 import OrderedMap from '../TreeContainer/OrderedMap';
-import HashContainer from './Base/index';
+import { initContainer } from '@/container/ContainerBase/index';
 
 class HashMap<K, V> extends HashContainer<K> {
   protected hashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];

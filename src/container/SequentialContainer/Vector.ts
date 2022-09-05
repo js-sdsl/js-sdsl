@@ -1,6 +1,6 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
-import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
 export class VectorIterator<T> extends RandomIterator<T> {
