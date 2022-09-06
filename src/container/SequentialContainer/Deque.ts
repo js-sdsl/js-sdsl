@@ -22,7 +22,7 @@ class Deque<T> extends SequentialContainer<T> {
   private curLast = 0;
   private bucketNum = 0;
   private readonly bucketSize: number;
-  private map: T[][] = [];
+  private map: (T | undefined)[][] = [];
   constructor(container: initContainer<T> = [], bucketSize = (1 << 12)) {
     super();
     let _length;
@@ -97,10 +97,10 @@ class Deque<T> extends SequentialContainer<T> {
     this.curFirst = this.curLast = this.bucketSize >> 1;
   }
   front() {
-    return this.map[this.first][this.curFirst] as (T | undefined);
+    return this.map[this.first][this.curFirst];
   }
   back() {
-    return this.map[this.last][this.curLast] as (T | undefined);
+    return this.map[this.last][this.curLast];
   }
   begin() {
     return new DequeIterator<T>(
@@ -157,7 +157,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   popBack() {
     if (!this.length) return;
-    this.map[this.last][this.curLast] = undefined as T;
+    this.map[this.last][this.curLast] = undefined;
     if (this.length !== 1) {
       if (this.curLast > 0) {
         this.curLast -= 1;
@@ -199,7 +199,7 @@ class Deque<T> extends SequentialContainer<T> {
    */
   popFront() {
     if (!this.length) return;
-    this.map[this.first][this.curFirst] = undefined as T;
+    this.map[this.first][this.curFirst] = undefined;
     if (this.length !== 1) {
       if (this.curFirst < this.bucketSize - 1) {
         this.curFirst += 1;
@@ -224,7 +224,7 @@ class Deque<T> extends SequentialContainer<T> {
       curNodeBucketIndex,
       curNodePointerIndex
     } = this.getElementIndex(pos);
-    return this.map[curNodeBucketIndex][curNodePointerIndex];
+    return this.map[curNodeBucketIndex][curNodePointerIndex] as T;
   }
   setElementByPos(pos: number, element: T) {
     checkWithinAccessParams(pos, 0, this.length - 1);
