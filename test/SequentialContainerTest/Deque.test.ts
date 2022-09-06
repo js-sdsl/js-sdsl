@@ -81,6 +81,7 @@ describe('Deque test', () => {
     while (!myDeque.empty()) {
       myDeque.popBack();
     }
+    expect(myDeque.front()).toEqual(undefined);
     expect(myDeque.size()).toBe(0);
     myDeque.shrinkToFit();
     myDeque.pushBack(1);

@@ -111,6 +111,8 @@ describe('LinkList test', () => {
     myLinkList.pushBack(1);
     expect(myLinkList.size()).toBe(1);
     myLinkList.popBack();
+    expect(myLinkList.front()).toEqual(undefined);
+    expect(myLinkList.back()).toEqual(undefined);
     expect(myLinkList.size()).toBe(0);
     myLinkList.insert(0, 100);
     expect(myLinkList.front()).toBe(100);

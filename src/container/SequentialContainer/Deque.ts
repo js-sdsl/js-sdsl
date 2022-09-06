@@ -157,6 +157,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   popBack() {
     if (!this.length) return;
+    this.map[this.last][this.curLast] = undefined as T;
     if (this.length !== 1) {
       if (this.curLast > 0) {
         this.curLast -= 1;
@@ -198,6 +199,7 @@ class Deque<T> extends SequentialContainer<T> {
    */
   popFront() {
     if (!this.length) return;
+    this.map[this.first][this.curFirst] = undefined as T;
     if (this.length !== 1) {
       if (this.curFirst < this.bucketSize - 1) {
         this.curFirst += 1;
