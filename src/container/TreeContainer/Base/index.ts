@@ -335,23 +335,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   /**
-   * @description Find node which key is equals to the given key.
-   * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @protected
-   */
-  protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
-    while (curNode) {
-      const cmpResult = this.cmp(curNode.key as K, key);
-      if (cmpResult < 0) {
-        curNode = curNode.right;
-      } else if (cmpResult > 0) {
-        curNode = curNode.left;
-      } else return curNode;
-    }
-    return curNode;
-  }
-  /**
    * @description Insert a key-value pair or set value by the given key.
    * @param key The key want to insert.
    * @param value The value want to set.
@@ -509,6 +492,23 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       index += 1;
       return false;
     });
+  }
+  /**
+   * @description Find node which key is equals to the given key.
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @protected
+   */
+  protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
+    while (curNode) {
+      const cmpResult = this.cmp(curNode.key as K, key);
+      if (cmpResult < 0) {
+        curNode = curNode.right;
+      } else if (cmpResult > 0) {
+        curNode = curNode.left;
+      } else return curNode;
+    }
+    return curNode;
   }
   /**
    * @description Remove the element of the specified key.
