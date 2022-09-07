@@ -1,5 +1,4 @@
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
-import { Vector, Deque } from '@/index';
+import { Vector, Deque, SequentialContainer } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -82,6 +81,7 @@ describe('Deque test', () => {
     while (!myDeque.empty()) {
       myDeque.popBack();
     }
+    expect(myDeque.front()).toEqual(undefined);
     expect(myDeque.size()).toBe(0);
     myDeque.shrinkToFit();
     myDeque.pushBack(1);

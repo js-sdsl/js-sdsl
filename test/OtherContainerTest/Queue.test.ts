@@ -15,6 +15,7 @@ function judge(myQueue: Queue<number>, myVector: Vector<number>) {
     myQueue.pop();
     myVector.eraseElementByPos(0);
   }
+  expect(myQueue.front()).toEqual(undefined);
   return true;
 }
 

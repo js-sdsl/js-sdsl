@@ -1,4 +1,4 @@
-import TreeBaseContainer from './Base/TreeBaseContainer';
+import TreeContainer from './Base/index';
 import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeIterator from './Base/TreeIterator';
@@ -16,7 +16,7 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   }
 }
 
-class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
+class OrderedSet<K> extends TreeContainer<K, undefined> {
   constructor(container: initContainer<K> = [], cmp?: (x: K, y: K) => number) {
     super(cmp);
     container.forEach((element) => this.insert(element));
@@ -86,44 +86,22 @@ class OrderedSet<K> extends TreeBaseContainer<K, undefined> {
     }
     return this.end();
   }
-  /**
-   * @return An iterator to the first element not less than the given key.
-   */
   lowerBound(key: K) {
     const resNode = this._lowerBound(this.root, key);
     return new OrderedSetIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element greater than the given key.
-   */
   upperBound(key: K) {
     const resNode = this._upperBound(this.root, key);
     return new OrderedSetIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element not greater than the given key.
-   */
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this.root, key);
     return new OrderedSetIterator(resNode, this.header);
   }
-  /**
-   * @return An iterator to the first element less than the given key.
-   */
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this.root, key);
     return new OrderedSetIterator(resNode, this.header);
   }
-  /**
-   * @description Union the other Set to self.
-   *              <br/>
-   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
-   *              but we expect it to be O(mlog(n/m+1)).<br/>
-   *              More information =>
-   *              https://en.wikipedia.org/wiki/Red_black_tree
-   *              <br/>
-   * @param other The other set you want to merge.
-   */
   union(other: OrderedSet<K>) {
     other.forEach((element) => this.insert(element));
   }
