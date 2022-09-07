@@ -1,6 +1,6 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
-import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 
 export class LinkNode<T> {
   value: T | undefined = undefined;
@@ -12,7 +12,7 @@ export class LinkNode<T> {
 }
 
 export class LinkListIterator<T> extends ContainerIterator<T> {
-  private node: LinkNode<T>;
+  protected node: LinkNode<T>;
   private readonly header: LinkNode<T>;
   pre: () => this;
   next: () => this;

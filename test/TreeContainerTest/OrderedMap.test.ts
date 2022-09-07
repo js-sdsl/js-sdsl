@@ -189,6 +189,8 @@ describe('OrderedMap test', () => {
       myOrderedMap.eraseElementByKey(key);
       expect(myOrderedMap.size()).toEqual(i);
     });
+    expect(myOrderedMap.front()).toEqual(undefined);
+    expect(myOrderedMap.back()).toEqual(undefined);
     expect(myOrderedMap.size()).toEqual(0);
     stdMap.clear();
   });

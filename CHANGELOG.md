@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.09.06
+
+### Added
+
+- Add some notes.
+
+### Changed
+
+- Optimize hash container.
+- Abstracting out the hash container.
+
+### Fixed
+
+- Fixed tree get height function return one larger than the real height.
+- Tree-shaking not work in ES module.
+- `Queue` and `Deque` should return `undefined` when container is empty.
+
 ## [4.1.4-beta.0] - 2022.08.31
 
 ### Added

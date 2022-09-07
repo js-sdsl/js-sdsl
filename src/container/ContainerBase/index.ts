@@ -5,6 +5,7 @@ export abstract class ContainerIterator<T> {
    * @description Iterator's type.
    */
   readonly iteratorType: boolean;
+  protected node: unknown;
   protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
     this.iteratorType = iteratorType;
   }
@@ -91,8 +92,8 @@ export abstract class Container<T> extends Base {
    */
   abstract back(): T | undefined;
   /**
-   * @description I terate over all elements in the container.
-   * @param callback callback function like Array.forEach.
+   * @description Iterate over all elements in the container.
+   * @param callback Callback function like Array.forEach.
    */
   abstract forEach(callback: (element: T, index: number) => void): void;
   /**

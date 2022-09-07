@@ -1,70 +1,9 @@
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
-import { checkWithinAccessParams } from '@/utils/checkParams';
 import SequentialContainer from './Base/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
-export class DequeIterator<T> extends ContainerIterator<T> {
-  private node: number;
-  private readonly size: () => number;
-  private readonly getElementByPos: (pos: number) => T;
-  private readonly setElementByPos: (pos: number, element: T) => void;
-  pre: () => this;
-  next: () => this;
-  constructor(
-    index: number,
-    size: () => number,
-    getElementByPos: (pos: number) => T,
-    setElementByPos: (pos: number, element: T) => void,
-    iteratorType?: boolean
-  ) {
-    super(iteratorType);
-    this.node = index;
-    this.size = size;
-    this.getElementByPos = getElementByPos;
-    this.setElementByPos = setElementByPos;
-
-    if (this.iteratorType === ContainerIterator.NORMAL) {
-      this.pre = function () {
-        if (this.node === 0) {
-          throw new RangeError('Deque iterator access denied!');
-        }
-        this.node -= 1;
-        return this;
-      };
-      this.next = function () {
-        if (this.node === this.size()) {
-          throw new RangeError('Deque Iterator access denied!');
-        }
-        this.node += 1;
-        return this;
-      };
-    } else {
-      this.pre = function () {
-        if (this.node === this.size() - 1) {
-          throw new RangeError('Deque iterator access denied!');
-        }
-        this.node += 1;
-        return this;
-      };
-      this.next = function () {
-        if (this.node === -1) {
-          throw new RangeError('Deque iterator access denied!');
-        }
-        this.node -= 1;
-        return this;
-      };
-    }
-  }
-  get pointer() {
-    checkWithinAccessParams(this.node, 0, this.size() - 1);
-    return this.getElementByPos(this.node);
-  }
-  set pointer(newValue: T) {
-    checkWithinAccessParams(this.node, 0, this.size() - 1);
-    this.setElementByPos(this.node, newValue);
-  }
-  equals(obj: DequeIterator<T>) {
-    return this.node === obj.node;
-  }
+export class DequeIterator<T> extends RandomIterator<T> {
   copy() {
     return new DequeIterator(
       this.node,
@@ -83,7 +22,7 @@ class Deque<T> extends SequentialContainer<T> {
   private curLast = 0;
   private bucketNum = 0;
   private readonly bucketSize: number;
-  private map: T[][] = [];
+  private map: (T | undefined)[][] = [];
   constructor(container: initContainer<T> = [], bucketSize = (1 << 12)) {
     super();
     let _length;
@@ -158,10 +97,10 @@ class Deque<T> extends SequentialContainer<T> {
     this.curFirst = this.curLast = this.bucketSize >> 1;
   }
   front() {
-    return this.map[this.first][this.curFirst] as (T | undefined);
+    return this.map[this.first][this.curFirst];
   }
   back() {
-    return this.map[this.last][this.curLast] as (T | undefined);
+    return this.map[this.last][this.curLast];
   }
   begin() {
     return new DequeIterator<T>(
@@ -218,6 +157,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   popBack() {
     if (!this.length) return;
+    this.map[this.last][this.curLast] = undefined;
     if (this.length !== 1) {
       if (this.curLast > 0) {
         this.curLast -= 1;
@@ -259,6 +199,7 @@ class Deque<T> extends SequentialContainer<T> {
    */
   popFront() {
     if (!this.length) return;
+    this.map[this.first][this.curFirst] = undefined;
     if (this.length !== 1) {
       if (this.curFirst < this.bucketSize - 1) {
         this.curFirst += 1;
@@ -283,7 +224,7 @@ class Deque<T> extends SequentialContainer<T> {
       curNodeBucketIndex,
       curNodePointerIndex
     } = this.getElementIndex(pos);
-    return this.map[curNodeBucketIndex][curNodePointerIndex];
+    return this.map[curNodeBucketIndex][curNodePointerIndex] as T;
   }
   setElementByPos(pos: number, element: T) {
     checkWithinAccessParams(pos, 0, this.length - 1);
