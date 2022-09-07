@@ -162,6 +162,18 @@ describe('OrderedSet test', () => {
       expect(st.lowerBound(v.getElementByPos(i)).index).toEqual(i);
     }
     expect(st.end().index).toEqual(st.size() - 1);
+
+    v.forEach(element => {
+      if (Math.random() > 0.5) {
+        st.eraseElementByKey(element);
+      }
+    });
+
+    st.forEach((element, index) => {
+      expect(st.lowerBound(element).index).toBe(index);
+    });
+
+    expect(st.end().index).toEqual(st.size() - 1);
   });
 
   test('OrderedSet insert by hint function test', () => {
