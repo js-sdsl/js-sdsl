@@ -18,10 +18,6 @@ function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
 }
 
 describe('HashSet test', () => {
-  // @ts-ignore
-  HashContainer.treeifyThreshold = 1;
-  // @ts-ignore
-  HashContainer.untreeifyThreshold = 1;
   test('constructor test', () => {
     // eslint-disable-next-line no-new
     expect(() => new HashSet([], 28)).toThrow(RangeError);
@@ -70,6 +66,24 @@ describe('HashSet test', () => {
       myHashSet.eraseElementByKey(random);
       stdSet.delete(random);
     }
+    myHashSet.eraseElementByKey('-1');
+    myHashSet.eraseElementByKey('-2');
+    myHashSet.eraseElementByKey('-3');
+    myHashSet.eraseElementByKey('-4');
+    myHashSet.eraseElementByKey('-5');
+    myHashSet.eraseElementByKey('-6');
+    myHashSet.eraseElementByKey('-7');
+    myHashSet.eraseElementByKey('-8');
+    myHashSet.eraseElementByKey('-9');
+    expect(myHashSet.find('-1')).toBe(false);
+    expect(myHashSet.find('-2')).toBe(false);
+    expect(myHashSet.find('-3')).toBe(false);
+    expect(myHashSet.find('-4')).toBe(false);
+    expect(myHashSet.find('-5')).toBe(false);
+    expect(myHashSet.find('-6')).toBe(false);
+    expect(myHashSet.find('-7')).toBe(false);
+    expect(myHashSet.find('-8')).toBe(false);
+    expect(myHashSet.find('-9')).toBe(false);
     judgeHashSet(myHashSet, stdSet);
   });
 
@@ -103,10 +117,6 @@ describe('HashSet test', () => {
   });
 
   test('HashSet normal test', () => {
-    // @ts-ignore
-    HashContainer.treeifyThreshold = 6;
-    // @ts-ignore
-    HashContainer.untreeifyThreshold = 8;
     const st = new HashSet<string>();
     const stdSet = new Set<string>();
     for (let i = 0; i < testNum; ++i) {
@@ -122,42 +132,83 @@ describe('HashSet test', () => {
     expect(st.size()).toEqual(0);
   });
 
-  test('HashSet insert and erase', () => {
-    // @ts-ignore
-    HashContainer.treeifyThreshold = 6;
-    // @ts-ignore
-    HashContainer.untreeifyThreshold = 8;
-    const st = new HashSet<string>();
+  test('HashSet hash func test', () => {
+    const normalSet = new HashSet<string>();
+    const st = new HashSet<string>([], undefined, () => -1);
     const stdSet = new Set<string>();
     const arr: string[] = [];
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       st.insert(random);
+      normalSet.insert(random);
       stdSet.add(random);
       arr.push(random);
     }
+    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         st.eraseElementByKey(arr[i]);
+        normalSet.eraseElementByKey(arr[i]);
         stdSet.delete(arr[i]);
       }
     }
+    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     arr.length = 0;
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       st.insert(random);
+      normalSet.insert(random);
       stdSet.add(random);
       arr.push(random);
     }
+    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         st.eraseElementByKey(arr[i]);
+        normalSet.eraseElementByKey(arr[i]);
         stdSet.delete(arr[i]);
       }
     }
+    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      st.insert(random);
+      normalSet.insert(random);
+      stdSet.add(random);
+      arr.push(random);
+    }
+    judgeHashSet(normalSet, stdSet);
+    judgeHashSet(st, stdSet);
+    for (let i = 0; i < testNum; ++i) {
+      st.eraseElementByKey(arr[i]);
+      normalSet.eraseElementByKey(arr[i]);
+      stdSet.delete(arr[i]);
+    }
+    judgeHashSet(normalSet, stdSet);
+    judgeHashSet(st, stdSet);
+  });
+
+  test('difficult test', () => {
+    const hashSetList: HashSet<string>[] = [];
+    for (let i = -10; i <= 10; ++i) {
+      hashSetList.push(new HashSet<string>([], undefined, () => i));
+    }
+    const arr: string[] = [];
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      stdSet.add(random);
+      hashSetList.forEach(st => st.insert(random));
+      arr.push(random);
+    }
+    hashSetList.forEach(st => judgeHashSet(st, stdSet));
+    arr.forEach(v => {
+      stdSet.delete(v);
+      hashSetList.forEach(st => st.eraseElementByKey(v));
+    });
+    hashSetList.forEach(st => judgeHashSet(st, stdSet));
   });
 });
