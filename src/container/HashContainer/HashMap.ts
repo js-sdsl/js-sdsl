@@ -42,25 +42,17 @@ class HashMap<K, V> extends HashContainer<K> {
       if (container instanceof OrderedMap) {
         if (lowList.length > HashContainer.untreeifyThreshold) {
           newHashTable[index] = new OrderedMap(lowList);
-        } else if (lowList.length) {
+        } else {
           newHashTable[index] = new Vector(lowList, false);
         }
         if (highList.length > HashContainer.untreeifyThreshold) {
           newHashTable[index + originalBucketNum] = new OrderedMap(highList);
-        } else if (highList.length) {
+        } else {
           newHashTable[index + originalBucketNum] = new Vector(highList, false);
         }
       } else {
-        if (lowList.length >= HashContainer.treeifyThreshold) {
-          newHashTable[index] = new OrderedMap(lowList);
-        } else if (lowList.length) {
-          newHashTable[index] = new Vector(lowList, false);
-        }
-        if (highList.length >= HashContainer.treeifyThreshold) {
-          newHashTable[index + originalBucketNum] = new OrderedMap(highList);
-        } else if (highList.length) {
-          newHashTable[index + originalBucketNum] = new Vector(highList, false);
-        }
+        newHashTable[index] = new Vector(lowList, false);
+        newHashTable[index + originalBucketNum] = new Vector(highList, false);
       }
     }
     this.hashTable = newHashTable;
