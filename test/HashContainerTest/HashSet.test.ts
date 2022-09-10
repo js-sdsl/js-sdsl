@@ -1,4 +1,5 @@
-import { Vector, HashSet, HashContainer } from '@/index';
+import { HashContainerConst } from '@/container/HashContainer/Base';
+import { Vector, HashSet } from '@/index';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -101,7 +102,7 @@ describe('HashSet test', () => {
     // @ts-ignore
     const bucketNum = myHashSet.bucketNum;
     // @ts-ignore
-    myHashSet.bucketNum = HashContainer.maxBucketNum;
+    myHashSet.bucketNum = HashContainerConst.maxBucketNum;
     // @ts-ignore
     myHashSet.reAllocate();
     // @ts-ignore
