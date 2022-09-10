@@ -5,8 +5,8 @@ import merge from 'merge-stream';
 import ts from 'gulp-typescript';
 import terser from 'gulp-terser';
 import GulpUglify from 'gulp-uglify';
-import eslint from 'gulp-eslint-new';
 import babel from 'gulp-babel';
+import rename from 'gulp-rename';
 import { SrcOptions } from 'vinyl-fs';
 import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
@@ -53,14 +53,15 @@ function terserStream() {
   });
 }
 
-function rollupStream(outFileName: string) {
+function rollupStream(input: string) {
   return rollup({
-    input: 'src/index.ts',
+    input,
     output: {
-      file: outFileName,
+      file: input,
       format: 'umd',
       name: 'sdsl'
     },
+    context: 'this',
     plugins: [
       rollupTypescript({
         tsconfigOverride: {
@@ -75,29 +76,15 @@ function rollupStream(outFileName: string) {
   });
 }
 
-function eslintStream() {
-  return eslint({
-    baseConfig: {
-      ignorePatterns: ['**/*.ts'],
-      parser: '@babel/eslint-parser',
-      parserOptions: {
-        requireConfigFile: false
-      },
-      plugins: ['unused-imports'],
-      rules: {
-        'unused-imports/no-unused-imports': 'error'
-      }
-    },
-    fix: true,
-    ignore: false,
-    useEslintrc: false
-  });
-}
-
-function babelStream() {
-  return babel({
-    plugins: ['@babel/plugin-transform-modules-commonjs']
-  });
+function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
+  return (removeUnusedImport || cjsTransform)
+    ? babel({
+      plugins: [
+        removeUnusedImport ? 'babel-plugin-remove-unused-import' : undefined,
+        cjsTransform ? '@babel/plugin-transform-modules-commonjs' : undefined
+      ].filter((plugin) => plugin !== undefined) as string[]
+    })
+    : tap(() => { /* */ });
 }
 
 function filterMacros() {
@@ -122,11 +109,7 @@ function gulpFactory(
   const tsBuildResult = gulp.src(input.globs, input.opts)
     .pipe(tsProject());
   const jsBuildResult = tsBuildResult.js
-    .pipe(eslintStream())
-    .pipe(eslint.fix())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-    .pipe(useCjsTransform ? babelStream() : tap(() => { /* */ }))
+    .pipe(babelStream(true, useCjsTransform))
     .pipe(terserStream());
   return merge(
     cleanStream,
@@ -144,7 +127,8 @@ gulp.task(
       module: 'ES2015',
       declaration: true
     },
-    true)
+    true
+  )
 );
 
 gulp.task(
@@ -176,49 +160,48 @@ gulp.task(
       module: 'ES2015',
       declaration: false
     },
-    true)
+    true
+  )
 );
 
-function gulpUmdFactory(
-  input: string,
-  output: string,
-  uglifyOpts?: GulpUglify.Options,
-  sourcemap = false
-) {
+function gulpUmdFactory(input: string, output: string) {
   macros.clear();
-  return gulp.src(`dist/umd/${output}`, { read: false, allowEmpty: true })
+  return gulp
+    .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
     .pipe(clean())
     .pipe(gulp.src(input))
-    .pipe(sourcemap ? sourcemaps.init() : tap(() => { /* */ }))
-    .pipe(rollupStream(output))
+    .pipe(rollupStream(input))
     .pipe(terserStream())
-    .pipe(GulpUglify(uglifyOpts))
-    .pipe(sourcemap ? sourcemaps.write('.') : tap(() => { /* */ }))
+    .pipe(rename(output))
+    .pipe(gulp.dest('dist/umd'));
+}
+
+function gulpUmdMinFactory(input: string, output: string) {
+  macros.clear();
+  return gulp
+    .src([`dist/umd/${output}`, `dist/umd/${output}.map`], { read: false, allowEmpty: true })
+    .pipe(clean())
+    .pipe(gulp.src(input))
+    .pipe(sourcemaps.init())
+    .pipe(GulpUglify({ compress: true }))
+    .pipe(rename(output))
+    .pipe(sourcemaps.write('.', { includeContent: false }))
     .pipe(gulp.dest('dist/umd'));
 }
 
 gulp.task(
   'umd',
   () => gulpUmdFactory(
-    'src/**/*.ts',
-    'js-sdsl.js',
-    {
-      compress: false,
-      output: { beautify: true },
-      mangle: { keep_fnames: true }
-    }
+    'src/index.ts',
+    'js-sdsl.js'
   )
 );
 
 gulp.task(
   'umd:min',
-  () => gulpUmdFactory(
+  () => gulpUmdMinFactory(
     'dist/umd/js-sdsl.js',
-    'js-sdsl.min.js',
-    {
-      compress: true
-    },
-    true
+    'js-sdsl.min.js'
   )
 );
 
