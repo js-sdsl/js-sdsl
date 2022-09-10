@@ -8,6 +8,7 @@
     "downlevelIteration": true,
     "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
+    "stripInternal": true,
     "paths": {
       "@/*": [
         "./src/*"
@@ -17,7 +18,18 @@
       {
         "transform": "ts-transform-paths",
         "afterDeclarations": true
+      },
+      {
+        "transform": "ts-macros"
+      },
+      { 
+        "transform": "ts-transformer-minify-privates"
       }
     ]
+  },
+  "ts-node": {
+    "compilerOptions": {
+        "module": "commonjs" 
+    }
   }
 }

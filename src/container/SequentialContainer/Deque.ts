@@ -1,6 +1,6 @@
 import SequentialContainer from './Base/index';
-import { checkWithinAccessParams } from '@/utils/checkParams';
-import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { IteratorType, initContainer } from '@/container/ContainerBase/index';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
 export class DequeIterator<T> extends RandomIterator<T> {
@@ -124,7 +124,7 @@ class Deque<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      ContainerIterator.REVERSE
+      IteratorType.REVERSE
     );
   }
   rEnd() {
@@ -133,7 +133,7 @@ class Deque<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      ContainerIterator.REVERSE
+      IteratorType.REVERSE
     );
   }
   pushBack(element: T) {
@@ -219,7 +219,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   getElementByPos(pos: number) {
-    checkWithinAccessParams(pos, 0, this.length - 1);
+    $checkWithinAccessParams!(pos, 0, this.length - 1);
     const {
       curNodeBucketIndex,
       curNodePointerIndex
@@ -227,7 +227,7 @@ class Deque<T> extends SequentialContainer<T> {
     return this.map[curNodeBucketIndex][curNodePointerIndex] as T;
   }
   setElementByPos(pos: number, element: T) {
-    checkWithinAccessParams(pos, 0, this.length - 1);
+    $checkWithinAccessParams!(pos, 0, this.length - 1);
     const {
       curNodeBucketIndex,
       curNodePointerIndex
@@ -235,7 +235,7 @@ class Deque<T> extends SequentialContainer<T> {
     this.map[curNodeBucketIndex][curNodePointerIndex] = element;
   }
   insert(pos: number, element: T, num = 1) {
-    checkWithinAccessParams(pos, 0, this.length);
+    $checkWithinAccessParams!(pos, 0, this.length);
     if (pos === 0) {
       while (num--) this.pushFront(element);
     } else if (pos === this.length) {
@@ -269,7 +269,7 @@ class Deque<T> extends SequentialContainer<T> {
     this.length = pos + 1;
   }
   eraseElementByPos(pos: number) {
-    checkWithinAccessParams(pos, 0, this.length - 1);
+    $checkWithinAccessParams!(pos, 0, this.length - 1);
     if (pos === 0) this.popFront();
     else if (pos === this.length - 1) this.popBack();
     else {

@@ -1,4 +1,5 @@
-import { Vector, HashMap, HashContainer } from '@/index';
+import { HashContainerConst } from '@/container/HashContainer/Base';
+import { Vector, HashMap } from '@/index';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -19,10 +20,6 @@ function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, nu
 }
 
 describe('HashMap test', () => {
-  // @ts-ignore
-  HashContainer.treeifyThreshold = 1;
-  // @ts-ignore
-  HashContainer.untreeifyThreshold = 1;
   const myHashMap = new HashMap(arr.map((element, index) => [element, index]));
   const stdMap = new Map(arr.map((element, index) => [element, index]));
 
@@ -119,7 +116,7 @@ describe('HashMap test', () => {
     // @ts-ignore
     const bucketNum = myHashMap.bucketNum;
     // @ts-ignore
-    myHashMap.bucketNum = HashContainer.maxBucketNum;
+    myHashMap.bucketNum = HashContainerConst.maxBucketNum;
     // @ts-ignore
     myHashMap.reAllocate();
     // @ts-ignore
@@ -135,10 +132,6 @@ describe('HashMap test', () => {
   });
 
   test('HashMap normal test', () => {
-    // @ts-ignore
-    HashContainer.treeifyThreshold = 6;
-    // @ts-ignore
-    HashContainer.untreeifyThreshold = 8;
     const mp = new HashMap<string, number>();
     const stdMap = new Map();
     for (let i = 0; i < testNum; ++i) {
@@ -155,42 +148,86 @@ describe('HashMap test', () => {
     expect(mp.size()).toEqual(0);
   });
 
-  test('HashSet insert and erase', () => {
-    // @ts-ignore
-    HashContainer.treeifyThreshold = 6;
-    // @ts-ignore
-    HashContainer.untreeifyThreshold = 8;
-    const mp = new HashMap<string, number>();
+  test('HashMap hash func test', () => {
+    const normalMap = new HashMap<string, number>();
+    const mp = new HashMap<string, number>([], undefined, () => -1);
     const stdMap = new Map<string, number>();
     const arr: string[] = [];
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       mp.setElement(random, i);
+      normalMap.setElement(random, i);
       stdMap.set(random, i);
       arr.push(random);
     }
+    judgeHashMap(normalMap, stdMap);
     judgeHashMap(mp, stdMap);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         mp.eraseElementByKey(arr[i]);
+        normalMap.eraseElementByKey(arr[i]);
         stdMap.delete(arr[i]);
       }
     }
+    judgeHashMap(normalMap, stdMap);
     judgeHashMap(mp, stdMap);
     arr.length = 0;
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       mp.setElement(random, i);
+      normalMap.setElement(random, i);
       stdMap.set(random, i);
       arr.push(random);
     }
+    judgeHashMap(normalMap, stdMap);
     judgeHashMap(mp, stdMap);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         mp.eraseElementByKey(arr[i]);
+        normalMap.eraseElementByKey(arr[i]);
         stdMap.delete(arr[i]);
       }
     }
+    judgeHashMap(normalMap, stdMap);
     judgeHashMap(mp, stdMap);
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      mp.setElement(random, i);
+      normalMap.setElement(random, i);
+      stdMap.set(random, i);
+      arr.push(random);
+    }
+    judgeHashMap(normalMap, stdMap);
+    judgeHashMap(mp, stdMap);
+    for (let i = 0; i < testNum; ++i) {
+      mp.eraseElementByKey(arr[i]);
+      normalMap.eraseElementByKey(arr[i]);
+      stdMap.delete(arr[i]);
+    }
+    judgeHashMap(normalMap, stdMap);
+    judgeHashMap(mp, stdMap);
+    normalMap.clear();
+    mp.clear();
+    stdMap.clear();
+  });
+
+  test('difficult test', () => {
+    const hashMapList: HashMap<string, number>[] = [];
+    for (let i = -10; i <= 10; ++i) {
+      hashMapList.push(new HashMap<string, number>([], undefined, () => i));
+    }
+    const arr: string[] = [];
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random().toFixed(6);
+      stdMap.set(random, i);
+      hashMapList.forEach(mp => mp.setElement(random, i));
+      arr.push(random);
+    }
+    hashMapList.forEach(mp => judgeHashMap(mp, stdMap));
+    arr.forEach(v => {
+      stdMap.delete(v);
+      hashMapList.forEach(mp => mp.eraseElementByKey(v));
+    });
+    hashMapList.forEach(mp => judgeHashMap(mp, stdMap));
   });
 });
