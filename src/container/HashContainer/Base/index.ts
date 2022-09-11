@@ -1,11 +1,14 @@
 import { Base, Container } from '@/container/ContainerBase/index';
 
+export const enum HashContainerConst {
+  sigma = 0.75,
+  treeifyThreshold = 8,
+  untreeifyThreshold = 6,
+  minTreeifySize = 64,
+  maxBucketNum = (1 << 30)
+}
+
 abstract class HashContainer<K> extends Base {
-  protected static readonly sigma = 0.75;
-  protected static readonly treeifyThreshold = 8;
-  protected static readonly untreeifyThreshold = 6;
-  protected static readonly minTreeifySize = 64;
-  protected static readonly maxBucketNum: number = (1 << 30);
   protected bucketNum: number;
   protected initBucketNum: number;
   protected hashFunc: (x: K) => number;
