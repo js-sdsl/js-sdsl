@@ -1,3 +1,7 @@
+/**
+ * TODO
+ * Packaged in separate files for lazy loading and reduce packing size
+ */
 export { default as Stack } from '@/container/OtherContainer/Stack';
 export { default as Queue } from '@/container/OtherContainer/Queue';
 export { default as PriorityQueue } from '@/container/OtherContainer/PriorityQueue';
