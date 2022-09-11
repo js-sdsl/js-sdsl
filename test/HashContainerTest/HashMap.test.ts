@@ -1,4 +1,5 @@
-import { Vector, HashMap, HashContainer } from '@/index';
+import { HashContainerConst } from '@/container/HashContainer/Base';
+import { Vector, HashMap } from '@/index';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -115,7 +116,7 @@ describe('HashMap test', () => {
     // @ts-ignore
     const bucketNum = myHashMap.bucketNum;
     // @ts-ignore
-    myHashMap.bucketNum = HashContainer.maxBucketNum;
+    myHashMap.bucketNum = HashContainerConst.maxBucketNum;
     // @ts-ignore
     myHashMap.reAllocate();
     // @ts-ignore
