@@ -1,10 +1,7 @@
-export const enum TreeNodeColor {
-  RED = 1,
-  BLACK = 0
-}
-
 class TreeNode<K, V> {
-  color = TreeNodeColor.RED;
+  static readonly RED = true;
+  static readonly BLACK = false;
+  color = true;
   key: K | undefined = undefined;
   value: V | undefined = undefined;
   left: TreeNode<K, V> | undefined = undefined;
@@ -21,7 +18,7 @@ class TreeNode<K, V> {
   pre() {
     let preNode: TreeNode<K, V> = this;
     if (
-      preNode.color === TreeNodeColor.RED &&
+      preNode.color === TreeNode.RED &&
       (preNode.parent as TreeNode<K, V>).parent === preNode
     ) {
       preNode = preNode.right as TreeNode<K, V>;

@@ -1,15 +1,12 @@
-export const enum IteratorType {
-  NORMAL = 0,
-  REVERSE = 1
-}
-
 export abstract class ContainerIterator<T> {
+  static readonly NORMAL = false;
+  static readonly REVERSE = true;
   /**
    * @description Iterator's type.
    */
-  readonly iteratorType: IteratorType;
+  readonly iteratorType: boolean;
   protected node: unknown;
-  protected constructor(iteratorType: IteratorType = IteratorType.NORMAL) {
+  protected constructor(iteratorType: boolean = ContainerIterator.NORMAL) {
     this.iteratorType = iteratorType;
   }
   /**

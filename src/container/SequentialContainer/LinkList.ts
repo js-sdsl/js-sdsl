@@ -1,6 +1,6 @@
 import SequentialContainer from './Base/index';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 
 export class LinkNode<T> {
   value: T | undefined = undefined;
@@ -19,13 +19,13 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
   constructor(
     node: LinkNode<T>,
     header: LinkNode<T>,
-    iteratorType?: IteratorType
+    iteratorType?: boolean
   ) {
     super(iteratorType);
     this.node = node;
     this.header = header;
 
-    if (this.iteratorType === IteratorType.NORMAL) {
+    if (this.iteratorType === ContainerIterator.NORMAL) {
       this.pre = function () {
         if (this.node.pre === this.header) {
           throw new RangeError('LinkList iterator access denied!');
@@ -103,10 +103,10 @@ class LinkList<T> extends SequentialContainer<T> {
     return new LinkListIterator(this.header, this.header);
   }
   rBegin() {
-    return new LinkListIterator(this.tail || this.header, this.header, IteratorType.REVERSE);
+    return new LinkListIterator(this.tail || this.header, this.header, ContainerIterator.REVERSE);
   }
   rEnd() {
-    return new LinkListIterator(this.header, this.header, IteratorType.REVERSE);
+    return new LinkListIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     return this.head ? this.head.value : undefined;
@@ -124,7 +124,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     let curNode = this.head as LinkNode<T>;
     while (pos--) {
       curNode = curNode.next as LinkNode<T>;
@@ -132,7 +132,7 @@ class LinkList<T> extends SequentialContainer<T> {
     return curNode.value as T;
   }
   eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     if (pos === 0) this.popFront();
     else if (pos === this.length - 1) this.popBack();
     else {
@@ -211,7 +211,7 @@ class LinkList<T> extends SequentialContainer<T> {
     if (this.tail) this.tail.next = this.header;
   }
   setElementByPos(pos: number, element: T) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     let curNode = this.head as LinkNode<T>;
     while (pos--) {
       curNode = curNode.next as LinkNode<T>;
@@ -219,7 +219,7 @@ class LinkList<T> extends SequentialContainer<T> {
     curNode.value = element;
   }
   insert(pos: number, element: T, num = 1) {
-    $checkWithinAccessParams!(pos, 0, this.length);
+    checkWithinAccessParams(pos, 0, this.length);
     if (num <= 0) return;
     if (pos === 0) {
       while (num--) this.pushFront(element);

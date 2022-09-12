@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "outDir": "dist",
+    "outDir": "dist/performance",
+    "module": "CommonJS",
     "strict": true,
     "baseUrl": "./",
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
@@ -18,6 +18,9 @@
         "transform": "ts-transform-paths",
         "afterDeclarations": true
       }
-    ]
-  }
+    ],
+  },
+  "files": [
+    "./performance/index.ts"
+  ],
 }

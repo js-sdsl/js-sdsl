@@ -1,4 +1,4 @@
-import HashContainer, { HashContainerConst } from './Base/index';
+import HashContainer from './Base/index';
 import Vector from '../SequentialContainer/Vector';
 import OrderedMap from '../TreeContainer/OrderedMap';
 import { initContainer } from '@/container/ContainerBase/index';
@@ -13,7 +13,7 @@ class HashMap<K, V> extends HashContainer<K> {
     container.forEach(element => this.setElement(element[0], element[1]));
   }
   protected reAllocate() {
-    if (this.bucketNum >= HashContainerConst.maxBucketNum) return;
+    if (this.bucketNum >= HashContainer.maxBucketNum) return;
     const newHashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];
     const originalBucketNum = this.bucketNum;
     this.bucketNum <<= 1;
@@ -40,19 +40,27 @@ class HashMap<K, V> extends HashContainer<K> {
         } else highList.push(element);
       });
       if (container instanceof OrderedMap) {
-        if (lowList.length > HashContainerConst.untreeifyThreshold) {
+        if (lowList.length > HashContainer.untreeifyThreshold) {
           newHashTable[index] = new OrderedMap(lowList);
-        } else {
+        } else if (lowList.length) {
           newHashTable[index] = new Vector(lowList, false);
         }
-        if (highList.length > HashContainerConst.untreeifyThreshold) {
+        if (highList.length > HashContainer.untreeifyThreshold) {
           newHashTable[index + originalBucketNum] = new OrderedMap(highList);
-        } else {
+        } else if (highList.length) {
           newHashTable[index + originalBucketNum] = new Vector(highList, false);
         }
       } else {
-        newHashTable[index] = new Vector(lowList, false);
-        newHashTable[index + originalBucketNum] = new Vector(highList, false);
+        if (lowList.length >= HashContainer.treeifyThreshold) {
+          newHashTable[index] = new OrderedMap(lowList);
+        } else if (lowList.length) {
+          newHashTable[index] = new Vector(lowList, false);
+        }
+        if (highList.length >= HashContainer.treeifyThreshold) {
+          newHashTable[index + originalBucketNum] = new OrderedMap(highList);
+        } else if (highList.length) {
+          newHashTable[index + originalBucketNum] = new Vector(highList, false);
+        }
       }
     }
     this.hashTable = newHashTable;
@@ -87,8 +95,8 @@ class HashMap<K, V> extends HashContainer<K> {
           }
         }
         (container as Vector<[K, V]>).pushBack([key, value]);
-        if (preSize + 1 >= HashContainerConst.treeifyThreshold) {
-          if (this.bucketNum <= HashContainerConst.minTreeifySize) {
+        if (preSize + 1 >= HashMap.treeifyThreshold) {
+          if (this.bucketNum <= HashMap.minTreeifySize) {
             this.length += 1;
             this.reAllocate();
             return;
@@ -102,7 +110,7 @@ class HashMap<K, V> extends HashContainer<K> {
         this.length += curSize - preSize;
       }
     }
-    if (this.length > this.bucketNum * HashContainerConst.sigma) {
+    if (this.length > this.bucketNum * HashMap.sigma) {
       this.reAllocate();
     }
   }
@@ -142,7 +150,7 @@ class HashMap<K, V> extends HashContainer<K> {
       (container as OrderedMap<K, V>).eraseElementByKey(key);
       const curSize = container.size();
       this.length += curSize - preSize;
-      if (curSize <= HashContainerConst.untreeifyThreshold) {
+      if (curSize <= HashContainer.untreeifyThreshold) {
         this.hashTable[index] = new Vector(container);
       }
     }

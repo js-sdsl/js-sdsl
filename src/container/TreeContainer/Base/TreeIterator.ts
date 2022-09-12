@@ -1,5 +1,5 @@
 import TreeNode from './TreeNode';
-import { ContainerIterator, IteratorType } from '@/container/ContainerBase/index';
+import { ContainerIterator } from '@/container/ContainerBase/index';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   protected node: TreeNode<K, V>;
@@ -9,13 +9,13 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   constructor(
     node: TreeNode<K, V>,
     header: TreeNode<K, V>,
-    iteratorType?: IteratorType
+    iteratorType?: boolean
   ) {
     super(iteratorType);
     this.node = node;
     this.header = header;
 
-    if (this.iteratorType === IteratorType.NORMAL) {
+    if (this.iteratorType === ContainerIterator.NORMAL) {
       this.pre = function () {
         if (this.node === this.header.left) {
           throw new RangeError('LinkList iterator access denied!');
