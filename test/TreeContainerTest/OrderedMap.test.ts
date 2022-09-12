@@ -53,22 +53,6 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
-  test('OrderedMap find function test', () => {
-    const myOrderedMap = new OrderedMap<number, number>();
-    expect(myOrderedMap.find(0).equals(myOrderedMap.end())).toBeTruthy();
-    expect(myOrderedMap.find(1).equals(myOrderedMap.end())).toBeTruthy();
-    expect(myOrderedMap.find(2).equals(myOrderedMap.end())).toBeTruthy();
-    myOrderedMap.setElement(1, 1);
-    expect(myOrderedMap.find(0).equals(myOrderedMap.end())).toBeTruthy();
-    expect(myOrderedMap.find(1).equals(myOrderedMap.begin())).toBeTruthy();
-    expect(myOrderedMap.find(2).equals(myOrderedMap.end())).toBeTruthy();
-    myOrderedMap.setElement(2, 2);
-    myOrderedMap.eraseElementByKey(1);
-    expect(myOrderedMap.find(0).equals(myOrderedMap.end())).toBeTruthy();
-    expect(myOrderedMap.find(1).equals(myOrderedMap.end())).toBeTruthy();
-    expect(myOrderedMap.find(2).equals(myOrderedMap.begin())).toBeTruthy();
-  });
-
   test('OrderedMap eraseElementByPos function test', () => {
     for (let i = 0; i < 10; ++i) {
       const pos = Math.floor(Math.random() * myOrderedMap.size());
@@ -142,6 +126,7 @@ describe('OrderedMap test', () => {
     myOrderedMap.begin().pointer['1'] = 2;
     expect(myOrderedMap.front()).toEqual([myOrderedMap.begin().pointer[0], 2]);
     expect(() => {
+      // @ts-ignore
       myOrderedMap.begin().pointer['0'] = 2;
     }).toThrow(TypeError);
   });
@@ -233,8 +218,9 @@ describe('OrderedMap test', () => {
       myOrderedMap.find(0).pointer[0] = 2;
     }).toThrowError(RangeError);
     expect(() => {
+      // @ts-ignore
       // eslint-disable-next-line no-unused-expressions
-      myOrderedMap.rBegin().pointer;
+      myOrderedMap.rBegin().pointer.a;
     }).toThrowError(RangeError);
     myOrderedMap.setElement(1, 1);
     expect(myOrderedMap.getElementByKey(0)).toEqual(undefined);

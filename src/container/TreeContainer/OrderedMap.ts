@@ -1,5 +1,5 @@
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
 import TreeContainer from './Base/index';
 import TreeIterator from './Base/TreeIterator';
 import TreeNode from './Base/TreeNode';
@@ -52,11 +52,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return new OrderedMapIterator(
       this.header.right || this.header,
       this.header,
-      IteratorType.REVERSE
+      ContainerIterator.REVERSE
     );
   }
   rEnd() {
-    return new OrderedMapIterator(this.header, this.header, IteratorType.REVERSE);
+    return new OrderedMapIterator(this.header, this.header, ContainerIterator.REVERSE);
   }
   front() {
     if (!this.length) return undefined;
@@ -112,7 +112,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return curNode ? curNode.value : undefined;
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     let res;
     let index = 0;
     for (const pair of this) {

@@ -1,6 +1,6 @@
 import SequentialContainer from './Base/index';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
+import { checkWithinAccessParams } from '@/utils/checkParams';
+import { ContainerIterator, initContainer } from '@/container/ContainerBase/index';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
 export class VectorIterator<T> extends RandomIterator<T> {
@@ -62,7 +62,7 @@ class Vector<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      IteratorType.REVERSE
+      ContainerIterator.REVERSE
     );
   }
   rEnd() {
@@ -71,7 +71,7 @@ class Vector<T> extends SequentialContainer<T> {
       this.size,
       this.getElementByPos,
       this.setElementByPos,
-      IteratorType.REVERSE
+      ContainerIterator.REVERSE
     );
   }
   front() {
@@ -86,11 +86,11 @@ class Vector<T> extends SequentialContainer<T> {
     }
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     return this.vector[pos];
   }
   eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     this.vector.splice(pos, 1);
     this.length -= 1;
   }
@@ -120,11 +120,11 @@ class Vector<T> extends SequentialContainer<T> {
     this.length -= 1;
   }
   setElementByPos(pos: number, element: T) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    checkWithinAccessParams(pos, 0, this.length - 1);
     this.vector[pos] = element;
   }
   insert(pos: number, element: T, num = 1) {
-    $checkWithinAccessParams!(pos, 0, this.length);
+    checkWithinAccessParams(pos, 0, this.length);
     this.vector.splice(pos, 0, ...new Array<T>(num).fill(element));
     this.length += num;
   }
