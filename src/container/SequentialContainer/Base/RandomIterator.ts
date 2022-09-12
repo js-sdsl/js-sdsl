@@ -1,5 +1,5 @@
-import { checkWithinAccessParams } from '@/utils/checkParams';
-import { ContainerIterator } from '@/container/ContainerBase/index';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { ContainerIterator, IteratorType } from '@/container/ContainerBase/index';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   protected node: number;
@@ -13,14 +13,14 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     size: () => number,
     getElementByPos: (pos: number) => T,
     setElementByPos: (pos: number, element: T) => void,
-    iteratorType?: boolean
+    iteratorType?: IteratorType
   ) {
     super(iteratorType);
     this.node = index;
     this.size = size;
     this.getElementByPos = getElementByPos;
     this.setElementByPos = setElementByPos;
-    if (this.iteratorType === ContainerIterator.NORMAL) {
+    if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this.node === 0) {
           throw new RangeError('Deque iterator access denied!');
@@ -53,11 +53,11 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     }
   }
   get pointer() {
-    checkWithinAccessParams(this.node, 0, this.size() - 1);
+    $checkWithinAccessParams!(this.node, 0, this.size() - 1);
     return this.getElementByPos(this.node);
   }
   set pointer(newValue: T) {
-    checkWithinAccessParams(this.node, 0, this.size() - 1);
+    $checkWithinAccessParams!(this.node, 0, this.size() - 1);
     this.setElementByPos(this.node, newValue);
   }
   equals(obj: RandomIterator<T>) {

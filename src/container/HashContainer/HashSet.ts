@@ -1,4 +1,4 @@
-import HashContainer from './Base/index';
+import HashContainer, { HashContainerConst } from './Base/index';
 import Vector from '../SequentialContainer/Vector';
 import OrderedSet from '../TreeContainer/OrderedSet';
 import { Container, initContainer } from '@/container/ContainerBase/index';
@@ -14,7 +14,7 @@ class HashSet<K> extends HashContainer<K> {
     container.forEach(element => this.insert(element));
   }
   protected reAllocate() {
-    if (this.bucketNum >= HashContainer.maxBucketNum) return;
+    if (this.bucketNum >= HashContainerConst.maxBucketNum) return;
     const newHashTable: (Vector<K> | OrderedSet<K>)[] = [];
     const originalBucketNum = this.bucketNum;
     this.bucketNum <<= 1;
@@ -41,27 +41,19 @@ class HashSet<K> extends HashContainer<K> {
         } else highList.push(element);
       });
       if (container instanceof OrderedSet) {
-        if (lowList.length > HashContainer.untreeifyThreshold) {
+        if (lowList.length > HashContainerConst.untreeifyThreshold) {
           newHashTable[index] = new OrderedSet(lowList);
-        } else if (lowList.length) {
+        } else {
           newHashTable[index] = new Vector(lowList, false);
         }
-        if (highList.length > HashContainer.untreeifyThreshold) {
+        if (highList.length > HashContainerConst.untreeifyThreshold) {
           newHashTable[index + originalBucketNum] = new OrderedSet(highList);
-        } else if (highList.length) {
+        } else {
           newHashTable[index + originalBucketNum] = new Vector(highList, false);
         }
       } else {
-        if (lowList.length >= HashContainer.treeifyThreshold) {
-          newHashTable[index] = new OrderedSet(lowList);
-        } else if (lowList.length) {
-          newHashTable[index] = new Vector(lowList, false);
-        }
-        if (highList.length >= HashContainer.treeifyThreshold) {
-          newHashTable[index + originalBucketNum] = new OrderedSet(highList);
-        } else if (highList.length) {
-          newHashTable[index + originalBucketNum] = new Vector(highList, false);
-        }
+        newHashTable[index] = new Vector(lowList, false);
+        newHashTable[index + originalBucketNum] = new Vector(highList, false);
       }
     }
     this.hashTable = newHashTable;
@@ -90,8 +82,8 @@ class HashSet<K> extends HashContainer<K> {
         if (!(container as Vector<K>).find(element)
           .equals((container as Vector<K>).end())) return;
         (container as Vector<K>).pushBack(element);
-        if (preSize + 1 >= HashContainer.treeifyThreshold) {
-          if (this.bucketNum <= HashContainer.minTreeifySize) {
+        if (preSize + 1 >= HashContainerConst.treeifyThreshold) {
+          if (this.bucketNum <= HashContainerConst.minTreeifySize) {
             this.length += 1;
             this.reAllocate();
             return;
@@ -105,7 +97,7 @@ class HashSet<K> extends HashContainer<K> {
         this.length += curSize - preSize;
       }
     }
-    if (this.length > this.bucketNum * HashContainer.sigma) {
+    if (this.length > this.bucketNum * HashContainerConst.sigma) {
       this.reAllocate();
     }
   }
@@ -123,7 +115,7 @@ class HashSet<K> extends HashContainer<K> {
       (container as OrderedSet<K>).eraseElementByKey(key);
       const curSize = container.size();
       this.length += curSize - preSize;
-      if (curSize <= HashContainer.untreeifyThreshold) {
+      if (curSize <= HashContainerConst.untreeifyThreshold) {
         this.hashTable[index] = new Vector<K>(container);
       }
     }
