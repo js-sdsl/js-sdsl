@@ -8,9 +8,9 @@ for (let i = 0; i < testNum; ++i) {
 
 function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
   while (!myQueue.empty()) {
-    if (myQueue.size() !== myVector.size()) return false;
+    expect(myQueue.size()).toBe(myVector.size());
     const u = myQueue.top();
-    if (u !== myVector.front()) return false;
+    expect(u).toBe(myVector.front());
     myQueue.pop();
     myVector.eraseElementByPos(0);
   }
@@ -40,13 +40,13 @@ describe('PriorityQueue test', () => {
       myVector.pushBack(i);
     }
     myVector.sort((x, y) => y - x);
-    expect(judge(myQueue, myVector)).toEqual(true);
+    judge(myQueue, myVector);
   });
 
   test('PriorityQueue clear function test', () => {
     myQueue.clear();
     myVector.clear();
-    expect(judge(myQueue, myVector)).toEqual(true);
+    judge(myQueue, myVector);
   });
 
   test('init test', () => {
