@@ -12,7 +12,9 @@ import {
   OrderedSetIterator,
   OrderedMapIterator,
   SequentialContainer,
-  TreeContainer
+  TreeContainer,
+  HashContainer,
+  IteratorType
 } from '@/index';
 
 let arr: number[] = [];
@@ -162,16 +164,19 @@ describe('iterator test', () => {
         });
       // @ts-ignore
       // eslint-disable-next-line no-new
-      new Container();
+      expect(new Container().size()).toEqual(0);
       // @ts-ignore
       // eslint-disable-next-line no-new
-      new ContainerIterator();
+      expect(new ContainerIterator().iteratorType).toEqual(IteratorType.NORMAL);
       // @ts-ignore
       // eslint-disable-next-line no-new
-      new SequentialContainer();
+      expect(new SequentialContainer().size()).toEqual(0);
       // @ts-ignore
       // eslint-disable-next-line no-new
-      new TreeContainer();
+      expect(new TreeContainer().size()).toEqual(0);
+      // @ts-ignore
+      // eslint-disable-next-line no-new
+      expect(new HashContainer().size()).toEqual(0);
       // @ts-ignore
       // eslint-disable-next-line no-new
       new LinkListIterator<number>(containerArr[0].begin().node);
