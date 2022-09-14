@@ -15,6 +15,7 @@ import rollupTypescript from 'rollup-plugin-typescript2';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
 import minifyPrivatesTransformer from 'ts-transformer-minify-privates';
+import ttypescript from 'ttypescript';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
@@ -55,7 +56,6 @@ function terserStream() {
 }
 
 function rollupStream(input: string) {
-  macros.clear();
   return rollup({
     input,
     output: {
@@ -66,7 +66,7 @@ function rollupStream(input: string) {
     context: 'this',
     plugins: [
       rollupTypescript({
-        typescript: require('ttypescript'),
+        typescript: ttypescript,
         tsconfigOverride: {
           compilerOptions: {
             target: 'ES5',
