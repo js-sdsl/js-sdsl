@@ -14,6 +14,8 @@ import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
 import { CustomTransformerFactory, Program } from 'typescript';
 import minifyPrivatesTransformer from 'ts-transformer-minify-privates';
+import tsTreeshaker, { DependencySolver } from './tsTreeshaker';
+import deleteEmpty from 'delete-empty';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
@@ -204,5 +206,71 @@ gulp.task(
     'js-sdsl.min.js'
   )
 );
+
+gulp.task('deque', (() => {
+  const output = 'dist/deque';
+
+  macros.clear();
+  const dependencySolver = new DependencySolver(['src/container/SequentialContainer/Deque.ts'], {
+    baseUrl: 'src',
+    outDir: output
+  });
+
+  const tsProject = ts.createProject('tsconfig.json', {
+    getCustomTransformers: (program?: Program) => {
+      if (program === undefined) throw new Error('Program is undefined');
+      const pathsTransform = pathsTransformer(program);
+      const treeShakeTransform = tsTreeshaker({ solver: dependencySolver });
+      return {
+        before: [
+          tsMacroTransformer(program) as unknown as CustomTransformerFactory,
+          minifyPrivatesTransformer(program)
+        ],
+        after: [
+          ...pathsTransform.after,
+          ...treeShakeTransform.after
+        ],
+        afterDeclarations: [
+          ...pathsTransform.afterDeclarations,
+          ...treeShakeTransform.afterDeclarations
+        ]
+      };
+    },
+    target: 'ESnext',
+    module: 'ESnext',
+    declaration: true
+  });
+
+  function cleanBuild() {
+    return gulp.src(output, { read: false, allowEmpty: true })
+      .pipe(clean());
+  }
+
+  function build() {
+    const tsBuildResult = gulp.src('src/**/*.ts')
+      .pipe(tsProject());
+    const jsBuildResult = tsBuildResult.js
+      .pipe(babelStream(true, false))
+      .pipe(terserStream());
+    return merge([tsBuildResult.dts, jsBuildResult])
+      .pipe(filterMacros())
+      .pipe(gulp.dest(output));
+  }
+
+  function filterDependencies() {
+    return gulp.src(`${output}/**/*`, { read: false, allowEmpty: true, base: '.' })
+      .pipe(filter([
+        '**/*.ts',
+        '**/*.js',
+        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}`)]))
+      .pipe(clean());
+  }
+
+  async function cleanEmptyDirs() {
+    await deleteEmpty(process.cwd() + '/' + output);
+  }
+
+  return gulp.series(cleanBuild, build, filterDependencies, cleanEmptyDirs);
+})());
 
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
