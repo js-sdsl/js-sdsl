@@ -26,17 +26,34 @@ const rollup = require('gulp-rollup-2').rollup as (...params: unknown[]) => Node
 
 function createProject(overrideSettings?: ts.Settings) {
   return ts.createProject('tsconfig.json', {
+    ...overrideSettings,
     getCustomTransformers: (program?: Program) => {
       if (program === undefined) throw new Error('Program is undefined');
+
+      const pathsTransform = pathsTransformer(program);
+
+      const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
+      if (typeof (overrideGetCustomTransformers) === 'string') {
+        throw new Error('getCustomTransformers should be a function');
+      }
+      const customTransformers = overrideGetCustomTransformers?.(program);
+
       return {
-        ...pathsTransformer(program),
         before: [
           tsMacroTransformer(program) as unknown as CustomTransformerFactory,
-          minifyPrivatesTransformer(program)
+          minifyPrivatesTransformer(program),
+          ...customTransformers?.before ?? []
+        ],
+        after: [
+          ...pathsTransform.after,
+          ...customTransformers?.after ?? []
+        ],
+        afterDeclarations: [
+          ...pathsTransform.afterDeclarations,
+          ...customTransformers?.afterDeclarations ?? []
         ]
       };
-    },
-    ...overrideSettings
+    }
   });
 }
 
@@ -215,54 +232,47 @@ gulp.task(
   )
 );
 
-gulp.task('deque', (() => {
-  const output = 'dist/deque';
-
-  macros.clear();
-  const dependencySolver = new DependencySolver(['src/container/SequentialContainer/Deque.ts'], {
-    baseUrl: 'src',
+function gulpIsolateFactory(
+  input: {
+    sourceRoots: string|string[],
+    globs: string | string[],
+    opts?: SrcOptions
+  },
+  output: string,
+  overrideSettings?: Omit<ts.Settings, 'outDir'>,
+  useCjsTransform = false) {
+  const dependencySolver = new DependencySolver(input.sourceRoots, {
+    baseUrl: input.opts?.base ?? '.',
     outDir: output
   });
 
-  const tsProject = ts.createProject('tsconfig.json', {
-    getCustomTransformers: (program?: Program) => {
-      if (program === undefined) throw new Error('Program is undefined');
-      const pathsTransform = pathsTransformer(program);
-      const treeShakeTransform = tsTreeshaker({ solver: dependencySolver });
-      return {
-        before: [
-          tsMacroTransformer(program) as unknown as CustomTransformerFactory,
-          minifyPrivatesTransformer(program)
-        ],
-        after: [
-          ...pathsTransform.after,
-          ...treeShakeTransform.after
-        ],
-        afterDeclarations: [
-          ...pathsTransform.afterDeclarations,
-          ...treeShakeTransform.afterDeclarations
-        ]
-      };
-    },
-    target: 'ESnext',
-    module: 'ESnext',
-    declaration: true
-  });
-
-  function cleanBuild() {
-    return gulp.src(output, { read: false, allowEmpty: true })
-      .pipe(clean());
-  }
-
   function build() {
-    const tsBuildResult = gulp.src('src/**/*.ts')
-      .pipe(tsProject());
-    const jsBuildResult = tsBuildResult.js
-      .pipe(babelStream(true, false))
-      .pipe(terserStream());
-    return merge([tsBuildResult.dts, jsBuildResult])
-      .pipe(filterMacros())
-      .pipe(gulp.dest(output));
+    return gulpFactory(
+      input,
+      output,
+      {
+        ...overrideSettings,
+        getCustomTransformers: (program?: Program) => {
+          const treeShakerTransform = tsTreeshaker({ solver: dependencySolver });
+
+          const customTransformers = overrideSettings?.getCustomTransformers?.(program);
+          return {
+            before: [
+              ...customTransformers?.before ?? []
+            ],
+            after: [
+              ...treeShakerTransform.after,
+              ...customTransformers?.after ?? []
+            ],
+            afterDeclarations: [
+              ...treeShakerTransform.afterDeclarations,
+              ...customTransformers?.afterDeclarations ?? []
+            ]
+          };
+        }
+      },
+      useCjsTransform
+    );
   }
 
   function filterDependencies() {
@@ -278,7 +288,24 @@ gulp.task('deque', (() => {
     await deleteEmpty(process.cwd() + '/' + output);
   }
 
-  return gulp.series(cleanBuild, build, filterDependencies, cleanEmptyDirs);
-})());
+  return gulp.series(build, filterDependencies, cleanEmptyDirs);
+}
+
+gulp.task(
+  'esm:deque',
+  gulpIsolateFactory(
+    {
+      sourceRoots: ['src/container/SequentialContainer/Deque.ts'],
+      globs: 'src/**/*.ts',
+      opts: { base: 'src' }
+    },
+    'dist/isolate/deque',
+    {
+      target: 'ES5',
+      module: 'ES2015',
+      declaration: true
+    }
+  )
+);
 
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
