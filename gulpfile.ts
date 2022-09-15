@@ -292,14 +292,50 @@ function gulpIsolateFactory(
 }
 
 gulp.task(
-  'esm:deque',
+  'cjs:stack',
+  gulpIsolateFactory(
+    {
+      sourceRoots: ['src/container/OtherContainer/Stack.ts'],
+      globs: 'src/**/*.ts',
+      opts: { base: 'src' }
+    },
+    'dist/isolate/cjs/stack',
+    {
+      target: 'ES5',
+      module: 'ES2015',
+      declaration: true
+    },
+    true
+  )
+);
+
+gulp.task(
+  'cjs:deque',
   gulpIsolateFactory(
     {
       sourceRoots: ['src/container/SequentialContainer/Deque.ts'],
       globs: 'src/**/*.ts',
       opts: { base: 'src' }
     },
-    'dist/isolate/deque',
+    'dist/isolate/cjs/deque',
+    {
+      target: 'ES5',
+      module: 'ES2015',
+      declaration: true
+    },
+    true
+  )
+);
+
+gulp.task(
+  'esm:stack',
+  gulpIsolateFactory(
+    {
+      sourceRoots: ['src/container/OtherContainer/Stack.ts'],
+      globs: 'src/**/*.ts',
+      opts: { base: 'src' }
+    },
+    'dist/isolate/esm/stack',
     {
       target: 'ES5',
       module: 'ES2015',
@@ -307,5 +343,24 @@ gulp.task(
     }
   )
 );
+
+gulp.task(
+  'esm:deque',
+  gulpIsolateFactory(
+    {
+      sourceRoots: ['src/container/SequentialContainer/Deque.ts'],
+      globs: 'src/**/*.ts',
+      opts: { base: 'src' }
+    },
+    'dist/isolate/esm/deque',
+    {
+      target: 'ES5',
+      module: 'ES2015',
+      declaration: true
+    }
+  )
+);
+
+gulp.task('isolate', gulp.series('cjs:stack', 'cjs:deque', 'esm:stack', 'esm:deque'));
 
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
