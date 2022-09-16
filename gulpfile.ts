@@ -69,8 +69,6 @@ gulp.task(
   )
 );
 
-// read ../conf/isolatebuild.json
-
 const isolateBuildConfig = JSON.parse(fs.readFileSync('./conf/isolatebuild.json', 'utf8'));
 const isolateTasks = createIsolateTasksFromConfig(isolateBuildConfig);
 
