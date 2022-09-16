@@ -9,6 +9,7 @@
     "moduleResolution": "Node",
     "forceConsistentCasingInFileNames": true,
     "stripInternal": true,
+    "resolveJsonModule": true,
     "paths": {
       "@/*": [
         "./src/*"
@@ -29,7 +30,7 @@
   },
   "ts-node": {
     "compilerOptions": {
-        "module": "commonjs" 
+        "module": "commonjs"
     }
   }
 }

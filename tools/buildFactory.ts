@@ -114,10 +114,6 @@ function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
     : tap(() => { /* */ });
 }
 
-function filterMacros() {
-  return filter(['**/*.ts', '**/*.js', '!**/*.macro.d.ts', '!**/*.macro.js']);
-}
-
 export function gulpFactory(
   input: {
     globs: string | string[],
@@ -125,7 +121,8 @@ export function gulpFactory(
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false): NodeJS.ReadWriteStream {
+  useCjsTransform = false
+): NodeJS.ReadWriteStream {
   macros.clear();
   const tsProject = createProject({
     ...overrideSettings,
@@ -141,7 +138,7 @@ export function gulpFactory(
   return merge(
     cleanStream,
     merge([tsBuildResult.dts, jsBuildResult])
-      .pipe(filterMacros())
+      .pipe(filter(['**/*.ts', '**/*.js', '!**/*.macro.d.ts', '!**/*.macro.js']))
       .pipe(gulp.dest(output)));
 }
 
@@ -178,7 +175,8 @@ export function gulpIsolateFactory(
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false) {
+  useCjsTransform = false
+) {
   const dependencySolver = new DependencySolver(input.sourceRoots, {
     baseUrl: input.opts?.base ?? '.',
     outDir: output

@@ -1,11 +1,11 @@
 import gulp from 'gulp';
-import fs from 'fs';
 import {
   gulpFactory,
   gulpUmdFactory,
   gulpUmdMinFactory
 } from './tools/buildFactory';
 import { createIsolateTasksFromConfig } from './tools/createTask';
+import isolateBuildConfig from './conf/isolatebuild.json';
 
 gulp.task(
   'cjs',
@@ -69,9 +69,6 @@ gulp.task(
   )
 );
 
-const isolateBuildConfig = JSON.parse(fs.readFileSync('./conf/isolatebuild.json', 'utf8'));
-const isolateTasks = createIsolateTasksFromConfig(isolateBuildConfig);
-
-gulp.task('isolate', gulp.series(...isolateTasks));
+gulp.task('isolate', gulp.series(createIsolateTasksFromConfig(isolateBuildConfig)));
 
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
