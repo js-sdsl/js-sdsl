@@ -125,7 +125,7 @@ export function gulpFactory(
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false) {
+  useCjsTransform = false): NodeJS.ReadWriteStream {
   macros.clear();
   const tsProject = createProject({
     ...overrideSettings,
