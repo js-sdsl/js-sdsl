@@ -332,7 +332,7 @@ const cjsIsolateTasks = createIsolateTasks(
     opts: { base: 'src' }
   },
   {
-    target: 'ES5',
+    target: 'ES6',
     module: 'ES2015',
     declaration: true
   },
