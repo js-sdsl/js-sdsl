@@ -1,0 +1,62 @@
+[
+  {
+    "name": "stack",
+    "sourceRoots": [
+      "src/container/OtherContainer/Stack.ts"
+    ]
+  },
+  {
+    "name": "queue",
+    "sourceRoots": [
+      "src/container/OtherContainer/Queue.ts"
+    ]
+  },
+  {
+    "name": "priority-queue",
+    "sourceRoots": [
+      "src/container/OtherContainer/PriorityQueue.ts"
+    ]
+  },
+  {
+    "name": "vector",
+    "sourceRoots": [
+      "src/container/SequentialContainer/Vector.ts"
+    ]
+  },
+  {
+    "name": "link-list",
+    "sourceRoots": [
+      "src/container/SequentialContainer/LinkList.ts"
+    ]
+  },
+  {
+    "name": "deque",
+    "sourceRoots": [
+      "src/container/SequentialContainer/Deque.ts"
+    ]
+  },
+  {
+    "name": "ordered-set",
+    "sourceRoots": [
+      "src/container/TreeContainer/OrderedSet.ts"
+    ]
+  },
+  {
+    "name": "ordered-map",
+    "sourceRoots": [
+      "src/container/TreeContainer/OrderedMap.ts"
+    ]
+  },
+  {
+    "name": "hash-set",
+    "sourceRoots": [
+      "src/container/HashContainer/HashSet.ts"
+    ]
+  },
+  {
+    "name": "hash-map",
+    "sourceRoots": [
+      "src/container/HashContainer/HashMap.ts"
+    ]
+  }
+]
