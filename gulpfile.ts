@@ -291,76 +291,172 @@ function gulpIsolateFactory(
   return gulp.series(build, filterDependencies, cleanEmptyDirs);
 }
 
-gulp.task(
-  'cjs:stack',
-  gulpIsolateFactory(
+function createIsolateTasks(
+  taskNamePrefix: string,
+  input: {
+    globs: string | string[],
+    opts?: SrcOptions
+  },
+  overrideSettings: Omit<ts.Settings, 'outDir'>,
+  useCjsTransform = false,
+  tasks: {
+    name: string,
+    sourceRoots: string|string[],
+    output: string
+  }[]
+) {
+  const createdTasks: string[] = [];
+  for (const task of tasks) {
+    const taskName = `${taskNamePrefix}:${task.name}`;
+    gulp.task(
+      taskName,
+      gulpIsolateFactory(
+        {
+          sourceRoots: task.sourceRoots,
+          ...input
+        },
+        task.output,
+        overrideSettings,
+        useCjsTransform
+      )
+    );
+    createdTasks.push(taskName);
+  }
+  return createdTasks;
+}
+
+const cjsIsolateTasks = createIsolateTasks(
+  'cjs',
+  {
+    globs: 'src/**/*.ts',
+    opts: { base: 'src' }
+  },
+  {
+    target: 'ES5',
+    module: 'ES2015',
+    declaration: true
+  },
+  true,
+  [
     {
+      name: 'stack',
       sourceRoots: ['src/container/OtherContainer/Stack.ts'],
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
+      output: 'dist/isolate/cjs/stack'
     },
-    'dist/isolate/cjs/stack',
     {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
+      name: 'queue',
+      sourceRoots: ['src/container/OtherContainer/Queue.ts'],
+      output: 'dist/isolate/cjs/queue'
     },
-    true
-  )
-);
-
-gulp.task(
-  'cjs:deque',
-  gulpIsolateFactory(
     {
+      name: 'priority-queue',
+      sourceRoots: ['src/container/OtherContainer/PriorityQueue.ts'],
+      output: 'dist/isolate/cjs/priority-queue'
+    },
+    {
+      name: 'vector',
+      sourceRoots: ['src/container/SequentialContainer/Vector.ts'],
+      output: 'dist/isolate/cjs/vector'
+    },
+    {
+      name: 'link-list',
+      sourceRoots: ['src/container/SequentialContainer/LinkList.ts'],
+      output: 'dist/isolate/cjs/link-list'
+    },
+    {
+      name: 'deque',
       sourceRoots: ['src/container/SequentialContainer/Deque.ts'],
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
+      output: 'dist/isolate/cjs/deque'
     },
-    'dist/isolate/cjs/deque',
     {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
+      name: 'ordered-set',
+      sourceRoots: ['src/container/TreeContainer/OrderedSet.ts'],
+      output: 'dist/isolate/cjs/ordered-set'
     },
-    true
-  )
+    {
+      name: 'ordered-map',
+      sourceRoots: ['src/container/TreeContainer/OrderedMap.ts'],
+      output: 'dist/isolate/cjs/ordered-map'
+    },
+    {
+      name: 'hash-set',
+      sourceRoots: ['src/container/HashContainer/HashSet.ts'],
+      output: 'dist/isolate/cjs/hash-set'
+    },
+    {
+      name: 'hash-map',
+      sourceRoots: ['src/container/HashContainer/HashMap.ts'],
+      output: 'dist/isolate/cjs/hash-map'
+    }
+  ]
 );
 
-gulp.task(
-  'esm:stack',
-  gulpIsolateFactory(
+const esmIsolateTasks = createIsolateTasks(
+  'esm',
+  {
+    globs: 'src/**/*.ts',
+    opts: { base: 'src' }
+  },
+  {
+    target: 'ES5',
+    module: 'ES2015',
+    declaration: true
+  },
+  true,
+  [
     {
+      name: 'stack',
       sourceRoots: ['src/container/OtherContainer/Stack.ts'],
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
+      output: 'dist/isolate/esm/stack'
     },
-    'dist/isolate/esm/stack',
     {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
-    }
-  )
-);
-
-gulp.task(
-  'esm:deque',
-  gulpIsolateFactory(
+      name: 'queue',
+      sourceRoots: ['src/container/OtherContainer/Queue.ts'],
+      output: 'dist/isolate/esm/queue'
+    },
     {
+      name: 'priority-queue',
+      sourceRoots: ['src/container/OtherContainer/PriorityQueue.ts'],
+      output: 'dist/isolate/esm/priority-queue'
+    },
+    {
+      name: 'vector',
+      sourceRoots: ['src/container/SequentialContainer/Vector.ts'],
+      output: 'dist/isolate/esm/vector'
+    },
+    {
+      name: 'link-list',
+      sourceRoots: ['src/container/SequentialContainer/LinkList.ts'],
+      output: 'dist/isolate/esm/link-list'
+    },
+    {
+      name: 'deque',
       sourceRoots: ['src/container/SequentialContainer/Deque.ts'],
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
+      output: 'dist/isolate/esm/deque'
     },
-    'dist/isolate/esm/deque',
     {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
+      name: 'ordered-set',
+      sourceRoots: ['src/container/TreeContainer/OrderedSet.ts'],
+      output: 'dist/isolate/esm/ordered-set'
+    },
+    {
+      name: 'ordered-map',
+      sourceRoots: ['src/container/TreeContainer/OrderedMap.ts'],
+      output: 'dist/isolate/esm/ordered-map'
+    },
+    {
+      name: 'hash-set',
+      sourceRoots: ['src/container/HashContainer/HashSet.ts'],
+      output: 'dist/isolate/esm/hash-set'
+    },
+    {
+      name: 'hash-map',
+      sourceRoots: ['src/container/HashContainer/HashMap.ts'],
+      output: 'dist/isolate/esm/hash-map'
     }
-  )
+  ]
 );
 
-gulp.task('isolate', gulp.series('cjs:stack', 'cjs:deque', 'esm:stack', 'esm:deque'));
+gulp.task('isolate', gulp.series(...cjsIsolateTasks, ...esmIsolateTasks));
 
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
