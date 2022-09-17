@@ -193,9 +193,7 @@ export function gulpIsolateFactory(
 
           const customTransformers = overrideSettings?.getCustomTransformers?.(program);
           return {
-            before: [
-              ...customTransformers?.before ?? []
-            ],
+            before: customTransformers?.before,
             after: [
               ...treeShakerTransform.after,
               ...customTransformers?.after ?? []

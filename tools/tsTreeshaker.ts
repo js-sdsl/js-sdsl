@@ -57,16 +57,14 @@ export class DependencySolver {
     this.sourceRoots = sourceRoot instanceof Array ? sourceRoot : [sourceRoot];
     const projectPath = process.cwd();
     this.sourceRoots = this.sourceRoots
-      .map((sourceRoot) => path.resolve(projectPath, sourceRoot))
-      .map((sourceRoot) => this.normalizePath(sourceRoot));
+      .map((sourceRoot) => this.normalizePath(path.resolve(projectPath, sourceRoot)));
   }
   private normalizePath(fileName: string) {
     return path.normalize(fileName).replace(/\\/g, '/');
   }
   private getAbsolutePath(fileName: string, requestedModule: string) {
     const dirName = path.dirname(fileName);
-    const absolutePath = path.resolve(dirName, requestedModule);
-    return absolutePath;
+    return path.resolve(dirName, requestedModule);
   }
   private replaceExtension(fileName: string, extension: string) {
     const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
@@ -83,8 +81,7 @@ export class DependencySolver {
     if (this.baseUrl === undefined) throw new Error('baseUrl is undefined');
     if (this.outDir === undefined) throw new Error('outDir is undefined');
     const relativePath = path.relative(this.baseUrl, filePath);
-    const destinationPath = path.join(this.outDir, relativePath);
-    return destinationPath;
+    return path.join(this.outDir, relativePath);
   }
   setCompilerOptions(options: ts.CompilerOptions) {
     if (this.graph) {
@@ -95,8 +92,7 @@ export class DependencySolver {
     this.outDir ??= options.outDir || this.baseUrl;
 
     this.sourceRoots = this.sourceRoots
-      .map((sourceRoot) => this.convertToDestinationPath(sourceRoot))
-      .map((sourceRoot) => this.normalizePath(sourceRoot));
+      .map((sourceRoot) => this.normalizePath(this.convertToDestinationPath(sourceRoot)));
 
     const declarationRoots = [...this.sourceRoots]
       .map((sourceRoot) => this.replaceExtension(sourceRoot, '.d.ts'));
@@ -170,23 +166,6 @@ class TsUtils {
   }
 }
 
-export type transformerConfig = {
-  solver: DependencySolver;
-};
-
-export default function transformer(config: transformerConfig) {
-  return {
-    after: [(context: ts.TransformationContext) => {
-      config.solver.setCompilerOptions(context.getCompilerOptions());
-      return new TransformerBuilder(config.solver, '.js').make<ts.SourceFile>(context);
-    }],
-    afterDeclarations: [(context: ts.TransformationContext) => {
-      config.solver.setCompilerOptions(context.getCompilerOptions());
-      return new TransformerBuilder(config.solver, '.d.ts').make(context);
-    }]
-  };
-}
-
 class TransformerBuilder {
   private readonly dependencySolver: DependencySolver;
   private readonly extension: '.d.ts' | '.js';
@@ -255,4 +234,17 @@ class TransformerBuilder {
 
     return TsUtils.chainBundle(transformSourceFile);
   }
+}
+
+export default function transformer(config: { solver: DependencySolver; }) {
+  return {
+    after: [(context: ts.TransformationContext) => {
+      config.solver.setCompilerOptions(context.getCompilerOptions());
+      return new TransformerBuilder(config.solver, '.js').make<ts.SourceFile>(context);
+    }],
+    afterDeclarations: [(context: ts.TransformationContext) => {
+      config.solver.setCompilerOptions(context.getCompilerOptions());
+      return new TransformerBuilder(config.solver, '.d.ts').make(context);
+    }]
+  };
 }
