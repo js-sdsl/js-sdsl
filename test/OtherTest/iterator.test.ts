@@ -5,14 +5,7 @@ import {
   OrderedSet,
   OrderedMap,
   Container,
-  ContainerIterator,
-  VectorIterator,
-  LinkListIterator,
-  DequeIterator,
-  OrderedSetIterator,
-  OrderedMapIterator,
-  SequentialContainer,
-  TreeContainer
+  ContainerIterator
 } from '@/index';
 
 let arr: number[] = [];
@@ -147,49 +140,5 @@ describe('iterator test', () => {
       copy.pre();
       expect(iter.equals(copy)).toBe(true);
     }
-  });
-
-  test('export test', () => {
-    expect(() => {
-      // eslint-disable-next-line no-new
-      new VectorIterator<number>(0,
-        function () {
-          return 0;
-        }, function () {
-          return 0;
-        }, function () {
-          return 0;
-        });
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new Container();
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new ContainerIterator();
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new SequentialContainer();
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new TreeContainer();
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new LinkListIterator<number>(containerArr[0].begin().node);
-      // eslint-disable-next-line no-new
-      new DequeIterator<number>(0,
-        function () {
-          return 0;
-        }, function () {
-          return 0;
-        }, function () {
-          return 0;
-        });
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new OrderedSetIterator<number>(containerArr[3].begin().node, containerArr[3].header);
-      // @ts-ignore
-      // eslint-disable-next-line no-new
-      new OrderedMapIterator<number, number>(containerArr[4].begin().node, containerArr[4].header);
-    }).not.toThrowError(Error);
   });
 });

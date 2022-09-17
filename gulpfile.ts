@@ -12,8 +12,10 @@ import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
+import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
 import minifyPrivatesTransformer from 'ts-transformer-minify-privates';
+import ttypescript from 'ttypescript';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
@@ -64,13 +66,19 @@ function rollupStream(input: string) {
     context: 'this',
     plugins: [
       rollupTypescript({
+        typescript: ttypescript,
         tsconfigOverride: {
           compilerOptions: {
             target: 'ES5',
             module: 'ES2015',
-            declaration: false
+            declaration: true
           }
         }
+      }),
+      rollupBabel({
+        babelHelpers: 'bundled',
+        extensions: ['.ts', '.js'],
+        plugins: ['babel-plugin-remove-unused-import']
       })
     ]
   });
