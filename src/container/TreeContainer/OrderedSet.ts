@@ -17,8 +17,12 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
 }
 
 class OrderedSet<K> extends TreeContainer<K, undefined> {
-  constructor(container: initContainer<K> = [], cmp?: (x: K, y: K) => number) {
-    super(cmp);
+  constructor(
+    container: initContainer<K> = [],
+    cmp?: (x: K, y: K) => number,
+    enableIndex?: boolean
+  ) {
+    super(cmp, enableIndex);
     container.forEach((element) => this.insert(element));
     this.iterationFunc = this.iterationFunc.bind(this);
   }

@@ -85,9 +85,6 @@ class TreeNode<K, V> {
 
     if (R) R.parent = this;
 
-    this.recount();
-    V.recount();
-
     return V;
   }
   /**
@@ -110,9 +107,6 @@ class TreeNode<K, V> {
     this.left = K;
 
     if (K) K.parent = this;
-
-    this.recount();
-    F.recount();
 
     return F;
   }

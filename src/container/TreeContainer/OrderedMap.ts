@@ -29,8 +29,12 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
 }
 
 class OrderedMap<K, V> extends TreeContainer<K, V> {
-  constructor(container: initContainer<[K, V]> = [], cmp?: (x: K, y: K) => number) {
-    super(cmp);
+  constructor(
+    container: initContainer<[K, V]> = [],
+    cmp?: (x: K, y: K) => number,
+    enableIndex?: boolean
+  ) {
+    super(cmp, enableIndex);
     this.iterationFunc = this.iterationFunc.bind(this);
     container.forEach(([key, value]) => this.setElement(key, value));
   }

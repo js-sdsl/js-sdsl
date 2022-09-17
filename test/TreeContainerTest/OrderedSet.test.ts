@@ -150,7 +150,7 @@ describe('OrderedSet test', () => {
   });
 
   test('OrderedSet iterator index function test', () => {
-    const st = new OrderedSet<number>();
+    const st = new OrderedSet<number>(undefined, undefined, true);
     const v = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * 10000000;

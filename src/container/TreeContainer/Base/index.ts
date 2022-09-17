@@ -7,14 +7,80 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> | undefined = undefined;
   protected header: TreeNode<K, V> = new TreeNode<K, V>();
   protected cmp: (x: K, y: K) => number;
+  /**
+   * @description Whether node indexing is enabled.
+   */
+  private enableIndex: boolean;
+  /**
+   * @description Remove a node.
+   * @param curNode The node you want to remove.
+   * @protected
+   */
+  protected eraseNode: (curNode: TreeNode<K, V>) => void;
+  /**
+   * @description Insert a key-value pair or set value by the given key.
+   * @param key The key want to insert.
+   * @param value The value want to set.
+   * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @protected
+   */
+  protected set: (key: K, value: V, hint?: TreeIterator<K, V>) => void;
   protected constructor(cmp: (x: K, y: K) => number =
   (x: K, y: K) => {
     if (x < y) return -1;
     if (x > y) return 1;
     return 0;
-  }) {
+  }, enableIndex = false) {
     super();
     this.cmp = cmp;
+    this.enableIndex = enableIndex;
+    if (enableIndex) {
+      this.set = function (key, value, hint) {
+        const curNode = this._preSet(key, value, hint);
+        if (curNode) {
+          const rotateLeft = curNode.rotateLeft.bind(curNode);
+          curNode.rotateLeft = function () {
+            const parent = rotateLeft();
+            this.recount();
+            parent.recount();
+            return parent;
+          };
+          const rotateRight = curNode.rotateRight.bind(curNode);
+          curNode.rotateRight = function () {
+            const parent = rotateRight();
+            this.recount();
+            parent.recount();
+            return parent;
+          };
+          if (curNode === this.root) return;
+          let p = curNode.parent as TreeNode<K, V>;
+          while (p !== this.header) {
+            p.subTreeSize += 1;
+            p = p.parent as TreeNode<K, V>;
+          }
+          const nodeList = this._insertNodeSelfBalance(curNode);
+          if (nodeList) {
+            const { parentNode, grandParent, curNode } = nodeList;
+            parentNode.recount();
+            grandParent.recount();
+            curNode.recount();
+          }
+        }
+      };
+      this.eraseNode = function (curNode) {
+        let p = this._eraseNode(curNode);
+        while (p !== this.header) {
+          p.subTreeSize -= 1;
+          p = p.parent as TreeNode<K, V>;
+        }
+      };
+    } else {
+      this.set = function (key, value, hint) {
+        const curNode = this._preSet(key, value, hint);
+        if (curNode && curNode !== this.root) this._insertNodeSelfBalance(curNode);
+      };
+      this.eraseNode = this._eraseNode;
+    }
   }
   /**
    * @param curNode The starting node of the search.
@@ -126,9 +192,9 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @description Make self balance after erase a node.
    * @param curNode The node want to remove.
-   * @protected
+   * @private
    */
-  protected eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
+  private _eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode.parent as TreeNode<K, V>;
       if (parentNode === this.header) return;
@@ -191,15 +257,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       }
     }
   }
-  /**
-   * @description Remove a node.
-   * @param curNode The node you want to remove.
-   * @protected
-   */
-  protected eraseNode(curNode: TreeNode<K, V>) {
+  private _eraseNode(curNode: TreeNode<K, V>) {
     if (this.length === 1) {
       this.clear();
-      return;
+      return this.header;
     }
     let swapNode = curNode;
     while (swapNode.left || swapNode.right) {
@@ -218,18 +279,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     } else if (this.header.right === swapNode) {
       this.header.right = swapNode.parent;
     }
-    this.eraseNodeSelfBalance(swapNode);
-    let p = swapNode.parent as TreeNode<K, V>;
-    while (p !== this.header) {
-      p.subTreeSize -= 1;
-      p = p.parent as TreeNode<K, V>;
-    }
+    this._eraseNodeSelfBalance(swapNode);
     const parent = swapNode.parent as TreeNode<K, V>;
     if (swapNode === parent.left) {
       parent.left = undefined;
     } else parent.right = undefined;
     this.length -= 1;
     (this.root as TreeNode<K, V>).color = TreeNodeColor.BLACK;
+    return parent;
   }
   /**
    * @description InOrder traversal the tree.
@@ -244,12 +301,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         if (callback(curNode)) return true;
         return this.inOrderTraversal(curNode.right, callback);
       };
-  /**
-   * @description Make self balance after insert a node.
-   * @param curNode The node want to insert.
-   * @protected
-   */
-  protected insertNodeSelfBalance(curNode: TreeNode<K, V>) {
+  private _insertNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode.parent as TreeNode<K, V>;
       if (parentNode.color === TreeNodeColor.BLACK) return;
@@ -268,11 +320,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           if (curNode.right) curNode.right.parent = grandParent;
           parentNode.right = curNode.left;
           grandParent.left = curNode.right;
-          parentNode.recount();
-          grandParent.recount();
           curNode.left = parentNode;
           curNode.right = grandParent;
-          curNode.recount();
           if (grandParent === this.root) {
             this.root = curNode;
             this.header.parent = curNode;
@@ -285,13 +334,15 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           curNode.parent = grandParent.parent;
           parentNode.parent = curNode;
           grandParent.parent = curNode;
+          grandParent.color = TreeNodeColor.RED;
+          return { parentNode, grandParent, curNode };
         } else {
           parentNode.color = TreeNodeColor.BLACK;
           if (grandParent === this.root) {
             this.root = grandParent.rotateRight();
           } else grandParent.rotateRight();
+          grandParent.color = TreeNodeColor.RED;
         }
-        grandParent.color = TreeNodeColor.RED;
       } else {
         const uncle = grandParent.left;
         if (uncle && uncle.color === TreeNodeColor.RED) {
@@ -306,11 +357,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           if (curNode.right) curNode.right.parent = parentNode;
           grandParent.right = curNode.left;
           parentNode.left = curNode.right;
-          grandParent.recount();
-          parentNode.recount();
           curNode.left = grandParent;
           curNode.right = parentNode;
-          curNode.recount();
           if (grandParent === this.root) {
             this.root = curNode;
             this.header.parent = curNode;
@@ -323,25 +371,20 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           curNode.parent = grandParent.parent;
           parentNode.parent = curNode;
           grandParent.parent = curNode;
+          grandParent.color = TreeNodeColor.RED;
+          return { parentNode, grandParent, curNode };
         } else {
           parentNode.color = TreeNodeColor.BLACK;
           if (grandParent === this.root) {
             this.root = grandParent.rotateLeft();
           } else grandParent.rotateLeft();
+          grandParent.color = TreeNodeColor.RED;
         }
-        grandParent.color = TreeNodeColor.RED;
       }
       return;
     }
   }
-  /**
-   * @description Insert a key-value pair or set value by the given key.
-   * @param key The key want to insert.
-   * @param value The value want to set.
-   * @param hint You can give an iterator hint to improve insertion efficiency.
-   * @protected
-   */
-  protected set(key: K, value?: V, hint?: TreeIterator<K, V>) {
+  private _preSet(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this.root === undefined) {
       this.length += 1;
       this.root = new TreeNode<K, V>(key, value);
@@ -350,7 +393,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       this.header.parent = this.root;
       this.header.left = this.root;
       this.header.right = this.root;
-      return;
+      return this.root;
     }
     let curNode;
     const minNode = this.header.left as TreeNode<K, V>;
@@ -431,12 +474,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       }
     }
     this.length += 1;
-    let p = curNode.parent as TreeNode<K, V>;
-    while (p !== this.header) {
-      p.subTreeSize += 1;
-      p = p.parent as TreeNode<K, V>;
-    }
-    this.insertNodeSelfBalance(curNode);
+    return curNode;
   }
   clear() {
     this.length = 0;
