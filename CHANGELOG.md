@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnRelease] - 2022.09.17
+
+### Fixed
+
+- Fixed wrong iterator error message.
+
 ## [4.1.4] - 2022.09.07
 
 ### Added

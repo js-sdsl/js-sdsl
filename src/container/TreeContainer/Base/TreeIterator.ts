@@ -18,7 +18,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     if (this.iteratorType === ContainerIterator.NORMAL) {
       this.pre = function () {
         if (this.node === this.header.left) {
-          throw new RangeError('LinkList iterator access denied!');
+          throw new RangeError('Tree iterator access denied!');
         }
         this.node = this.node.pre();
         return this;
@@ -26,7 +26,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
 
       this.next = function () {
         if (this.node === this.header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throw new RangeError('Tree iterator access denied!');
         }
         this.node = this.node.next();
         return this;
@@ -34,7 +34,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     } else {
       this.pre = function () {
         if (this.node === this.header.right) {
-          throw new RangeError('LinkList iterator access denied!');
+          throw new RangeError('Tree iterator access denied!');
         }
         this.node = this.node.next();
         return this;
@@ -42,7 +42,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
 
       this.next = function () {
         if (this.node === this.header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throw new RangeError('Tree iterator access denied!');
         }
         this.node = this.node.pre();
         return this;
