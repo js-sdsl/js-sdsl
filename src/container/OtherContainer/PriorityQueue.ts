@@ -27,47 +27,26 @@ class PriorityQueue<T> extends Base {
       container.forEach(element => this.priorityQueue.push(element));
     }
     this.length = this.priorityQueue.length;
+    const halfLength = this.length >> 1;
     for (let parent = (this.length - 1) >> 1; parent >= 0; --parent) {
       let curParent = parent;
-      let curChild = (curParent << 1) | 1;
-      while (curChild < this.length) {
-        const left = curChild;
+      const item = this.priorityQueue[curParent];
+      while (curParent < halfLength) {
+        let left = curParent << 1 | 1;
         const right = left + 1;
-        let minChild = left;
+        let minItem = this.priorityQueue[left];
         if (
           right < this.length &&
-          this.cmp(this.priorityQueue[left], this.priorityQueue[right]) > 0
+          this.cmp(minItem, this.priorityQueue[right]) > 0
         ) {
-          minChild = right;
+          left = right;
+          minItem = this.priorityQueue[right];
         }
-        if (this.cmp(this.priorityQueue[curParent], this.priorityQueue[minChild]) <= 0) break;
-        [this.priorityQueue[curParent], this.priorityQueue[minChild]] =
-          [this.priorityQueue[minChild], this.priorityQueue[curParent]];
-        curParent = minChild;
-        curChild = (curParent << 1) | 1;
+        if (this.cmp(minItem, item) >= 0) break;
+        this.priorityQueue[curParent] = minItem;
+        curParent = left;
       }
-    }
-  }
-  /**
-   * @description Adjusting parent's children to suit the nature of the heap.
-   * @param parent Parent's index.
-   * @private
-   */
-  private adjust(parent: number) {
-    const left = (parent << 1) | 1;
-    const right = (parent << 1) + 2;
-    if (
-      left < this.length &&
-      this.cmp(this.priorityQueue[parent], this.priorityQueue[left]) > 0
-    ) {
-      [this.priorityQueue[parent], this.priorityQueue[left]] =
-        [this.priorityQueue[left], this.priorityQueue[parent]];
-    }
-    if (right < this.length &&
-      this.cmp(this.priorityQueue[parent], this.priorityQueue[right]) > 0
-    ) {
-      [this.priorityQueue[parent], this.priorityQueue[right]] =
-        [this.priorityQueue[right], this.priorityQueue[parent]];
+      this.priorityQueue[curParent] = item;
     }
   }
   clear() {
@@ -79,42 +58,45 @@ class PriorityQueue<T> extends Base {
    * @param element The element you want to push.
    */
   push(element: T) {
-    this.priorityQueue.push(element);
+    let curNode = this.length;
     this.length += 1;
-    if (this.length === 1) return;
-    let curNode = this.length - 1;
+    this.priorityQueue.push(element);
     while (curNode > 0) {
       const parent = (curNode - 1) >> 1;
-      if (this.cmp(this.priorityQueue[parent], element) <= 0) break;
-      this.adjust(parent);
+      const parentItem = this.priorityQueue[parent];
+      if (this.cmp(parentItem, element) <= 0) break;
+      this.priorityQueue[curNode] = parentItem;
       curNode = parent;
     }
+    this.priorityQueue[curNode] = element;
   }
   /**
    * @description Removes the top element.
    */
   pop() {
     if (!this.length) return;
-    const last = this.priorityQueue[this.length - 1];
+    const last = this.priorityQueue.pop() as T;
     this.length -= 1;
+    if (!this.length) return;
     let parent = 0;
-    while (parent < this.length) {
-      const left = (parent << 1) | 1;
-      const right = (parent << 1) + 2;
-      if (left >= this.length) break;
-      let minChild = left;
+    const halfLength = this.length >> 1;
+    while (parent < halfLength) {
+      let left = parent << 1 | 1;
+      const right = left + 1;
+      let minItem = this.priorityQueue[left];
+      const rightItem = this.priorityQueue[right];
       if (
         right < this.length &&
-        this.cmp(this.priorityQueue[left], this.priorityQueue[right]) > 0
+        this.cmp(minItem, rightItem) > 0
       ) {
-        minChild = right;
+        left = right;
+        minItem = rightItem;
       }
-      if (this.cmp(this.priorityQueue[minChild], last) >= 0) break;
-      this.priorityQueue[parent] = this.priorityQueue[minChild];
-      parent = minChild;
+      if (this.cmp(minItem, last) >= 0) break;
+      this.priorityQueue[parent] = minItem;
+      parent = left;
     }
     this.priorityQueue[parent] = last;
-    this.priorityQueue.pop();
   }
   /**
    * @description Accesses the top element.
