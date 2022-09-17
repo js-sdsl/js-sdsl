@@ -39,7 +39,7 @@ We are benchmarking against other popular data structure libraries. In some ways
 
 ## Supported platforms
 
-- node.js (using commonjs)
+- node.js (using es6)
 - react/vue (using es5)
 - browser (support most browsers)
 
@@ -65,7 +65,6 @@ To help you have a better use, we also provide this [API document](https://js-sd
 ### For browser
 
 ```html
-<!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"></script>
 <script>
     const {
