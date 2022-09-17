@@ -39,23 +39,29 @@ class DependencyGraph {
     this.computeDependencies();
     return [...this.includedDependencies];
   }
+  isIncludedDependency(path: string) {
+    this.computeDependencies();
+    return this.includedDependencies.has(path);
+  }
 }
 
 export class DependencySolver {
   private sourceRoots: readonly string[];
+  private forceIncludeFiles?: string[];
   private baseUrl?: string;
   private outDir?: string;
   private graph?: DependencyGraph;
   constructor(
     sourceRoot: string | readonly string[],
-    options?: { baseUrl?: string; outDir?: string }) {
+    options?: { baseUrl?: string; outDir?: string }
+  ) {
     if (options !== undefined) {
       this.baseUrl = options.baseUrl;
       this.outDir = options.outDir;
     }
 
-    this.sourceRoots = sourceRoot instanceof Array ? sourceRoot : [sourceRoot];
     const projectPath = process.cwd();
+    this.sourceRoots = sourceRoot instanceof Array ? sourceRoot : [sourceRoot];
     this.sourceRoots = this.sourceRoots
       .map((sourceRoot) => this.normalizePath(path.resolve(projectPath, sourceRoot)));
   }
@@ -102,6 +108,21 @@ export class DependencySolver {
 
     this.graph = new DependencyGraph([...declarationRoots, ...jsRoots]);
   }
+  setForceIncludeFiles(...files: string[]) {
+    if (this.graph === undefined) throw new Error('graph is undefined');
+
+    const projectPath = process.cwd();
+    files = files.map((file) =>
+      this.normalizePath(
+        this.convertToDestinationPath(path.resolve(projectPath, file))
+      )
+    );
+
+    this.forceIncludeFiles = [
+      ...files.map((file) => this.replaceExtension(file, '.d.ts')),
+      ...files.map((file) => this.replaceExtension(file, '.js'))
+    ];
+  }
   addNode(filePath: string, requestedModule: string, extension: '.d.ts' | '.js') {
     if (this.graph === undefined) throw new Error('graph is undefined');
 
@@ -120,7 +141,26 @@ export class DependencySolver {
   }
   getIncludedDependencies() {
     if (this.graph === undefined) throw new Error('graph is undefined');
+
+    if (this.forceIncludeFiles !== undefined) {
+      return [
+        ...this.graph.getIncludedDependencies(),
+        ...this.forceIncludeFiles
+      ];
+    }
     return this.graph.getIncludedDependencies();
+  }
+  isIncludedDependency(filePath: string, basePath?: string) {
+    if (this.graph === undefined) throw new Error('graph is undefined');
+
+    if (basePath !== undefined) {
+      filePath = this.getAbsolutePath(basePath, filePath);
+    }
+
+    filePath = this.convertToDestinationPath(filePath);
+    filePath = this.normalizePath(filePath);
+
+    return this.graph.isIncludedDependency(filePath);
   }
 }
 
@@ -168,12 +208,14 @@ class TsUtils {
 
 class TransformerBuilder {
   private readonly dependencySolver: DependencySolver;
+  private readonly indexFile?: string;
   private readonly extension: '.d.ts' | '.js';
-  constructor(dependencySolver: DependencySolver, extension: '.d.ts' | '.js') {
-    this.dependencySolver = dependencySolver;
+  constructor(config: transformerConfig, extension: '.d.ts' | '.js') {
+    this.dependencySolver = config.solver;
+    if (config.indexFile) this.indexFile = path.resolve(process.cwd(), config.indexFile);
     this.extension = extension;
   }
-  make<T extends ts.Bundle | ts.SourceFile>(
+  makeGraphBuilder<T extends ts.Bundle | ts.SourceFile>(
     context: ts.TransformationContext
   ): ts.Transformer<T> {
     const transformSourceFile = (sourceFile: ts.SourceFile) => {
@@ -234,17 +276,117 @@ class TransformerBuilder {
 
     return TsUtils.chainBundle(transformSourceFile);
   }
+  makeIndexTransformer<T extends ts.Bundle | ts.SourceFile>(
+    context: ts.TransformationContext
+  ): ts.Transformer<T> {
+    if (this.indexFile === undefined) {
+      return (x) => x;
+    }
+
+    const transformSourceFile = (sourceFile: ts.SourceFile) => {
+      if (path.resolve(sourceFile.fileName) !== this.indexFile) {
+        return sourceFile;
+      }
+
+      const usedImportExports = new Set<ts.ImportDeclaration | ts.ExportDeclaration>();
+
+      const visitor = (node: ts.Node): ts.Node => {
+        /**
+         * e.g.
+         * - import * as x from 'path';
+         * - import { x } from 'path';
+         */
+        if (
+          ts.isImportDeclaration(node) &&
+          ts.isStringLiteral(node.moduleSpecifier)
+        ) {
+          const importNode = node;
+          const importVisitor = (node: ts.Node): ts.Node => {
+            if (ts.isStringLiteral(node)) {
+              const filePath = node.text + this.extension;
+              if (this.dependencySolver.isIncludedDependency(filePath, sourceFile.fileName)) {
+                usedImportExports.add(importNode);
+              }
+            }
+            return ts.visitEachChild(node, importVisitor, context);
+          };
+
+          return ts.visitEachChild(node, importVisitor, context);
+        }
+
+        /**
+         * e.g.
+         * - export { x } from 'path';
+         */
+        if (
+          ts.isExportDeclaration(node) &&
+          node.moduleSpecifier &&
+          ts.isStringLiteral(node.moduleSpecifier)
+        ) {
+          const exportNode = node;
+          const importVisitor = (node: ts.Node): ts.Node => {
+            if (ts.isStringLiteral(node)) {
+              const filePath = node.text + this.extension;
+              if (this.dependencySolver.isIncludedDependency(filePath, sourceFile.fileName)) {
+                usedImportExports.add(exportNode);
+              }
+            }
+            return ts.visitEachChild(node, importVisitor, context);
+          };
+
+          return ts.visitEachChild(node, importVisitor, context);
+        }
+
+        return ts.visitEachChild(node, visitor, context);
+      };
+
+      ts.visitEachChild(sourceFile, visitor, context);
+
+      const filteredChildren = sourceFile.statements.filter((node) => {
+        if (ts.isImportDeclaration(node)) {
+          return usedImportExports.has(node);
+        } else if (ts.isExportDeclaration(node)) {
+          return usedImportExports.has(node);
+        }
+        return true;
+      });
+
+      return factory.updateSourceFile(sourceFile, filteredChildren);
+    };
+
+    return TsUtils.chainBundle(transformSourceFile);
+  }
 }
 
-export default function transformer(config: { solver: DependencySolver; }) {
+export type transformerConfig = {
+  solver: DependencySolver;
+  indexFile?: string;
+}
+
+export default function transformer(config: transformerConfig) {
+  const jsTransformerBuilder = new TransformerBuilder(config, '.js');
+  const dtsTransformerBuilder = new TransformerBuilder(config, '.d.ts');
+
   return {
-    after: [(context: ts.TransformationContext) => {
-      config.solver.setCompilerOptions(context.getCompilerOptions());
-      return new TransformerBuilder(config.solver, '.js').make<ts.SourceFile>(context);
-    }],
-    afterDeclarations: [(context: ts.TransformationContext) => {
-      config.solver.setCompilerOptions(context.getCompilerOptions());
-      return new TransformerBuilder(config.solver, '.d.ts').make(context);
-    }]
+    after: [
+      (context: ts.TransformationContext) => {
+        config.solver.setCompilerOptions(context.getCompilerOptions());
+        return jsTransformerBuilder.makeGraphBuilder<ts.SourceFile>(context);
+      },
+      (context: ts.TransformationContext) => {
+        if (config.indexFile) config.solver.setForceIncludeFiles(config.indexFile);
+        return jsTransformerBuilder.makeIndexTransformer<ts.SourceFile>(context);
+      }
+    ],
+    afterDeclarations: [
+      (context: ts.TransformationContext) => {
+        config.solver.setCompilerOptions(context.getCompilerOptions());
+        return dtsTransformerBuilder.makeGraphBuilder(context);
+      },
+      (context: ts.TransformationContext) => {
+        if (config.indexFile) config.solver.setForceIncludeFiles(config.indexFile);
+        return dtsTransformerBuilder.makeIndexTransformer(context);
+      }
+    ]
   };
 }

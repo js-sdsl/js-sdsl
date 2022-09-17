@@ -170,6 +170,7 @@ export function gulpUmdMinFactory(input: string, output: string) {
 export function gulpIsolateFactory(
   input: {
     sourceRoots: string|string[],
+    indexFile: string,
     globs: string | string[],
     opts?: SrcOptions
   },
@@ -189,7 +190,10 @@ export function gulpIsolateFactory(
       {
         ...overrideSettings,
         getCustomTransformers: (program?: Program) => {
-          const treeShakerTransform = tsTreeshaker({ solver: dependencySolver });
+          const treeShakerTransform = tsTreeshaker({
+            solver: dependencySolver,
+            indexFile: input.indexFile
+          });
 
           const customTransformers = overrideSettings?.getCustomTransformers?.(program);
           return {
