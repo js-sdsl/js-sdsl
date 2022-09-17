@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h3><p align="center">一个参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
+<h3><p align="center">一款参考 C++ STL 实现的 JavaScript 标准数据结构库</p></h3>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM Version" /></a>
@@ -33,7 +33,7 @@
 - HashSet
 - HashMap
 
-## Benchmark
+## 基准测试
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
@@ -41,7 +41,7 @@
 
 ## 支持的平台
 
-- node.js (using commonjs)
+- node.js (using es6)
 - react/vue (using es5)
 - browser (support most browsers)
 
@@ -67,7 +67,6 @@ npm install js-sdsl
 ### 在浏览器中使用
 
 ```html
-<!-- you can download the file locally and import it or import it dynamically by using url. -->
 <script src="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"></script>
 <script>
     const { 
@@ -132,13 +131,17 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
-  <tr>
-    <td align="center"><a href="https://www.linkedin.com/in/takatoshi-kondo-02a91410/"><img src="https://avatars.githubusercontent.com/u/275959?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Takatoshi Kondo</b></sub></a><br /><a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Code">💻</a> <a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Tests">⚠️</a></td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://www.linkedin.com/in/takatoshi-kondo-02a91410/"><img src="https://avatars.githubusercontent.com/u/275959?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Takatoshi Kondo</b></sub></a><br /><a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Code">💻</a> <a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Tests">⚠️</a></td>
+      <td align="center"><a href="https://www.youtube.com/c/noname0310"><img src="https://avatars.githubusercontent.com/u/48761044?v=4?s=100" width="100px;" alt=""/><br /><sub><b>noname</b></sub></a><br /><a href="https://github.com/js-sdsl/js-sdsl/commits?author=noname0310" title="Code">💻</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。 欢迎任何形式的贡献！
