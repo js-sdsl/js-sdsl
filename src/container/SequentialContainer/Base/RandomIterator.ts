@@ -23,14 +23,14 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this.node === 0) {
-          throw new RangeError('Deque iterator access denied!');
+          throw new RangeError('Random iterator access denied!');
         }
         this.node -= 1;
         return this;
       };
       this.next = function () {
         if (this.node === this.size()) {
-          throw new RangeError('Deque Iterator access denied!');
+          throw new RangeError('Random Iterator access denied!');
         }
         this.node += 1;
         return this;
@@ -38,14 +38,14 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     } else {
       this.pre = function () {
         if (this.node === this.size() - 1) {
-          throw new RangeError('Deque iterator access denied!');
+          throw new RangeError('Random iterator access denied!');
         }
         this.node += 1;
         return this;
       };
       this.next = function () {
         if (this.node === -1) {
-          throw new RangeError('Deque iterator access denied!');
+          throw new RangeError('Random iterator access denied!');
         }
         this.node -= 1;
         return this;

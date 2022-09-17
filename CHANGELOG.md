@@ -16,6 +16,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - The type of `TreeNode.color` is now changed from `boolean` to `TreeNodeColor` const enum.
 - Turn some member exports into export-only types.
 
+### Fixed
+
+- Fixed wrong iterator error message.
+
 ## [4.1.4] - 2022.09.07
 
 ### Added
