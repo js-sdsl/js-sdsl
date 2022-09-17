@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.09.11
+## [UnReleased] - 2022.09.17
 
 ### Changed
 
@@ -14,6 +14,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Constants of `HashContainer` are moved to `HashContainerConst` const enum.
 - The iteratorType parameter in the constructor now changed from `boolean` type to `IteratorType` const enum type.
 - The type of `TreeNode.color` is now changed from `boolean` to `TreeNodeColor` const enum.
+- Turn some member exports into export-only types.
 
 ## [4.1.4] - 2022.09.07
 
