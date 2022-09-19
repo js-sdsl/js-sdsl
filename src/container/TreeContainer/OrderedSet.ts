@@ -2,7 +2,7 @@ import TreeContainer from './Base/index';
 import { initContainer, IteratorType } from '@/container/ContainerBase/index';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import TreeIterator from './Base/TreeIterator';
-import TreeNode from './Base/TreeNode';
+import { TreeNode } from './Base/TreeNode';
 
 export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   get pointer() {

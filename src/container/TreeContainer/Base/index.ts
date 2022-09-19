@@ -1,12 +1,13 @@
-import TreeNode, { TreeNodeColor } from './TreeNode';
-import TreeIterator from './TreeIterator';
+import type TreeIterator from './TreeIterator';
 import { Container } from '@/container/ContainerBase/index';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected root: TreeNode<K, V> | undefined = undefined;
-  protected header: TreeNode<K, V> = new TreeNode<K, V>();
+  protected header: TreeNode<K, V>;
   protected cmp: (x: K, y: K) => number;
+  TreeNodeClass: typeof TreeNode | typeof TreeNodeEnableIndex;
   /**
    * @description Whether node indexing is enabled.
    */
@@ -25,42 +26,35 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @protected
    */
   protected set: (key: K, value: V, hint?: TreeIterator<K, V>) => void;
-  protected constructor(cmp: (x: K, y: K) => number =
-  (x: K, y: K) => {
-    if (x < y) return -1;
-    if (x > y) return 1;
-    return 0;
-  }, enableIndex = false) {
+  protected constructor(
+    cmp: (x: K, y: K) => number =
+    (x: K, y: K) => {
+      if (x < y) return -1;
+      if (x > y) return 1;
+      return 0;
+    },
+    enableIndex = false
+  ) {
     super();
     this.cmp = cmp;
     this.enableIndex = enableIndex;
     if (enableIndex) {
+      this.TreeNodeClass = TreeNodeEnableIndex;
       this.set = function (key, value, hint) {
         const curNode = this._preSet(key, value, hint);
         if (curNode) {
-          const rotateLeft = curNode.rotateLeft.bind(curNode);
-          curNode.rotateLeft = function () {
-            const parent = rotateLeft();
-            this.recount();
-            parent.recount();
-            return parent;
-          };
-          const rotateRight = curNode.rotateRight.bind(curNode);
-          curNode.rotateRight = function () {
-            const parent = rotateRight();
-            this.recount();
-            parent.recount();
-            return parent;
-          };
-          if (curNode === this.root) return;
-          let p = curNode.parent as TreeNode<K, V>;
+          let p = curNode.parent as TreeNodeEnableIndex<K, V>;
           while (p !== this.header) {
             p.subTreeSize += 1;
-            p = p.parent as TreeNode<K, V>;
+            p = p.parent as TreeNodeEnableIndex<K, V>;
           }
           const nodeList = this._insertNodeSelfBalance(curNode);
           if (nodeList) {
-            const { parentNode, grandParent, curNode } = nodeList;
+            const {
+              parentNode,
+              grandParent,
+              curNode
+            } = nodeList as unknown as Record<string, TreeNodeEnableIndex<K, V>>;
             parentNode.recount();
             grandParent.recount();
             curNode.recount();
@@ -68,19 +62,21 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         }
       };
       this.eraseNode = function (curNode) {
-        let p = this._eraseNode(curNode);
+        let p = this._eraseNode(curNode) as TreeNodeEnableIndex<K, V>;
         while (p !== this.header) {
           p.subTreeSize -= 1;
-          p = p.parent as TreeNode<K, V>;
+          p = p.parent as TreeNodeEnableIndex<K, V>;
         }
       };
     } else {
+      this.TreeNodeClass = TreeNode;
       this.set = function (key, value, hint) {
         const curNode = this._preSet(key, value, hint);
         if (curNode && curNode !== this.root) this._insertNodeSelfBalance(curNode);
       };
       this.eraseNode = this._eraseNode;
     }
+    this.header = new this.TreeNodeClass<K, V>();
   }
   /**
    * @param curNode The starting node of the search.
@@ -387,13 +383,13 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   private _preSet(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this.root === undefined) {
       this.length += 1;
-      this.root = new TreeNode<K, V>(key, value);
+      this.root = new this.TreeNodeClass<K, V>(key, value);
       this.root.color = TreeNodeColor.BLACK;
       this.root.parent = this.header;
       this.header.parent = this.root;
       this.header.left = this.root;
       this.header.right = this.root;
-      return this.root;
+      return;
     }
     let curNode;
     const minNode = this.header.left as TreeNode<K, V>;
@@ -402,7 +398,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       minNode.value = value;
       return;
     } else if (compareToMin > 0) {
-      minNode.left = new TreeNode(key, value);
+      minNode.left = new this.TreeNodeClass(key, value);
       minNode.left.parent = minNode;
       curNode = minNode.left;
       this.header.left = curNode;
@@ -413,7 +409,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         maxNode.value = value;
         return;
       } else if (compareToMax < 0) {
-        maxNode.right = new TreeNode<K, V>(key, value);
+        maxNode.right = new this.TreeNodeClass<K, V>(key, value);
         maxNode.right.parent = maxNode;
         curNode = maxNode.right;
         this.header.right = curNode;
@@ -433,7 +429,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
                 preNode.value = value;
                 return;
               } else if (preCmpRes < 0) {
-                curNode = new TreeNode(key, value);
+                curNode = new this.TreeNodeClass(key, value);
                 if (preNode.right === undefined) {
                   preNode.right = curNode;
                   curNode.parent = preNode;
@@ -451,7 +447,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
             const cmpResult = this.cmp(curNode.key as K, key);
             if (cmpResult > 0) {
               if (curNode.left === undefined) {
-                curNode.left = new TreeNode<K, V>(key, value);
+                curNode.left = new this.TreeNodeClass<K, V>(key, value);
                 curNode.left.parent = curNode;
                 curNode = curNode.left;
                 break;
@@ -459,7 +455,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               curNode = curNode.left;
             } else if (cmpResult < 0) {
               if (curNode.right === undefined) {
-                curNode.right = new TreeNode<K, V>(key, value);
+                curNode.right = new this.TreeNodeClass<K, V>(key, value);
                 curNode.right.parent = curNode;
                 curNode = curNode.right;
                 break;

@@ -1,4 +1,5 @@
-import TreeNode from './TreeNode';
+import { TreeNode } from './TreeNode';
+import type { TreeNodeEnableIndex } from './TreeNode';
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase/index';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
@@ -53,20 +54,20 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     let node = this.node;
     if (node === this.header) {
       if (this.header.parent) {
-        return this.header.parent.subTreeSize - 1;
+        return (this.header.parent as TreeNodeEnableIndex<K, V>).subTreeSize - 1;
       }
       return 0;
     }
     let index = 0;
     if (node.left) {
-      index += node.left.subTreeSize;
+      index += (node.left as TreeNodeEnableIndex<K, V>).subTreeSize;
     }
     while (node !== this.header) {
       const parent = node.parent as TreeNode<K, V>;
       if (node === parent.right) {
         index += 1;
         if (parent.left) {
-          index += parent.left.subTreeSize;
+          index += (parent.left as TreeNodeEnableIndex<K, V>).subTreeSize;
         }
       }
       node = parent;
