@@ -9,10 +9,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected cmp: (x: K, y: K) => number;
   TreeNodeClass: typeof TreeNode | typeof TreeNodeEnableIndex;
   /**
-   * @description Whether node indexing is enabled.
-   */
-  private enableIndex: boolean;
-  /**
    * @description Remove a node.
    * @param curNode The node you want to remove.
    * @protected
@@ -37,7 +33,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   ) {
     super();
     this.cmp = cmp;
-    this.enableIndex = enableIndex;
     if (enableIndex) {
       this.TreeNodeClass = TreeNodeEnableIndex;
       this.set = function (key, value, hint) {
