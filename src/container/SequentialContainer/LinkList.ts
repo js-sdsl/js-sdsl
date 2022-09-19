@@ -1,6 +1,6 @@
-import SequentialContainer from './Base/index';
+import SequentialContainer from './Base';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase/index';
+import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase';
 
 export class LinkNode<T> {
   value: T | undefined = undefined;

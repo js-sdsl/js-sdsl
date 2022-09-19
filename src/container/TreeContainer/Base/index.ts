@@ -1,5 +1,5 @@
 import type TreeIterator from './TreeIterator';
-import { Container } from '@/container/ContainerBase/index';
+import { Container } from '@/container/ContainerBase';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
 
