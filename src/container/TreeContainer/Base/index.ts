@@ -67,7 +67,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       this.TreeNodeClass = TreeNode;
       this.set = function (key, value, hint) {
         const curNode = this._preSet(key, value, hint);
-        if (curNode && curNode !== this.root) this._insertNodeSelfBalance(curNode);
+        if (curNode) this._insertNodeSelfBalance(curNode);
       };
       this.eraseNode = this._eraseNode;
     }
