@@ -2,10 +2,22 @@ import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
+  /**
+   * @internal
+   */
   protected node: number;
-  protected readonly size: () => number;
-  protected readonly getElementByPos: (pos: number) => T;
-  protected readonly setElementByPos: (pos: number, element: T) => void;
+  /**
+   * @internal
+   */
+  protected readonly _size: () => number;
+  /**
+   * @internal
+   */
+  protected readonly _getElementByPos: (pos: number) => T;
+  /**
+   * @internal
+   */
+  protected readonly _setElementByPos: (pos: number, element: T) => void;
   pre: () => this;
   next: () => this;
   constructor(
@@ -17,9 +29,9 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
   ) {
     super(iteratorType);
     this.node = index;
-    this.size = size;
-    this.getElementByPos = getElementByPos;
-    this.setElementByPos = setElementByPos;
+    this._size = size;
+    this._getElementByPos = getElementByPos;
+    this._setElementByPos = setElementByPos;
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this.node === 0) {
@@ -29,7 +41,7 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
         return this;
       };
       this.next = function () {
-        if (this.node === this.size()) {
+        if (this.node === this._size()) {
           throw new RangeError('Random Iterator access denied!');
         }
         this.node += 1;
@@ -37,7 +49,7 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
       };
     } else {
       this.pre = function () {
-        if (this.node === this.size() - 1) {
+        if (this.node === this._size() - 1) {
           throw new RangeError('Random iterator access denied!');
         }
         this.node += 1;
@@ -53,12 +65,12 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     }
   }
   get pointer() {
-    $checkWithinAccessParams!(this.node, 0, this.size() - 1);
-    return this.getElementByPos(this.node);
+    $checkWithinAccessParams!(this.node, 0, this._size() - 1);
+    return this._getElementByPos(this.node);
   }
   set pointer(newValue: T) {
-    $checkWithinAccessParams!(this.node, 0, this.size() - 1);
-    this.setElementByPos(this.node, newValue);
+    $checkWithinAccessParams!(this.node, 0, this._size() - 1);
+    this._setElementByPos(this.node, newValue);
   }
   equals(obj: RandomIterator<T>) {
     return this.node === obj.node;

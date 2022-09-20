@@ -48,7 +48,7 @@ function terserStream() {
       keep_fnames: true,
       keep_classnames: true,
       properties: {
-        regex: /^_private_/
+        regex: /^_/
       }
     },
     nameCache: {}
@@ -152,7 +152,7 @@ gulp.task(
 );
 
 gulp.task(
-  'performanceTest',
+  'performance',
   () => gulpFactory(
     {
       globs: [
