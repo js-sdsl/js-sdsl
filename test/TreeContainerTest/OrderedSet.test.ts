@@ -149,9 +149,37 @@ describe('OrderedSet test', () => {
     }
   });
 
+  test('OrderedSet iterator index function test', () => {
+    const st = new OrderedSet<number>(undefined, undefined, true);
+    const v = new Vector<number>();
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random() * 10000000;
+      st.insert(random);
+      v.pushBack(random);
+    }
+    v.sort((x, y) => x - y);
+    for (let i = 0; i < testNum; ++i) {
+      expect(st.lowerBound(v.getElementByPos(i)).index).toEqual(i);
+    }
+    expect(st.end().index).toEqual(st.size() - 1);
+
+    v.forEach(element => {
+      if (Math.random() > 0.5) {
+        st.eraseElementByKey(element);
+      }
+    });
+
+    st.forEach((element, index) => {
+      expect(st.lowerBound(element).index).toBe(index);
+    });
+
+    expect(st.end().index).toEqual(st.size() - 1);
+  });
+
   test('OrderedSet insert by hint function test', () => {
     const st = new OrderedSet<number>();
     const v = new Vector<number>();
+    expect(st.begin().index).toEqual(0);
     for (let i = 0; i < testNum; ++i) {
       st.insert(i * 3);
       v.pushBack(i * 3);

@@ -3,7 +3,7 @@ export const enum TreeNodeColor {
   BLACK = 0
 }
 
-class TreeNode<K, V> {
+export class TreeNode<K, V> {
   color = TreeNodeColor.RED;
   key: K | undefined = undefined;
   value: V | undefined = undefined;
@@ -87,7 +87,7 @@ class TreeNode<K, V> {
     return V;
   }
   /**
-   * @description Rotate left.
+   * @description Rotate right.
    * @return TreeNode about moved to original position after rotation.
    */
   rotateRight() {
@@ -109,15 +109,36 @@ class TreeNode<K, V> {
 
     return F;
   }
-  /**
-   * @description Remove this.
-   */
-  remove() {
-    const parent = this.parent as TreeNode<K, V>;
-    if (this === parent.left) {
-      parent.left = undefined;
-    } else parent.right = undefined;
-  }
 }
 
-export default TreeNode;
+export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
+  left: TreeNodeEnableIndex<K, V> | undefined = undefined;
+  right: TreeNodeEnableIndex<K, V> | undefined = undefined;
+  parent: TreeNodeEnableIndex<K, V> | undefined = undefined;
+  subTreeSize = 1;
+  /**
+   * @description Rotate left and do recount.
+   * @return TreeNode about moved to original position after rotation.
+   */
+  rotateLeft() {
+    const parent = super.rotateLeft() as TreeNodeEnableIndex<K, V>;
+    this.recount();
+    parent.recount();
+    return parent;
+  }
+  /**
+   * @description Rotate right and do recount.
+   * @return TreeNode about moved to original position after rotation.
+   */
+  rotateRight(): TreeNode<K, V> {
+    const parent = super.rotateRight() as TreeNodeEnableIndex<K, V>;
+    this.recount();
+    parent.recount();
+    return parent;
+  }
+  recount() {
+    this.subTreeSize = 1;
+    if (this.left) this.subTreeSize += this.left.subTreeSize;
+    if (this.right) this.subTreeSize += this.right.subTreeSize;
+  }
+}

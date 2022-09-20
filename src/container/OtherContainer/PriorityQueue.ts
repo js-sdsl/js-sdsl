@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/container/ContainerBase/index';
+import { Base, initContainer } from '@/container/ContainerBase';
 
 class PriorityQueue<T> extends Base {
   private readonly priorityQueue: T[];
@@ -17,7 +17,9 @@ class PriorityQueue<T> extends Base {
       if (x > y) return -1;
       if (x < y) return 1;
       return 0;
-    }, copy = true) {
+    },
+    copy = true
+  ) {
     super();
     this.cmp = cmp;
     if (Array.isArray(container)) {

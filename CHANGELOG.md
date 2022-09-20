@@ -6,6 +6,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [UnReleased] - 2022.09.17
 
+### Added
+
+- Add `index` property to tree iterator which represents the sequential index of the iterator in the tree.
+
 ### Changed
 
 - Minimal optimization with private properties mangling, macro inlining and const enum.

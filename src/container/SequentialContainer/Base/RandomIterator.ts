@@ -1,5 +1,5 @@
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { ContainerIterator, IteratorType } from '@/container/ContainerBase/index';
+import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   protected node: number;
