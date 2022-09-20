@@ -1,8 +1,8 @@
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import TreeContainer from './Base/index';
+import TreeContainer from './Base';
+import { TreeNode } from './Base/TreeNode';
 import TreeIterator from './Base/TreeIterator';
-import TreeNode from './Base/TreeNode';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { initContainer, IteratorType } from '@/container/ContainerBase';
 
 export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   get pointer() {
@@ -29,8 +29,12 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
 }
 
 class OrderedMap<K, V> extends TreeContainer<K, V> {
-  constructor(container: initContainer<[K, V]> = [], cmp?: (x: K, y: K) => number) {
-    super(cmp);
+  constructor(
+    container: initContainer<[K, V]> = [],
+    cmp?: (x: K, y: K) => number,
+    enableIndex?: boolean
+  ) {
+    super(cmp, enableIndex);
     this.iterationFunc = this.iterationFunc.bind(this);
     container.forEach(([key, value]) => this.setElement(key, value));
   }

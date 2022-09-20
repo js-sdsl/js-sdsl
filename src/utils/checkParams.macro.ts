@@ -1,6 +1,5 @@
 /**
  * @internal
- *
  * @description Check if access is out of bounds.
  * @param pos The position want to access.
  * @param lower The lower bound.

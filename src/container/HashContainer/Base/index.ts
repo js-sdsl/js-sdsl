@@ -1,4 +1,4 @@
-import { Base, Container } from '@/container/ContainerBase/index';
+import { Base, Container } from '@/container/ContainerBase';
 
 export const enum HashContainerConst {
   sigma = 0.75,

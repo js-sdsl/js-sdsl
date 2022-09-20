@@ -1,6 +1,6 @@
-import SequentialContainer from './Base/index';
+import SequentialContainer from './Base';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
+import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
 export class VectorIterator<T> extends RandomIterator<T> {
