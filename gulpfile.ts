@@ -14,7 +14,6 @@ import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
-import minifyPrivatesTransformer from 'ts-transformer-minify-privates';
 import ttypescript from 'ttypescript';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -29,8 +28,7 @@ function createProject(overrideSettings?: ts.Settings) {
       return {
         ...pathsTransformer(program),
         before: [
-          tsMacroTransformer(program) as unknown as CustomTransformerFactory,
-          minifyPrivatesTransformer(program)
+          tsMacroTransformer(program) as unknown as CustomTransformerFactory
         ]
       };
     },
