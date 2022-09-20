@@ -150,11 +150,23 @@ export class DependencySolver {
     }
     return this.graph.getIncludedDependencies();
   }
-  isIncludedDependency(filePath: string, basePath?: string) {
+  isIncludedDependency(filePath: string, basePath?: string, overrideExtension?: string) {
     if (this.graph === undefined) throw new Error('graph is undefined');
 
     if (basePath !== undefined) {
       filePath = this.getAbsolutePath(basePath, filePath);
+    }
+
+    try {
+      if (fs.lstatSync(filePath).isDirectory()) {
+        filePath = path.join(filePath, 'index');
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    if (overrideExtension !== undefined) {
+      filePath = this.replaceExtension(filePath, overrideExtension);
     }
 
     filePath = this.convertToDestinationPath(filePath);
@@ -303,8 +315,11 @@ class TransformerBuilder {
           const importNode = node;
           const importVisitor = (node: ts.Node): ts.Node => {
             if (ts.isStringLiteral(node)) {
-              const filePath = node.text + this.extension;
-              if (this.dependencySolver.isIncludedDependency(filePath, sourceFile.fileName)) {
+              if (this.dependencySolver.isIncludedDependency(
+                node.text,
+                sourceFile.fileName,
+                this.extension
+              )) {
                 usedImportExports.add(importNode);
               }
             }
@@ -326,8 +341,11 @@ class TransformerBuilder {
           const exportNode = node;
           const importVisitor = (node: ts.Node): ts.Node => {
             if (ts.isStringLiteral(node)) {
-              const filePath = node.text + this.extension;
-              if (this.dependencySolver.isIncludedDependency(filePath, sourceFile.fileName)) {
+              if (this.dependencySolver.isIncludedDependency(
+                node.text,
+                sourceFile.fileName,
+                this.extension
+              )) {
                 usedImportExports.add(exportNode);
               }
             }
