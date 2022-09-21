@@ -25,7 +25,7 @@
     "build:esm": "gulp esm",
     "build:umd": "gulp umd",
     "build:umd:min": "yarn build:umd && gulp umd:min",
-    "test": "yarn test:unit && yarn test:browser && yarn test:performance",
+    "test": "yarn test:unit --timeout 10000 && yarn test:browser && yarn test:performance",
     "test:unit": "nyc ts-mocha --paths 'test/**/*.test.ts'",
     "test:browser": "karma start",
     "test:performance": "gulp performance && node dist/performance/performance/index.js",

@@ -41,6 +41,13 @@ module.exports = function (config: Config) {
     // available reporters: https://www.npmjs.com/search?q=keywords:karma-reporter
     reporters: ['mocha'],
 
+    client: {
+      // @ts-ignore
+      mocha: {
+        timeout: 10000
+      }
+    },
+
     // web server port
     port: 9876,
 
