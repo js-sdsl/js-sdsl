@@ -2,35 +2,38 @@ import Deque from '../SequentialContainer/Deque';
 import { Base, initContainer } from '@/container/ContainerBase';
 
 class Queue<T> extends Base {
-  private queue: Deque<T>;
+  /**
+   * @internal
+   */
+  private _queue: Deque<T>;
   constructor(container: initContainer<T> = []) {
     super();
-    this.queue = new Deque(container);
-    this.length = this.queue.size();
+    this._queue = new Deque(container);
+    this._length = this._queue.size();
   }
   clear() {
-    this.queue.clear();
-    this.length = 0;
+    this._queue.clear();
+    this._length = 0;
   }
   /**
    * @description Inserts element to queue's end.
    */
   push(element: T) {
-    this.queue.pushBack(element);
-    this.length += 1;
+    this._queue.pushBack(element);
+    this._length += 1;
   }
   /**
    * @description Removes the first element.
    */
   pop() {
-    this.queue.popFront();
-    if (this.length) this.length -= 1;
+    this._queue.popFront();
+    if (this._length) this._length -= 1;
   }
   /**
    * @description Access the first element.
    */
   front() {
-    return this.queue.front();
+    return this._queue.front();
   }
 }
 

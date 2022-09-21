@@ -21,15 +21,12 @@
       },
       {
         "transform": "ts-macros"
-      },
-      { 
-        "transform": "ts-transformer-minify-privates"
       }
     ]
   },
   "ts-node": {
     "compilerOptions": {
-        "module": "commonjs" 
+        "module": "commonjs"
     }
   }
 }
