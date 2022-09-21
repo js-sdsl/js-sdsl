@@ -25,9 +25,6 @@ abstract class HashContainer<K> extends Base {
    * @internal
    */
   protected abstract _hashTable: Container<unknown>[];
-  /**
-   * @internal
-   */
   protected constructor(
     initBucketNum = 16,
     hashFunc: (x: K) => number =

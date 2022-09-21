@@ -24,7 +24,6 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   ) {
     super(cmp, enableIndex);
     container.forEach((element) => this.insert(element));
-    this._iterationFunc = this._iterationFunc.bind(this);
   }
   /**
    * @internal
@@ -73,6 +72,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     for (const element of this) {
       if (index === pos) {
         res = element;
+        break;
       }
       index += 1;
     }
@@ -87,7 +87,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     this._set(key, undefined, hint);
   }
   find(element: K) {
-    const curNode = this.findElementNode(this._root, element);
+    const curNode = this._findElementNode(this._root, element);
     if (curNode !== undefined) {
       return new OrderedSetIterator(curNode, this._header);
     }

@@ -1,4 +1,4 @@
-import Deque from '../SequentialContainer/Deque';
+import Deque from '@/container/SequentialContainer/Deque';
 import { Base, initContainer } from '@/container/ContainerBase';
 
 class Queue<T> extends Base {
