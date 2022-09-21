@@ -8,7 +8,13 @@ export abstract class ContainerIterator<T> {
    * @description Iterator's type.
    */
   readonly iteratorType: IteratorType;
-  protected node: unknown;
+  /**
+   * @internal
+   */
+  protected _node: unknown;
+  /**
+   * @internal
+   */
   protected constructor(iteratorType: IteratorType = IteratorType.NORMAL) {
     this.iteratorType = iteratorType;
   }
@@ -48,20 +54,20 @@ export abstract class ContainerIterator<T> {
 export abstract class Base {
   /**
    * @description Container's size.
-   * @protected
+   * @internal
    */
-  protected length = 0;
+  protected _length = 0;
   /**
    * @return The size of the container.
    */
   size() {
-    return this.length;
+    return this._length;
   }
   /**
    * @return Boolean about if the container is empty.
    */
   empty() {
-    return this.length === 0;
+    return this._length === 0;
   }
   /**
    * @description Clear the container.

@@ -9,10 +9,25 @@ export const enum HashContainerConst {
 }
 
 abstract class HashContainer<K> extends Base {
-  protected bucketNum: number;
-  protected initBucketNum: number;
-  protected hashFunc: (x: K) => number;
-  protected abstract hashTable: Container<unknown>[];
+  /**
+   * @internal
+   */
+  protected _bucketNum: number;
+  /**
+   * @internal
+   */
+  protected _initBucketNum: number;
+  /**
+   * @internal
+   */
+  protected _hashFunc: (x: K) => number;
+  /**
+   * @internal
+   */
+  protected abstract _hashTable: Container<unknown>[];
+  /**
+   * @internal
+   */
   protected constructor(
     initBucketNum = 16,
     hashFunc: (x: K) => number =
@@ -34,19 +49,19 @@ abstract class HashContainer<K> extends Base {
     if (initBucketNum < 16 || (initBucketNum & (initBucketNum - 1)) !== 0) {
       throw new RangeError('InitBucketNum range error');
     }
-    this.bucketNum = this.initBucketNum = initBucketNum;
-    this.hashFunc = hashFunc;
+    this._bucketNum = this._initBucketNum = initBucketNum;
+    this._hashFunc = hashFunc;
   }
   clear() {
-    this.length = 0;
-    this.bucketNum = this.initBucketNum;
-    this.hashTable = [];
+    this._length = 0;
+    this._bucketNum = this._initBucketNum;
+    this._hashTable = [];
   }
   /**
    * @description Growth the hash table.
-   * @protected
+   * @internal
    */
-  protected abstract reAllocate(): void;
+  protected abstract _reAllocate(): void;
   abstract forEach(callback: (element: unknown, index: number) => void): void;
   /**
    * @description Remove the elements of the specified value.

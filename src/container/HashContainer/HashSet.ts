@@ -4,38 +4,44 @@ import OrderedSet from '@/container/TreeContainer/OrderedSet';
 import { Container, initContainer } from '@/container/ContainerBase';
 
 class HashSet<K> extends HashContainer<K> {
-  protected hashTable: (Vector<K> | OrderedSet<K>)[] = [];
+  /**
+   * @internal
+   */
+  protected _hashTable: (Vector<K> | OrderedSet<K>)[] = [];
   constructor(
     container: initContainer<K> = [],
     initBucketNum?: number,
-    hashFunc?: (x: K) => number
+    _hashFunc?: (x: K) => number
   ) {
-    super(initBucketNum, hashFunc);
+    super(initBucketNum, _hashFunc);
     container.forEach(element => this.insert(element));
   }
-  protected reAllocate() {
-    if (this.bucketNum >= HashContainerConst.maxBucketNum) return;
+  /**
+   * @internal
+   */
+  protected _reAllocate() {
+    if (this._bucketNum >= HashContainerConst.maxBucketNum) return;
     const newHashTable: (Vector<K> | OrderedSet<K>)[] = [];
-    const originalBucketNum = this.bucketNum;
-    this.bucketNum <<= 1;
-    const keys = Object.keys(this.hashTable);
+    const originalBucketNum = this._bucketNum;
+    this._bucketNum <<= 1;
+    const keys = Object.keys(this._hashTable);
     const keyNums = keys.length;
     for (let i = 0; i < keyNums; ++i) {
       const index = parseInt(keys[i]);
-      const container = this.hashTable[index];
+      const container = this._hashTable[index];
       const size = container.size();
       if (size === 0) continue;
       if (size === 1) {
         const element = container.front() as K;
         newHashTable[
-          this.hashFunc(element) & (this.bucketNum - 1)
+          this._hashFunc(element) & (this._bucketNum - 1)
         ] = new Vector([element], false);
         continue;
       }
       const lowList: K[] = [];
       const highList: K[] = [];
       container.forEach(element => {
-        const hashCode = this.hashFunc(element);
+        const hashCode = this._hashFunc(element);
         if ((hashCode & originalBucketNum) === 0) {
           lowList.push(element);
         } else highList.push(element);
@@ -56,10 +62,10 @@ class HashSet<K> extends HashContainer<K> {
         newHashTable[index + originalBucketNum] = new Vector(highList, false);
       }
     }
-    this.hashTable = newHashTable;
+    this._hashTable = newHashTable;
   }
   forEach(callback: (element: K, index: number) => void) {
-    const containers = Object.values(this.hashTable);
+    const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
@@ -71,11 +77,11 @@ class HashSet<K> extends HashContainer<K> {
    * @param element The element you want to insert.
    */
   insert(element: K) {
-    const index = this.hashFunc(element) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(element) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) {
-      this.hashTable[index] = new Vector<K>([element], false);
-      this.length += 1;
+      this._hashTable[index] = new Vector<K>([element], false);
+      this._length += 1;
     } else {
       const preSize = container.size();
       if (container instanceof Vector) {
@@ -83,53 +89,53 @@ class HashSet<K> extends HashContainer<K> {
           .equals((container as Vector<K>).end())) return;
         (container as Vector<K>).pushBack(element);
         if (preSize + 1 >= HashContainerConst.treeifyThreshold) {
-          if (this.bucketNum <= HashContainerConst.minTreeifySize) {
-            this.length += 1;
-            this.reAllocate();
+          if (this._bucketNum <= HashContainerConst.minTreeifySize) {
+            this._length += 1;
+            this._reAllocate();
             return;
           }
-          this.hashTable[index] = new OrderedSet<K>(container);
+          this._hashTable[index] = new OrderedSet<K>(container);
         }
-        this.length += 1;
+        this._length += 1;
       } else {
         (container as OrderedSet<K>).insert(element);
         const curSize = container.size();
-        this.length += curSize - preSize;
+        this._length += curSize - preSize;
       }
     }
-    if (this.length > this.bucketNum * HashContainerConst.sigma) {
-      this.reAllocate();
+    if (this._length > this._bucketNum * HashContainerConst.sigma) {
+      this._reAllocate();
     }
   }
   eraseElementByKey(key: K) {
-    const index = this.hashFunc(key) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(key) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) return;
     const preSize = container.size();
     if (preSize === 0) return;
     if (container instanceof Vector) {
       (container as Vector<K>).eraseElementByValue(key);
       const curSize = container.size();
-      this.length += curSize - preSize;
+      this._length += curSize - preSize;
     } else {
       (container as OrderedSet<K>).eraseElementByKey(key);
       const curSize = container.size();
-      this.length += curSize - preSize;
+      this._length += curSize - preSize;
       if (curSize <= HashContainerConst.untreeifyThreshold) {
-        this.hashTable[index] = new Vector<K>(container);
+        this._hashTable[index] = new Vector<K>(container);
       }
     }
   }
   find(element: K) {
-    const index = this.hashFunc(element) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(element) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) return false;
     return !(container as Container<K>).find(element)
       .equals((container as Container<K>).end());
   }
   [Symbol.iterator]() {
     return function * (this: HashSet<K>) {
-      const containers = Object.values(this.hashTable);
+      const containers = Object.values(this._hashTable);
       const containersNum = containers.length;
       for (let i = 0; i < containersNum; ++i) {
         const container = containers[i];

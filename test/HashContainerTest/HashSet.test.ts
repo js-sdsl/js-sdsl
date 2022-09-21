@@ -100,19 +100,19 @@ describe('HashSet test', () => {
     myHashSet.insert(arr[0]);
     expect(myHashSet.size()).toBe(1);
     // @ts-ignore
-    const bucketNum = myHashSet.bucketNum;
+    const bucketNum = myHashSet._bucketNum;
     // @ts-ignore
-    myHashSet.bucketNum = HashContainerConst.maxBucketNum;
+    myHashSet._bucketNum = HashContainerConst.maxBucketNum;
     // @ts-ignore
-    myHashSet.reAllocate();
+    myHashSet._reAllocate();
     // @ts-ignore
-    myHashSet.hashTable[0] = new Vector();
+    myHashSet._hashTable[0] = new Vector();
     // @ts-ignore
-    myHashSet.hashTable[myHashSet.bucketNum - 5] = new Vector();
+    myHashSet._hashTable[myHashSet.bucketNum - 5] = new Vector();
     // @ts-ignore
-    myHashSet.reAllocate(myHashSet.bucketNum);
+    myHashSet._reAllocate(myHashSet.bucketNum);
     // @ts-ignore
-    myHashSet.bucketNum = bucketNum;
+    myHashSet._bucketNum = bucketNum;
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashSet) {}
   });
