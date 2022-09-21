@@ -6,7 +6,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   /**
    * @internal
    */
-  protected _node: TreeNode<K, V>;
+  _node: TreeNode<K, V>;
   /**
    * @internal
    */

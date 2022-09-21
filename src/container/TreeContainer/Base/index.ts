@@ -431,7 +431,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         this._header.right = curNode;
       } else {
         if (hint !== undefined) {
-          // @ts-ignore
           const iterNode = hint._node;
           if (iterNode !== this._header) {
             const iterCmpRes = this._cmp(iterNode.key as K, key);
@@ -501,7 +500,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @return Boolean about if the modification is successful.
    */
   updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
-    // @ts-ignore
     const node = iter._node;
     if (node === this._header) {
       throw new TypeError('Invalid iterator!');
@@ -534,14 +532,16 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     let index = 0;
-    this._inOrderTraversal(this._root, curNode => {
-      if (pos === index) {
-        this._eraseNode(curNode);
-        return true;
-      }
-      index += 1;
-      return false;
-    });
+    this._inOrderTraversal(
+      this._root,
+      curNode => {
+        if (pos === index) {
+          this._eraseNode(curNode);
+          return true;
+        }
+        index += 1;
+        return false;
+      });
   }
   /**
    * @description Find node which key is equals to the given key.
@@ -549,7 +549,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @param key The key you want to search.
    * @internal
    */
-  protected findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
     while (curNode) {
       const cmpResult = this._cmp(curNode.key as K, key);
       if (cmpResult < 0) {
@@ -566,12 +566,11 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   eraseElementByKey(key: K) {
     if (!this._length) return;
-    const curNode = this.findElementNode(this._root, key);
+    const curNode = this._findElementNode(this._root, key);
     if (curNode === undefined) return;
     this._eraseNode(curNode);
   }
   eraseElementByIterator(iter: TreeIterator<K, V>) {
-    // @ts-ignore
     const node = iter._node;
     if (node === this._header) {
       throw new RangeError('Invalid iterator');
