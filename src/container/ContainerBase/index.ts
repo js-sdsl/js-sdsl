@@ -12,9 +12,6 @@ export abstract class ContainerIterator<T> {
    * @internal
    */
   protected _node: unknown;
-  /**
-   * @internal
-   */
   protected constructor(iteratorType: IteratorType = IteratorType.NORMAL) {
     this.iteratorType = iteratorType;
   }

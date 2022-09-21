@@ -6,7 +6,7 @@ import { RandomIterator } from '@/container/SequentialContainer/Base/RandomItera
 export class VectorIterator<T> extends RandomIterator<T> {
   copy() {
     return new VectorIterator(
-      this.node,
+      this._node,
       this._size,
       this._getElementByPos,
       this._setElementByPos,
@@ -107,10 +107,9 @@ class Vector<T> extends SequentialContainer<T> {
     this._length = this._vector.length = index;
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
-    // @ts-ignore
-    const node = iter.node;
+    const _node = iter._node;
     iter = iter.next();
-    this.eraseElementByPos(node);
+    this.eraseElementByPos(_node);
     return iter;
   }
   pushBack(element: T) {

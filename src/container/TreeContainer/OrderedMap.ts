@@ -35,7 +35,6 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    this._iterationFunc = this._iterationFunc.bind(this);
     container.forEach(([key, value]) => this.setElement(key, value));
   }
   /**
@@ -105,7 +104,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     this._set(key, value, hint);
   }
   find(key: K) {
-    const curNode = this.findElementNode(this._root, key);
+    const curNode = this._findElementNode(this._root, key);
     if (curNode !== undefined) {
       return new OrderedMapIterator(curNode, this._header);
     }
@@ -115,7 +114,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * @description Get the value of the element of the specified key.
    */
   getElementByKey(key: K) {
-    const curNode = this.findElementNode(this._root, key);
+    const curNode = this._findElementNode(this._root, key);
     return curNode ? curNode.value : undefined;
   }
   getElementByPos(pos: number) {
