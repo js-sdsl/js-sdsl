@@ -1,4 +1,5 @@
 import { Vector, Queue } from '@/index';
+import { expect } from 'chai';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -15,7 +16,7 @@ function judge(myQueue: Queue<number>, myVector: Vector<number>) {
     myQueue.pop();
     myVector.eraseElementByPos(0);
   }
-  expect(myQueue.front()).toEqual(undefined);
+  expect(myQueue.front()).to.equal(undefined);
   return true;
 }
 
@@ -23,21 +24,21 @@ describe('Queue test', () => {
   const myQueue = new Queue(arr);
   const myVector = new Vector(arr);
 
-  test('Queue size test', () => {
-    expect(myQueue.size()).toBe(myVector.size());
+  it('Queue size test', () => {
+    expect(myQueue.size()).to.equal(myVector.size());
   });
 
-  test('Queue clear function test', () => {
+  it('Queue clear function test', () => {
     myQueue.clear();
     myVector.clear();
-    expect(judge(myQueue, myVector)).toEqual(true);
+    expect(judge(myQueue, myVector)).to.equal(true);
   });
 
-  test('Queue other function test', () => {
+  it('Queue other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
       myVector.pushBack(i);
     }
-    expect(judge(myQueue, myVector)).toEqual(true);
+    expect(judge(myQueue, myVector)).to.equal(true);
   });
 });

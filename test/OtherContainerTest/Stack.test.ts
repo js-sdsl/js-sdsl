@@ -1,4 +1,5 @@
 import { Vector, Stack } from '@/index';
+import { expect } from 'chai';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -15,7 +16,7 @@ function judge(myStack: Stack<number>, myVector: Vector<number>) {
     myStack.pop();
     myVector.popBack();
   }
-  expect(myStack.top()).toEqual(undefined);
+  expect(myStack.top()).to.equal(undefined);
   return true;
 }
 
@@ -23,21 +24,21 @@ describe('Stack test', () => {
   const myStack = new Stack(arr);
   const myVector = new Vector(arr);
 
-  test('Stack size test', () => {
-    expect(myStack.size()).toBe(myVector.size());
+  it('Stack size test', () => {
+    expect(myStack.size()).to.equal(myVector.size());
   });
 
-  test('Stack clear function test', () => {
+  it('Stack clear function test', () => {
     myStack.clear();
     myVector.clear();
-    expect(judge(myStack, myVector)).toEqual(true);
+    expect(judge(myStack, myVector)).to.equal(true);
   });
 
-  test('Stack other function test', () => {
+  it('Stack other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myStack.push(i);
       myVector.pushBack(i);
     }
-    expect(judge(myStack, myVector)).toEqual(true);
+    expect(judge(myStack, myVector)).to.equal(true);
   });
 });

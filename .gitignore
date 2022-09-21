@@ -9,3 +9,4 @@ node_modules/
 .npmrc
 .yarnrc
 .DS_Store
+.nyc_output

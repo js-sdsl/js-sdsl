@@ -7,6 +7,7 @@ import {
   HashSet,
   HashMap
 } from '@/index';
+import { expect } from 'chai';
 
 let arr: number[] = [];
 const testNum = 10000;
@@ -25,35 +26,35 @@ const containerArr = [
 ];
 
 describe('symbol iterator test', () => {
-  test('HashSet symbol iterator test', () => {
+  it('HashSet symbol iterator test', () => {
     const myHashSet = new HashSet(arr);
     const st = new Set(arr);
     for (const element of myHashSet) {
-      expect(st.has(element)).toEqual(true);
+      expect(st.has(element)).to.equal(true);
       st.delete(element);
     }
-    expect(st.size).toEqual(0);
+    expect(st.size).to.equal(0);
   });
 
-  test('HashSet symbol iterator test', () => {
+  it('HashSet symbol iterator test', () => {
     const myHashMap = new HashMap(arr.map((element, index) => [index, element]));
     const mp = new Map(arr.map((element, index) => [index, element]));
     for (const element of myHashMap) {
-      expect(element[1]).toEqual(mp.get(element[0]));
+      expect(element[1]).to.equal(mp.get(element[0]));
       mp.delete(element[0]);
     }
-    expect(mp.size).toEqual(0);
+    expect(mp.size).to.equal(0);
   });
 
-  test('non-hash-container symbol iterator test', () => {
+  it('non-hash-container symbol iterator test', () => {
     for (const container of containerArr) {
       let index = 0;
       for (const element of container) {
         if (container instanceof OrderedMap) {
           expect((element as [number, number])[1])
-            .toEqual(arr[index++]);
+            .to.equal(arr[index++]);
         } else {
-          expect(element).toEqual(arr[index++]);
+          expect(element).to.equal(arr[index++]);
         }
       }
     }
