@@ -1,22 +1,25 @@
-import SequentialContainer from './Base/index';
+import SequentialContainer from './Base';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
+import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
 export class VectorIterator<T> extends RandomIterator<T> {
   copy() {
     return new VectorIterator(
-      this.node,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
+      this._node,
+      this._size,
+      this._getElementByPos,
+      this._setElementByPos,
       this.iteratorType
     );
   }
 }
 
 class Vector<T> extends SequentialContainer<T> {
-  private readonly vector: T[];
+  /**
+   * @internal
+   */
+  private readonly _vector: T[];
   /**
    * @description Vector's constructor.
    * @param container Initialize container, must have a forEach function.
@@ -26,10 +29,10 @@ class Vector<T> extends SequentialContainer<T> {
   constructor(container: initContainer<T> = [], copy = true) {
     super();
     if (Array.isArray(container)) {
-      this.vector = copy ? [...container] : container;
-      this.length = container.length;
+      this._vector = copy ? [...container] : container;
+      this._length = container.length;
     } else {
-      this.vector = [];
+      this._vector = [];
       container.forEach(element => this.pushBack(element));
     }
     this.size = this.size.bind(this);
@@ -37,8 +40,8 @@ class Vector<T> extends SequentialContainer<T> {
     this.setElementByPos = this.setElementByPos.bind(this);
   }
   clear() {
-    this.length = 0;
-    this.vector.length = 0;
+    this._length = 0;
+    this._vector.length = 0;
   }
   begin() {
     return new VectorIterator(
@@ -50,7 +53,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   end() {
     return new VectorIterator(
-      this.length,
+      this._length,
       this.size,
       this.getElementByPos,
       this.setElementByPos
@@ -58,7 +61,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   rBegin() {
     return new VectorIterator(
-      this.length - 1,
+      this._length - 1,
       this.size,
       this.getElementByPos,
       this.setElementByPos,
@@ -75,62 +78,61 @@ class Vector<T> extends SequentialContainer<T> {
     );
   }
   front() {
-    return this.vector[0] as (T | undefined);
+    return this._vector[0] as (T | undefined);
   }
   back() {
-    return this.vector[this.length - 1] as (T | undefined);
+    return this._vector[this._length - 1] as (T | undefined);
   }
   forEach(callback: (element: T, index: number) => void) {
-    for (let i = 0; i < this.length; ++i) {
-      callback(this.vector[i], i);
+    for (let i = 0; i < this._length; ++i) {
+      callback(this._vector[i], i);
     }
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
-    return this.vector[pos];
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    return this._vector[pos];
   }
   eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
-    this.vector.splice(pos, 1);
-    this.length -= 1;
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    this._vector.splice(pos, 1);
+    this._length -= 1;
   }
   eraseElementByValue(value: T) {
     let index = 0;
-    for (let i = 0; i < this.length; ++i) {
-      if (this.vector[i] !== value) {
-        this.vector[index++] = this.vector[i];
+    for (let i = 0; i < this._length; ++i) {
+      if (this._vector[i] !== value) {
+        this._vector[index++] = this._vector[i];
       }
     }
-    this.length = this.vector.length = index;
+    this._length = this._vector.length = index;
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
-    // @ts-ignore
-    const node = iter.node;
+    const _node = iter._node;
     iter = iter.next();
-    this.eraseElementByPos(node);
+    this.eraseElementByPos(_node);
     return iter;
   }
   pushBack(element: T) {
-    this.vector.push(element);
-    this.length += 1;
+    this._vector.push(element);
+    this._length += 1;
   }
   popBack() {
-    if (!this.length) return;
-    this.vector.pop();
-    this.length -= 1;
+    if (!this._length) return;
+    this._vector.pop();
+    this._length -= 1;
   }
   setElementByPos(pos: number, element: T) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
-    this.vector[pos] = element;
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    this._vector[pos] = element;
   }
   insert(pos: number, element: T, num = 1) {
-    $checkWithinAccessParams!(pos, 0, this.length);
-    this.vector.splice(pos, 0, ...new Array<T>(num).fill(element));
-    this.length += num;
+    $checkWithinAccessParams!(pos, 0, this._length);
+    this._vector.splice(pos, 0, ...new Array<T>(num).fill(element));
+    this._length += num;
   }
   find(element: T) {
-    for (let i = 0; i < this.length; ++i) {
-      if (this.vector[i] === element) {
+    for (let i = 0; i < this._length; ++i) {
+      if (this._vector[i] === element) {
         return new VectorIterator(
           i,
           this.size,
@@ -142,23 +144,23 @@ class Vector<T> extends SequentialContainer<T> {
     return this.end();
   }
   reverse() {
-    this.vector.reverse();
+    this._vector.reverse();
   }
   unique() {
     let index = 1;
-    for (let i = 1; i < this.length; ++i) {
-      if (this.vector[i] !== this.vector[i - 1]) {
-        this.vector[index++] = this.vector[i];
+    for (let i = 1; i < this._length; ++i) {
+      if (this._vector[i] !== this._vector[i - 1]) {
+        this._vector[index++] = this._vector[i];
       }
     }
-    this.length = this.vector.length = index;
+    this._length = this._vector.length = index;
   }
   sort(cmp?: (x: T, y: T) => number) {
-    this.vector.sort(cmp);
+    this._vector.sort(cmp);
   }
   [Symbol.iterator]() {
     return function * (this: Vector<T>) {
-      return yield * this.vector;
+      return yield * this._vector;
     }.bind(this)();
   }
 }

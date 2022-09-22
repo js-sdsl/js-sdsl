@@ -1,71 +1,78 @@
-import TreeContainer from './Base/index';
-import { initContainer, IteratorType } from '@/container/ContainerBase/index';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import TreeContainer from './Base';
+import { TreeNode } from './Base/TreeNode';
 import TreeIterator from './Base/TreeIterator';
-import TreeNode from './Base/TreeNode';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { initContainer, IteratorType } from '@/container/ContainerBase';
 
 export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   get pointer() {
-    if (this.node === this.header) {
+    if (this._node === this._header) {
       throw new RangeError('OrderedSet iterator access denied!');
     }
-    return this.node.key as K;
+    return this._node.key as K;
   }
   copy() {
-    return new OrderedSetIterator(this.node, this.header, this.iteratorType);
+    return new OrderedSetIterator(this._node, this._header, this.iteratorType);
   }
 }
 
 class OrderedSet<K> extends TreeContainer<K, undefined> {
-  constructor(container: initContainer<K> = [], cmp?: (x: K, y: K) => number) {
-    super(cmp);
+  constructor(
+    container: initContainer<K> = [],
+    cmp?: (x: K, y: K) => number,
+    enableIndex?: boolean
+  ) {
+    super(cmp, enableIndex);
     container.forEach((element) => this.insert(element));
-    this.iterationFunc = this.iterationFunc.bind(this);
   }
-  private readonly iterationFunc:
+  /**
+   * @internal
+   */
+  private readonly _iterationFunc:
   (curNode: TreeNode<K, undefined> | undefined) => Generator<K, void, undefined> =
       function * (this: OrderedSet<K>, curNode: TreeNode<K, undefined> | undefined) {
         if (curNode === undefined) return;
-        yield * this.iterationFunc(curNode.left);
+        yield * this._iterationFunc(curNode.left);
         yield curNode.key as K;
-        yield * this.iterationFunc(curNode.right);
+        yield * this._iterationFunc(curNode.right);
       };
   begin() {
     return new OrderedSetIterator(
-      this.header.left || this.header,
-      this.header
+      this._header.left || this._header,
+      this._header
     );
   }
   end() {
-    return new OrderedSetIterator(this.header, this.header);
+    return new OrderedSetIterator(this._header, this._header);
   }
   rBegin() {
     return new OrderedSetIterator(
-      this.header.right || this.header,
-      this.header,
+      this._header.right || this._header,
+      this._header,
       IteratorType.REVERSE
     );
   }
   rEnd() {
-    return new OrderedSetIterator(this.header, this.header, IteratorType.REVERSE);
+    return new OrderedSetIterator(this._header, this._header, IteratorType.REVERSE);
   }
   front() {
-    return this.header.left ? this.header.left.key : undefined;
+    return this._header.left ? this._header.left.key : undefined;
   }
   back() {
-    return this.header.right ? this.header.right.key : undefined;
+    return this._header.right ? this._header.right.key : undefined;
   }
   forEach(callback: (element: K, index: number) => void) {
     let index = 0;
     for (const element of this) callback(element, index++);
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this.length - 1);
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
     let res;
     let index = 0;
     for (const element of this) {
       if (index === pos) {
         res = element;
+        break;
       }
       index += 1;
     }
@@ -77,36 +84,36 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * @param hint You can give an iterator hint to improve insertion efficiency.
    */
   insert(key: K, hint?: OrderedSetIterator<K>) {
-    this.set(key, undefined, hint);
+    this._set(key, undefined, hint);
   }
   find(element: K) {
-    const curNode = this.findElementNode(this.root, element);
+    const curNode = this._findElementNode(this._root, element);
     if (curNode !== undefined) {
-      return new OrderedSetIterator(curNode, this.header);
+      return new OrderedSetIterator(curNode, this._header);
     }
     return this.end();
   }
   lowerBound(key: K) {
-    const resNode = this._lowerBound(this.root, key);
-    return new OrderedSetIterator(resNode, this.header);
+    const resNode = this._lowerBound(this._root, key);
+    return new OrderedSetIterator(resNode, this._header);
   }
   upperBound(key: K) {
-    const resNode = this._upperBound(this.root, key);
-    return new OrderedSetIterator(resNode, this.header);
+    const resNode = this._upperBound(this._root, key);
+    return new OrderedSetIterator(resNode, this._header);
   }
   reverseLowerBound(key: K) {
-    const resNode = this._reverseLowerBound(this.root, key);
-    return new OrderedSetIterator(resNode, this.header);
+    const resNode = this._reverseLowerBound(this._root, key);
+    return new OrderedSetIterator(resNode, this._header);
   }
   reverseUpperBound(key: K) {
-    const resNode = this._reverseUpperBound(this.root, key);
-    return new OrderedSetIterator(resNode, this.header);
+    const resNode = this._reverseUpperBound(this._root, key);
+    return new OrderedSetIterator(resNode, this._header);
   }
   union(other: OrderedSet<K>) {
     other.forEach((element) => this.insert(element));
   }
   [Symbol.iterator]() {
-    return this.iterationFunc(this.root);
+    return this._iterationFunc(this._root);
   }
 }
 

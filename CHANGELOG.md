@@ -4,16 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.09.11
+## [UnReleased] - 2022.09.17
+
+### Added
+
+- Add `index` property to tree iterator which represents the sequential index of the iterator in the tree.
 
 ### Changed
 
-- Minimal optimization with private properties mangling, macro inlining and const enum. see [#24]
+- Minimal optimization with private properties mangling, macro inlining and const enum.
 - Private properties are now mangled.
-- `checkWithinAccessParams` function is removed.
-- constants of `HashContainer` are moved to `HashContainerConst` const enum.
+- Remove `checkWithinAccessParams` function.
+- Constants of `HashContainer` are moved to `HashContainerConst` const enum.
 - The iteratorType parameter in the constructor now changed from `boolean` type to `IteratorType` const enum type.
 - The type of `TreeNode.color` is now changed from `boolean` to `TreeNodeColor` const enum.
+- Turn some member exports into export-only types.
+
+### Fixed
+
+- Fixed wrong iterator error message.
 
 ## [4.1.4] - 2022.09.07
 
@@ -88,7 +97,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Change `if (this.empty())` to `if (!this.length)`.
 - Change some unit test.
-- Change class type and optimized type design
+- Change class type and optimized type design.
 
 ### Fixed
 

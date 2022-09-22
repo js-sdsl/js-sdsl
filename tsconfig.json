@@ -22,9 +22,6 @@
       },
       {
         "transform": "ts-macros"
-      },
-      { 
-        "transform": "ts-transformer-minify-privates"
       }
     ]
   },

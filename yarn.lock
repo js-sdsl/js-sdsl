@@ -6659,11 +6659,6 @@ ts-transform-paths@^2.0.3:
   resolved "https://registry.yarnpkg.com/ts-transform-paths/-/ts-transform-paths-2.0.3.tgz#8d9cc0e7b503e36c9fe44b5019c2cd59950c43de"
   integrity sha512-eMUcIe/CCLUl90j9xqyj0RXC0t7h2E/ETbGBG3E8xFLyIMD9kTixUfZM78K1sHu0OBTFZTo6J7aUOafB8Mx+Dg==
 
-ts-transformer-minify-privates@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/ts-transformer-minify-privates/-/ts-transformer-minify-privates-0.4.0.tgz#86b4346682d799683ff189230b55fc99e49be64a"
-  integrity sha512-0rBMi4f49cNXLfz3p+EVEQV8wqBq9Xu9DFcl3s1NQm3S/Dd0M0C22OrQnw2hD1mqH0cIrXT06VFGJ1/qI5XzQg==
-
 tsconfig-paths@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-4.1.0.tgz#f8ef7d467f08ae3a695335bf1ece088c5538d2c1"

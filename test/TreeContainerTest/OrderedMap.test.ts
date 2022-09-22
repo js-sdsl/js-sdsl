@@ -176,6 +176,33 @@ describe('OrderedMap test', () => {
     }
   });
 
+  test('OrderedMap iterator index function test', () => {
+    const mp = new OrderedMap<number, number>(undefined, undefined, true);
+    const v = new Vector<number>();
+    for (let i = 0; i < testNum; ++i) {
+      const random = Math.random() * 10000000;
+      mp.setElement(random, i);
+      v.pushBack(random);
+    }
+    v.sort((x, y) => x - y);
+    for (let i = 0; i < testNum; ++i) {
+      expect(mp.lowerBound(v.getElementByPos(i)).index).toEqual(i);
+    }
+    expect(mp.end().index).toEqual(mp.size() - 1);
+
+    v.forEach(element => {
+      if (Math.random() > 0.5) {
+        mp.eraseElementByKey(element);
+      }
+    });
+
+    mp.forEach((element, index) => {
+      expect(mp.lowerBound(element[0]).index).toBe(index);
+    });
+
+    expect(mp.end().index).toEqual(mp.size() - 1);
+  });
+
   test('OrderedMap clear function test', () => {
     myOrderedMap.clear();
     stdMap.clear();

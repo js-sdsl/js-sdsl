@@ -1,10 +1,13 @@
-import HashContainer, { HashContainerConst } from './Base/index';
-import Vector from '../SequentialContainer/Vector';
-import OrderedMap from '../TreeContainer/OrderedMap';
-import { initContainer } from '@/container/ContainerBase/index';
+import { initContainer } from '@/container/ContainerBase';
+import HashContainer, { HashContainerConst } from './Base';
+import Vector from '@/container/SequentialContainer/Vector';
+import OrderedMap from '@/container/TreeContainer/OrderedMap';
 
 class HashMap<K, V> extends HashContainer<K> {
-  protected hashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];
+  /**
+   * @internal
+   */
+  protected _hashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];
   constructor(
     container: initContainer<[K, V]> = [],
     initBucketNum? :number,
@@ -12,29 +15,32 @@ class HashMap<K, V> extends HashContainer<K> {
     super(initBucketNum, hashFunc);
     container.forEach(element => this.setElement(element[0], element[1]));
   }
-  protected reAllocate() {
-    if (this.bucketNum >= HashContainerConst.maxBucketNum) return;
+  /**
+   * @internal
+   */
+  protected _reAllocate() {
+    if (this._bucketNum >= HashContainerConst.maxBucketNum) return;
     const newHashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];
-    const originalBucketNum = this.bucketNum;
-    this.bucketNum <<= 1;
-    const keys = Object.keys(this.hashTable);
+    const originalBucketNum = this._bucketNum;
+    this._bucketNum <<= 1;
+    const keys = Object.keys(this._hashTable);
     const keyNums = keys.length;
     for (let i = 0; i < keyNums; ++i) {
       const index = parseInt(keys[i]);
-      const container = this.hashTable[index];
+      const container = this._hashTable[index];
       const size = container.size();
       if (size === 0) continue;
       if (size === 1) {
         const element = container.front() as [K, V];
         newHashTable[
-          this.hashFunc(element[0]) & (this.bucketNum - 1)
+          this._hashFunc(element[0]) & (this._bucketNum - 1)
         ] = new Vector([element], false);
         continue;
       }
       const lowList: [K, V][] = [];
       const highList: [K, V][] = [];
       container.forEach(element => {
-        const hashCode = this.hashFunc(element[0]);
+        const hashCode = this._hashFunc(element[0]);
         if ((hashCode & originalBucketNum) === 0) {
           lowList.push(element);
         } else highList.push(element);
@@ -55,10 +61,10 @@ class HashMap<K, V> extends HashContainer<K> {
         newHashTable[index + originalBucketNum] = new Vector(highList, false);
       }
     }
-    this.hashTable = newHashTable;
+    this._hashTable = newHashTable;
   }
   forEach(callback: (element: [K, V], index: number) => void) {
-    const containers = Object.values(this.hashTable);
+    const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
@@ -72,11 +78,11 @@ class HashMap<K, V> extends HashContainer<K> {
    * @example HashMap.setElement(1, 2); // insert a key-value pair [1, 2]
    */
   setElement(key: K, value: V) {
-    const index = this.hashFunc(key) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(key) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) {
-      this.length += 1;
-      this.hashTable[index] = new Vector([<[K, V]>[key, value]], false);
+      this._length += 1;
+      this._hashTable[index] = new Vector([<[K, V]>[key, value]], false);
     } else {
       const preSize = container.size();
       if (container instanceof Vector) {
@@ -88,22 +94,22 @@ class HashMap<K, V> extends HashContainer<K> {
         }
         (container as Vector<[K, V]>).pushBack([key, value]);
         if (preSize + 1 >= HashContainerConst.treeifyThreshold) {
-          if (this.bucketNum <= HashContainerConst.minTreeifySize) {
-            this.length += 1;
-            this.reAllocate();
+          if (this._bucketNum <= HashContainerConst.minTreeifySize) {
+            this._length += 1;
+            this._reAllocate();
             return;
           }
-          this.hashTable[index] = new OrderedMap<K, V>(this.hashTable[index]);
+          this._hashTable[index] = new OrderedMap<K, V>(this._hashTable[index]);
         }
-        this.length += 1;
+        this._length += 1;
       } else {
         (container as OrderedMap<K, V>).setElement(key, value);
         const curSize = container.size();
-        this.length += curSize - preSize;
+        this._length += curSize - preSize;
       }
     }
-    if (this.length > this.bucketNum * HashContainerConst.sigma) {
-      this.reAllocate();
+    if (this._length > this._bucketNum * HashContainerConst.sigma) {
+      this._reAllocate();
     }
   }
   /**
@@ -111,8 +117,8 @@ class HashMap<K, V> extends HashContainer<K> {
    * @param key The key you want to get.
    */
   getElementByKey(key: K) {
-    const index = this.hashFunc(key) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(key) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) return undefined;
     if (container instanceof OrderedMap) {
       return (container as OrderedMap<K, V>).getElementByKey(key);
@@ -124,15 +130,15 @@ class HashMap<K, V> extends HashContainer<K> {
     }
   }
   eraseElementByKey(key: K) {
-    const index = this.hashFunc(key) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(key) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) return;
     if (container instanceof Vector) {
       let pos = 0;
       for (const pair of container) {
         if (pair[0] === key) {
           container.eraseElementByPos(pos);
-          this.length -= 1;
+          this._length -= 1;
           return;
         }
         pos += 1;
@@ -141,15 +147,15 @@ class HashMap<K, V> extends HashContainer<K> {
       const preSize = container.size();
       (container as OrderedMap<K, V>).eraseElementByKey(key);
       const curSize = container.size();
-      this.length += curSize - preSize;
+      this._length += curSize - preSize;
       if (curSize <= HashContainerConst.untreeifyThreshold) {
-        this.hashTable[index] = new Vector(container);
+        this._hashTable[index] = new Vector(container);
       }
     }
   }
   find(key: K) {
-    const index = this.hashFunc(key) & (this.bucketNum - 1);
-    const container = this.hashTable[index];
+    const index = this._hashFunc(key) & (this._bucketNum - 1);
+    const container = this._hashTable[index];
     if (!container) return false;
     if (container instanceof OrderedMap) {
       return !(container as OrderedMap<K, V>).find(key)
@@ -162,7 +168,7 @@ class HashMap<K, V> extends HashContainer<K> {
   }
   [Symbol.iterator]() {
     return function * (this: HashMap<K, V>) {
-      const containers = Object.values(this.hashTable);
+      const containers = Object.values(this._hashTable);
       const containersNum = containers.length;
       for (let i = 0; i < containersNum; ++i) {
         const container = containers[i];
