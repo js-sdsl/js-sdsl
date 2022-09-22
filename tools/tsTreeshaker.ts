@@ -127,6 +127,15 @@ export class DependencySolver {
     if (this.graph === undefined) throw new Error('graph is undefined');
 
     requestedModule = this.getAbsolutePath(filePath, requestedModule);
+
+    try {
+      if (fs.lstatSync(requestedModule).isDirectory()) {
+        requestedModule = path.join(requestedModule, 'index');
+      }
+    } catch (e) {
+      // ignore
+    }
+
     requestedModule = requestedModule + this.getFileExtension(requestedModule);
     requestedModule = this.replaceExtension(requestedModule, extension);
 
