@@ -33,7 +33,7 @@ gulp.task(
 );
 
 gulp.task(
-  'performanceTest',
+  'performance',
   () => gulpFactory(
     {
       globs: [
