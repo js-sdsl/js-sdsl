@@ -70,7 +70,7 @@ function createPackageJsonCreateTasks(
       async () => {
         const packageJson = {
           name: `${PackageJson.name}-${task.name}`,
-          version: PackageJson.version,
+          version: task.version,
           description: PackageJson.description,
           main: PackageJson.main,
           module: PackageJson.module,
@@ -98,6 +98,7 @@ function createPackageJsonCreateTasks(
 export type IsolateBuildConfig = {
   builds: {
     name: string;
+    version: string;
     sourceRoots: string | string[];
   }[],
   sharedFiles: string | string[]
