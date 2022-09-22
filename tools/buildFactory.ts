@@ -14,7 +14,6 @@ import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
-import minifyPrivatesTransformer from 'ts-transformer-minify-privates';
 import tsTreeshaker, { DependencySolver } from './tsTreeshaker';
 import deleteEmpty from 'delete-empty';
 import ttypescript from 'ttypescript';
@@ -41,7 +40,6 @@ function createProject(overrideSettings?: ts.Settings) {
       return {
         before: [
           tsMacroTransformer(program) as unknown as CustomTransformerFactory,
-          minifyPrivatesTransformer(program),
           ...customTransformers?.before ?? []
         ],
         after: [
@@ -67,7 +65,7 @@ function terserStream() {
       keep_fnames: true,
       keep_classnames: true,
       properties: {
-        regex: /^_private_/
+        regex: /^_/
       }
     },
     nameCache: {}
