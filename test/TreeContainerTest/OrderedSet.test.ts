@@ -251,6 +251,7 @@ describe('OrderedSet test', () => {
     myOrderedSet.eraseElementByKey(0);
     expect(myOrderedSet.size()).to.equal(0);
     myOrderedSet.insert(1);
+    expect(myOrderedSet.begin().next().equals(myOrderedSet.end())).to.equal(true);
     myOrderedSet.eraseElementByKey(0);
     expect(myOrderedSet.getElementByPos(0)).to.equal(1);
     myOrderedSet.insert(3);

@@ -140,10 +140,12 @@ describe('OrderedMap test', () => {
   });
 
   it('OrderedMap iterator error test', () => {
-    myOrderedMap.begin().pointer['1'] = 2;
+    myOrderedMap.begin().pointer[1] = 2;
+    // @ts-ignore
+    expect(myOrderedMap.begin().pointer[3]).to.equal(undefined);
     expect(myOrderedMap.front()).to.deep.equal([myOrderedMap.begin().pointer[0], 2]);
     expect(() => {
-      myOrderedMap.begin().pointer['0'] = 2;
+      myOrderedMap.begin().pointer[0] = 2;
     }).to.throw(TypeError);
   });
 

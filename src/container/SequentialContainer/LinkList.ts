@@ -170,10 +170,10 @@ class LinkList<T> extends SequentialContainer<T> {
     let curNode: LinkNode<T> = this._head;
     while (curNode !== this._header) {
       if (curNode.value === value) {
-        const pre = curNode.pre;
-        const next = curNode.next;
-        if (next) next.pre = pre;
-        if (pre) pre.next = next;
+        const pre = curNode.pre as LinkNode<T>;
+        const next = curNode.next as LinkNode<T>;
+        next.pre = pre;
+        pre.next = next;
         this._length -= 1;
       }
       curNode = curNode.next as LinkNode<T>;
@@ -188,10 +188,10 @@ class LinkList<T> extends SequentialContainer<T> {
     if (this._head === _node) this.popFront();
     else if (this._tail === _node) this.popBack();
     else {
-      const pre = _node.pre;
-      const next = _node.next;
-      if (next) next.pre = pre;
-      if (pre) pre.next = next;
+      const pre = _node.pre as LinkNode<T>;
+      const next = _node.next as LinkNode<T>;
+      next.pre = pre;
+      pre.next = next;
       this._length -= 1;
     }
     return iter;
@@ -218,11 +218,10 @@ class LinkList<T> extends SequentialContainer<T> {
       this._head = this._tail = undefined;
       this._header.next = undefined;
     } else {
-      this._tail = this._tail.pre;
-      if (this._tail) this._tail.next = undefined;
+      this._tail = this._tail.pre as LinkNode<T>;
+      this._tail.next = this._header;
     }
     this._header.pre = this._tail;
-    if (this._tail) this._tail.next = this._header;
   }
   setElementByPos(pos: number, element: T) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -244,7 +243,7 @@ class LinkList<T> extends SequentialContainer<T> {
       for (let i = 1; i < pos; ++i) {
         curNode = curNode.next as LinkNode<T>;
       }
-      const next = curNode.next;
+      const next = curNode.next as LinkNode<T>;
       this._length += num;
       while (num--) {
         curNode.next = new LinkNode(element);
@@ -252,7 +251,7 @@ class LinkList<T> extends SequentialContainer<T> {
         curNode = curNode.next;
       }
       curNode.next = next;
-      if (next) next.pre = curNode;
+      next.pre = curNode;
     }
   }
   find(element: T) {
@@ -289,8 +288,8 @@ class LinkList<T> extends SequentialContainer<T> {
         tmpNode = tmpNode.next;
         this._length -= 1;
       }
-      curNode.next = tmpNode.next;
-      if (curNode.next) curNode.next.pre = curNode;
+      curNode.next = tmpNode.next as LinkNode<T>;
+      curNode.next.pre = curNode;
       curNode = curNode.next as LinkNode<T>;
     }
   }
@@ -334,8 +333,8 @@ class LinkList<T> extends SequentialContainer<T> {
       this._head = this._tail = undefined;
       this._header.pre = this._tail;
     } else {
-      this._head = this._head.next;
-      if (this._head) this._head.pre = this._header;
+      this._head = this._head.next as LinkNode<T>;
+      this._head.pre = this._header;
     }
     this._header.next = this._head;
   }

@@ -16,6 +16,7 @@ function judge(myStack: Stack<number>, myVector: Vector<number>) {
     myStack.pop();
     myVector.popBack();
   }
+  expect(() => myStack.pop()).to.not.throw();
   expect(myStack.top()).to.equal(undefined);
   return true;
 }

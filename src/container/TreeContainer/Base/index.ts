@@ -121,7 +121,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       const cmpResult = this._cmp(curNode.key as K, key);
       if (cmpResult <= 0) {
         curNode = curNode.right;
-      } else if (cmpResult > 0) {
+      } else {
         resNode = curNode;
         curNode = curNode.left;
       }
@@ -170,7 +170,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       if (cmpResult < 0) {
         resNode = curNode;
         curNode = curNode.right;
-      } else if (cmpResult >= 0) {
+      } else {
         curNode = curNode.left;
       }
     }
@@ -213,7 +213,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           if (parentNode === this._root) {
             this._root = parentNode.rotateLeft();
           } else parentNode.rotateLeft();
-        } else if (brother.color === TreeNodeColor.BLACK) {
+        } else {
           if (brother.right && brother.right.color === TreeNodeColor.RED) {
             brother.color = parentNode.color;
             parentNode.color = TreeNodeColor.BLACK;
@@ -273,8 +273,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       if (swapNode.right) {
         swapNode = swapNode.right;
         while (swapNode.left) swapNode = swapNode.left;
-      } else if (swapNode.left) {
-        swapNode = swapNode.left;
+      } else {
+        swapNode = swapNode.left as TreeNode<K, V>;
       }
       [curNode.key, swapNode.key] = [swapNode.key, curNode.key];
       [curNode.value, swapNode.value] = [swapNode.value, curNode.value];
@@ -437,7 +437,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
             if (iterCmpRes === 0) {
               iterNode.value = value;
               return;
-            } else if (iterCmpRes > 0) {
+            } else /* istanbul ignore else */ if (iterCmpRes > 0) {
               const preNode = iterNode.pre();
               const preCmpRes = this._cmp(preNode.key as K, key);
               if (preCmpRes === 0) {

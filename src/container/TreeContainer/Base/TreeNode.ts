@@ -51,6 +51,7 @@ export class TreeNode<K, V> {
       while (nextNode.left) {
         nextNode = nextNode.left;
       }
+      return nextNode;
     } else {
       let pre = nextNode.parent as TreeNode<K, V>;
       while (pre.right === nextNode) {
@@ -58,10 +59,9 @@ export class TreeNode<K, V> {
         pre = nextNode.parent as TreeNode<K, V>;
       }
       if (nextNode.right !== pre) {
-        nextNode = pre;
-      }
+        return pre;
+      } else return nextNode;
     }
-    return nextNode;
   }
   /**
    * @description Rotate left.
