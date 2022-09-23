@@ -174,6 +174,11 @@ describe('OrderedSet test', () => {
     });
 
     expect(st.end().index).toEqual(st.size() - 1);
+
+    v.forEach(key => {
+      st.eraseElementByKey(key);
+      expect(st.begin().index).toEqual(0);
+    });
   });
 
   test('OrderedSet insert by hint function test', () => {
