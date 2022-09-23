@@ -39,10 +39,15 @@ const testFuncMap: Record<string, testFunc> = {
   HashMap: testHashMap
 };
 
+const testNumMap: Record<string, number> = {
+  HashSet: testNum / 10,
+  HashMap: testNum / 10
+};
+
 function testContainer(containerName: string) {
   return {
     containerName,
-    reportList: testFuncMap[containerName]([...arr], testNum)
+    reportList: testFuncMap[containerName]([...arr], testNumMap[containerName] ?? testNum)
   };
 }
 

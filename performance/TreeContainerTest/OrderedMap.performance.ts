@@ -1,5 +1,5 @@
 import { OrderedMap } from '@/index';
-import { testReportFormat } from '../index';
+import type { testReportFormat } from '../index';
 
 function testOrderedMap(arr: number[], testNum: number) {
   let startTime, endTime;
@@ -38,13 +38,13 @@ function testOrderedMap(arr: number[], testNum: number) {
 
   startTime = Date.now();
   size = myMap.size();
-  for (let i = testNum; i < testNum + 100; ++i) {
+  for (let i = 0; i < 10; ++i) {
     myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
   }
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByPos',
-    testNum: 100,
+    testNum: 10,
     containerSize: size,
     runTime: endTime - startTime
   });

@@ -1,4 +1,5 @@
 import { Vector, LinkList, Deque, SequentialContainer } from '@/index';
+import { expect } from 'chai';
 
 const arr: number[] = [];
 const testNum = 1000;
@@ -10,9 +11,9 @@ function judgeSequentialContainer(
   container: SequentialContainer<number>,
   myVector: SequentialContainer<number>
 ) {
-  expect(container.size()).toEqual(myVector.size());
+  expect(container.size()).to.equal(myVector.size());
   container.forEach((element, index) => {
-    expect(element).toEqual(myVector.getElementByPos(index));
+    expect(element).to.equal(myVector.getElementByPos(index));
   });
 }
 
@@ -114,32 +115,32 @@ function testSequentialContainer(container: SequentialContainer<number>) {
 }
 
 describe('SequentialContainer test', () => {
-  test('Vector test', () => {
+  it('Vector test', () => {
     const myVector = new Vector([1], false);
     myVector.begin().pointer = 0;
-    expect(myVector.front()).toBe(0);
-    expect(myVector.find(0).pointer).toBe(0);
+    expect(myVector.front()).to.equal(0);
+    expect(myVector.find(0).pointer).to.equal(0);
     myVector.eraseElementByIterator(myVector.begin());
-    expect(myVector.size()).toBe(0);
-    expect(myVector.front()).toEqual(undefined);
-    expect(myVector.back()).toEqual(undefined);
+    expect(myVector.size()).to.equal(0);
+    expect(myVector.front()).to.equal(undefined);
+    expect(myVector.back()).to.equal(undefined);
     myVector.insert(0, 100);
     expect(() => {
       myVector.find(0).pointer = 1;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     myVector.clear();
     myVector.popBack();
   });
 
-  test('LinkList standard test', () => {
+  it('LinkList standard test', () => {
     const myLinkList = new LinkList(arr);
     expect(() => {
       testSequentialContainer(myLinkList);
-    }).not.toThrowError(Error);
+    }).not.to.to.throw(Error);
   });
 
-  test('Deque standard test', () => {
+  it('Deque standard test', () => {
     const myDeque = new Deque(arr);
-    expect(() => testSequentialContainer(myDeque)).not.toThrowError(Error);
+    expect(() => testSequentialContainer(myDeque)).not.to.to.throw(Error);
   });
 });

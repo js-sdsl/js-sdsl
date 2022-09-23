@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,9 +22,37 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run test
-        run: yarn test
+      - name: Run unit test
+        run: yarn test:unit
       - name: Coveralls report
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ github.token }}
+  browser-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run browser test
+        run: yarn test:browser
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run performance test
+        run: yarn test:performance
