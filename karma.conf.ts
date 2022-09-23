@@ -30,8 +30,7 @@ module.exports = function (config: Config) {
     karmaTypescriptConfig: {
       compilerOptions: {
         target: 'ES5',
-        module: 'commonjs',
-        skipLibCheck: true
+        module: 'commonjs'
       },
       tsconfig: 'tsconfig.json'
     },
