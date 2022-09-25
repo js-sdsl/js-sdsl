@@ -100,10 +100,10 @@ export class DependencySolver {
     this.sourceRoots = this.sourceRoots
       .map((sourceRoot) => this.normalizePath(this.convertToDestinationPath(sourceRoot)));
 
-    const declarationRoots = [...this.sourceRoots]
+    const declarationRoots = this.sourceRoots
       .map((sourceRoot) => this.replaceExtension(sourceRoot, '.d.ts'));
 
-    const jsRoots = [...this.sourceRoots]
+    const jsRoots = this.sourceRoots
       .map((sourceRoot) => this.replaceExtension(sourceRoot, '.js'));
 
     this.graph = new DependencyGraph([...declarationRoots, ...jsRoots]);
@@ -166,12 +166,8 @@ export class DependencySolver {
       filePath = this.getAbsolutePath(basePath, filePath);
     }
 
-    try {
-      if (fs.lstatSync(filePath).isDirectory()) {
-        filePath = path.join(filePath, 'index');
-      }
-    } catch (e) {
-      // ignore
+    if (fs.existsSync(filePath) && fs.lstatSync(filePath).isDirectory()) {
+      filePath = path.join(filePath, 'index');
     }
 
     if (overrideExtension !== undefined) {
@@ -214,7 +210,7 @@ class TsUtils {
   ): (x: T) => T {
     function transformBundle(node: ts.Bundle) {
       return factory.createBundle(
-        node.sourceFiles.map(transformSourceFile).filter((x): x is ts.SourceFile => !!x),
+        node.sourceFiles.map(transformSourceFile).filter((x): x is ts.SourceFile => Boolean(x)),
         node.prepends
       );
     }

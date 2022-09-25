@@ -5,7 +5,7 @@ import {
   gulpUmdMinFactory
 } from './tools/buildFactory';
 import { createIsolateTasksFromConfig } from './tools/createTask';
-import isolateBuildConfig from './conf/isolatebuild.json';
+import isolateBuildConfig from './conf/isolate.config.json';
 
 gulp.task(
   'cjs',

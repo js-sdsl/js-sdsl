@@ -6,8 +6,8 @@ import { SrcOptions } from 'vinyl-fs';
 import { gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
 
-function createIsolateTasks(
-  taskNamePrefix: string,
+function createIsolateTask(
+  taskPrefix: string,
   input: {
     indexFile: string,
     globs: string | string[],
@@ -15,84 +15,57 @@ function createIsolateTasks(
   },
   overrideSettings: Omit<ts.Settings, 'outDir'>,
   useCjsTransform = false,
-  tasks: {
+  task: {
     name: string,
     sourceRoots: string | string[],
     output: string
-  }[]
-) {
-  const createdTasks: string[] = [];
-  for (const task of tasks) {
-    const taskName = `${taskNamePrefix}:${task.name}`;
-    gulp.task(
-      taskName,
-      gulpIsolateFactory(
-        {
-          sourceRoots: task.sourceRoots,
-          ...input
-        },
-        task.output,
-        overrideSettings,
-        useCjsTransform
-      )
-    );
-    createdTasks.push(taskName);
   }
-  return createdTasks;
+) {
+  return gulpIsolateFactory(
+    taskPrefix,
+    {
+      sourceRoots: task.sourceRoots,
+      ...input
+    },
+    task.output,
+    overrideSettings,
+    useCjsTransform
+  );
 }
 
-function createSharedFilesCopyTasks(
+function createSharedFilesCopyTask(
   config: IsolateBuildConfig,
+  packageSettings: IsolateBuildConfig['builds'][number],
   outputPattern: `${string}{name}${string}`
 ) {
-  const tasks: string[] = [];
-  for (const task of config.builds) {
-    const taskName = `${task.name}:copy-shared-files`;
-    gulp.task(
-      taskName,
-      () => gulp.src(config.sharedFiles)
-        .pipe(gulp.dest(outputPattern.replace('{name}', task.name)))
-    );
-    tasks.push(taskName);
+  function copySharedFiles() {
+    return gulp.src(config.sharedFiles)
+      .pipe(gulp.dest(outputPattern.replace('{name}', packageSettings.name)));
   }
-  return tasks;
+  copySharedFiles.displayName = 'copy-shared-files';
+  return copySharedFiles;
 }
 
-function createPackageJsonCreateTasks(
-  config: IsolateBuildConfig,
+function createPackageJsonCreateTask(
+  packageSettings: IsolateBuildConfig['builds'][number],
   outputPattern: `${string}{name}${string}`
 ) {
-  const tasks: string[] = [];
-  for (const task of config.builds) {
-    const taskName = `${task.name}:create-package-json`;
-    gulp.task(
-      taskName,
-      async () => {
-        const packageJson = {
-          name: `${PackageJson.name}-${task.name}`,
-          version: task.version,
-          description: PackageJson.description,
-          main: PackageJson.main,
-          module: PackageJson.module,
-          author: PackageJson.author,
-          sideEffects: PackageJson.sideEffects,
-          homepage: PackageJson.homepage,
-          repository: PackageJson.repository,
-          license: PackageJson.license,
-          keywords: PackageJson.keywords,
-          bugs: PackageJson.bugs,
-          dependencies: PackageJson.dependencies
-        };
-        const packageJsonPath = path.join(
-          outputPattern.replace('{name}', task.name),
-          'package.json'
-        );
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-      }
+  async function createPackageJson() {
+    const packageJson = {
+      ...PackageJson,
+      name: `@${PackageJson.name}/${packageSettings.name}`,
+      version: packageSettings.version
+    };
+    const noNeedFields = ['scripts', 'files'];
+    noNeedFields.forEach(field => Reflect.deleteProperty(packageJson, field));
+    const packageJsonPath = path.join(
+      outputPattern.replace('{name}', packageSettings.name),
+      'package.json'
     );
-    tasks.push(taskName);
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
   }
-  return tasks;
+  createPackageJson.displayName = 'create-package-json';
+  return createPackageJson;
 }
 
 export type IsolateBuildConfig = {
@@ -105,56 +78,68 @@ export type IsolateBuildConfig = {
 };
 
 export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
-  const cjsConfig = config.builds.map((item) => ({
-    ...item,
-    output: `dist/isolate/${item.name}/dist/cjs`
-  }));
+  const tasks: string[] = [];
 
-  const esmConfig = config.builds.map((item) => ({
-    ...item,
-    output: `dist/isolate/${item.name}/dist/esm`
-  }));
+  for (const build of config.builds) {
+    const isolateCjsBuildTask = createIsolateTask(
+      'cjs',
+      {
+        indexFile: 'src/index.ts',
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      {
+        module: 'ES2015',
+        declaration: true
+      },
+      true,
+      {
+        ...build,
+        output: `dist/isolate/${build.name}/dist/cjs`
+      }
+    );
 
-  const cjsTasks = createIsolateTasks(
-    'cjs',
-    {
-      indexFile: 'src/index.ts',
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
-    },
-    {
-      module: 'ES2015',
-      declaration: true
-    },
-    true,
-    cjsConfig
-  );
+    const isolateEsmBuildTask = createIsolateTask(
+      'esm',
+      {
+        indexFile: 'src/index.ts',
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      {
+        target: 'ES5',
+        module: 'ES2015',
+        declaration: true
+      },
+      false,
+      {
+        ...build,
+        output: `dist/isolate/${build.name}/dist/esm`
+      }
+    );
 
-  const esmTasks = createIsolateTasks(
-    'esm',
-    {
-      indexFile: 'src/index.ts',
-      globs: 'src/**/*.ts',
-      opts: { base: 'src' }
-    },
-    {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
-    },
-    false,
-    esmConfig
-  );
+    const copySharedFilesTask = createSharedFilesCopyTask(
+      config,
+      build,
+      'dist/isolate/{name}'
+    );
 
-  const copySharedTasks = createSharedFilesCopyTasks(
-    config,
-    'dist/isolate/{name}/'
-  );
+    const createPackageJsonTask = createPackageJsonCreateTask(
+      build,
+      'dist/isolate/{name}'
+    );
 
-  const createPackageJsonTasks = createPackageJsonCreateTasks(
-    config,
-    'dist/isolate/{name}/'
-  );
+    gulp.task(
+      `isolate:${build.name}`,
+      gulp.series(
+        isolateCjsBuildTask,
+        isolateEsmBuildTask,
+        copySharedFilesTask,
+        createPackageJsonTask
+      )
+    );
+    tasks.push(`isolate:${build.name}`);
+  }
 
-  return [...cjsTasks, ...esmTasks, ...copySharedTasks, ...createPackageJsonTasks];
+  return tasks;
 }

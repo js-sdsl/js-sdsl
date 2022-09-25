@@ -166,8 +166,9 @@ export function gulpUmdMinFactory(input: string, output: string) {
 }
 
 export function gulpIsolateFactory(
+  taskPrefix: string,
   input: {
-    sourceRoots: string|string[],
+    sourceRoots: string | string[],
     indexFile: string,
     globs: string | string[],
     opts?: SrcOptions
@@ -176,10 +177,13 @@ export function gulpIsolateFactory(
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
   useCjsTransform = false
 ) {
-  const dependencySolver = new DependencySolver(input.sourceRoots, {
-    baseUrl: input.opts?.base ?? '.',
-    outDir: output
-  });
+  const dependencySolver = new DependencySolver(
+    input.sourceRoots,
+    {
+      baseUrl: input.opts?.base ?? '.',
+      outDir: output
+    }
+  );
 
   function build() {
     return gulpFactory(
@@ -210,6 +214,7 @@ export function gulpIsolateFactory(
       useCjsTransform
     );
   }
+  build.displayName = `${taskPrefix}-build`;
 
   function filterDependencies() {
     return gulp.src(`${output}/**/*`, { read: false, allowEmpty: true, base: '.' })
@@ -219,10 +224,12 @@ export function gulpIsolateFactory(
         ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}`)]))
       .pipe(clean());
   }
+  filterDependencies.displayName = `${taskPrefix}-filter-dependencies`;
 
   async function cleanEmptyDirs() {
     await deleteEmpty(process.cwd() + '/' + output);
   }
+  cleanEmptyDirs.displayName = `${taskPrefix}-clean-empty-dirs`;
 
   return gulp.series(build, filterDependencies, cleanEmptyDirs);
 }

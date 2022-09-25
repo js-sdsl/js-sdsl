@@ -2,13 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import getNpmPackageVersion from 'get-npm-package-version';
+import { compareVersions } from 'compare-versions';
 
 async function main() {
-  const args = process.argv;
-  const npmAuthToken = args[0];
   const isolatePackageRoot = './dist/isolate';
 
-  const publishPackageList: string[] = [];
+  const publishPackageList: { packageName: string; dir: string }[] = [];
 
   // get directory listing
   const files = fs.readdirSync(isolatePackageRoot);
@@ -20,57 +19,39 @@ async function main() {
       const packageJsonPath = path.join(filePath, 'package.json');
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
       // get version
-      const version = getNpmPackageVersion(packageJson.name);
-
-      if (version === null) {
-        throw new Error(`Package ${packageJson.name} not found on npm`);
-      }
-
+      const version = getNpmPackageVersion(packageJson.name) || '1.0.0';
       // compare version
       if (compareVersions(version, packageJson.version) < 0) {
-        publishPackageList.push(packageJson.name);
+        publishPackageList.push({ packageName: packageJson.name, dir: filePath });
       }
     }
   }
 
   // publish packages
-  for (const packageName of publishPackageList) {
-    console.log(`Publishing ${packageName}`);
-    const packagePath = path.join(isolatePackageRoot, packageName);
-    const command = `npm publish --token ${npmAuthToken} ${packagePath}`;
-    console.log(command);
+  for (const publishPackage of publishPackageList) {
     // eslint-disable-next-line compat/compat
-    await new Promise<void>((resolve, reject) => {
-      const process = childProcess.exec(command, (error, stdout, stderr) => {
-        if (error) reject(error);
-        console.log(stdout);
-        console.log(stderr);
+    await new Promise<void>((resolve) => {
+      const childProcessInstance = childProcess.spawn(
+        'yarn',
+        ['publish', publishPackage.dir]
+      );
+
+      childProcessInstance.stdout.on('data', (data) => {
+        console.log(data.toString());
       });
-      process.on('exit', (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`Process exited with code ${code}`));
+
+      childProcessInstance.stderr.on('data', (data) => {
+        throw new Error(data.toString());
+      });
+
+      childProcessInstance.on('close', (code) => {
+        if (code !== 0) {
+          throw new Error(`Failed to publish package ${publishPackage.packageName}`);
         }
+        resolve();
       });
     });
   }
-}
-
-function compareVersions(a: string, b: string): number {
-  const aParts = a.split('.');
-  const bParts = b.split('.');
-  for (let i = 0; i < aParts.length; i++) {
-    const aPart = parseInt(aParts[i]);
-    const bPart = parseInt(bParts[i]);
-    if (aPart < bPart) {
-      return -1;
-    }
-    if (aPart > bPart) {
-      return 1;
-    }
-  }
-  return 0;
 }
 
 main();
