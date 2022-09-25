@@ -8,12 +8,16 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
+  myVector.sort((x, y) => y - x);
+  expect(myQueue.toArray().sort((x, y) => y - x)).to.deep.equal(Array.from(myVector));
+  let index = 0;
   while (!myQueue.empty()) {
-    expect(myQueue.size()).to.equal(myVector.size());
-    const u = myQueue.top();
-    expect(u).to.equal(myVector.front());
+    expect(myQueue.size()).to.equal(myVector.size() - index);
+    const u = myQueue.top() as number;
+    expect(myQueue.find(u)).to.equal(true);
+    expect(u).to.equal(myVector.getElementByPos(index++));
     myQueue.pop();
-    myVector.eraseElementByPos(0);
+    expect(myQueue.find(-u - 1)).to.equal(false);
   }
   return true;
 }
@@ -40,8 +44,53 @@ describe('PriorityQueue test', () => {
       myQueue.push(i);
       myVector.pushBack(i);
     }
-    myVector.sort((x, y) => y - x);
     judge(myQueue, myVector);
+  });
+
+  it('PriorityQueue remove function test', () => {
+    const myQueue = new PriorityQueue<number>();
+    const myVector = new Vector<number>();
+    for (let i = 0; i < testNum; ++i) {
+      myQueue.push(i);
+      myVector.pushBack(i);
+    }
+    for (let i = 1; i < testNum; ++i) {
+      if (Math.random() > 0.5) {
+        expect(myQueue.remove(i)).to.equal(true);
+        myVector.eraseElementByValue(i);
+      }
+      expect(myQueue.remove(-i)).to.equal(false);
+    }
+    myQueue.push(testNum);
+    myQueue.remove(testNum);
+    // @ts-ignore
+    const back = myQueue._priorityQueue[myQueue.size() - 1];
+    myQueue.remove(back);
+    myQueue.push(back);
+    judge(myQueue, myVector);
+  });
+
+  it('PriorityQueue updateItem function test', () => {
+    type obj = { num: number };
+    const arr: obj[] = [];
+    for (let i = 0; i < testNum; ++i) {
+      arr.push({ num: i });
+    }
+    const cmp = (x: obj, y: obj) => x.num - y.num;
+    const myQueue = new PriorityQueue<obj>(arr, cmp);
+    for (let i = 0; i < testNum; ++i) {
+      arr[i].num = -i;
+      expect(myQueue.updateItem(arr[i])).to.equal(true);
+      expect(myQueue.updateItem({ num: 1 })).to.equal(false);
+      expect(myQueue.top()).to.equal(arr[i]);
+    }
+    arr.sort(cmp);
+    let index = 0;
+    while (!myQueue.empty()) {
+      const u = myQueue.top();
+      myQueue.pop();
+      expect(u).to.equal(arr[index++]);
+    }
   });
 
   it('PriorityQueue clear function test', () => {
