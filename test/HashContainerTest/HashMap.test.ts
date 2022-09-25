@@ -1,5 +1,6 @@
 import { HashContainerConst } from '@/container/HashContainer/Base';
 import { Vector, HashMap } from '@/index';
+import { expect } from 'chai';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -12,10 +13,10 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, number>) {
-  expect(myHashMap.size()).toBe(stdMap.size);
+  expect(myHashMap.size()).to.equal(stdMap.size);
   stdMap.forEach((value, key) => {
-    expect(myHashMap.getElementByKey(key)).toEqual(value);
-    expect(myHashMap.find(key)).toEqual(true);
+    expect(myHashMap.getElementByKey(key)).to.equal(value);
+    expect(myHashMap.find(key)).to.equal(true);
   });
 }
 
@@ -23,7 +24,7 @@ describe('HashMap test', () => {
   const myHashMap = new HashMap(arr.map((element, index) => [element, index]));
   const stdMap = new Map(arr.map((element, index) => [element, index]));
 
-  test('HashSet hash function test', () => {
+  it('HashSet hash function test', () => {
     judgeHashMap(
       // @ts-ignore
       new HashMap(arr.map(x => [Math.floor(Number(x)), 1])),
@@ -31,11 +32,11 @@ describe('HashMap test', () => {
     );
   });
 
-  test('constructor test', () => {
-    expect(new HashMap().size()).toBe(0);
+  it('constructor test', () => {
+    expect(new HashMap().size()).to.equal(0);
   });
 
-  test('HashMap setElement function test', () => {
+  it('HashMap setElement function test', () => {
     for (let i = 0; i <= testNum; ++i) {
       myHashMap.setElement(i.toString(), i);
       stdMap.set(i.toString(), i);
@@ -51,20 +52,20 @@ describe('HashMap test', () => {
     judgeHashMap(myHashMap, stdMap);
   });
 
-  test('HashMap forEach function test', () => {
+  it('HashMap forEach function test', () => {
     myHashMap.forEach(([key, value]) => {
-      expect(stdMap.get(key)).toEqual(value);
+      expect(stdMap.get(key)).to.equal(value);
     });
-    expect(myHashMap.find('-1')).toEqual(false);
+    expect(myHashMap.find('-1')).to.equal(false);
     let cnt = 0;
     for (const element of myHashMap) {
       ++cnt;
-      expect(stdMap.has(element[0])).toEqual(true);
+      expect(stdMap.has(element[0])).to.equal(true);
     }
-    expect(cnt).toBe(myHashMap.size());
+    expect(cnt).to.equal(myHashMap.size());
   });
 
-  test('HashMap eraseElementByKey function test', () => {
+  it('HashMap eraseElementByKey function test', () => {
     for (let i = 0; i < testNum; ++i) {
       const str = i.toString();
       myHashMap.eraseElementByKey(str);
@@ -79,39 +80,39 @@ describe('HashMap test', () => {
     myHashMap.eraseElementByKey('-7');
     myHashMap.eraseElementByKey('-8');
     myHashMap.eraseElementByKey('-9');
-    expect(myHashMap.getElementByKey('-1')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-2')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-3')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-4')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-5')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-6')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-7')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-8')).toBe(undefined);
-    expect(myHashMap.getElementByKey('-9')).toBe(undefined);
-    expect(myHashMap.find('-1')).toBe(false);
-    expect(myHashMap.find('-2')).toBe(false);
-    expect(myHashMap.find('-3')).toBe(false);
-    expect(myHashMap.find('-4')).toBe(false);
-    expect(myHashMap.find('-5')).toBe(false);
-    expect(myHashMap.find('-6')).toBe(false);
-    expect(myHashMap.find('-7')).toBe(false);
-    expect(myHashMap.find('-8')).toBe(false);
-    expect(myHashMap.find('-9')).toBe(false);
+    expect(myHashMap.getElementByKey('-1')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-2')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-3')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-4')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-5')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-6')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-7')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-8')).to.equal(undefined);
+    expect(myHashMap.getElementByKey('-9')).to.equal(undefined);
+    expect(myHashMap.find('-1')).to.equal(false);
+    expect(myHashMap.find('-2')).to.equal(false);
+    expect(myHashMap.find('-3')).to.equal(false);
+    expect(myHashMap.find('-4')).to.equal(false);
+    expect(myHashMap.find('-5')).to.equal(false);
+    expect(myHashMap.find('-6')).to.equal(false);
+    expect(myHashMap.find('-7')).to.equal(false);
+    expect(myHashMap.find('-8')).to.equal(false);
+    expect(myHashMap.find('-9')).to.equal(false);
     judgeHashMap(myHashMap, stdMap);
   });
 
-  test('HashMap clear function test', () => {
+  it('HashMap clear function test', () => {
     myHashMap.clear();
     stdMap.clear();
     judgeHashMap(myHashMap, stdMap);
   });
 
-  test('HashMap empty test', () => {
+  it('HashMap empty test', () => {
     myHashMap.eraseElementByKey('1');
-    expect(myHashMap.find('1')).toEqual(false);
+    expect(myHashMap.find('1')).to.equal(false);
     for (let i = -1; i >= -1000; --i) {
-      expect(myHashMap.getElementByKey(i.toString())).toEqual(undefined);
-      expect(myHashMap.find(i.toString())).toEqual(false);
+      expect(myHashMap.getElementByKey(i.toString())).to.equal(undefined);
+      expect(myHashMap.find(i.toString())).to.equal(false);
     }
     // @ts-ignore
     const bucketNum = myHashMap._bucketNum;
@@ -131,7 +132,7 @@ describe('HashMap test', () => {
     for (const _ of myHashMap) {}
   });
 
-  test('HashMap normal test', () => {
+  it('HashMap normal test', () => {
     const mp = new HashMap<string, number>();
     const stdMap = new Map();
     for (let i = 0; i < testNum; ++i) {
@@ -143,12 +144,12 @@ describe('HashMap test', () => {
     let size = testNum;
     for (let i = 0; i < testNum; ++i) {
       mp.eraseElementByKey(i.toString());
-      expect(mp.size()).toEqual(--size);
+      expect(mp.size()).to.equal(--size);
     }
-    expect(mp.size()).toEqual(0);
+    expect(mp.size()).to.equal(0);
   });
 
-  test('HashMap hash func test', () => {
+  it('HashMap hash func test', () => {
     const normalMap = new HashMap<string, number>();
     const mp = new HashMap<string, number>([], undefined, () => -1);
     const stdMap = new Map<string, number>();
@@ -211,7 +212,7 @@ describe('HashMap test', () => {
     stdMap.clear();
   });
 
-  test('difficult test', () => {
+  it('difficult test', () => {
     const hashMapList: HashMap<string, number>[] = [];
     for (let i = -10; i <= 10; ++i) {
       hashMapList.push(new HashMap<string, number>([], undefined, () => i));

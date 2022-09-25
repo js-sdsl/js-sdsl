@@ -24,7 +24,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
 
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
-        if (this._node === this._header.left) {
+        if (this._node === this._header._left) {
           throw new RangeError('Tree iterator access denied!');
         }
         this._node = this._node.pre();
@@ -40,7 +40,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
       };
     } else {
       this.pre = function () {
-        if (this._node === this._header.right) {
+        if (this._node === this._header._right) {
           throw new RangeError('Tree iterator access denied!');
         }
         this._node = this._node.next();
@@ -57,26 +57,27 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
   }
   get index() {
-    let _node = this._node;
+    let _node = this._node as TreeNodeEnableIndex<K, V>;
+    const root = this._header._parent as TreeNodeEnableIndex<K, V>;
     if (_node === this._header) {
-      if (this._header.parent) {
-        return (this._header.parent as TreeNodeEnableIndex<K, V>).subTreeSize - 1;
+      if (root) {
+        return root.subTreeSize - 1;
       }
       return 0;
     }
     let index = 0;
-    if (_node.left) {
-      index += (_node.left as TreeNodeEnableIndex<K, V>).subTreeSize;
+    if (_node._left) {
+      index += _node._left.subTreeSize;
     }
-    while (_node !== this._header) {
-      const parent = _node.parent as TreeNode<K, V>;
-      if (_node === parent.right) {
+    while (_node !== root) {
+      const _parent = _node._parent as TreeNodeEnableIndex<K, V>;
+      if (_node === _parent._right) {
         index += 1;
-        if (parent.left) {
-          index += (parent.left as TreeNodeEnableIndex<K, V>).subTreeSize;
+        if (_parent._left) {
+          index += _parent._left.subTreeSize;
         }
       }
-      _node = parent;
+      _node = _parent;
     }
     return index;
   }

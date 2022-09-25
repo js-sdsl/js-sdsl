@@ -10,6 +10,7 @@ import {
   Queue,
   PriorityQueue
 } from '@/index';
+import { expect } from 'chai';
 
 const containerArr = [
   new Stack(),
@@ -25,9 +26,9 @@ const containerArr = [
 ];
 
 describe('iterator test', () => {
-  test('empty constructor test', () => {
+  it('empty constructor test', () => {
     for (const container of containerArr) {
-      expect(container.size()).toEqual(0);
+      expect(container.size()).to.equal(0);
     }
   });
 });

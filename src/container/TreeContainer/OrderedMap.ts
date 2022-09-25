@@ -11,14 +11,14 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     }
     return new Proxy([] as unknown as [K, V], {
       get: (_, props: '0' | '1') => {
-        if (props === '0') return this._node.key;
-        else if (props === '1') return this._node.value;
+        if (props === '0') return this._node._key;
+        else if (props === '1') return this._node._value;
       },
       set: (_, props: '1', newValue: V) => {
         if (props !== '1') {
           throw new TypeError('props must be 1');
         }
-        this._node.value = newValue;
+        this._node._value = newValue;
         return true;
       }
     });
@@ -35,7 +35,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    container.forEach(([key, value]) => this.setElement(key, value));
+    container.forEach(([_key, _value]) => this.setElement(_key, _value));
   }
   /**
    * @internal
@@ -44,19 +44,19 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
       function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
         if (curNode === undefined) return;
-        yield * this._iterationFunc(curNode.left);
-        yield [curNode.key, curNode.value] as [K, V];
-        yield * this._iterationFunc(curNode.right);
+        yield * this._iterationFunc(curNode._left);
+        yield [curNode._key, curNode._value] as [K, V];
+        yield * this._iterationFunc(curNode._right);
       };
   begin() {
-    return new OrderedMapIterator(this._header.left || this._header, this._header);
+    return new OrderedMapIterator(this._header._left || this._header, this._header);
   }
   end() {
     return new OrderedMapIterator(this._header, this._header);
   }
   rBegin() {
     return new OrderedMapIterator(
-      this._header.right || this._header,
+      this._header._right || this._header,
       this._header,
       IteratorType.REVERSE
     );
@@ -66,56 +66,56 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   front() {
     if (!this._length) return undefined;
-    const minNode = this._header.left as TreeNode<K, V>;
-    return [minNode.key, minNode.value] as [K, V];
+    const minNode = this._header._left as TreeNode<K, V>;
+    return [minNode._key, minNode._value] as [K, V];
   }
   back() {
     if (!this._length) return undefined;
-    const maxNode = this._header.right as TreeNode<K, V>;
-    return [maxNode.key, maxNode.value] as [K, V];
+    const maxNode = this._header._right as TreeNode<K, V>;
+    return [maxNode._key, maxNode._value] as [K, V];
   }
   forEach(callback: (element: [K, V], index: number) => void) {
     let index = 0;
     for (const pair of this) callback(pair, index++);
   }
-  lowerBound(key: K) {
-    const resNode = this._lowerBound(this._root, key);
+  lowerBound(_key: K) {
+    const resNode = this._lowerBound(this._root, _key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  upperBound(key: K) {
-    const resNode = this._upperBound(this._root, key);
+  upperBound(_key: K) {
+    const resNode = this._upperBound(this._root, _key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  reverseLowerBound(key: K) {
-    const resNode = this._reverseLowerBound(this._root, key);
+  reverseLowerBound(_key: K) {
+    const resNode = this._reverseLowerBound(this._root, _key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  reverseUpperBound(key: K) {
-    const resNode = this._reverseUpperBound(this._root, key);
+  reverseUpperBound(_key: K) {
+    const resNode = this._reverseUpperBound(this._root, _key);
     return new OrderedMapIterator(resNode, this._header);
   }
   /**
-   * @description Insert a key-value pair or set value by the given key.
-   * @param key The key want to insert.
-   * @param value The value want to set.
+   * @description Insert a _key-_value pair or set _value by the given _key.
+   * @param _key The _key want to insert.
+   * @param _value The _value want to set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
    */
-  setElement(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
-    this._set(key, value, hint);
+  setElement(_key: K, _value: V, hint?: OrderedMapIterator<K, V>) {
+    this._set(_key, _value, hint);
   }
-  find(key: K) {
-    const curNode = this._findElementNode(this._root, key);
+  find(_key: K) {
+    const curNode = this._findElementNode(this._root, _key);
     if (curNode !== undefined) {
       return new OrderedMapIterator(curNode, this._header);
     }
     return this.end();
   }
   /**
-   * @description Get the value of the element of the specified key.
+   * @description Get the _value of the element of the specified _key.
    */
-  getElementByKey(key: K) {
-    const curNode = this._findElementNode(this._root, key);
-    return curNode ? curNode.value : undefined;
+  getElementByKey(_key: K) {
+    const curNode = this._findElementNode(this._root, _key);
+    return curNode ? curNode._value : undefined;
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -131,7 +131,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return res as [K, V];
   }
   union(other: OrderedMap<K, V>) {
-    other.forEach(([key, value]) => this.setElement(key, value));
+    other.forEach(([_key, _value]) => this.setElement(_key, _value));
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);
