@@ -67,6 +67,7 @@
     "commitlint": "^17.0.3",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "coveralls": "^3.1.1",
+    "delete-empty": "^3.0.0",
     "eslint": "^8.23.1",
     "eslint-plugin-compat": "^4.0.2",
     "get-npm-package-version": "^1.1.1",
