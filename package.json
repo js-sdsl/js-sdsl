@@ -31,6 +31,7 @@
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
     "generate": "typedoc src/index.ts",
     "generate:dev": "typedoc src/index.ts --watch",
+    "publish:isolate": "ts-node tools/publishIsolate.ts",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -66,6 +67,7 @@
     "delete-empty": "^3.0.0",
     "eslint": "^8.23.1",
     "eslint-plugin-compat": "^4.0.2",
+    "get-npm-package-version": "^1.1.1",
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
@@ -136,6 +138,5 @@
   "bugs": {
     "email": "951711127@qq.com",
     "url": "https://github.com/js-sdsl/js-sdsl/issues"
-  },
-  "dependencies": {}
+  }
 }
