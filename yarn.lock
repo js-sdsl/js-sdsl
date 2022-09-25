@@ -3353,6 +3353,11 @@ get-intrinsic@^1.0.2, get-intrinsic@^1.1.0, get-intrinsic@^1.1.1, get-intrinsic@
     has "^1.0.3"
     has-symbols "^1.0.3"
 
+get-npm-package-version@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/get-npm-package-version/-/get-npm-package-version-1.1.1.tgz#19927e2763208fc6f751d2e387b2667ce61d5f79"
+  integrity sha512-WaF536fV8eqp0T/rcD4ifes3GfHllXo0yoEd2xYIhvKlRpw69Q7YCl8vTSnZ/xOoEcSIGES2+/Qcb7h2GJ0Cuw==
+
 get-package-type@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"
