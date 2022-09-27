@@ -7,7 +7,7 @@ import { compareVersions } from 'compare-versions';
 async function main() {
   const isolatePackageRoot = './dist/isolate';
 
-  const publishPackageList: { packageName: string; dir: string }[] = [];
+  const publishPackageList: { packageName: string; dir: string, version: string }[] = [];
 
   // get directory listing
   const files = fs.readdirSync(isolatePackageRoot);
@@ -22,7 +22,11 @@ async function main() {
       const version = getNpmPackageVersion(packageJson.name) || '1.0.0';
       // compare version
       if (compareVersions(version, packageJson.version) < 0) {
-        publishPackageList.push({ packageName: packageJson.name, dir: filePath });
+        publishPackageList.push({
+          packageName: packageJson.name,
+          dir: filePath,
+          version: packageJson.version
+        });
       }
     }
   }
@@ -48,6 +52,7 @@ async function main() {
         if (code !== 0) {
           throw new Error(`Failed to publish package ${publishPackage.packageName}`);
         }
+        console.log(`${publishPackage.packageName} version ${publishPackage.version} published.`);
         resolve();
       });
     });
