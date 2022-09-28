@@ -3,21 +3,30 @@ import path from 'path';
 import childProcess from 'child_process';
 import getNpmPackageVersion from 'get-npm-package-version';
 import { compareVersions } from 'compare-versions';
+import isolateBuildConfig from '../conf/isolate.config.json';
 
 async function main() {
   const isolatePackageRoot = './dist/isolate';
 
   const publishPackageList: { packageName: string; dir: string, version: string }[] = [];
 
-  // get directory listing
-  const files = fs.readdirSync(isolatePackageRoot);
-  for (const file of files) {
-    const filePath = path.join(isolatePackageRoot, file);
+  const configPackages = isolateBuildConfig.builds
+    .map(build => ({ buildName: build.name, version: build.version }));
+
+  for (const configPackage of configPackages) {
+    const filePath = path.join(isolatePackageRoot, configPackage.buildName);
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Package ${configPackage.buildName} does not exist`);
+    }
     const stat = fs.statSync(filePath);
     if (stat.isDirectory()) {
       // get package.json
       const packageJsonPath = path.join(filePath, 'package.json');
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      // check is builded
+      if (packageJson.version !== configPackage.version) {
+        throw new Error(`Package ${configPackage.buildName} is not builded`);
+      }
       // get version
       const version = getNpmPackageVersion(packageJson.name) || '1.0.0';
       // compare version
@@ -28,6 +37,8 @@ async function main() {
           version: packageJson.version
         });
       }
+    } else {
+      throw new Error(`isolate package ${filePath} is not a directory`);
     }
   }
 
