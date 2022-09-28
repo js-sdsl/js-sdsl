@@ -14,7 +14,7 @@ import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
-import tsTreeshaker, { DependencySolver } from './tsTreeshaker';
+import tsTreeShaker, { DependencySolver } from './tsTreeShaker';
 import deleteEmpty from 'delete-empty';
 import ttypescript from 'ttypescript';
 
@@ -192,7 +192,7 @@ export function gulpIsolateFactory(
       {
         ...overrideSettings,
         getCustomTransformers: (program?: Program) => {
-          const treeShakerTransform = tsTreeshaker({
+          const treeShakerTransform = tsTreeShaker({
             solver: dependencySolver,
             indexFile: input.indexFile
           });
