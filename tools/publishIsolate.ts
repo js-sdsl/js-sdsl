@@ -16,10 +16,10 @@ async function main() {
     const isolatePackageName = `@${PackageJson.name}/${configPackage.buildName}`;
 
     // get version
-    const isolatePackageNpmversion = getNpmPackageVersion(isolatePackageName) || '1.0.0';
+    const isolatePackageNpmVersion = getNpmPackageVersion(isolatePackageName) || '1.0.0';
 
     // compare version
-    if (compareVersions(configPackage.version, isolatePackageNpmversion) <= 0) {
+    if (compareVersions(configPackage.version, isolatePackageNpmVersion) <= 0) {
       // skip because version is not newer
       continue;
     }
@@ -28,23 +28,23 @@ async function main() {
     // eslint-disable-next-line compat/compat
     await new Promise<void>((resolve) => {
       const buildProcess = childProcess.spawn(
-        'npx',
-        ['gulp', `isolate:${configPackage.buildName}`]
+        'gulp',
+        [`isolate:${configPackage.buildName}`]
       );
 
       buildProcess.stdout.on('data', (data) => {
-        console.log(data.toString());
+        process.stdout.write(data);
       });
 
       buildProcess.stderr.on('data', (data) => {
-        console.error(data.toString());
+        process.stderr.write(data);
       });
 
       buildProcess.on('close', (code) => {
         if (code === 0) {
           resolve();
         } else {
-          throw new Error(`$ npx gulp isolate:${configPackage.buildName} failed with code ${code}`);
+          throw new Error(`$ gulp isolate:${configPackage.buildName} failed with code ${code}`);
         }
       });
     });
@@ -68,18 +68,18 @@ async function main() {
       );
 
       childProcessInstance.stdout.on('data', (data) => {
-        console.log(data.toString());
+        process.stdout.write(data);
       });
 
       childProcessInstance.stderr.on('data', (data) => {
-        throw new Error(data.toString());
+        process.stderr.write(data);
       });
 
       childProcessInstance.on('close', (code) => {
         if (code !== 0) {
           throw new Error(`Failed to publish package ${isolatePackageName}`);
         }
-        console.log(`${isolatePackageName} version ${configPackage.version} published.`);
+        console.log(`${isolatePackageName} version ${configPackage.version} published.\n`);
         resolve();
       });
     });

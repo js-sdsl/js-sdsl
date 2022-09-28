@@ -69,6 +69,6 @@ gulp.task(
   )
 );
 
-gulp.task('isolate', gulp.series(createIsolateTasksFromConfig(isolateBuildConfig)));
-
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
+
+gulp.task('isolate', gulp.series(createIsolateTasksFromConfig(isolateBuildConfig)));
