@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.09.25
+## [4.1.5] - 2022.09.30
 
 ### Added
 
 - Add `find`, `remove`, `updateItem` and `toArray` functions to `PriorityQueue`.
+- Support single package release (use scope @js-sdsl).
 
 ## [4.1.5-beta.1] - 2022.09.23
 
