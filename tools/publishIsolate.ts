@@ -23,9 +23,9 @@ async function main() {
       // get package.json
       const packageJsonPath = path.join(filePath, 'package.json');
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-      // check is builded
+      // check is built
       if (packageJson.version !== configPackage.version) {
-        throw new Error(`Package ${configPackage.buildName} is not builded`);
+        throw new Error(`Package ${configPackage.buildName} is not built`);
       }
       // get version
       const version = getNpmPackageVersion(packageJson.name) || '1.0.0';
