@@ -20,6 +20,9 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
   protected readonly _setElementByPos: (pos: number, element: T) => void;
   pre: () => this;
   next: () => this;
+  /**
+   * @internal
+   */
   constructor(
     index: number,
     size: () => number,

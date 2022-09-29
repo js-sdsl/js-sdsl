@@ -12,13 +12,13 @@ class PriorityQueue<T> extends Base {
   /**
    * @description PriorityQueue's constructor.
    * @param container Initialize container, must have a forEach function.
-   * @param _cmp Compare function.
+   * @param cmp Compare function.
    * @param copy When the container is an array, you can choose to directly operate on the original object of
    *             the array or perform a shallow copy. The default is shallow copy.
    */
   constructor(
     container: initContainer<T> = [],
-    _cmp: (x: T, y: T) => number =
+    cmp: (x: T, y: T) => number =
     (x: T, y: T) => {
       if (x > y) return -1;
       if (x < y) return 1;
@@ -27,7 +27,7 @@ class PriorityQueue<T> extends Base {
     copy = true
   ) {
     super();
-    this._cmp = _cmp;
+    this._cmp = cmp;
     if (Array.isArray(container)) {
       this._priorityQueue = copy ? [...container] : container;
     } else {
