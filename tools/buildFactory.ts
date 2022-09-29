@@ -119,7 +119,8 @@ export function gulpFactory(
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false
+  useCjsTransform = false,
+  sourceMap = true
 ): NodeJS.ReadWriteStream {
   macros.clear();
   const tsProject = createProject({
@@ -129,15 +130,22 @@ export function gulpFactory(
   const cleanStream = gulp.src(output, { read: false, allowEmpty: true })
     .pipe(clean());
   const tsBuildResult = gulp.src(input.globs, input.opts)
+    .pipe(sourceMap ? sourcemaps.init() : tap(() => { /* */ }))
     .pipe(tsProject());
   const jsBuildResult = tsBuildResult.js
     .pipe(babelStream(true, useCjsTransform))
     .pipe(terserStream());
   return merge(
     cleanStream,
-    merge([tsBuildResult.dts, jsBuildResult])
-      .pipe(filter(['**/*.ts', '**/*.js', '!**/*.macro.d.ts', '!**/*.macro.js']))
-      .pipe(gulp.dest(output)));
+    merge([
+      tsBuildResult.dts
+        .pipe(filter(['**/*.ts', '!**/*.macro.d.ts'])),
+      jsBuildResult
+        .pipe(filter(['**/*.js', '!**/*.macro.js']))
+        .pipe(sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
+    ])
+      .pipe(gulp.dest(output))
+  );
 }
 
 export function gulpUmdFactory(input: string, output: string) {
@@ -147,18 +155,18 @@ export function gulpUmdFactory(input: string, output: string) {
     .pipe(clean())
     .pipe(gulp.src(input))
     .pipe(rollupStream(input))
-    .pipe(terserStream())
     .pipe(rename(output))
     .pipe(gulp.dest('dist/umd'));
 }
 
-export function gulpUmdMinFactory(input: string, output: string) {
+export async function gulpUmdMinFactory(input: string, output: string) {
   macros.clear();
   return gulp
     .src([`dist/umd/${output}`, `dist/umd/${output}.map`], { read: false, allowEmpty: true })
     .pipe(clean())
     .pipe(gulp.src(input))
     .pipe(sourcemaps.init())
+    .pipe(terserStream())
     .pipe(GulpUglify({ compress: true }))
     .pipe(rename(output))
     .pipe(sourcemaps.write('.', { includeContent: false }))
@@ -221,7 +229,10 @@ export function gulpIsolateFactory(
       .pipe(filter([
         '**/*.ts',
         '**/*.js',
-        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}`)]))
+        '**/*.js.map',
+        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}`),
+        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}.map`)
+      ]))
       .pipe(clean());
   }
   filterDependencies.displayName = `${taskPrefix}-filter-dependencies`;
