@@ -1,14 +1,35 @@
+/**
+ * @internal
+ */
 export const enum TreeNodeColor {
   RED = 1,
   BLACK = 0
 }
 
 export class TreeNode<K, V> {
+  /**
+   * @internal
+   */
   _color = TreeNodeColor.RED;
+  /**
+   * @internal
+   */
   _key: K | undefined = undefined;
+  /**
+   * @internal
+   */
   _value: V | undefined = undefined;
+  /**
+   * @internal
+   */
   _left: TreeNode<K, V> | undefined = undefined;
+  /**
+   * @internal
+   */
   _right: TreeNode<K, V> | undefined = undefined;
+  /**
+   * @internal
+   */
   _parent: TreeNode<K, V> | undefined = undefined;
   constructor(_key?: K, _value?: V) {
     this._key = _key;
@@ -112,10 +133,22 @@ export class TreeNode<K, V> {
 }
 
 export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
+  /**
+   * @internal
+   */
   _left: TreeNodeEnableIndex<K, V> | undefined = undefined;
+  /**
+   * @internal
+   */
   _right: TreeNodeEnableIndex<K, V> | undefined = undefined;
+  /**
+   * @internal
+   */
   _parent: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  subTreeSize = 1;
+  /**
+   * @internal
+   */
+  _subTreeSize = 1;
   /**
    * @description Rotate _left and do recount.
    * @return TreeNode about moved to original position after rotation.
@@ -137,8 +170,8 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
     return _parent;
   }
   recount() {
-    this.subTreeSize = 1;
-    if (this._left) this.subTreeSize += this._left.subTreeSize;
-    if (this._right) this.subTreeSize += this._right.subTreeSize;
+    this._subTreeSize = 1;
+    if (this._left) this._subTreeSize += this._left._subTreeSize;
+    if (this._right) this._subTreeSize += this._right._subTreeSize;
   }
 }

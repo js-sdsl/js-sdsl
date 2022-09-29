@@ -29,6 +29,11 @@ export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
 }
 
 class OrderedMap<K, V> extends TreeContainer<K, V> {
+  /**
+   * @param container The initialization container.
+   * @param cmp The compare function.
+   * @param enableIndex Whether to enable iterator indexing function.
+   */
   constructor(
     container: initContainer<[K, V]> = [],
     cmp?: (x: K, y: K) => number,

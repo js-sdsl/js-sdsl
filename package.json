@@ -41,7 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.9",
     "@babel/plugin-transform-modules-commonjs": "^7.18.6",
     "@rollup/plugin-babel": "^5.3.1",
     "@types/babel__core": "^7.1.19",
@@ -69,7 +68,6 @@
     "commitlint": "^17.0.3",
     "compare-versions": "^5.0.1",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "coveralls": "^3.1.1",
     "delete-empty": "^3.0.0",
     "eslint": "^8.23.1",
     "eslint-plugin-compat": "^4.0.2",
@@ -107,7 +105,6 @@
     "tslib": "^2.4.0",
     "ttypescript": "^1.5.13",
     "typedoc": "^0.23.10",
-    "typedoc-plugin-missing-exports": "^1.0.0",
     "typescript": "~4.7.4"
   },
   "repository": {
