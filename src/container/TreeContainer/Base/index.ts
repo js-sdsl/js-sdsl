@@ -34,8 +34,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @internal
    */
   protected _set: (_key: K, _value: V, hint?: TreeIterator<K, V>) => void;
+  /**
+   * @param cmp The compare function.
+   * @param enableIndex Whether to enable iterator indexing function.
+   */
   protected constructor(
-    _cmp: (x: K, y: K) => number =
+    cmp: (x: K, y: K) => number =
     (x: K, y: K) => {
       if (x < y) return -1;
       if (x > y) return 1;
@@ -44,7 +48,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     enableIndex = false
   ) {
     super();
-    this._cmp = _cmp;
+    this._cmp = cmp;
     if (enableIndex) {
       this._TreeNodeClass = TreeNodeEnableIndex;
       this._set = function (_key, _value, hint) {
@@ -52,7 +56,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         if (curNode) {
           let p = curNode._parent as TreeNodeEnableIndex<K, V>;
           while (p !== this._header) {
-            p.subTreeSize += 1;
+            p._subTreeSize += 1;
             p = p._parent as TreeNodeEnableIndex<K, V>;
           }
           const nodeList = this._insertNodeSelfBalance(curNode);
@@ -71,7 +75,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       this._eraseNode = function (curNode) {
         let p = this._preEraseNode(curNode) as TreeNodeEnableIndex<K, V>;
         while (p !== this._header) {
-          p.subTreeSize -= 1;
+          p._subTreeSize -= 1;
           p = p._parent as TreeNodeEnableIndex<K, V>;
         }
       };
@@ -183,12 +187,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   abstract reverseUpperBound(_key: K): TreeIterator<K, V>;
   /**
    * @description Union the other tree to self.
-   *              <br/>
-   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
-   *              but we expect it to be O(mlog(n/m+1)).<br/>
-   *              More information =>
-   *              https://en.wikipedia.org/wiki/Red_black_tree
-   *              <br/>
    * @param other The other tree container you want to merge.
    */
   abstract union(other: TreeContainer<K, V>): void;

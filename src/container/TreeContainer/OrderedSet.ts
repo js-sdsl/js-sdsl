@@ -17,6 +17,11 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
 }
 
 class OrderedSet<K> extends TreeContainer<K, undefined> {
+  /**
+   * @param container The initialization container.
+   * @param cmp The compare function.
+   * @param enableIndex Whether to enable iterator indexing function.
+   */
   constructor(
     container: initContainer<K> = [],
     cmp?: (x: K, y: K) => number,

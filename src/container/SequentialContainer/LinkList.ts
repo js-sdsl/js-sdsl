@@ -2,6 +2,9 @@ import SequentialContainer from './Base';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase';
 
+/**
+ * @internal
+ */
 export class LinkNode<T> {
   _value: T | undefined = undefined;
   _pre: LinkNode<T> | undefined = undefined;
@@ -22,6 +25,9 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
   private readonly _header: LinkNode<T>;
   pre: () => this;
   next: () => this;
+  /**
+   * @internal
+   */
   constructor(
     _node: LinkNode<T>,
     _header: LinkNode<T>,
