@@ -22,12 +22,10 @@
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li><a href="TreeContainer.html" class="tsd-signature-type" data-tsd-kind="Class">TreeContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span>
-<section class="tsd-panel tsd-hierarchy">
-<h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="target">OrderedSet</span></li></ul></section></li></ul></section><aside class="tsd-sources">
+<li><span class="target">OrderedSet</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L19">src/container/TreeContainer/OrderedSet.ts:19</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L19">src/container/TreeContainer/OrderedSet.ts:19</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -71,20 +69,22 @@
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="constructor.new_OrderedSet">new <wbr/>Ordered<wbr/>Set<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">?: </span><a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span>, cmp<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span>, enableIndex<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSet.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_OrderedSet" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-type-parameters">
-<h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <section class="tsd-panel tsd-type-parameters">
 <h4>Type Parameters</h4>
 <ul class="tsd-type-parameters">
 <li>
-<h4>K</h4></li></ul></section></div>
+<h4>K</h4></li></ul></section>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>container: <a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5></li>
+<h5>container: <a href="../types/_internal_.initContainer.html" class="tsd-signature-type" data-tsd-kind="Type alias">initContainer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5>
+<div class="tsd-comment tsd-typography"><p>The initialization container.</p>
+</div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> cmp: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span>, y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span></h5>
+<div class="tsd-comment tsd-typography"><p>The compare function.</p>
+</div>
 <ul class="tsd-parameters">
 <li class="tsd-parameter-signature">
 <ul class="tsd-signatures tsd-kind-type-literal">
@@ -99,11 +99,13 @@
 <h5>y: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4></li></ul></li></ul></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> enableIndex: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> enableIndex: <span class="tsd-signature-type">boolean</span></h5>
+<div class="tsd-comment tsd-typography"><p>Whether to enable iterator indexing function.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="OrderedSet.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L20">src/container/TreeContainer/OrderedSet.ts:20</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L25">src/container/TreeContainer/OrderedSet.ts:25</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="_iterator_" class="tsd-anchor"></a>
@@ -112,12 +114,12 @@
 <li class="tsd-signature tsd-anchor-link" id="_iterator_._iterator_-1">[iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_internal_.Generator.html" class="tsd-signature-type" data-tsd-kind="Interface">Generator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#_iterator_._iterator_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Description</h3><p>Using for &#39;for...of&#39; syntax like Array.</p>
+<h3>Description</h3><p>Using for <code>for...of</code> syntax like Array.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/_internal_.Generator.html" class="tsd-signature-type" data-tsd-kind="Interface">Generator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#_iterator_">[iterator]</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L115">src/container/TreeContainer/OrderedSet.ts:115</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L120">src/container/TreeContainer/OrderedSet.ts:120</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="back" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>back</span><a href="#back" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -129,7 +131,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#back">back</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L61">src/container/TreeContainer/OrderedSet.ts:61</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L66">src/container/TreeContainer/OrderedSet.ts:66</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="begin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>begin</span><a href="#begin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -141,7 +143,7 @@
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#begin">begin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L39">src/container/TreeContainer/OrderedSet.ts:39</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L44">src/container/TreeContainer/OrderedSet.ts:44</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="clear" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clear</span><a href="#clear" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -153,7 +155,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#clear">clear</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L490">src/container/TreeContainer/Base/index.ts:490</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L488">src/container/TreeContainer/Base/index.ts:488</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="empty" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>empty</span><a href="#empty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -165,7 +167,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#empty">empty</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/ContainerBase/index.ts#L66">src/container/ContainerBase/index.ts:66</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/ContainerBase/index.ts#L66">src/container/ContainerBase/index.ts:66</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="end" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>end</span><a href="#end" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -177,7 +179,7 @@
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#end">end</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L45">src/container/TreeContainer/OrderedSet.ts:45</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L50">src/container/TreeContainer/OrderedSet.ts:50</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="eraseElementByIterator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Iterator</span><a href="#eraseElementByIterator" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -199,26 +201,26 @@
 <h4 class="tsd-returns-title">Returns <a href="_internal_.TreeIterator.html" class="tsd-signature-type" data-tsd-kind="Class">TreeIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#eraseElementByIterator">eraseElementByIterator</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L573">src/container/TreeContainer/Base/index.ts:573</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L571">src/container/TreeContainer/Base/index.ts:571</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="eraseElementByKey" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Key</span><a href="#eraseElementByKey" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="eraseElementByKey.eraseElementByKey-1">erase<wbr/>Element<wbr/>By<wbr/>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#eraseElementByKey.eraseElementByKey-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="eraseElementByKey.eraseElementByKey-1">erase<wbr/>Element<wbr/>By<wbr/>Key<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#eraseElementByKey.eraseElementByKey-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Description</h3><p>Remove the element of the specified key.</p>
+<h3>Description</h3><p>Remove the element of the specified _key.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The key you want to remove.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The _key you want to remove.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#eraseElementByKey">eraseElementByKey</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L567">src/container/TreeContainer/Base/index.ts:567</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L565">src/container/TreeContainer/Base/index.ts:565</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="eraseElementByPos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erase<wbr/>Element<wbr/>By<wbr/>Pos</span><a href="#eraseElementByPos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -237,7 +239,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#eraseElementByPos">eraseElementByPos</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L532">src/container/TreeContainer/Base/index.ts:532</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L530">src/container/TreeContainer/Base/index.ts:530</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="find" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>find</span><a href="#find" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -256,7 +258,7 @@
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#find">find</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L89">src/container/TreeContainer/OrderedSet.ts:89</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L94">src/container/TreeContainer/OrderedSet.ts:94</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forEach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>for<wbr/>Each</span><a href="#forEach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -288,7 +290,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#forEach">forEach</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L64">src/container/TreeContainer/OrderedSet.ts:64</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L69">src/container/TreeContainer/OrderedSet.ts:69</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="front" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>front</span><a href="#front" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -300,7 +302,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#front">front</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L58">src/container/TreeContainer/OrderedSet.ts:58</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L63">src/container/TreeContainer/OrderedSet.ts:63</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getElementByPos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Element<wbr/>By<wbr/>Pos</span><a href="#getElementByPos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -317,7 +319,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#getElementByPos">getElementByPos</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L68">src/container/TreeContainer/OrderedSet.ts:68</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L73">src/container/TreeContainer/OrderedSet.ts:73</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getHeight" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Height</span><a href="#getHeight" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -331,11 +333,11 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#getHeight">getHeight</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L588">src/container/TreeContainer/Base/index.ts:588</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L586">src/container/TreeContainer/Base/index.ts:586</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="insert" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="insert.insert-1">insert<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span>, hint<span class="tsd-signature-symbol">?: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="insert.insert-1">insert<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span>, hint<span class="tsd-signature-symbol">?: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
 <h3>Description</h3><p>Insert element to set.</p>
@@ -344,8 +346,8 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The key want to insert.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The _key want to insert.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> hint: <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -353,26 +355,26 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L86">src/container/TreeContainer/OrderedSet.ts:86</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L91">src/container/TreeContainer/OrderedSet.ts:91</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="lowerBound" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>lower<wbr/>Bound</span><a href="#lowerBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="lowerBound.lowerBound-1">lower<wbr/>Bound<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#lowerBound.lowerBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="lowerBound.lowerBound-1">lower<wbr/>Bound<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#lowerBound.lowerBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>An iterator to the first element not less than the given key.</p>
+<h3>Returns</h3><p>An iterator to the first element not less than the given _key.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The given key you want to compare.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The given _key you want to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#lowerBound">lowerBound</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L96">src/container/TreeContainer/OrderedSet.ts:96</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L101">src/container/TreeContainer/OrderedSet.ts:101</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rBegin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>r<wbr/>Begin</span><a href="#rBegin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -384,7 +386,7 @@
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#rBegin">rBegin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L48">src/container/TreeContainer/OrderedSet.ts:48</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L53">src/container/TreeContainer/OrderedSet.ts:53</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="rEnd" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>r<wbr/>End</span><a href="#rEnd" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -396,45 +398,45 @@
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#rEnd">rEnd</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L55">src/container/TreeContainer/OrderedSet.ts:55</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L60">src/container/TreeContainer/OrderedSet.ts:60</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="reverseLowerBound" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reverse<wbr/>Lower<wbr/>Bound</span><a href="#reverseLowerBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="reverseLowerBound.reverseLowerBound-1">reverse<wbr/>Lower<wbr/>Bound<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#reverseLowerBound.reverseLowerBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="reverseLowerBound.reverseLowerBound-1">reverse<wbr/>Lower<wbr/>Bound<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#reverseLowerBound.reverseLowerBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>An iterator to the first element not greater than the given key.</p>
+<h3>Returns</h3><p>An iterator to the first element not greater than the given _key.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The given key you want to compare.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The given _key you want to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#reverseLowerBound">reverseLowerBound</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L104">src/container/TreeContainer/OrderedSet.ts:104</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L109">src/container/TreeContainer/OrderedSet.ts:109</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="reverseUpperBound" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reverse<wbr/>Upper<wbr/>Bound</span><a href="#reverseUpperBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="reverseUpperBound.reverseUpperBound-1">reverse<wbr/>Upper<wbr/>Bound<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#reverseUpperBound.reverseUpperBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="reverseUpperBound.reverseUpperBound-1">reverse<wbr/>Upper<wbr/>Bound<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#reverseUpperBound.reverseUpperBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>An iterator to the first element less than the given key.</p>
+<h3>Returns</h3><p>An iterator to the first element less than the given _key.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The given key you want to compare.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The given _key you want to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#reverseUpperBound">reverseUpperBound</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L108">src/container/TreeContainer/OrderedSet.ts:108</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L113">src/container/TreeContainer/OrderedSet.ts:113</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="size" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>size</span><a href="#size" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -446,20 +448,14 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#size">size</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/ContainerBase/index.ts#L60">src/container/ContainerBase/index.ts:60</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/ContainerBase/index.ts#L60">src/container/ContainerBase/index.ts:60</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="union" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>union</span><a href="#union" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="union.union-1">union<span class="tsd-signature-symbol">(</span>other<span class="tsd-signature-symbol">: </span><a href="OrderedSet.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#union.union-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Description</h3><p>Union the other tree to self.
-             <br/>
-             Waiting for optimization, this is O(mlog(n+m)) algorithm now,
-             but we expect it to be O(mlog(n/m+1)).<br/>
-             More information =&gt;
-             <a href="https://en.wikipedia.org/wiki/Red_black_tree">https://en.wikipedia.org/wiki/Red_black_tree</a>
-             <br/></p>
+<h3>Description</h3><p>Union the other tree to self.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -471,14 +467,14 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#union">union</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L112">src/container/TreeContainer/OrderedSet.ts:112</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L117">src/container/TreeContainer/OrderedSet.ts:117</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="updateKeyByIterator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update<wbr/>Key<wbr/>By<wbr/>Iterator</span><a href="#updateKeyByIterator" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="updateKeyByIterator.updateKeyByIterator-1">update<wbr/>Key<wbr/>By<wbr/>Iterator<span class="tsd-signature-symbol">(</span>iter<span class="tsd-signature-symbol">: </span><a href="_internal_.TreeIterator.html" class="tsd-signature-type" data-tsd-kind="Class">TreeIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#updateKeyByIterator.updateKeyByIterator-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="updateKeyByIterator.updateKeyByIterator-1">update<wbr/>Key<wbr/>By<wbr/>Iterator<span class="tsd-signature-symbol">(</span>iter<span class="tsd-signature-symbol">: </span><a href="_internal_.TreeIterator.html" class="tsd-signature-type" data-tsd-kind="Class">TreeIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span>, _key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#updateKeyByIterator.updateKeyByIterator-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Description</h3><p>Update node&#39;s key by iterator.</p>
+<h3>Description</h3><p>Update node&#39;s _key by iterator.</p>
 
 <h3>Returns</h3><p>Boolean about if the modification is successful.</p>
 </div>
@@ -490,32 +486,32 @@
 <div class="tsd-comment tsd-typography"><p>The iterator you want to change.</p>
 </div></li>
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The key you want to update.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The _key you want to update.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#updateKeyByIterator">updateKeyByIterator</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/Base/index.ts#L502">src/container/TreeContainer/Base/index.ts:502</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/Base/index.ts#L500">src/container/TreeContainer/Base/index.ts:500</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="upperBound" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>upper<wbr/>Bound</span><a href="#upperBound" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="upperBound.upperBound-1">upper<wbr/>Bound<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#upperBound.upperBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="upperBound.upperBound-1">upper<wbr/>Bound<span class="tsd-signature-symbol">(</span>_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span><a href="#upperBound.upperBound-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography">
-<h3>Returns</h3><p>An iterator to the first element greater than the given key.</p>
+<h3>Returns</h3><p>An iterator to the first element greater than the given _key.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
-<div class="tsd-comment tsd-typography"><p>The given key you want to compare.</p>
+<h5>_key: <span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span></h5>
+<div class="tsd-comment tsd-typography"><p>The given _key you want to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="OrderedSetIterator.html" class="tsd-signature-type" data-tsd-kind="Class">OrderedSetIterator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">K</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="TreeContainer.html">TreeContainer</a>.<a href="TreeContainer.html#upperBound">upperBound</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/055866a/src/container/TreeContainer/OrderedSet.ts#L100">src/container/TreeContainer/OrderedSet.ts:100</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/js-sdsl/js-sdsl/blob/84686fc/src/container/TreeContainer/OrderedSet.ts#L105">src/container/TreeContainer/OrderedSet.ts:105</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
