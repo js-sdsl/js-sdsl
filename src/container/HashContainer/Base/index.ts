@@ -1,5 +1,8 @@
 import { Base, Container } from '@/container/ContainerBase';
 
+/**
+ * @internal
+ */
 export const enum HashContainerConst {
   sigma = 0.75,
   treeifyThreshold = 8,
@@ -59,6 +62,10 @@ abstract class HashContainer<K> extends Base {
    * @internal
    */
   protected abstract _reAllocate(): void;
+  /**
+   * @description Iterate over all elements in the container.
+   * @param callback Callback function like Array.forEach.
+   */
   abstract forEach(callback: (element: unknown, index: number) => void): void;
   /**
    * @description Remove the elements of the specified value.
@@ -70,7 +77,10 @@ abstract class HashContainer<K> extends Base {
    * @return Boolean about if the specified element in the hash set.
    */
   abstract find(key: K): void;
-  abstract [Symbol.iterator](): Generator<unknown, void, undefined>;
+  /**
+   * @description Using for `for...of` syntax like Array.
+   */
+  abstract [Symbol.iterator](): Generator<K | [K, unknown], void, undefined>;
 }
 
 export default HashContainer;

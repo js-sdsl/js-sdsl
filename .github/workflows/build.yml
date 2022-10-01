@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,19 +18,47 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run test
-        run: yarn test
+      - name: Run unit test
+        run: yarn test:unit
+      - name: Coveralls report
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ github.token }}
+  browser-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run browser test
+        run: yarn test:browser
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Run performance test
+        run: yarn test:performance
       - name: Save performance test result
         uses: actions/upload-artifact@v3
         with:
           name: performance.md
           path: dist/performance
-      - name: Coveralls report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ github.token }}
   deploy:
-    needs: test
+    needs: [unit-test, browser-test, performance-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -48,8 +76,8 @@ jobs:
         with:
           folder: docs
           branch: gh-pages
-  publish:
-    needs: test
+  publish-main:
+    needs: [unit-test, browser-test, performance-test]
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
@@ -63,8 +91,21 @@ jobs:
         run: yarn publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  publish-isolate:
+    needs: [unit-test, browser-test, performance-test]
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, 'publish@') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn install
+      - name: Publish isolate
+        run: ts-node tools/publishIsolate.ts
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
-    needs: test
+    needs: [unit-test, browser-test, performance-test]
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:

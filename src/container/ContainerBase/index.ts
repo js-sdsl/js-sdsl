@@ -125,7 +125,7 @@ export abstract class Container<T> extends Base {
     iter: ContainerIterator<T>
   ): ContainerIterator<T>;
   /**
-   * @description Using for 'for...of' syntax like Array.
+   * @description Using for `for...of` syntax like Array.
    */
   abstract [Symbol.iterator](): Generator<T, void, undefined>;
 }

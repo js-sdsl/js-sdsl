@@ -1,12 +1,13 @@
 import { Vector, LinkList, SequentialContainer } from '@/index';
+import { expect } from 'chai';
 
 function judgeSequentialContainer(
   container: SequentialContainer<number>,
   myVector: SequentialContainer<number>
 ) {
-  expect(container.size()).toEqual(myVector.size());
+  expect(container.size()).to.equal(myVector.size());
   container.forEach((element, index) => {
-    expect(element).toEqual(myVector.getElementByPos(index));
+    expect(element).to.equal(myVector.getElementByPos(index));
   });
 }
 
@@ -20,7 +21,7 @@ describe('LinkList test', () => {
   const myLinkList = new LinkList(arr);
   const tmpArr = [...arr];
 
-  test('LinkList pushFront function test', () => {
+  it('LinkList pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myLinkList.pushFront(i);
       tmpArr.unshift(i);
@@ -30,7 +31,7 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 
-  test('LinkList popFront function test', () => {
+  it('LinkList popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myLinkList.popFront();
       tmpArr.shift();
@@ -38,7 +39,7 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 
-  test('LinkList merge function test', () => {
+  it('LinkList merge function test', () => {
     for (let i = 0; i < testNum; ++i) {
       tmpArr.push(i);
     }
@@ -51,15 +52,15 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 
-  test('LinkList find function test', () => {
+  it('LinkList find function test', () => {
     myLinkList.forEach((element, index) => {
       if (index >= 1000) return;
-      expect(myLinkList.find(element).pointer).toEqual(element);
+      expect(myLinkList.find(element).pointer).to.equal(element);
     });
-    expect(myLinkList.find(-1).equals(myLinkList.end())).toBe(true);
+    expect(myLinkList.find(-1).equals(myLinkList.end())).to.equal(true);
   });
 
-  test('LinkList eraseElementByIterator function test', () => {
+  it('LinkList eraseElementByIterator function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       myLinkList.eraseElementByIterator(myLinkList.begin().next());
       myLinkList.eraseElementByIterator(myLinkList.begin());
@@ -73,79 +74,79 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 
-  test('LinkList run time error test', () => {
-    expect(() => myLinkList.getElementByPos(myLinkList.size())).toThrowError(RangeError);
+  it('LinkList run time error test', () => {
+    expect(() => myLinkList.getElementByPos(myLinkList.size())).to.to.throw(RangeError);
   });
 
-  test('LinkList pushFront function test', () => {
+  it('LinkList pushFront function test', () => {
     const myLinkList = new LinkList();
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myLinkList) {}
     myLinkList.reverse();
-    expect(myLinkList.front()).toEqual(undefined);
-    expect(myLinkList.back()).toEqual(undefined);
+    expect(myLinkList.front()).to.equal(undefined);
+    expect(myLinkList.back()).to.equal(undefined);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.begin().pointer;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.end().pointer;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rBegin().pointer;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rEnd().pointer;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     expect(() => {
       myLinkList.eraseElementByIterator(myLinkList.begin());
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     expect(() => {
       myLinkList.begin().pointer = 0;
-    }).toThrowError(RangeError);
+    }).to.to.throw(RangeError);
     myLinkList.popBack();
-    expect(myLinkList.size()).toBe(0);
+    expect(myLinkList.size()).to.equal(0);
     myLinkList.pushBack(1);
-    expect(myLinkList.size()).toBe(1);
+    expect(myLinkList.size()).to.equal(1);
     myLinkList.popBack();
-    expect(myLinkList.front()).toEqual(undefined);
-    expect(myLinkList.back()).toEqual(undefined);
-    expect(myLinkList.size()).toBe(0);
+    expect(myLinkList.front()).to.equal(undefined);
+    expect(myLinkList.back()).to.equal(undefined);
+    expect(myLinkList.size()).to.equal(0);
     myLinkList.insert(0, 100);
-    expect(myLinkList.front()).toBe(100);
+    expect(myLinkList.front()).to.equal(100);
     myLinkList.insert(myLinkList.size(), 100);
-    expect(myLinkList.back()).toBe(100);
+    expect(myLinkList.back()).to.equal(100);
     myLinkList.clear();
     myLinkList.pushFront(1);
-    expect(myLinkList.front()).toBe(1);
+    expect(myLinkList.front()).to.equal(1);
     myLinkList.popFront();
     myLinkList.popFront();
-    expect(myLinkList.size()).toBe(0);
+    expect(myLinkList.size()).to.equal(0);
     myLinkList.pushBack(1);
     myLinkList.merge(new LinkList([2]));
-    expect(myLinkList.size()).toBe(2);
+    expect(myLinkList.size()).to.equal(2);
     myLinkList.clear();
     myLinkList.eraseElementByValue(0);
-    expect(myLinkList.find(0).equals(myLinkList.end())).toBe(true);
+    expect(myLinkList.find(0).equals(myLinkList.end())).to.equal(true);
     myLinkList.merge(new LinkList([2]));
-    expect(myLinkList.size()).toBe(1);
-    expect(myLinkList.front()).toBe(2);
+    expect(myLinkList.size()).to.equal(1);
+    expect(myLinkList.front()).to.equal(2);
     myLinkList.insert(1, 1, 0);
-    expect(myLinkList.size()).toBe(1);
+    expect(myLinkList.size()).to.equal(1);
     myLinkList.pushFront(0);
-    expect(myLinkList.size()).toBe(2);
+    expect(myLinkList.size()).to.equal(2);
     myLinkList.eraseElementByValue(0);
-    expect(myLinkList.size()).toBe(1);
+    expect(myLinkList.size()).to.equal(1);
     myLinkList.clear();
     myLinkList.sort();
     myLinkList.unique();
-    expect(myLinkList.size()).toBe(0);
+    expect(myLinkList.size()).to.equal(0);
     const newLink = new LinkList([1, 2, 3]);
     myLinkList.pushBack(4);
     myLinkList.merge(newLink);
-    myLinkList.forEach((element, index) => expect(element).toBe(index + 1));
+    myLinkList.forEach((element, index) => expect(element).to.equal(index + 1));
   });
 });

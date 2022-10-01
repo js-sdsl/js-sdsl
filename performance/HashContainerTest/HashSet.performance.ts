@@ -1,5 +1,5 @@
 import { HashSet } from '@/index';
-import { testReportFormat } from '../index';
+import type { testReportFormat } from '../index';
 
 function testHashSet(arr: number[], testNum: number) {
   let startTime, endTime;

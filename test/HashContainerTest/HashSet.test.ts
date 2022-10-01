@@ -1,5 +1,6 @@
 import { HashContainerConst } from '@/container/HashContainer/Base';
 import { Vector, HashSet } from '@/index';
+import { expect } from 'chai';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
   return (low + Math.random() * (high - low)).toFixed(fix);
@@ -12,20 +13,20 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
-  expect(myHashSet.size()).toBe(stdSet.size);
+  expect(myHashSet.size()).to.equal(stdSet.size);
   stdSet.forEach((element) => {
-    expect(myHashSet.find(element)).toEqual(true);
+    expect(myHashSet.find(element)).to.equal(true);
   });
 }
 
 describe('HashSet test', () => {
-  test('constructor test', () => {
+  it('constructor test', () => {
     // eslint-disable-next-line no-new
-    expect(() => new HashSet([], 28)).toThrow(RangeError);
-    expect(new HashSet().size()).toBe(0);
+    expect(() => new HashSet([], 28)).to.throw(RangeError);
+    expect(new HashSet().size()).to.equal(0);
   });
 
-  test('HashSet hash function test', () => {
+  it('HashSet hash function test', () => {
     judgeHashSet(
       // @ts-ignore
       new HashSet(arr.map(x => Math.floor(Number(x)))),
@@ -36,7 +37,7 @@ describe('HashSet test', () => {
   const myHashSet = new HashSet(arr);
   const stdSet = new Set(arr);
 
-  test('HashSet insert function test', () => {
+  it('HashSet insert function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myHashSet.insert(i.toString());
       stdSet.add(i.toString());
@@ -47,19 +48,19 @@ describe('HashSet test', () => {
     judgeHashSet(myHashSet, stdSet);
   });
 
-  test('HashSet forEach function test', () => {
+  it('HashSet forEach function test', () => {
     myHashSet.forEach((element) => {
-      expect(stdSet.has(element)).toEqual(true);
+      expect(stdSet.has(element)).to.equal(true);
     });
     let cnt = 0;
     for (const element of myHashSet) {
       ++cnt;
-      expect(stdSet.has(element)).toEqual(true);
+      expect(stdSet.has(element)).to.equal(true);
     }
-    expect(cnt).toBe(myHashSet.size());
+    expect(cnt).to.equal(myHashSet.size());
   });
 
-  test('HashSet eraseElementByKey function test', () => {
+  it('HashSet eraseElementByKey function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myHashSet.eraseElementByKey(arr[i]);
       stdSet.delete(arr[i]);
@@ -76,29 +77,29 @@ describe('HashSet test', () => {
     myHashSet.eraseElementByKey('-7');
     myHashSet.eraseElementByKey('-8');
     myHashSet.eraseElementByKey('-9');
-    expect(myHashSet.find('-1')).toBe(false);
-    expect(myHashSet.find('-2')).toBe(false);
-    expect(myHashSet.find('-3')).toBe(false);
-    expect(myHashSet.find('-4')).toBe(false);
-    expect(myHashSet.find('-5')).toBe(false);
-    expect(myHashSet.find('-6')).toBe(false);
-    expect(myHashSet.find('-7')).toBe(false);
-    expect(myHashSet.find('-8')).toBe(false);
-    expect(myHashSet.find('-9')).toBe(false);
+    expect(myHashSet.find('-1')).to.equal(false);
+    expect(myHashSet.find('-2')).to.equal(false);
+    expect(myHashSet.find('-3')).to.equal(false);
+    expect(myHashSet.find('-4')).to.equal(false);
+    expect(myHashSet.find('-5')).to.equal(false);
+    expect(myHashSet.find('-6')).to.equal(false);
+    expect(myHashSet.find('-7')).to.equal(false);
+    expect(myHashSet.find('-8')).to.equal(false);
+    expect(myHashSet.find('-9')).to.equal(false);
     judgeHashSet(myHashSet, stdSet);
   });
 
-  test('HashSet clear function test', () => {
+  it('HashSet clear function test', () => {
     myHashSet.clear();
     stdSet.clear();
     judgeHashSet(myHashSet, stdSet);
   });
 
-  test('HashSet empty test', () => {
-    expect(myHashSet.find('1')).toEqual(false);
+  it('HashSet empty test', () => {
+    expect(myHashSet.find('1')).to.equal(false);
     myHashSet.insert(arr[0]);
     myHashSet.insert(arr[0]);
-    expect(myHashSet.size()).toBe(1);
+    expect(myHashSet.size()).to.equal(1);
     // @ts-ignore
     const bucketNum = myHashSet._bucketNum;
     // @ts-ignore
@@ -117,7 +118,7 @@ describe('HashSet test', () => {
     for (const _ of myHashSet) {}
   });
 
-  test('HashSet normal test', () => {
+  it('HashSet normal test', () => {
     const st = new HashSet<string>();
     const stdSet = new Set<string>();
     for (let i = 0; i < testNum; ++i) {
@@ -128,12 +129,12 @@ describe('HashSet test', () => {
     let size = testNum;
     for (let i = 0; i < testNum; ++i) {
       st.eraseElementByKey(i.toString());
-      expect(st.size()).toEqual(--size);
+      expect(st.size()).to.equal(--size);
     }
-    expect(st.size()).toEqual(0);
+    expect(st.size()).to.equal(0);
   });
 
-  test('HashSet hash func test', () => {
+  it('HashSet hash func test', () => {
     const normalSet = new HashSet<string>();
     const st = new HashSet<string>([], undefined, () => -1);
     const stdSet = new Set<string>();
@@ -193,7 +194,7 @@ describe('HashSet test', () => {
     judgeHashSet(st, stdSet);
   });
 
-  test('difficult test', () => {
+  it('difficult test', () => {
     const hashSetList: HashSet<string>[] = [];
     for (let i = -10; i <= 10; ++i) {
       hashSetList.push(new HashSet<string>([], undefined, () => i));

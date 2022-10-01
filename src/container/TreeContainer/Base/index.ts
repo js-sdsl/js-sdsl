@@ -27,15 +27,19 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   private readonly _eraseNode: (curNode: TreeNode<K, V>) => void;
   /**
-   * @description Insert a key-value pair or _set value by the given key.
-   * @param key The key want to insert.
-   * @param value The value want to _set.
+   * @description Insert a _key-_value pair or _set _value by the given _key.
+   * @param _key The _key want to insert.
+   * @param _value The _value want to _set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
    * @internal
    */
-  protected _set: (key: K, value: V, hint?: TreeIterator<K, V>) => void;
+  protected _set: (_key: K, _value: V, hint?: TreeIterator<K, V>) => void;
+  /**
+   * @param cmp The compare function.
+   * @param enableIndex Whether to enable iterator indexing function.
+   */
   protected constructor(
-    _cmp: (x: K, y: K) => number =
+    cmp: (x: K, y: K) => number =
     (x: K, y: K) => {
       if (x < y) return -1;
       if (x > y) return 1;
@@ -44,16 +48,16 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     enableIndex = false
   ) {
     super();
-    this._cmp = _cmp;
+    this._cmp = cmp;
     if (enableIndex) {
       this._TreeNodeClass = TreeNodeEnableIndex;
-      this._set = function (key, value, hint) {
-        const curNode = this._preSet(key, value, hint);
+      this._set = function (_key, _value, hint) {
+        const curNode = this._preSet(_key, _value, hint);
         if (curNode) {
-          let p = curNode.parent as TreeNodeEnableIndex<K, V>;
+          let p = curNode._parent as TreeNodeEnableIndex<K, V>;
           while (p !== this._header) {
-            p.subTreeSize += 1;
-            p = p.parent as TreeNodeEnableIndex<K, V>;
+            p._subTreeSize += 1;
+            p = p._parent as TreeNodeEnableIndex<K, V>;
           }
           const nodeList = this._insertNodeSelfBalance(curNode);
           if (nodeList) {
@@ -71,14 +75,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       this._eraseNode = function (curNode) {
         let p = this._preEraseNode(curNode) as TreeNodeEnableIndex<K, V>;
         while (p !== this._header) {
-          p.subTreeSize -= 1;
-          p = p.parent as TreeNodeEnableIndex<K, V>;
+          p._subTreeSize -= 1;
+          p = p._parent as TreeNodeEnableIndex<K, V>;
         }
       };
     } else {
       this._TreeNodeClass = TreeNode;
-      this._set = function (key, value, hint) {
-        const curNode = this._preSet(key, value, hint);
+      this._set = function (_key, _value, hint) {
+        const curNode = this._preSet(_key, _value, hint);
         if (curNode) this._insertNodeSelfBalance(curNode);
       };
       this._eraseNode = this._preEraseNode;
@@ -87,108 +91,102 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   /**
    * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @return TreeNode which key is greater than or equals to the given key.
+   * @param _key The _key you want to search.
+   * @return TreeNode which _key is greater than or equals to the given _key.
    * @internal
    */
-  protected _lowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _lowerBound(curNode: TreeNode<K, V> | undefined, _key: K) {
     let resNode;
     while (curNode) {
-      const cmpResult = this._cmp(curNode.key as K, key);
+      const cmpResult = this._cmp(curNode._key as K, _key);
       if (cmpResult < 0) {
-        curNode = curNode.right;
+        curNode = curNode._right;
       } else if (cmpResult > 0) {
         resNode = curNode;
-        curNode = curNode.left;
+        curNode = curNode._left;
       } else return curNode;
     }
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element not less than the given key.
+   * @param _key The given _key you want to compare.
+   * @return An iterator to the first element not less than the given _key.
    */
-  abstract lowerBound(key: K): TreeIterator<K, V>;
+  abstract lowerBound(_key: K): TreeIterator<K, V>;
   /**
    * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @return TreeNode which key is greater than the given key.
+   * @param _key The _key you want to search.
+   * @return TreeNode which _key is greater than the given _key.
    * @internal
    */
-  protected _upperBound(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _upperBound(curNode: TreeNode<K, V> | undefined, _key: K) {
     let resNode;
     while (curNode) {
-      const cmpResult = this._cmp(curNode.key as K, key);
+      const cmpResult = this._cmp(curNode._key as K, _key);
       if (cmpResult <= 0) {
-        curNode = curNode.right;
-      } else if (cmpResult > 0) {
+        curNode = curNode._right;
+      } else {
         resNode = curNode;
-        curNode = curNode.left;
+        curNode = curNode._left;
       }
     }
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element greater than the given key.
+   * @param _key The given _key you want to compare.
+   * @return An iterator to the first element greater than the given _key.
    */
-  abstract upperBound(key: K): TreeIterator<K, V>;
+  abstract upperBound(_key: K): TreeIterator<K, V>;
   /**
    * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @return TreeNode which key is less than or equals to the given key.
+   * @param _key The _key you want to search.
+   * @return TreeNode which _key is less than or equals to the given _key.
    * @internal
    */
-  protected _reverseLowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _reverseLowerBound(curNode: TreeNode<K, V> | undefined, _key: K) {
     let resNode;
     while (curNode) {
-      const cmpResult = this._cmp(curNode.key as K, key);
+      const cmpResult = this._cmp(curNode._key as K, _key);
       if (cmpResult < 0) {
         resNode = curNode;
-        curNode = curNode.right;
+        curNode = curNode._right;
       } else if (cmpResult > 0) {
-        curNode = curNode.left;
+        curNode = curNode._left;
       } else return curNode;
     }
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element not greater than the given key.
+   * @param _key The given _key you want to compare.
+   * @return An iterator to the first element not greater than the given _key.
    */
-  abstract reverseLowerBound(key: K): TreeIterator<K, V>;
+  abstract reverseLowerBound(_key: K): TreeIterator<K, V>;
   /**
    * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @return TreeNode which key is less than the given key.
+   * @param _key The _key you want to search.
+   * @return TreeNode which _key is less than the given _key.
    * @internal
    */
-  protected _reverseUpperBound(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _reverseUpperBound(curNode: TreeNode<K, V> | undefined, _key: K) {
     let resNode;
     while (curNode) {
-      const cmpResult = this._cmp(curNode.key as K, key);
+      const cmpResult = this._cmp(curNode._key as K, _key);
       if (cmpResult < 0) {
         resNode = curNode;
-        curNode = curNode.right;
-      } else if (cmpResult >= 0) {
-        curNode = curNode.left;
+        curNode = curNode._right;
+      } else {
+        curNode = curNode._left;
       }
     }
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element less than the given key.
+   * @param _key The given _key you want to compare.
+   * @return An iterator to the first element less than the given _key.
    */
-  abstract reverseUpperBound(key: K): TreeIterator<K, V>;
+  abstract reverseUpperBound(_key: K): TreeIterator<K, V>;
   /**
    * @description Union the other tree to self.
-   *              <br/>
-   *              Waiting for optimization, this is O(mlog(n+m)) algorithm now,
-   *              but we expect it to be O(mlog(n/m+1)).<br/>
-   *              More information =>
-   *              https://en.wikipedia.org/wiki/Red_black_tree
-   *              <br/>
    * @param other The other tree container you want to merge.
    */
   abstract union(other: TreeContainer<K, V>): void;
@@ -199,61 +197,61 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   private _eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
-      const parentNode = curNode.parent as TreeNode<K, V>;
+      const parentNode = curNode._parent as TreeNode<K, V>;
       if (parentNode === this._header) return;
-      if (curNode.color === TreeNodeColor.RED) {
-        curNode.color = TreeNodeColor.BLACK;
+      if (curNode._color === TreeNodeColor.RED) {
+        curNode._color = TreeNodeColor.BLACK;
         return;
       }
-      if (curNode === parentNode.left) {
-        const brother = parentNode.right as TreeNode<K, V>;
-        if (brother.color === TreeNodeColor.RED) {
-          brother.color = TreeNodeColor.BLACK;
-          parentNode.color = TreeNodeColor.RED;
+      if (curNode === parentNode._left) {
+        const brother = parentNode._right as TreeNode<K, V>;
+        if (brother._color === TreeNodeColor.RED) {
+          brother._color = TreeNodeColor.BLACK;
+          parentNode._color = TreeNodeColor.RED;
           if (parentNode === this._root) {
             this._root = parentNode.rotateLeft();
           } else parentNode.rotateLeft();
-        } else if (brother.color === TreeNodeColor.BLACK) {
-          if (brother.right && brother.right.color === TreeNodeColor.RED) {
-            brother.color = parentNode.color;
-            parentNode.color = TreeNodeColor.BLACK;
-            brother.right.color = TreeNodeColor.BLACK;
+        } else {
+          if (brother._right && brother._right._color === TreeNodeColor.RED) {
+            brother._color = parentNode._color;
+            parentNode._color = TreeNodeColor.BLACK;
+            brother._right._color = TreeNodeColor.BLACK;
             if (parentNode === this._root) {
               this._root = parentNode.rotateLeft();
             } else parentNode.rotateLeft();
             return;
-          } else if (brother.left && brother.left.color === TreeNodeColor.RED) {
-            brother.color = TreeNodeColor.RED;
-            brother.left.color = TreeNodeColor.BLACK;
+          } else if (brother._left && brother._left._color === TreeNodeColor.RED) {
+            brother._color = TreeNodeColor.RED;
+            brother._left._color = TreeNodeColor.BLACK;
             brother.rotateRight();
           } else {
-            brother.color = TreeNodeColor.RED;
+            brother._color = TreeNodeColor.RED;
             curNode = parentNode;
           }
         }
       } else {
-        const brother = parentNode.left as TreeNode<K, V>;
-        if (brother.color === TreeNodeColor.RED) {
-          brother.color = TreeNodeColor.BLACK;
-          parentNode.color = TreeNodeColor.RED;
+        const brother = parentNode._left as TreeNode<K, V>;
+        if (brother._color === TreeNodeColor.RED) {
+          brother._color = TreeNodeColor.BLACK;
+          parentNode._color = TreeNodeColor.RED;
           if (parentNode === this._root) {
             this._root = parentNode.rotateRight();
           } else parentNode.rotateRight();
         } else {
-          if (brother.left && brother.left.color === TreeNodeColor.RED) {
-            brother.color = parentNode.color;
-            parentNode.color = TreeNodeColor.BLACK;
-            brother.left.color = TreeNodeColor.BLACK;
+          if (brother._left && brother._left._color === TreeNodeColor.RED) {
+            brother._color = parentNode._color;
+            parentNode._color = TreeNodeColor.BLACK;
+            brother._left._color = TreeNodeColor.BLACK;
             if (parentNode === this._root) {
               this._root = parentNode.rotateRight();
             } else parentNode.rotateRight();
             return;
-          } else if (brother.right && brother.right.color === TreeNodeColor.RED) {
-            brother.color = TreeNodeColor.RED;
-            brother.right.color = TreeNodeColor.BLACK;
+          } else if (brother._right && brother._right._color === TreeNodeColor.RED) {
+            brother._color = TreeNodeColor.RED;
+            brother._right._color = TreeNodeColor.BLACK;
             brother.rotateLeft();
           } else {
-            brother.color = TreeNodeColor.RED;
+            brother._color = TreeNodeColor.RED;
             curNode = parentNode;
           }
         }
@@ -269,30 +267,30 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       return this._header;
     }
     let swapNode = curNode;
-    while (swapNode.left || swapNode.right) {
-      if (swapNode.right) {
-        swapNode = swapNode.right;
-        while (swapNode.left) swapNode = swapNode.left;
-      } else if (swapNode.left) {
-        swapNode = swapNode.left;
+    while (swapNode._left || swapNode._right) {
+      if (swapNode._right) {
+        swapNode = swapNode._right;
+        while (swapNode._left) swapNode = swapNode._left;
+      } else {
+        swapNode = swapNode._left as TreeNode<K, V>;
       }
-      [curNode.key, swapNode.key] = [swapNode.key, curNode.key];
-      [curNode.value, swapNode.value] = [swapNode.value, curNode.value];
+      [curNode._key, swapNode._key] = [swapNode._key, curNode._key];
+      [curNode._value, swapNode._value] = [swapNode._value, curNode._value];
       curNode = swapNode;
     }
-    if (this._header.left === swapNode) {
-      this._header.left = swapNode.parent;
-    } else if (this._header.right === swapNode) {
-      this._header.right = swapNode.parent;
+    if (this._header._left === swapNode) {
+      this._header._left = swapNode._parent;
+    } else if (this._header._right === swapNode) {
+      this._header._right = swapNode._parent;
     }
     this._eraseNodeSelfBalance(swapNode);
-    const parent = swapNode.parent as TreeNode<K, V>;
-    if (swapNode === parent.left) {
-      parent.left = undefined;
-    } else parent.right = undefined;
+    const _parent = swapNode._parent as TreeNode<K, V>;
+    if (swapNode === _parent._left) {
+      _parent._left = undefined;
+    } else _parent._right = undefined;
     this._length -= 1;
-    (this._root as TreeNode<K, V>).color = TreeNodeColor.BLACK;
-    return parent;
+    (this._root as TreeNode<K, V>)._color = TreeNodeColor.BLACK;
+    return _parent;
   }
   /**
    * @description InOrder traversal the tree.
@@ -302,92 +300,92 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
       (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => {
         if (curNode === undefined) return false;
-        const ifReturn = this._inOrderTraversal(curNode.left, callback);
+        const ifReturn = this._inOrderTraversal(curNode._left, callback);
         if (ifReturn) return true;
         if (callback(curNode)) return true;
-        return this._inOrderTraversal(curNode.right, callback);
+        return this._inOrderTraversal(curNode._right, callback);
       };
   /**
    * @internal
    */
   private _insertNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
-      const parentNode = curNode.parent as TreeNode<K, V>;
-      if (parentNode.color === TreeNodeColor.BLACK) return;
-      const grandParent = parentNode.parent as TreeNode<K, V>;
-      if (parentNode === grandParent.left) {
-        const uncle = grandParent.right;
-        if (uncle && uncle.color === TreeNodeColor.RED) {
-          uncle.color = parentNode.color = TreeNodeColor.BLACK;
+      const parentNode = curNode._parent as TreeNode<K, V>;
+      if (parentNode._color === TreeNodeColor.BLACK) return;
+      const grandParent = parentNode._parent as TreeNode<K, V>;
+      if (parentNode === grandParent._left) {
+        const uncle = grandParent._right;
+        if (uncle && uncle._color === TreeNodeColor.RED) {
+          uncle._color = parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) return;
-          grandParent.color = TreeNodeColor.RED;
+          grandParent._color = TreeNodeColor.RED;
           curNode = grandParent;
           continue;
-        } else if (curNode === parentNode.right) {
-          curNode.color = TreeNodeColor.BLACK;
-          if (curNode.left) curNode.left.parent = parentNode;
-          if (curNode.right) curNode.right.parent = grandParent;
-          parentNode.right = curNode.left;
-          grandParent.left = curNode.right;
-          curNode.left = parentNode;
-          curNode.right = grandParent;
+        } else if (curNode === parentNode._right) {
+          curNode._color = TreeNodeColor.BLACK;
+          if (curNode._left) curNode._left._parent = parentNode;
+          if (curNode._right) curNode._right._parent = grandParent;
+          parentNode._right = curNode._left;
+          grandParent._left = curNode._right;
+          curNode._left = parentNode;
+          curNode._right = grandParent;
           if (grandParent === this._root) {
             this._root = curNode;
-            this._header.parent = curNode;
+            this._header._parent = curNode;
           } else {
-            const GP = grandParent.parent as TreeNode<K, V>;
-            if (GP.left === grandParent) {
-              GP.left = curNode;
-            } else GP.right = curNode;
+            const GP = grandParent._parent as TreeNode<K, V>;
+            if (GP._left === grandParent) {
+              GP._left = curNode;
+            } else GP._right = curNode;
           }
-          curNode.parent = grandParent.parent;
-          parentNode.parent = curNode;
-          grandParent.parent = curNode;
-          grandParent.color = TreeNodeColor.RED;
+          curNode._parent = grandParent._parent;
+          parentNode._parent = curNode;
+          grandParent._parent = curNode;
+          grandParent._color = TreeNodeColor.RED;
           return { parentNode, grandParent, curNode };
         } else {
-          parentNode.color = TreeNodeColor.BLACK;
+          parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) {
             this._root = grandParent.rotateRight();
           } else grandParent.rotateRight();
-          grandParent.color = TreeNodeColor.RED;
+          grandParent._color = TreeNodeColor.RED;
         }
       } else {
-        const uncle = grandParent.left;
-        if (uncle && uncle.color === TreeNodeColor.RED) {
-          uncle.color = parentNode.color = TreeNodeColor.BLACK;
+        const uncle = grandParent._left;
+        if (uncle && uncle._color === TreeNodeColor.RED) {
+          uncle._color = parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) return;
-          grandParent.color = TreeNodeColor.RED;
+          grandParent._color = TreeNodeColor.RED;
           curNode = grandParent;
           continue;
-        } else if (curNode === parentNode.left) {
-          curNode.color = TreeNodeColor.BLACK;
-          if (curNode.left) curNode.left.parent = grandParent;
-          if (curNode.right) curNode.right.parent = parentNode;
-          grandParent.right = curNode.left;
-          parentNode.left = curNode.right;
-          curNode.left = grandParent;
-          curNode.right = parentNode;
+        } else if (curNode === parentNode._left) {
+          curNode._color = TreeNodeColor.BLACK;
+          if (curNode._left) curNode._left._parent = grandParent;
+          if (curNode._right) curNode._right._parent = parentNode;
+          grandParent._right = curNode._left;
+          parentNode._left = curNode._right;
+          curNode._left = grandParent;
+          curNode._right = parentNode;
           if (grandParent === this._root) {
             this._root = curNode;
-            this._header.parent = curNode;
+            this._header._parent = curNode;
           } else {
-            const GP = grandParent.parent as TreeNode<K, V>;
-            if (GP.left === grandParent) {
-              GP.left = curNode;
-            } else GP.right = curNode;
+            const GP = grandParent._parent as TreeNode<K, V>;
+            if (GP._left === grandParent) {
+              GP._left = curNode;
+            } else GP._right = curNode;
           }
-          curNode.parent = grandParent.parent;
-          parentNode.parent = curNode;
-          grandParent.parent = curNode;
-          grandParent.color = TreeNodeColor.RED;
+          curNode._parent = grandParent._parent;
+          parentNode._parent = curNode;
+          grandParent._parent = curNode;
+          grandParent._color = TreeNodeColor.RED;
           return { parentNode, grandParent, curNode };
         } else {
-          parentNode.color = TreeNodeColor.BLACK;
+          parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) {
             this._root = grandParent.rotateLeft();
           } else grandParent.rotateLeft();
-          grandParent.color = TreeNodeColor.RED;
+          grandParent._color = TreeNodeColor.RED;
         }
       }
       return;
@@ -396,61 +394,61 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  private _preSet(key: K, value?: V, hint?: TreeIterator<K, V>) {
+  private _preSet(_key: K, _value?: V, hint?: TreeIterator<K, V>) {
     if (this._root === undefined) {
       this._length += 1;
-      this._root = new this._TreeNodeClass<K, V>(key, value);
-      this._root.color = TreeNodeColor.BLACK;
-      this._root.parent = this._header;
-      this._header.parent = this._root;
-      this._header.left = this._root;
-      this._header.right = this._root;
+      this._root = new this._TreeNodeClass<K, V>(_key, _value);
+      this._root._color = TreeNodeColor.BLACK;
+      this._root._parent = this._header;
+      this._header._parent = this._root;
+      this._header._left = this._root;
+      this._header._right = this._root;
       return;
     }
     let curNode;
-    const minNode = this._header.left as TreeNode<K, V>;
-    const compareToMin = this._cmp(minNode.key as K, key);
+    const minNode = this._header._left as TreeNode<K, V>;
+    const compareToMin = this._cmp(minNode._key as K, _key);
     if (compareToMin === 0) {
-      minNode.value = value;
+      minNode._value = _value;
       return;
     } else if (compareToMin > 0) {
-      minNode.left = new this._TreeNodeClass(key, value);
-      minNode.left.parent = minNode;
-      curNode = minNode.left;
-      this._header.left = curNode;
+      minNode._left = new this._TreeNodeClass(_key, _value);
+      minNode._left._parent = minNode;
+      curNode = minNode._left;
+      this._header._left = curNode;
     } else {
-      const maxNode = this._header.right as TreeNode<K, V>;
-      const compareToMax = this._cmp(maxNode.key as K, key);
+      const maxNode = this._header._right as TreeNode<K, V>;
+      const compareToMax = this._cmp(maxNode._key as K, _key);
       if (compareToMax === 0) {
-        maxNode.value = value;
+        maxNode._value = _value;
         return;
       } else if (compareToMax < 0) {
-        maxNode.right = new this._TreeNodeClass<K, V>(key, value);
-        maxNode.right.parent = maxNode;
-        curNode = maxNode.right;
-        this._header.right = curNode;
+        maxNode._right = new this._TreeNodeClass<K, V>(_key, _value);
+        maxNode._right._parent = maxNode;
+        curNode = maxNode._right;
+        this._header._right = curNode;
       } else {
         if (hint !== undefined) {
           const iterNode = hint._node;
           if (iterNode !== this._header) {
-            const iterCmpRes = this._cmp(iterNode.key as K, key);
+            const iterCmpRes = this._cmp(iterNode._key as K, _key);
             if (iterCmpRes === 0) {
-              iterNode.value = value;
+              iterNode._value = _value;
               return;
-            } else if (iterCmpRes > 0) {
+            } else /* istanbul ignore else */ if (iterCmpRes > 0) {
               const preNode = iterNode.pre();
-              const preCmpRes = this._cmp(preNode.key as K, key);
+              const preCmpRes = this._cmp(preNode._key as K, _key);
               if (preCmpRes === 0) {
-                preNode.value = value;
+                preNode._value = _value;
                 return;
               } else if (preCmpRes < 0) {
-                curNode = new this._TreeNodeClass(key, value);
-                if (preNode.right === undefined) {
-                  preNode.right = curNode;
-                  curNode.parent = preNode;
+                curNode = new this._TreeNodeClass(_key, _value);
+                if (preNode._right === undefined) {
+                  preNode._right = curNode;
+                  curNode._parent = preNode;
                 } else {
-                  iterNode.left = curNode;
-                  curNode.parent = iterNode;
+                  iterNode._left = curNode;
+                  curNode._parent = iterNode;
                 }
               }
             }
@@ -459,25 +457,25 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         if (curNode === undefined) {
           curNode = this._root;
           while (true) {
-            const cmpResult = this._cmp(curNode.key as K, key);
+            const cmpResult = this._cmp(curNode._key as K, _key);
             if (cmpResult > 0) {
-              if (curNode.left === undefined) {
-                curNode.left = new this._TreeNodeClass<K, V>(key, value);
-                curNode.left.parent = curNode;
-                curNode = curNode.left;
+              if (curNode._left === undefined) {
+                curNode._left = new this._TreeNodeClass<K, V>(_key, _value);
+                curNode._left._parent = curNode;
+                curNode = curNode._left;
                 break;
               }
-              curNode = curNode.left;
+              curNode = curNode._left;
             } else if (cmpResult < 0) {
-              if (curNode.right === undefined) {
-                curNode.right = new this._TreeNodeClass<K, V>(key, value);
-                curNode.right.parent = curNode;
-                curNode = curNode.right;
+              if (curNode._right === undefined) {
+                curNode._right = new this._TreeNodeClass<K, V>(_key, _value);
+                curNode._right._parent = curNode;
+                curNode = curNode._right;
                 break;
               }
-              curNode = curNode.right;
+              curNode = curNode._right;
             } else {
-              curNode.value = value;
+              curNode._value = _value;
               return;
             }
           }
@@ -490,43 +488,43 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   clear() {
     this._length = 0;
     this._root = undefined;
-    this._header.parent = undefined;
-    this._header.left = this._header.right = undefined;
+    this._header._parent = undefined;
+    this._header._left = this._header._right = undefined;
   }
   /**
-   * @description Update node's key by iterator.
+   * @description Update node's _key by iterator.
    * @param iter The iterator you want to change.
-   * @param key The key you want to update.
+   * @param _key The _key you want to update.
    * @return Boolean about if the modification is successful.
    */
-  updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
+  updateKeyByIterator(iter: TreeIterator<K, V>, _key: K): boolean {
     const node = iter._node;
     if (node === this._header) {
       throw new TypeError('Invalid iterator!');
     }
     if (this._length === 1) {
-      node.key = key;
+      node._key = _key;
       return true;
     }
-    if (node === this._header.left) {
-      if (this._cmp(node.next().key as K, key) > 0) {
-        node.key = key;
+    if (node === this._header._left) {
+      if (this._cmp(node.next()._key as K, _key) > 0) {
+        node._key = _key;
         return true;
       }
       return false;
     }
-    if (node === this._header.right) {
-      if (this._cmp(node.pre().key as K, key) < 0) {
-        node.key = key;
+    if (node === this._header._right) {
+      if (this._cmp(node.pre()._key as K, _key) < 0) {
+        node._key = _key;
         return true;
       }
       return false;
     }
-    const preKey = node.pre().key as K;
-    if (this._cmp(preKey, key) >= 0) return false;
-    const nextKey = node.next().key as K;
-    if (this._cmp(nextKey, key) <= 0) return false;
-    node.key = key;
+    const preKey = node.pre()._key as K;
+    if (this._cmp(preKey, _key) >= 0) return false;
+    const nextKey = node.next()._key as K;
+    if (this._cmp(nextKey, _key) <= 0) return false;
+    node._key = _key;
     return true;
   }
   eraseElementByPos(pos: number) {
@@ -544,29 +542,29 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       });
   }
   /**
-   * @description Find node which key is equals to the given key.
+   * @description Find node which _key is equals to the given _key.
    * @param curNode The starting node of the search.
-   * @param key The key you want to search.
+   * @param _key The _key you want to search.
    * @internal
    */
-  protected _findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
+  protected _findElementNode(curNode: TreeNode<K, V> | undefined, _key: K) {
     while (curNode) {
-      const cmpResult = this._cmp(curNode.key as K, key);
+      const cmpResult = this._cmp(curNode._key as K, _key);
       if (cmpResult < 0) {
-        curNode = curNode.right;
+        curNode = curNode._right;
       } else if (cmpResult > 0) {
-        curNode = curNode.left;
+        curNode = curNode._left;
       } else return curNode;
     }
     return curNode;
   }
   /**
-   * @description Remove the element of the specified key.
-   * @param key The key you want to remove.
+   * @description Remove the element of the specified _key.
+   * @param _key The _key you want to remove.
    */
-  eraseElementByKey(key: K) {
+  eraseElementByKey(_key: K) {
     if (!this._length) return;
-    const curNode = this._findElementNode(this._root, key);
+    const curNode = this._findElementNode(this._root, _key);
     if (curNode === undefined) return;
     this._eraseNode(curNode);
   }
@@ -575,7 +573,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     if (node === this._header) {
       throw new RangeError('Invalid iterator');
     }
-    if (node.right === undefined) {
+    if (node._right === undefined) {
       iter = iter.next();
     }
     this._eraseNode(node);
@@ -591,7 +589,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       (curNode: TreeNode<K, V> | undefined) => number =
       (curNode: TreeNode<K, V> | undefined) => {
         if (!curNode) return 0;
-        return Math.max(traversal(curNode.left), traversal(curNode.right)) + 1;
+        return Math.max(traversal(curNode._left), traversal(curNode._right)) + 1;
       };
     return traversal(this._root);
   }
