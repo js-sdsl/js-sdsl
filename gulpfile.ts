@@ -49,7 +49,8 @@ gulp.task(
       module: 'ES2015',
       declaration: false
     },
-    true
+    true,
+    false
   )
 );
 
