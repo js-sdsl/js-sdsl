@@ -58,19 +58,19 @@
 npm install js-sdsl
 ```
 
-或者可以使用仅存在特定集装箱的隔离包装
+或者根据需要安装以下任意单个包
 
 ```bash
-npm i @js-sdsl/stack # 是只存在stack集装箱的包装
-npm i @js-sdsl/queue # 是只存在queue集装箱的包装
-npm i @js-sdsl/priority-queue # 是只存在priority-queue集装箱的包装
-npm i @js-sdsl/vector # 是只存在vector集装箱的包装
-npm i @js-sdsl/linklist # 是只存在linklist集装箱的包装
-npm i @js-sdsl/deque # 是只存在deque集装箱的包装
-npm i @js-sdsl/ordered-set # 是只存在ordered-set集装箱的包装
-npm i @js-sdsl/ordered-map # 是只存在ordered-map集装箱的包装
-npm i @js-sdsl/hash-set # 是只存在hash-set集装箱的包装
-npm i @js-sdsl/hash-map # 是只存在hash-map集装箱的包装
+npm i @js-sdsl/stack
+npm i @js-sdsl/queue
+npm i @js-sdsl/priority-queue
+npm i @js-sdsl/vector
+npm i @js-sdsl/linklist
+npm i @js-sdsl/deque
+npm i @js-sdsl/ordered-set
+npm i @js-sdsl/ordered-map
+npm i @js-sdsl/hash-set
+npm i @js-sdsl/hash-map
 ```
 
 ## 使用说明
