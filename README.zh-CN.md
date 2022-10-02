@@ -58,6 +58,21 @@
 npm install js-sdsl
 ```
 
+或者根据需要安装以下任意单个包
+
+```bash
+npm i @js-sdsl/stack
+npm i @js-sdsl/queue
+npm i @js-sdsl/priority-queue
+npm i @js-sdsl/vector
+npm i @js-sdsl/linklist
+npm i @js-sdsl/deque
+npm i @js-sdsl/ordered-set
+npm i @js-sdsl/ordered-map
+npm i @js-sdsl/hash-set
+npm i @js-sdsl/hash-map
+```
+
 ## 使用说明
 
 您可以[访问我们的主页](https://js-sdsl.github.io/)获取更多信息

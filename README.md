@@ -56,6 +56,21 @@ Or install js-sdsl using npm
 npm install js-sdsl
 ```
 
+Or you can download the isolate package containing only the containers you want:
+
+```bash
+npm i @js-sdsl/stack
+npm i @js-sdsl/queue
+npm i @js-sdsl/priority-queue
+npm i @js-sdsl/vector
+npm i @js-sdsl/linklist
+npm i @js-sdsl/deque
+npm i @js-sdsl/ordered-set
+npm i @js-sdsl/ordered-map
+npm i @js-sdsl/hash-set
+npm i @js-sdsl/hash-map
+```
+
 ## Usage
 
 You can visit our [official website](https://js-sdsl.github.io/) to get more information.
