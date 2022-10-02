@@ -101,7 +101,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Publish isolate
-        run: ts-node tools/publishIsolate.ts
+        run: ./node_modules/.bin/ts-node tools/publishIsolate.ts
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
