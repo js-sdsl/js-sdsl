@@ -199,11 +199,14 @@ export function gulpIsolateFactory(
       output,
       {
         ...overrideSettings,
-        getCustomTransformers: (program?: Program) => {
-          const treeShakerTransform = tsTreeShaker({
-            solver: dependencySolver,
-            indexFile: input.indexFile
-          });
+        getCustomTransformers: (program: Program) => {
+          const treeShakerTransform = tsTreeShaker(
+            program,
+            {
+              solver: dependencySolver,
+              indexFile: input.indexFile
+            }
+          );
 
           const customTransformers = overrideSettings?.getCustomTransformers?.(program);
           return {

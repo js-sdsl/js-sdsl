@@ -60,10 +60,7 @@ export class DependencySolver {
       this.outDir = options.outDir;
     }
 
-    const projectPath = process.cwd();
     this.sourceRoots = sourceRoot instanceof Array ? sourceRoot : [sourceRoot];
-    this.sourceRoots = this.sourceRoots
-      .map((sourceRoot) => this.normalizePath(path.resolve(projectPath, sourceRoot)));
   }
   private normalizePath(fileName: string) {
     return path.normalize(fileName).replace(/\\/g, '/');
@@ -89,10 +86,14 @@ export class DependencySolver {
     const relativePath = path.relative(this.baseUrl, filePath);
     return path.join(this.outDir, relativePath);
   }
-  setCompilerOptions(options: ts.CompilerOptions) {
-    if (this.graph) {
-      if (this.baseUrl || this.outDir) return;
-    }
+  initialize(program: ts.Program, config: transformerConfig) {
+    // resolve sorceRoots
+    const projectPath = program.getCurrentDirectory();
+    this.sourceRoots = this.sourceRoots
+      .map((sourceRoot) => path.resolve(projectPath, sourceRoot));
+
+    // convert to destination paths
+    const options = program.getCompilerOptions();
 
     this.baseUrl ??= options.baseUrl || __dirname;
     this.outDir ??= options.outDir || this.baseUrl;
@@ -106,17 +107,17 @@ export class DependencySolver {
     const jsRoots = this.sourceRoots
       .map((sourceRoot) => this.replaceExtension(sourceRoot, '.js'));
 
+    // create graph
     this.graph = new DependencyGraph([...declarationRoots, ...jsRoots]);
-  }
-  setForceIncludeFiles(...files: string[]) {
-    if (this.graph === undefined) throw new Error('graph is undefined');
 
-    const projectPath = process.cwd();
-    files = files.map((file) =>
-      this.normalizePath(
-        this.convertToDestinationPath(path.resolve(projectPath, file))
-      )
-    );
+    // set force include files
+    const files = [config.indexFile]
+      .filter((file): file is string => file !== undefined)
+      .map((file) =>
+        this.normalizePath(
+          this.convertToDestinationPath(path.resolve(projectPath, file))
+        )
+      );
 
     this.forceIncludeFiles = [
       ...files.map((file) => this.replaceExtension(file, '.d.ts')),
@@ -221,15 +222,28 @@ class TsUtils {
         : (transformBundle(node as ts.Bundle) as T);
     };
   }
+  static saveSourceFile(sourceFile: ts.SourceFile, filePath: string) {
+    const printer = ts.createPrinter();
+    const source = printer.printFile(sourceFile);
+    fs.writeFileSync(filePath, source);
+  }
 }
 
 class TransformerBuilder {
+  private readonly program: ts.Program;
   private readonly dependencySolver: DependencySolver;
   private readonly indexFile?: string;
   private readonly extension: '.d.ts' | '.js';
-  constructor(config: transformerConfig, extension: '.d.ts' | '.js') {
+  constructor(
+    program: ts.Program,
+    config: transformerConfig,
+    extension: '.d.ts' | '.js'
+  ) {
+    this.program = program;
     this.dependencySolver = config.solver;
-    if (config.indexFile) this.indexFile = path.resolve(process.cwd(), config.indexFile);
+    if (config.indexFile) {
+      this.indexFile = path.resolve(program.getCurrentDirectory(), config.indexFile);
+    }
     this.extension = extension;
   }
   makeGraphBuilder<T extends ts.Bundle | ts.SourceFile>(
@@ -386,30 +400,25 @@ export type transformerConfig = {
   indexFile?: string;
 }
 
-export default function transformer(config: transformerConfig) {
-  const jsTransformerBuilder = new TransformerBuilder(config, '.js');
-  const dtsTransformerBuilder = new TransformerBuilder(config, '.d.ts');
+export default function transformer(program: ts.Program, config: transformerConfig) {
+  config.solver.initialize(program, config);
+  const jsBuilder = new TransformerBuilder(program, config, '.js');
+  const dtsBuilder = new TransformerBuilder(program, config, '.d.ts');
+
+  function createTransformerBuilder(
+    transformer: (context: ts.TransformationContext
+  ) => ts.Transformer<ts.SourceFile | ts.Bundle>) {
+    return (context: ts.TransformationContext) => transformer(context);
+  }
 
   return {
     after: [
-      (context: ts.TransformationContext) => {
-        config.solver.setCompilerOptions(context.getCompilerOptions());
-        return jsTransformerBuilder.makeGraphBuilder<ts.SourceFile>(context);
-      },
-      (context: ts.TransformationContext) => {
-        if (config.indexFile) config.solver.setForceIncludeFiles(config.indexFile);
-        return jsTransformerBuilder.makeIndexTransformer<ts.SourceFile>(context);
-      }
+      createTransformerBuilder(jsBuilder.makeGraphBuilder.bind(jsBuilder)),
+      createTransformerBuilder(jsBuilder.makeIndexTransformer.bind(dtsBuilder))
     ],
     afterDeclarations: [
-      (context: ts.TransformationContext) => {
-        config.solver.setCompilerOptions(context.getCompilerOptions());
-        return dtsTransformerBuilder.makeGraphBuilder(context);
-      },
-      (context: ts.TransformationContext) => {
-        if (config.indexFile) config.solver.setForceIncludeFiles(config.indexFile);
-        return dtsTransformerBuilder.makeIndexTransformer(context);
-      }
+      createTransformerBuilder(dtsBuilder.makeGraphBuilder.bind(dtsBuilder)),
+      createTransformerBuilder(dtsBuilder.makeIndexTransformer.bind(dtsBuilder))
     ]
   };
 }
