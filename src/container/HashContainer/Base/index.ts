@@ -4,22 +4,12 @@ import { Base, Container } from '@/container/ContainerBase';
  * @internal
  */
 export const enum HashContainerConst {
-  sigma = 0.75,
   treeifyThreshold = 8,
   untreeifyThreshold = 6,
-  minTreeifySize = 64,
   maxBucketNum = (1 << 30)
 }
 
-abstract class HashContainer<K> extends Base {
-  /**
-   * @internal
-   */
-  protected _bucketNum: number;
-  /**
-   * @internal
-   */
-  protected _initBucketNum: number;
+abstract class HashContainer<K, V> extends Base {
   /**
    * @internal
    */
@@ -27,18 +17,29 @@ abstract class HashContainer<K> extends Base {
   /**
    * @internal
    */
-  protected abstract _hashTable: Container<unknown>[];
+  protected abstract _hashTable: ((K | [K, V])[] | Container<K | [K, V]>)[];
   protected constructor(
-    initBucketNum = 16,
-    hashFunc: (x: K) => number =
-    (x: K) => {
+    hashFunc = (x: K) => {
       let str;
-      if (typeof x !== 'string') {
-        str = JSON.stringify(x);
-      } else str = x;
+      const type = typeof x;
+      if (type === 'number') {
+        if ((x as unknown as number) % 1 === 0) {
+          let hash = x as unknown as number;
+          hash = hash ^ 5381;
+          hash = ~hash + (hash << 15);
+          hash = hash ^ (hash >> 12);
+          hash = hash + (hash << 2);
+          hash = hash ^ (hash >> 4);
+          hash = hash * 2057;
+          hash = hash ^ (hash >> 16);
+          return hash & 0x3fffffff;
+        } else str = (x as unknown as number).toFixed(6);
+      } else if (type === 'string') {
+        str = x as unknown as string;
+      } else str = JSON.stringify(x);
       let hashCode = 0;
       const strLength = str.length;
-      for (let i = 0; i < strLength; i++) {
+      for (let i = 0; i < strLength; ++i) {
         const ch = str.charCodeAt(i);
         hashCode = ((hashCode << 5) - hashCode) + ch;
         hashCode |= 0;
@@ -46,22 +47,12 @@ abstract class HashContainer<K> extends Base {
       return hashCode >>> 0;
     }) {
     super();
-    if (initBucketNum < 16 || (initBucketNum & (initBucketNum - 1)) !== 0) {
-      throw new RangeError('InitBucketNum range error');
-    }
-    this._bucketNum = this._initBucketNum = initBucketNum;
     this._hashFunc = hashFunc;
   }
   clear() {
     this._length = 0;
-    this._bucketNum = this._initBucketNum;
     this._hashTable = [];
   }
-  /**
-   * @description Growth the hash table.
-   * @internal
-   */
-  protected abstract _reAllocate(): void;
   /**
    * @description Iterate over all elements in the container.
    * @param callback Callback function like Array.forEach.
@@ -80,7 +71,7 @@ abstract class HashContainer<K> extends Base {
   /**
    * @description Using for `for...of` syntax like Array.
    */
-  abstract [Symbol.iterator](): Generator<K | [K, unknown], void, undefined>;
+  abstract [Symbol.iterator](): Generator<K | [K, V], void, undefined>;
 }
 
 export default HashContainer;

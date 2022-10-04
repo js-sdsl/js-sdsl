@@ -6,7 +6,7 @@ function testHashMap(arr: number[], testNum: number) {
   const reportList: testReportFormat['reportList'] = [];
 
   startTime = Date.now();
-  const myHashMap = new HashMap(arr.map((element, index) => [index, element]), (1 << 21));
+  const myHashMap = new HashMap(arr.map((element, index) => [index, element]));
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',

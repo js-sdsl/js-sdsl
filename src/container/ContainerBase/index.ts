@@ -55,6 +55,12 @@ export abstract class Base {
    */
   protected _length = 0;
   /**
+   * @description The getter of container's length.
+   */
+  get length() {
+    return this._length;
+  }
+  /**
    * @return The size of the container.
    */
   size() {

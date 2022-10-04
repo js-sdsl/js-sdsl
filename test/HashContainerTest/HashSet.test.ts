@@ -1,18 +1,14 @@
-import { HashContainerConst } from '@/container/HashContainer/Base';
-import { Vector, HashSet } from '@/index';
 import { expect } from 'chai';
+import { HashSet } from '@/index';
+import { generateRandom } from '../utils/generateRandom';
 
-function generateRandom(low = 0, high = 1e6, fix = 6) {
-  return (low + Math.random() * (high - low)).toFixed(fix);
-}
-
-const arr: string[] = [];
+const arr: (string | number)[] = [];
 const testNum = 10000;
 for (let i = 0; i < testNum; ++i) {
   arr.push(generateRandom());
 }
 
-function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
+function judgeHashSet(myHashSet: HashSet<string | number>, stdSet: Set<string | number>) {
   expect(myHashSet.size()).to.equal(stdSet.size);
   stdSet.forEach((element) => {
     expect(myHashSet.find(element)).to.equal(true);
@@ -21,8 +17,6 @@ function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
 
 describe('HashSet test', () => {
   it('constructor test', () => {
-    // eslint-disable-next-line no-new
-    expect(() => new HashSet([], 28)).to.throw(RangeError);
     expect(new HashSet().size()).to.equal(0);
   });
 
@@ -31,6 +25,13 @@ describe('HashSet test', () => {
       // @ts-ignore
       new HashSet(arr.map(x => Math.floor(Number(x)))),
       new Set(arr.map(x => Math.floor(Number(x))))
+    );
+    const random = generateRandom().toFixed(6);
+    const arrCopy = arr.map(x => ({ [random]: x }));
+    judgeHashSet(
+      // @ts-ignore
+      new HashSet(arrCopy),
+      new Set(arrCopy)
     );
   });
 
@@ -100,27 +101,13 @@ describe('HashSet test', () => {
     myHashSet.insert(arr[0]);
     myHashSet.insert(arr[0]);
     expect(myHashSet.size()).to.equal(1);
-    // @ts-ignore
-    const bucketNum = myHashSet._bucketNum;
-    // @ts-ignore
-    myHashSet._bucketNum = HashContainerConst.maxBucketNum;
-    // @ts-ignore
-    myHashSet._reAllocate();
-    // @ts-ignore
-    myHashSet._hashTable[0] = new Vector();
-    // @ts-ignore
-    myHashSet._hashTable[myHashSet.bucketNum - 5] = new Vector();
-    // @ts-ignore
-    myHashSet._reAllocate(myHashSet.bucketNum);
-    // @ts-ignore
-    myHashSet._bucketNum = bucketNum;
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
+    // eslint-disable-next-line no-empty, @typescript-eslint/no-unused-vars
     for (const _ of myHashSet) {}
   });
 
   it('HashSet normal test', () => {
-    const st = new HashSet<string>();
-    const stdSet = new Set<string>();
+    const st = new HashSet<string | number>();
+    const stdSet = new Set<string | number>();
     for (let i = 0; i < testNum; ++i) {
       st.insert(i.toString());
       stdSet.add(i.toString());
@@ -135,9 +122,9 @@ describe('HashSet test', () => {
   });
 
   it('HashSet hash func test', () => {
-    const normalSet = new HashSet<string>();
-    const st = new HashSet<string>([], undefined, () => -1);
-    const stdSet = new Set<string>();
+    const normalSet = new HashSet<string | number>();
+    const st = new HashSet<string | number>([], () => -1);
+    const stdSet = new Set<string | number>();
     const arr: string[] = [];
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
@@ -195,9 +182,9 @@ describe('HashSet test', () => {
   });
 
   it('difficult test', () => {
-    const hashSetList: HashSet<string>[] = [];
+    const hashSetList: HashSet<string | number>[] = [];
     for (let i = -10; i <= 10; ++i) {
-      hashSetList.push(new HashSet<string>([], undefined, () => i));
+      hashSetList.push(new HashSet<string | number>([], () => i));
     }
     const arr: string[] = [];
     for (let i = 0; i < testNum; ++i) {
