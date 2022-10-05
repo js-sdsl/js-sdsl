@@ -7,6 +7,12 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @internal
    */
   protected _hashTable: (K[] | OrderedSet<K>)[] = [];
+  /**
+   * @description HashSet's constructor.
+   * @param container Initialize container, must have a forEach function.
+   * @param hashFunc The hash function to get a number from item.
+   * @param cmp The compare function for rbtree.
+   */
   constructor(
     container: initContainer<K> = [],
     hashFunc?: (x: K) => number,

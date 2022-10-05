@@ -7,6 +7,12 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @internal
    */
   protected _hashTable: ([K, V][] | OrderedMap<K, V>)[] = [];
+  /**
+   * @description HashMap's constructor.
+   * @param container Initialize container, must have a forEach function.
+   * @param hashFunc The hash function to get a number from item.
+   * @param cmp The compare function for rbtree.
+   */
   constructor(
     container: initContainer<[K, V]> = [],
     hashFunc?: (x: K) => number,
