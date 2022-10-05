@@ -9,8 +9,10 @@ class HashMap<K, V> extends HashContainer<K, V> {
   protected _hashTable: ([K, V][] | OrderedMap<K, V>)[] = [];
   constructor(
     container: initContainer<[K, V]> = [],
-    hashFunc?: (x: K) => number) {
-    super(hashFunc);
+    hashFunc?: (x: K) => number,
+    cmp?: (x: K, y: K) => number
+  ) {
+    super(hashFunc, cmp);
     container.forEach(element => this.setElement(element[0], element[1]));
   }
   forEach(callback: (element: [K, V], index: number) => void) {
@@ -28,7 +30,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @example HashMap.setElement(1, 2); // insert a key-value pair [1, 2]
    */
   setElement(key: K, value: V) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) {
       this._length += 1;
@@ -44,7 +46,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
         })) return;
         container.push([key, value]);
         if (container.length >= HashContainerConst.treeifyThreshold) {
-          this._hashTable[index] = new OrderedMap<K, V>(container);
+          this._hashTable[index] = new OrderedMap<K, V>(container, this._cmp);
         }
         this._length += 1;
       } else {
@@ -60,7 +62,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param key The key you want to get.
    */
   getElementByKey(key: K) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) return undefined;
     if (container instanceof Array) {
@@ -72,7 +74,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
   }
   eraseElementByKey(key: K) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) return;
     const preSize = container.length;
@@ -91,7 +93,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
   }
   find(key: K) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) return false;
     if (container instanceof Array) {

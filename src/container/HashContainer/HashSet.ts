@@ -9,9 +9,11 @@ class HashSet<K> extends HashContainer<K, undefined> {
   protected _hashTable: (K[] | OrderedSet<K>)[] = [];
   constructor(
     container: initContainer<K> = [],
-    hashFunc?: (x: K) => number
+    hashFunc?: (x: K) => number,
+    cmp?: (x: K, y: K) => number
   ) {
-    super(hashFunc);
+    super(hashFunc, cmp);
+    this._hashTable.length = HashContainerConst.maxBucketNum + 1;
     container.forEach(element => this.insert(element));
   }
   forEach(callback: (element: K, index: number) => void) {
@@ -27,7 +29,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @param element The element you want to insert.
    */
   insert(element: K) {
-    const index = this._hashFunc(element) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(element) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) {
       this._hashTable[index] = [element];
@@ -37,7 +39,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
         if (container.indexOf(element) >= 0) return;
         container.push(element);
         if (container.length >= HashContainerConst.treeifyThreshold) {
-          this._hashTable[index] = new OrderedSet<K>(container);
+          this._hashTable[index] = new OrderedSet<K>(container, this._cmp);
         }
         this._length += 1;
       } else {
@@ -49,7 +51,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     }
   }
   eraseElementByKey(key: K) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) return;
     const preSize = container.length;
@@ -68,7 +70,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     }
   }
   find(key: K) {
-    const index = this._hashFunc(key) & (HashContainerConst.maxBucketNum - 1);
+    const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;
     const container = this._hashTable[index];
     if (!container) return false;
     if (container instanceof Array) {
