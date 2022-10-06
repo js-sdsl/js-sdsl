@@ -233,17 +233,23 @@ export function gulpIsolateFactory(
         '**/*.ts',
         '**/*.js',
         '**/*.js.map',
-        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}`),
-        ...dependencySolver.getIncludedDependencies().map((dep) => `!${dep}.map`)
+        ...dependencySolver.getIncludedFileDependencies().map((dep) => `!${dep}`),
+        ...dependencySolver.getIncludedFileDependencies().map((dep) => `!${dep}.map`)
       ]))
       .pipe(clean());
   }
   filterDependencies.displayName = `${taskPrefix}-filter-dependencies`;
+
+  // gulp-typescript seems to have a memory leak so we need to dispose dependency graph after each build
+  async function disposeTreeShaker() {
+    return dependencySolver.dispose();
+  }
+  disposeTreeShaker.displayName = `${taskPrefix}-dispose-tree-shaker`;
 
   async function cleanEmptyDirs() {
     await deleteEmpty(process.cwd() + '/' + output);
   }
   cleanEmptyDirs.displayName = `${taskPrefix}-clean-empty-dirs`;
 
-  return gulp.series(build, filterDependencies, cleanEmptyDirs);
+  return gulp.series(build, filterDependencies, disposeTreeShaker, cleanEmptyDirs);
 }
