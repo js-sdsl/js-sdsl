@@ -96,7 +96,12 @@ class FileDependencyGraph {
       requestedModule = path.join(requestedModule, 'index');
     }
 
-    requestedModule = requestedModule + PathUtils.getFileExtension(requestedModule);
+    const moduleExtension = PathUtils.getFileExtension(requestedModule);
+    
+    // get extension failed means it's a node module
+    if (moduleExtension === null) return;
+
+    requestedModule = requestedModule + moduleExtension;
     requestedModule = PathUtils.replaceExtension(requestedModule, extension);
 
     filePath = PathUtils.replaceExtension(filePath, extension);
@@ -379,11 +384,12 @@ class PathUtils {
     const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
     return fileNameWithoutExtension + extension;
   }
-  static getFileExtension(extensionTrimmedPath: string) {
+  static getFileExtension(extensionTrimmedPath: string): string|null {
     const extensionTrimmedFileName = path.basename(extensionTrimmedPath);
     const files = fs.readdirSync(path.dirname(extensionTrimmedPath));
     const file = files.find((file) => file.startsWith(extensionTrimmedFileName));
-    if (file === undefined) throw new Error(`File ${extensionTrimmedFileName} not found`);
+    
+    if (file === undefined) return null;
     return path.extname(file);
   }
 }
