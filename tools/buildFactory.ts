@@ -14,7 +14,7 @@ import pathsTransformer from 'ts-transform-paths';
 import rollupTypescript from 'rollup-plugin-typescript2';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
-import tsTreeShaker, { DependencySolver } from './tsTreeShaker';
+import tsTreeShaker, { FileDependencySolver } from './tsTreeShaker';
 import deleteEmpty from 'delete-empty';
 import ttypescript from 'ttypescript';
 
@@ -185,7 +185,7 @@ export function gulpIsolateFactory(
   overrideSettings?: Omit<ts.Settings, 'outDir'>,
   useCjsTransform = false
 ) {
-  const dependencySolver = new DependencySolver(
+  const dependencySolver = new FileDependencySolver(
     input.sourceRoots,
     {
       baseUrl: input.opts?.base ?? '.',
@@ -240,16 +240,10 @@ export function gulpIsolateFactory(
   }
   filterDependencies.displayName = `${taskPrefix}-filter-dependencies`;
 
-  // gulp-typescript seems to have a memory leak so we need to dispose dependency graph after each build
-  async function disposeTreeShaker() {
-    return dependencySolver.dispose();
-  }
-  disposeTreeShaker.displayName = `${taskPrefix}-dispose-tree-shaker`;
-
   async function cleanEmptyDirs() {
     await deleteEmpty(process.cwd() + '/' + output);
   }
   cleanEmptyDirs.displayName = `${taskPrefix}-clean-empty-dirs`;
 
-  return gulp.series(build, filterDependencies, disposeTreeShaker, cleanEmptyDirs);
+  return gulp.series(build, filterDependencies, cleanEmptyDirs);
 }
