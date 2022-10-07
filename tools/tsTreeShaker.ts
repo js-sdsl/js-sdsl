@@ -53,7 +53,6 @@ class DependencyGraph<T> {
 
 class FileDependencyGraph {
   private readonly graph: DependencyGraph<string>;
-  private readonly program: ts.Program;
   private readonly baseUrl?: string;
   private readonly outDir?: string;
   constructor(
@@ -65,7 +64,6 @@ class FileDependencyGraph {
     const projectPath = program.getCurrentDirectory();
     const options = program.getCompilerOptions();
 
-    this.program = program;
     this.baseUrl = baseUrl ?? options.baseUrl ?? __dirname;
     this.outDir = outDir ?? options.outDir ?? this.baseUrl;
 
@@ -196,22 +194,17 @@ class FileDependencyGraph {
 
 class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
   private readonly program: ts.Program;
-  private computed: boolean;
   constructor(program: ts.Program, sourceRoots: readonly string[]) {
     super(
       sourceRoots
         .map((path) => SymbolDependencyGraph.pathToSymbol(program, path))
         .filter((symbol): symbol is ts.Symbol => symbol !== undefined)
-
     );
 
     this.program = program;
-    this.computed = false;
   }
   buildGraph(typeOnly: boolean) {
-    if (this.computed) return;
-    this.computed = true;
-    
+    this.clear();
     const typeChecker = this.program.getTypeChecker();
 
     const queue: ts.Symbol[] = [];
@@ -253,10 +246,6 @@ class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
         queue.push(dependency);
       }
     }
-  }
-  override clear() {
-    super.clear();
-    this.computed = false;
   }
   private static getDependencySymbols(
     typeChecker: ts.TypeChecker,
@@ -323,7 +312,7 @@ export class FileDependencySolver {
     this.options = options;
   }
   initialize(program: ts.Program, config: transformerConfig) {
-    this.fileGraph = new FileDependencyGraph(
+    const fileGraph = this.fileGraph = new FileDependencyGraph(
       program,
       this.sourceRoots,
       this.options?.baseUrl,
@@ -337,7 +326,7 @@ export class FileDependencySolver {
       .filter((file): file is string => file !== undefined)
       .map((file) =>
         PathUtils.normalizePath(
-          (this.fileGraph as FileDependencyGraph).convertToDestinationPath(
+          fileGraph.convertToDestinationPath(
             path.resolve(projectPath, file)
           )
         )
@@ -354,10 +343,6 @@ export class FileDependencySolver {
   ) {
     if (this.fileGraph === undefined) throw new Error('graph is undefined');
     this.fileGraph.addSourceFile(sourceFile, extension);
-  }
-  clearFileGraph() {
-    if (this.fileGraph === undefined) throw new Error('graph is undefined');
-    this.fileGraph.clear();
   }
   getIncludedFileDependencies() {
     if (this.fileGraph === undefined) throw new Error('graph is undefined');
@@ -551,6 +536,7 @@ class TransformerBuilder {
       this.program,
       this.filedependencySolver.sourceRoots
     );
+    this.symbolGraph.buildGraph(this.extension === '.d.ts');
   }
   makeFileGraphBuilder<T extends ts.Bundle | ts.SourceFile>(): ts.Transformer<T> {
     const visitor = (sourceFile: ts.SourceFile) => {
@@ -583,7 +569,7 @@ class TransformerBuilder {
 
     const usedImportExports = new Set<ts.ImportDeclaration | ts.ExportDeclaration>();
 
-    const visitor = (node: ts.Node): ts.Node => {
+    const visitor = (node: ts.Node): void => {
       /**
        * e.g.
        * - import * as x from 'path';
@@ -594,7 +580,7 @@ class TransformerBuilder {
         ts.isStringLiteral(node.moduleSpecifier)
       ) {
         const importNode = node;
-        const importVisitor = (node: ts.Node): ts.Node => {
+        const importVisitor = (node: ts.Node): void => {
           if (ts.isStringLiteral(node)) {
             if (this.filedependencySolver.isIncludedFileDependency(
               node.text,
@@ -604,10 +590,10 @@ class TransformerBuilder {
               usedImportExports.add(importNode);
             }
           }
-          return ts.visitEachChild(node, importVisitor, context);
+          return ts.forEachChild(node, importVisitor);
         };
 
-        return ts.visitEachChild(node, importVisitor, context);
+        return ts.forEachChild(node, importVisitor);
       }
 
       /**
@@ -620,7 +606,7 @@ class TransformerBuilder {
         ts.isStringLiteral(node.moduleSpecifier)
       ) {
         const exportNode = node;
-        const importVisitor = (node: ts.Node): ts.Node => {
+        const importVisitor = (node: ts.Node): void => {
           if (ts.isStringLiteral(node)) {
             if (this.filedependencySolver.isIncludedFileDependency(
               node.text,
@@ -630,21 +616,19 @@ class TransformerBuilder {
               usedImportExports.add(exportNode);
             }
           }
-          return ts.visitEachChild(node, importVisitor, context);
+          return ts.forEachChild(node, importVisitor);
         };
 
-        return ts.visitEachChild(node, importVisitor, context);
+        return ts.forEachChild(node, importVisitor);
       }
 
-      return ts.visitEachChild(node, visitor, context);
+      return ts.forEachChild(node, visitor);
     };
 
-    ts.visitEachChild(sourceFile, visitor, context);
+    ts.forEachChild(sourceFile, visitor);
 
     const filteredChildren = sourceFile.statements.filter((node) => {
-      if (ts.isImportDeclaration(node)) {
-        return usedImportExports.has(node);
-      } else if (ts.isExportDeclaration(node)) {
+      if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
         return usedImportExports.has(node);
       }
       return true;
@@ -656,7 +640,10 @@ class TransformerBuilder {
     sourceFile: ts.SourceFile,
     context: ts.TransformationContext
   ): ts.SourceFile {
-    this.symbolGraph.buildGraph(this.extension === '.d.ts');
+    if (this.symbolGraph === undefined) {
+      throw new Error('symbolGraph is undefined');
+    }
+    const symbolGraph = this.symbolGraph;
 
     const typeChecker = this.program.getTypeChecker();
 
@@ -676,7 +663,7 @@ class TransformerBuilder {
         if (symbol === undefined) return node;
         const actualSymbol = TsUtils.getActualSymbol(symbol, typeChecker);
 
-        if (this.symbolGraph.isIncludedDependency(actualSymbol)) return node;
+        if (symbolGraph.isIncludedDependency(actualSymbol)) return node;
 
         removeStatements.add(node);
       }
@@ -692,7 +679,7 @@ class TransformerBuilder {
           if (symbol === undefined) continue;
           const actualSymbol = TsUtils.getActualSymbol(symbol, typeChecker);
 
-          if (this.symbolGraph.isIncludedDependency(actualSymbol)) continue;
+          if (symbolGraph.isIncludedDependency(actualSymbol)) continue;
 
           removeStatements.add(variableStatementNode);
         }
@@ -724,7 +711,7 @@ class TransformerBuilder {
 
               const actualSymbol = TsUtils.getActualSymbol(childSymbol, typeChecker);
 
-              if (this.symbolGraph.isIncludedDependency(actualSymbol)) {
+              if (symbolGraph.isIncludedDependency(actualSymbol)) {
                 includeChildren.push(importSpecifier);
               }
             }
@@ -768,7 +755,7 @@ class TransformerBuilder {
 
               const actualSymbol = TsUtils.getActualSymbol(childSymbol, typeChecker);
 
-              if (this.symbolGraph.isIncludedDependency(actualSymbol)) {
+              if (symbolGraph.isIncludedDependency(actualSymbol)) {
                 includeChildren.push(exportSpecifier);
               }
             }
@@ -826,7 +813,7 @@ export default function transformer(program: ts.Program, config: transformerConf
       createTransformerBuilder(jsBuilder.makeTransformer.bind(jsBuilder))
     ],
     afterDeclarations: [
-      createTransformerBuilder(jsBuilder.makeFileGraphBuilder.bind(jsBuilder)),
+      createTransformerBuilder(dtsBuilder.makeFileGraphBuilder.bind(dtsBuilder)),
       createTransformerBuilder(dtsBuilder.makeTransformer.bind(dtsBuilder))
     ]
   };
