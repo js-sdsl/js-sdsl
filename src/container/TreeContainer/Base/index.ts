@@ -496,6 +496,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @param iter The iterator you want to change.
    * @param _key The _key you want to update.
    * @return Boolean about if the modification is successful.
+   * @example
+   * const st = new orderedSet([1, 2, 5]);
+   * const iter = st.find(2);
+   * st.updateKeyByIterator(iter, 3); // then st will become [1, 3, 5]
    */
   updateKeyByIterator(iter: TreeIterator<K, V>, _key: K): boolean {
     const node = iter._node;

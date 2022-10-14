@@ -33,6 +33,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * @param container The initialization container.
    * @param cmp The compare function.
    * @param enableIndex Whether to enable iterator indexing function.
+   * @example
+   * new OrderedMap();
+   * new OrderedMap([[0, 1], [2, 1]]);
+   * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y);
+   * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y, true);
    */
   constructor(
     container: initContainer<[K, V]> = [],
@@ -104,6 +109,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * @param _key The _key want to insert.
    * @param _value The _value want to set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @example
+   * const mp = new OrderedMap([[2, 0], [4, 0], [5, 0]]);
+   * const iter = mp.begin();
+   * mp.setElement(1, 0);
+   * mp.setElement(3, 0, iter);  // give a hint will be faster.
    */
   setElement(_key: K, _value: V, hint?: OrderedMapIterator<K, V>) {
     this._set(_key, _value, hint);
