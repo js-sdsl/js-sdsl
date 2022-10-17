@@ -7,29 +7,25 @@ import { gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
 
 function createIsolateTask(
-  taskPrefix: string,
+  format: 'cjs' | 'esm',
   input: {
-    indexFile: string,
     globs: string | string[],
     opts?: SrcOptions
   },
   overrideSettings: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false,
   task: {
-    name: string,
-    sourceRoots: string | string[],
+    sourceRoot: string,
     output: string
   }
 ) {
   return gulpIsolateFactory(
-    taskPrefix,
+    format,
     {
-      sourceRoots: task.sourceRoots,
+      sourceRoot: task.sourceRoot,
       ...input
     },
     task.output,
-    overrideSettings,
-    useCjsTransform
+    overrideSettings
   );
 }
 
@@ -72,7 +68,7 @@ export type IsolateBuildConfig = {
   builds: {
     name: string;
     version: string;
-    sourceRoots: string | string[];
+    sourceRoot: string;
   }[],
   sharedFiles: string | string[]
 };
@@ -84,7 +80,6 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
     const isolateCjsBuildTask = createIsolateTask(
       'cjs',
       {
-        indexFile: 'src/index.ts',
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
@@ -92,17 +87,15 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         module: 'ES2015',
         declaration: true
       },
-      true,
       {
         ...build,
-        output: `dist/isolate/${build.name}/dist/cjs`
+        output: `${build.name}/dist/cjs`
       }
     );
 
     const isolateEsmBuildTask = createIsolateTask(
       'esm',
       {
-        indexFile: 'src/index.ts',
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
@@ -111,10 +104,9 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         module: 'ES2015',
         declaration: true
       },
-      false,
       {
         ...build,
-        output: `dist/isolate/${build.name}/dist/esm`
+        output: `${build.name}/dist/esm`
       }
     );
 

@@ -56,7 +56,7 @@ gulp.task(
 
 gulp.task(
   'umd',
-  () => gulpUmdFactory(
+  gulpUmdFactory(
     'src/index.ts',
     'js-sdsl.js'
   )

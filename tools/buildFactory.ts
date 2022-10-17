@@ -11,16 +11,15 @@ import { SrcOptions } from 'vinyl-fs';
 import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
-import rollupTypescript from 'rollup-plugin-typescript2';
+import rollupPluginTs from 'rollup-plugin-ts';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
-import tsTreeShaker, { FileDependencySolver } from './tsTreeShaker';
-import deleteEmpty from 'delete-empty';
 import ttypescript from 'ttypescript';
+import tsConfig from '../tsconfig.json';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
-const rollup = require('gulp-rollup-2').rollup as (...params: unknown[]) => NodeJS.ReadWriteStream;
+const rollup = require('rollup') as typeof import('rollup');
 /* eslint-enable @typescript-eslint/no-var-requires */
 
 function createProject(overrideSettings?: ts.Settings) {
@@ -72,24 +71,22 @@ function terserStream() {
   });
 }
 
-function rollupStream(input: string) {
-  return rollup({
+async function rollupTask(
+  input: string,
+  output: string,
+  format: 'cjs' | 'esm' | 'umd',
+  sourceMap: boolean,
+  overrideSettings?: Omit<ts.Settings, 'outDir'>
+): Promise<void> {
+  const rollupBundle = await rollup.rollup({
     input,
-    output: {
-      file: input,
-      format: 'umd',
-      name: 'sdsl'
-    },
     context: 'this',
     plugins: [
-      rollupTypescript({
+      rollupPluginTs({
         typescript: ttypescript,
-        tsconfigOverride: {
-          compilerOptions: {
-            target: 'ES5',
-            module: 'ES2015',
-            declaration: true
-          }
+        tsconfig: {
+          ...tsConfig.compilerOptions as unknown as object,
+          ...overrideSettings
         }
       }),
       rollupBabel({
@@ -99,6 +96,16 @@ function rollupStream(input: string) {
       })
     ]
   });
+
+  await rollupBundle.write({
+    sourcemap: sourceMap,
+    file: output,
+    format,
+    name: 'sdsl',
+    exports: 'named'
+  });
+
+  await rollupBundle.close();
 }
 
 function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
@@ -150,13 +157,30 @@ export function gulpFactory(
 
 export function gulpUmdFactory(input: string, output: string) {
   macros.clear();
-  return gulp
-    .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
-    .pipe(clean())
-    .pipe(gulp.src(input))
-    .pipe(rollupStream(input))
-    .pipe(rename(output))
-    .pipe(gulp.dest('dist/umd'));
+
+  function cleanStream() {
+    return gulp
+      .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
+      .pipe(clean());
+  }
+
+  cleanStream.displayName = 'clean';
+
+  async function build() {
+    await rollupTask(
+      input,
+      `dist/umd/${output}`,
+      'umd',
+      false,
+      {
+        target: 'es5'
+      }
+    );
+  }
+
+  build.displayName = 'build';
+
+  return gulp.series(cleanStream, build);
 }
 
 export async function gulpUmdMinFactory(input: string, output: string) {
@@ -174,76 +198,45 @@ export async function gulpUmdMinFactory(input: string, output: string) {
 }
 
 export function gulpIsolateFactory(
-  taskPrefix: string,
+  format: 'cjs' | 'esm',
   input: {
-    sourceRoots: string | string[],
-    indexFile: string,
+    sourceRoot: string,
     globs: string | string[],
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false
+  overrideSettings?: Omit<ts.Settings, 'outDir'>
 ) {
-  const dependencySolver = new FileDependencySolver(
-    input.sourceRoots,
-    {
-      baseUrl: input.opts?.base ?? '.',
-      outDir: output
-    }
-  );
-
-  function build() {
-    return gulpFactory(
-      input,
-      output,
-      {
-        ...overrideSettings,
-        getCustomTransformers: (program: Program) => {
-          const treeShakerTransform = tsTreeShaker(
-            program,
-            {
-              solver: dependencySolver,
-              indexFile: input.indexFile
-            }
-          );
-
-          const customTransformers = overrideSettings?.getCustomTransformers?.(program);
-          return {
-            before: customTransformers?.before,
-            after: [
-              ...treeShakerTransform.after,
-              ...customTransformers?.after ?? []
-            ],
-            afterDeclarations: [
-              ...treeShakerTransform.afterDeclarations,
-              ...customTransformers?.afterDeclarations ?? []
-            ]
-          };
-        }
-      },
-      useCjsTransform
-    );
-  }
-  build.displayName = `${taskPrefix}-build`;
-
-  function filterDependencies() {
-    return gulp.src(`${output}/**/*`, { read: false, allowEmpty: true, base: '.' })
-      .pipe(filter([
-        '**/*.ts',
-        '**/*.js',
-        '**/*.js.map',
-        ...dependencySolver.getIncludedFileDependencies().map((dep) => `!${dep}`),
-        ...dependencySolver.getIncludedFileDependencies().map((dep) => `!${dep}.map`)
-      ]))
+  function cleanStream() {
+    return gulp
+      .src([`dist/isolate/${output}`], { read: false, allowEmpty: true })
       .pipe(clean());
   }
-  filterDependencies.displayName = `${taskPrefix}-filter-dependencies`;
 
-  async function cleanEmptyDirs() {
-    await deleteEmpty(process.cwd() + '/' + output);
+  cleanStream.displayName = `${format}-clean`;
+
+  async function rollupBuild() {
+    await rollupTask(
+      input.sourceRoot,
+      `dist/isolate/${output}/index.js`,
+      format,
+      true,
+      overrideSettings
+    );
   }
-  cleanEmptyDirs.displayName = `${taskPrefix}-clean-empty-dirs`;
 
-  return gulp.series(build, filterDependencies, cleanEmptyDirs);
+  rollupBuild.displayName = `${format}-rollup`;
+
+  function mangle() {
+    return gulp
+      .src([`dist/isolate/${output}/index.js`])
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(terserStream())
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(`dist/isolate/${output}`));
+  }
+
+  mangle.displayName = `${format}-mangle`;
+
+  return gulp.series(cleanStream, rollupBuild, mangle);
 }
