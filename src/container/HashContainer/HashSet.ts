@@ -8,12 +8,19 @@ class HashSet<K> extends HashContainer<K> {
    * @internal
    */
   protected _hashTable: (Vector<K> | OrderedSet<K>)[] = [];
+  /**
+   * @description HashSet's constructor.
+   * @param container Initialize container, must have a forEach function.
+   * @param initBucketNum Initialize bucket num, must be an integer power of 2 and greater than 16.
+   * @param hashFunc The hash function, convert key element from type T to a number.
+   * @example new HashSet([1, 2, 3], 1 << 10, x => x);
+   */
   constructor(
     container: initContainer<K> = [],
     initBucketNum?: number,
-    _hashFunc?: (x: K) => number
+    hashFunc?: (x: K) => number
   ) {
-    super(initBucketNum, _hashFunc);
+    super(initBucketNum, hashFunc);
     container.forEach(element => this.insert(element));
   }
   /**
@@ -75,6 +82,7 @@ class HashSet<K> extends HashContainer<K> {
   /**
    * @description Insert element to hash set.
    * @param element The element you want to insert.
+   * @example container.insert(1);
    */
   insert(element: K) {
     const index = this._hashFunc(element) & (this._bucketNum - 1);

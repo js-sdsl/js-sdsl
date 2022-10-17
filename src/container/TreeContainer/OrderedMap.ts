@@ -33,6 +33,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * @param container The initialization container.
    * @param cmp The compare function.
    * @param enableIndex Whether to enable iterator indexing function.
+   * @example
+   * new OrderedMap();
+   * new OrderedMap([[0, 1], [2, 1]]);
+   * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y);
+   * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y, true);
    */
   constructor(
     container: initContainer<[K, V]> = [],
@@ -83,43 +88,49 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     let index = 0;
     for (const pair of this) callback(pair, index++);
   }
-  lowerBound(_key: K) {
-    const resNode = this._lowerBound(this._root, _key);
+  lowerBound(key: K) {
+    const resNode = this._lowerBound(this._root, key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  upperBound(_key: K) {
-    const resNode = this._upperBound(this._root, _key);
+  upperBound(key: K) {
+    const resNode = this._upperBound(this._root, key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  reverseLowerBound(_key: K) {
-    const resNode = this._reverseLowerBound(this._root, _key);
+  reverseLowerBound(key: K) {
+    const resNode = this._reverseLowerBound(this._root, key);
     return new OrderedMapIterator(resNode, this._header);
   }
-  reverseUpperBound(_key: K) {
-    const resNode = this._reverseUpperBound(this._root, _key);
+  reverseUpperBound(key: K) {
+    const resNode = this._reverseUpperBound(this._root, key);
     return new OrderedMapIterator(resNode, this._header);
   }
   /**
-   * @description Insert a _key-_value pair or set _value by the given _key.
-   * @param _key The _key want to insert.
-   * @param _value The _value want to set.
+   * @description Insert a key-value pair or set value by the given key.
+   * @param key The key want to insert.
+   * @param value The value want to set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @example
+   * const mp = new OrderedMap([[2, 0], [4, 0], [5, 0]]);
+   * const iter = mp.begin();
+   * mp.setElement(1, 0);
+   * mp.setElement(3, 0, iter);  // give a hint will be faster.
    */
-  setElement(_key: K, _value: V, hint?: OrderedMapIterator<K, V>) {
-    this._set(_key, _value, hint);
+  setElement(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
+    this._set(key, value, hint);
   }
-  find(_key: K) {
-    const curNode = this._findElementNode(this._root, _key);
+  find(key: K) {
+    const curNode = this._findElementNode(this._root, key);
     if (curNode !== undefined) {
       return new OrderedMapIterator(curNode, this._header);
     }
     return this.end();
   }
   /**
-   * @description Get the _value of the element of the specified _key.
+   * @description Get the value of the element of the specified key.
+   * @example const val = container.getElementByKey(1);
    */
-  getElementByKey(_key: K) {
-    const curNode = this._findElementNode(this._root, _key);
+  getElementByKey(key: K) {
+    const curNode = this._findElementNode(this._root, key);
     return curNode ? curNode._value : undefined;
   }
   getElementByPos(pos: number) {

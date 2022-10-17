@@ -15,6 +15,11 @@ class PriorityQueue<T> extends Base {
    * @param cmp Compare function.
    * @param copy When the container is an array, you can choose to directly operate on the original object of
    *             the array or perform a shallow copy. The default is shallow copy.
+   * @example
+   * new PriorityQueue();
+   * new PriorityQueue([1, 2, 3]);
+   * new PriorityQueue([1, 2, 3], (x, y) => x - y);
+   * new PriorityQueue([1, 2, 3], (x, y) => x - y, false);
    */
   constructor(
     container: initContainer<T> = [],
@@ -83,6 +88,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Push element into a container in order.
    * @param item The element you want to push.
+   * @example queue.push(1);
    */
   push(item: T) {
     this._priorityQueue.push(item);
@@ -91,6 +97,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Removes the top element.
+   * @example queue.pop();
    */
   pop() {
     if (!this._length) return;
@@ -103,6 +110,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Accesses the top element.
+   * @example const top = queue.top();
    */
   top() {
     return this._priorityQueue[0] as (T | undefined);
@@ -111,6 +119,11 @@ class PriorityQueue<T> extends Base {
    * @description Check if element is in heap.
    * @param item The item want to find.
    * @return Boolean about if element is in heap.
+   * @example
+   * const que = new PriorityQueue([], (x, y) => x.id - y.id);
+   * const obj = { id: 1 };
+   * que.push(obj);
+   * console.log(que.find(obj));  // true
    */
   find(item: T) {
     return this._priorityQueue.indexOf(item) >= 0;
@@ -119,6 +132,11 @@ class PriorityQueue<T> extends Base {
    * @description Remove specified item from heap.
    * @param item The item want to remove.
    * @return Boolean about if remove success.
+   * @example
+   * const que = new PriorityQueue([], (x, y) => x.id - y.id);
+   * const obj = { id: 1 };
+   * que.push(obj);
+   * que.remove(obj);
    */
   remove(item: T) {
     const index = this._priorityQueue.indexOf(item);
@@ -140,6 +158,12 @@ class PriorityQueue<T> extends Base {
    * @description Update item and it's pos in the heap.
    * @param item The item want to update.
    * @return Boolean about if update success.
+   * @example
+   * const que = new PriorityQueue([], (x, y) => x.id - y.id);
+   * const obj = { id: 1 };
+   * que.push(obj);
+   * obj.id = 2;
+   * que.updateItem(obj);
    */
   updateItem(item: T) {
     const index = this._priorityQueue.indexOf(item);
@@ -150,6 +174,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @return Return a copy array of heap.
+   * @example const arr = queue.toArray();
    */
   toArray() {
     return [...this._priorityQueue];
