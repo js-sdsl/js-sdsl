@@ -64,11 +64,13 @@ function main(taskQueue: string[]) {
   }
 
   console.log('All container performance test end.');
+  // eslint-disable-next-line compat/compat
   console.clear();
 
   console.log('='.repeat(35), 'Report', '='.repeat(35));
   testReport.forEach(report => {
     console.log('='.repeat(35), report.containerName, '='.repeat(35));
+    // eslint-disable-next-line compat/compat
     console.table(report.reportList);
   });
   console.log('='.repeat(35), 'Report', '='.repeat(35));

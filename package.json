@@ -9,12 +9,6 @@
     "email": "951711127@qq.com",
     "url": "https://github.com/js-sdsl/js-sdsl"
   },
-  "browserslist": [
-    "last 2 version",
-    "> 1%",
-    "not dead",
-    "maintained node versions"
-  ],
   "sideEffects": false,
   "homepage": "https://js-sdsl.github.io",
   "scripts": {
@@ -64,7 +58,6 @@
     "all-contributors-cli": "^6.20.0",
     "babel-plugin-remove-unused-import": "^2.1.1",
     "browserslist": "^4.21.3",
-    "caniuse-lite": "^1.0.30001380",
     "chai": "^4.3.6",
     "commitlint": "^17.0.3",
     "compare-versions": "^5.0.1",
