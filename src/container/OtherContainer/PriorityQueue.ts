@@ -88,6 +88,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Push element into a container in order.
    * @param item The element you want to push.
+   * @example queue.push(1);
    */
   push(item: T) {
     this._priorityQueue.push(item);
@@ -96,6 +97,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Removes the top element.
+   * @example queue.pop();
    */
   pop() {
     if (!this._length) return;
@@ -108,6 +110,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Accesses the top element.
+   * @example const top = queue.top();
    */
   top() {
     return this._priorityQueue[0] as (T | undefined);
@@ -171,6 +174,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @return Return a copy array of heap.
+   * @example const arr = queue.toArray();
    */
   toArray() {
     return [...this._priorityQueue];

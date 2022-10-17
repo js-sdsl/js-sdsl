@@ -75,18 +75,27 @@ export abstract class Base {
   protected _length = 0;
   /**
    * @return The size of the container.
+   * @example
+   * const container = new Vector([1, 2]);
+   * console.log(container.size()); // 2
    */
   size() {
     return this._length;
   }
   /**
    * @return Boolean about if the container is empty.
+   * @example
+   * container.clear();
+   * console.log(container.empty());  // true
    */
   empty() {
     return this._length === 0;
   }
   /**
    * @description Clear the container.
+   * @example
+   * container.clear();
+   * console.log(container.empty());  // true
    */
   abstract clear(): void;
 }
@@ -94,18 +103,42 @@ export abstract class Base {
 export abstract class Container<T> extends Base {
   /**
    * @return Iterator pointing to the beginning element.
+   * @example
+   * const begin = container.begin();
+   * const end = container.end();
+   * for (const it = begin; !it.equals(end); it.next()) {
+   *   doSomething(it.pointer);
+   * }
    */
   abstract begin(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the super end like c++.
+   * @example
+   * const begin = container.begin();
+   * const end = container.end();
+   * for (const it = begin; !it.equals(end); it.next()) {
+   *   doSomething(it.pointer);
+   * }
    */
   abstract end(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the end element.
+   * @example
+   * const rBegin = container.rBegin();
+   * const rEnd = container.rEnd();
+   * for (const it = rBegin; !it.equals(rEnd); it.next()) {
+   *   doSomething(it.pointer);
+   * }
    */
   abstract rBegin(): ContainerIterator<T>;
   /**
    * @return Iterator pointing to the super begin like c++.
+   * @example
+   * const rBegin = container.rBegin();
+   * const rEnd = container.rEnd();
+   * for (const it = rBegin; !it.equals(rEnd); it.next()) {
+   *   doSomething(it.pointer);
+   * }
    */
   abstract rEnd(): ContainerIterator<T>;
   /**
@@ -130,17 +163,22 @@ export abstract class Container<T> extends Base {
   abstract find(element: T): ContainerIterator<T>;
   /**
    * @description Gets the value of the element at the specified position.
+   * @example
+   * const val = container.getElementByPos(-1); // throw a RangeError
    */
   abstract getElementByPos(pos: number): T;
   /**
    * @description Removes the element at the specified position.
    * @param pos The element's position you want to remove.
+   * container.eraseElementByPos(-1); // throw a RangeError
    */
   abstract eraseElementByPos(pos: number): void;
   /**
    * @description Removes element by iterator and move `iter` to next.
    * @param iter The iterator you want to erase.
-   * @example container.eraseElementByIterator(container.begin());
+   * @example
+   * container.eraseElementByIterator(container.begin());
+   * container.eraseElementByIterator(container.end()); // throw a RangeError
    */
   abstract eraseElementByIterator(
     iter: ContainerIterator<T>

@@ -90,7 +90,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
-   * @param _key The _key want to insert.
+   * @param key The key want to insert.
    * @param hint You can give an iterator hint to improve insertion efficiency.
    * @example
    * const st = new OrderedSet([2, 4, 5]);
@@ -98,8 +98,8 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * st.insert(1);
    * st.insert(3, iter);  // give a hint will be faster.
    */
-  insert(_key: K, hint?: OrderedSetIterator<K>) {
-    this._set(_key, undefined, hint);
+  insert(key: K, hint?: OrderedSetIterator<K>) {
+    this._set(key, undefined, hint);
   }
   find(element: K) {
     const curNode = this._findElementNode(this._root, element);
@@ -108,20 +108,20 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     }
     return this.end();
   }
-  lowerBound(_key: K) {
-    const resNode = this._lowerBound(this._root, _key);
+  lowerBound(key: K) {
+    const resNode = this._lowerBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  upperBound(_key: K) {
-    const resNode = this._upperBound(this._root, _key);
+  upperBound(key: K) {
+    const resNode = this._upperBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  reverseLowerBound(_key: K) {
-    const resNode = this._reverseLowerBound(this._root, _key);
+  reverseLowerBound(key: K) {
+    const resNode = this._reverseLowerBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  reverseUpperBound(_key: K) {
-    const resNode = this._reverseUpperBound(this._root, _key);
+  reverseUpperBound(key: K) {
+    const resNode = this._reverseUpperBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
   union(other: OrderedSet<K>) {

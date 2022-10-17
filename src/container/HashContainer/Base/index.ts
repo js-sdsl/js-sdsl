@@ -65,7 +65,7 @@ abstract class HashContainer<K> extends Base {
   /**
    * @description Iterate over all elements in the container.
    * @param callback Callback function like Array.forEach.
-   * @example @example container.forEach((element, index) => console.log(element, index));
+   * @example container.forEach((element, index) => console.log(element, index));
    */
   abstract forEach(callback: (element: unknown, index: number) => void): void;
   /**
