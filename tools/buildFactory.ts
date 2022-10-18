@@ -200,9 +200,7 @@ export async function gulpUmdMinFactory(input: string, output: string) {
 export function gulpIsolateFactory(
   format: 'cjs' | 'esm',
   input: {
-    sourceRoot: string,
-    globs: string | string[],
-    opts?: SrcOptions
+    sourceRoot: string
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>
