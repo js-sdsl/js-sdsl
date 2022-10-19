@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.10.20
+
+### Added
+
+- Add `ts` sourcemap for debug mode.
+
 ## [4.1.5] - 2022.09.30
 
 ### Added

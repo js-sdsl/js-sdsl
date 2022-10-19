@@ -68,7 +68,7 @@ We are benchmarking against other popular data structure libraries. In some ways
   </tr>
   <tr align="center">
     <td>Edge 12</td>
-    <td>18</td>
+    <td>31</td>
     <td>49</td>
     <td>10</td>
     <td>36</td>
