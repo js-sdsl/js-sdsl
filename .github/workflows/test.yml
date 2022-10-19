@@ -11,20 +11,27 @@ on:
 
 jobs:
   unit-test:
+    strategy:
+      matrix:
+        version: [ 10, 16, 17, 18 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Use node.js lts/Gallium
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run unit test
+      - name: Use node.js ${{ matrix.version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+      - name: Run unit test without coverage
+        if: ${{ matrix.version != '16' }}
+        run: ./node_modules/.bin/ts-mocha --paths 'test/**/*.test.ts' --timeout 10000
+      - name: Run unit test with coverage
+        if: ${{ matrix.version == '16' }}
         run: yarn test:unit
       - name: Coveralls report
+        if: ${{ matrix.version == '16' }}
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ github.token }}

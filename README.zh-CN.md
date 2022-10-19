@@ -74,7 +74,7 @@
     <td>49</td>
     <td>10</td>
     <td>36</td>
-    <td>6</td>
+    <td>10</td>
   </tr>
 </table>
 
