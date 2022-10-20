@@ -20,6 +20,7 @@
     "build:umd": "gulp umd",
     "build:umd:min": "yarn build:umd && gulp umd:min",
     "build:isolate": "gulp isolate",
+    "build:all": "yarn build && yarn build:isolate",
     "test": "yarn test:unit && yarn test:chrome && yarn test:performance",
     "test:unit": "nyc ts-mocha --paths 'test/**/*.test.ts' --timeout 10000",
     "test:edge": "karma start --browsers Edge",
