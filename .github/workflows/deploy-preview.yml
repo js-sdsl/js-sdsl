@@ -14,7 +14,7 @@ on:
       - dev
       - main
 
-permission: write-all
+permissions: write-all
 concurrency: preview-${{ github.ref }}
 
 jobs:
