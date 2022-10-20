@@ -2,10 +2,19 @@ name: Deploy PR previews
 
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+    paths:
+      - src/**/*.ts
+      - README.md
     branches:
       - dev
       - main
 
+permission: write-all
 concurrency: preview-${{ github.ref }}
 
 jobs:
@@ -22,3 +31,4 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
+          action: auto
