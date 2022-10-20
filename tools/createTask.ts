@@ -2,12 +2,18 @@ import gulp from 'gulp';
 import ts from 'gulp-typescript';
 import fs from 'fs';
 import path from 'path';
+import { SrcOptions } from 'vinyl-fs';
 import { gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
 
 function createIsolateTask(
   format: 'cjs' | 'esm',
   overrideSettings: Omit<ts.Settings, 'outDir'>,
+  input: {
+    indexFile: string,
+    globs: string | string[],
+    opts?: SrcOptions
+  },
   task: {
     sourceRoot: string,
     output: string
@@ -16,6 +22,7 @@ function createIsolateTask(
   return gulpIsolateFactory(
     format,
     {
+      ...input,
       sourceRoot: task.sourceRoot
     },
     task.output,
@@ -78,6 +85,11 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         declaration: true
       },
       {
+        indexFile: 'src/index.ts',
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      {
         sourceRoot: build.sourceRoot,
         output: `${build.name}/dist/cjs`
       }
@@ -88,7 +100,13 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       {
         target: 'ES5',
         module: 'ES2015',
-        declaration: true
+        declaration: true,
+        rootDir: 'src'
+      },
+      {
+        indexFile: 'src/index.ts',
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
       },
       {
         sourceRoot: build.sourceRoot,

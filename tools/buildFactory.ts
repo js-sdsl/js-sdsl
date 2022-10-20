@@ -7,15 +7,19 @@ import terser from 'gulp-terser';
 import GulpUglify from 'gulp-uglify';
 import babel from 'gulp-babel';
 import rename from 'gulp-rename';
-import { SrcOptions } from 'vinyl-fs';
 import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
+import exportTransformer from './exportTransformer';
+import rollupPluginTypescript from 'rollup-plugin-typescript2';
+import rollupPluginDts from 'rollup-plugin-dts';
 import rollupPluginTs from 'rollup-plugin-ts';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import { CustomTransformerFactory, Program } from 'typescript';
 import ttypescript from 'ttypescript';
 import tsConfig from '../tsconfig.json';
+import path from 'path';
+import { SrcOptions } from 'vinyl-fs';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
@@ -79,14 +83,13 @@ async function rollupTask(
   overrideSettings?: Omit<ts.Settings, 'outDir'>
 ): Promise<void> {
   const rollupBundle = await rollup.rollup({
-    input,
+    input: input,
     context: 'this',
     plugins: [
-      rollupPluginTs({
+      rollupPluginTypescript({
         typescript: ttypescript,
-        tsconfig: {
-          ...tsConfig.compilerOptions as unknown as object,
-          ...overrideSettings
+        tsconfigOverride: {
+          compilerOptions: overrideSettings
         }
       }),
       rollupBabel({
@@ -100,7 +103,7 @@ async function rollupTask(
   await rollupBundle.write({
     sourcemap: sourceMap,
     file: output,
-    format,
+    format: format,
     name: 'sdsl',
     exports: 'named'
   });
@@ -200,41 +203,168 @@ export async function gulpUmdMinFactory(input: string, output: string) {
 export function gulpIsolateFactory(
   format: 'cjs' | 'esm',
   input: {
+    indexFile: string,
+    globs: string | string[],
+    opts?: SrcOptions
     sourceRoot: string
   },
   output: string,
   overrideSettings?: Omit<ts.Settings, 'outDir'>
 ) {
-  function cleanStream() {
-    return gulp
-      .src([`dist/isolate/${output}`], { read: false, allowEmpty: true })
+  output = `dist/isolate/${output}`;
+
+  function cleanBuild() {
+    return gulp.src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
-  cleanStream.displayName = `${format}-clean`;
+  cleanBuild.displayName = `${format}-clean`;
 
-  async function rollupBuild() {
-    await rollupTask(
-      input.sourceRoot,
-      `dist/isolate/${output}/index.js`,
-      format,
-      true,
-      overrideSettings
-    );
+  async function buildJs() {
+    macros.clear();
+    const rollupBundle = await rollup.rollup({
+      input: input.indexFile,
+      plugins: [
+        rollupPluginTs({
+          tsconfig: {
+            ...tsConfig.compilerOptions as object,
+            ...overrideSettings,
+            declaration: false
+          },
+          transformers: (options) => {
+            const program = options.program;
+            if (program === undefined) throw new Error('program is undefined');
+
+            const pathsTransform = pathsTransformer(program);
+            const exportTransform = exportTransformer(program, {
+              indexFile: input.indexFile,
+              sourceRoots: [input.sourceRoot]
+            });
+
+            const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
+            if (typeof (overrideGetCustomTransformers) === 'string') {
+              throw new Error('getCustomTransformers should be a function');
+            }
+            const customTransformers = overrideGetCustomTransformers?.(program);
+
+            return {
+              before: [
+                tsMacroTransformer(program) as unknown as CustomTransformerFactory,
+                ...customTransformers?.before ?? []
+              ],
+              after: [
+                ...pathsTransform.after,
+                ...exportTransform.after,
+                ...customTransformers?.after ?? []
+              ],
+              afterDeclarations: [
+                ...pathsTransform.afterDeclarations,
+                ...exportTransform.afterDeclarations,
+                ...customTransformers?.afterDeclarations ?? []
+              ]
+            };
+          }
+        }),
+        rollupBabel({
+          babelHelpers: 'bundled',
+          extensions: ['.ts', '.js'],
+          plugins: ['babel-plugin-remove-unused-import']
+        })
+      ]
+    });
+
+    await rollupBundle.write({
+      sourcemap: true,
+      file: `${output}/index.js`,
+      format: format,
+      exports: 'named'
+    });
+
+    await rollupBundle.close();
   }
 
-  rollupBuild.displayName = `${format}-rollup`;
+  buildJs.displayName = `${format}-build-js`;
 
-  function mangle() {
-    return gulp
-      .src([`dist/isolate/${output}/index.js`])
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(terserStream())
-      .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest(`dist/isolate/${output}`));
+  function buildDeclaration() {
+    macros.clear();
+    const tsProject = createProject({
+      ...overrideSettings,
+      outDir: output,
+      getCustomTransformers: (program?: Program) => {
+        if (program === undefined) throw new Error('Program is undefined');
+
+        const exportTransform = exportTransformer(program, {
+          indexFile: input.indexFile,
+          sourceRoots: [input.sourceRoot]
+        });
+
+        const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
+        if (typeof (overrideGetCustomTransformers) === 'string') {
+          throw new Error('getCustomTransformers should be a function');
+        }
+        const customTransformers = overrideGetCustomTransformers?.(program);
+
+        return {
+          before: [
+            ...customTransformers?.before ?? []
+          ],
+          after: [
+            ...exportTransform.after,
+            ...customTransformers?.after ?? []
+          ],
+          afterDeclarations: [
+            ...exportTransform.afterDeclarations,
+            ...customTransformers?.afterDeclarations ?? []
+          ]
+        };
+      }
+    });
+    return gulp.src(input.globs, input.opts)
+      .pipe(tsProject()).dts
+      .pipe(filter(['**/*', '!**/*.macro.d.ts']))
+      .pipe(gulp.dest(output));
   }
 
-  mangle.displayName = `${format}-mangle`;
+  buildDeclaration.displayName = `${format}-build-declaration`;
 
-  return gulp.series(cleanStream, rollupBuild, mangle);
+  async function bundleDeclaration() {
+    function replaceExtension(fileName: string, extension: string) {
+      const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
+      return fileNameWithoutExtension + extension;
+    }
+
+    let sourceRoot = process.cwd();
+    if (input.opts?.base) {
+      sourceRoot = path.join(sourceRoot, input.opts.base);
+    }
+
+    {
+      const indexDtsFileName = replaceExtension(input.indexFile, '.d.ts');
+      const indexDtsRelativePath = path.relative(sourceRoot, indexDtsFileName);
+
+      const rollupBundle = await rollup.rollup({
+        input: `${output}/${indexDtsRelativePath}`,
+        plugins: [rollupPluginDts()]
+      });
+
+      await rollupBundle.write({
+        file: `${output}/${path.basename(indexDtsFileName)}`,
+        format: format
+      });
+
+      await rollupBundle.close();
+    }
+  }
+
+  bundleDeclaration.displayName = `${format}-bundle-declaration`;
+
+  function afterCleanBuild() {
+    return gulp.src(`${output}/*`, { read: false, allowEmpty: true })
+      .pipe(filter(['**', '!index.*']))
+      .pipe(clean());
+  }
+
+  afterCleanBuild.displayName = `${format}-after-clean`;
+
+  return gulp.series(cleanBuild, buildJs, buildDeclaration, bundleDeclaration, afterCleanBuild);
 }
