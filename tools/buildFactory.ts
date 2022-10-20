@@ -226,6 +226,7 @@ export function gulpIsolateFactory(
       input: input.indexFile,
       plugins: [
         rollupPluginTs({
+          browserslist: false,
           tsconfig: {
             ...tsConfig.compilerOptions as object,
             ...overrideSettings,
