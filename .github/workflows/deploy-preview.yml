@@ -1,7 +1,7 @@
 name: Deploy PR previews
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - reopened
@@ -14,7 +14,6 @@ on:
       - dev
       - main
 
-permissions: write-all
 concurrency: preview-${{ github.ref }}
 
 jobs:
