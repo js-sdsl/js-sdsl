@@ -8,7 +8,7 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeMap(myOrderedMap: OrderedMap<number, number>, stdMap: Map<number, number>) {
-  expect(myOrderedMap.getHeight()).to.lessThanOrEqual(2 * Math.log2(myOrderedMap.size() + 1));
+  expect(myOrderedMap.getHeight()).to.lessThan(2 * Math.log2(myOrderedMap.size() + 1) + 1);
   expect(myOrderedMap.size()).to.equal(stdMap.size);
   if (!myOrderedMap.empty()) {
     const front = myOrderedMap.front() as [number, number];

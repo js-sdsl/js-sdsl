@@ -41,9 +41,42 @@
 
 ## 支持的平台
 
-- node.js (using es6)
-- react/vue (using es5)
-- browser (support most browsers)
+<table>
+  <tr align="center">
+    <td>
+      <img alt="IE / Edge" src="https://www.w3schools.com/images/compatible_edge2020.png" />
+      <div>IE / Edge</div>
+    </td>
+    <td>
+      <img alt="Firefox" src="https://www.w3schools.com/images/compatible_firefox2020.png" />
+      <div>Firefox</div>
+    </td>
+    <td>
+      <img alt="Chrome" src="https://www.w3schools.com/images/compatible_chrome2020.png" />
+      <div>Chrome</div>
+    </td>
+    <td>
+      <img alt="Safari" src="https://www.w3schools.com/images/compatible_safari2020.png" />
+      <div>Safari</div>
+    </td>
+    <td>
+      <img alt="Opera" src="https://www.w3schools.com/images/compatible_opera2020.png" />
+      <div>Opera</div>
+    </td>
+    <td>
+      <img alt="NodeJs" src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png" width="20" />
+      <div>NodeJs</div>
+    </td>
+  </tr>
+  <tr align="center">
+    <td>Edge 12</td>
+    <td>31</td>
+    <td>49</td>
+    <td>10</td>
+    <td>36</td>
+    <td>10</td>
+  </tr>
+</table>
 
 ## 下载
 
