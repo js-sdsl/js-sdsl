@@ -16,6 +16,10 @@ on:
       - dev
       - main
 
+concurrency:
+  group: compressed-size-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
