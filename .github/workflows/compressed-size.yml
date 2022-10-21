@@ -12,6 +12,7 @@ on:
       - tsconfig.json
       - package.json
       - yarn.lock
+      - .github/workflow/compressed-size.yml
     branches:
       - dev
       - main
@@ -22,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
       - name: Install dependencies
         run: yarn install
       - name: Compressed size
@@ -29,4 +32,4 @@ jobs:
         with:
           pattern: ./dist/**/*.js
           compression: none
-          build-script: build:all
+          build-script: build
