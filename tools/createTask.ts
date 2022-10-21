@@ -1,34 +1,8 @@
 import gulp from 'gulp';
-import ts from 'gulp-typescript';
 import fs from 'fs';
 import path from 'path';
-import { SrcOptions } from 'vinyl-fs';
 import { gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
-
-function createIsolateTask(
-  format: 'cjs' | 'esm',
-  overrideSettings: Omit<ts.Settings, 'outDir'>,
-  input: {
-    indexFile: string,
-    globs: string | string[],
-    opts?: SrcOptions
-  },
-  task: {
-    sourceRoot: string,
-    output: string
-  }
-) {
-  return gulpIsolateFactory(
-    format,
-    {
-      ...input,
-      sourceRoot: task.sourceRoot
-    },
-    task.output,
-    overrideSettings
-  );
-}
 
 function createSharedFilesCopyTask(
   config: IsolateBuildConfig,
@@ -78,39 +52,36 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
   const tasks: string[] = [];
 
   for (const build of config.builds) {
-    const isolateCjsBuildTask = createIsolateTask(
+    const isolateCjsBuildTask = gulpIsolateFactory(
       'cjs',
+      {
+        indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      `${build.name}/dist/cjs`,
       {
         module: 'ES2015',
         declaration: true
-      },
-      {
-        indexFile: 'src/index.ts',
-        globs: 'src/**/*.ts',
-        opts: { base: 'src' }
-      },
-      {
-        sourceRoot: build.sourceRoot,
-        output: `${build.name}/dist/cjs`
       }
     );
 
-    const isolateEsmBuildTask = createIsolateTask(
+    const isolateEsmBuildTask = gulpIsolateFactory(
       'esm',
       {
-        target: 'ES5',
-        module: 'ES2015',
-        declaration: true,
-        rootDir: 'src'
-      },
-      {
         indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
+      `${build.name}/dist/esm`,
       {
-        sourceRoot: build.sourceRoot,
-        output: `${build.name}/dist/esm`
+        target: 'ES5',
+        module: 'ES2015',
+        declaration: true
       }
     );
 

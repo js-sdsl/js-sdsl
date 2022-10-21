@@ -2,7 +2,7 @@ import gulp from 'gulp';
 import tap from 'gulp-tap';
 import filter from 'gulp-filter';
 import merge from 'merge-stream';
-import ts from 'gulp-typescript';
+import gulpTs from 'gulp-typescript';
 import terser from 'gulp-terser';
 import GulpUglify from 'gulp-uglify';
 import babel from 'gulp-babel';
@@ -12,24 +12,26 @@ import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
 import rollupPluginTypescript from 'rollup-plugin-typescript2';
-import rollupPluginDts from 'rollup-plugin-dts';
 import rollupPluginTs from 'rollup-plugin-ts';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
-import { CustomTransformerFactory, Program } from 'typescript';
+import ts from 'typescript';
 import ttypescript from 'ttypescript';
 import tsConfig from '../tsconfig.json';
+import fs from 'fs';
 import path from 'path';
 import { SrcOptions } from 'vinyl-fs';
+import crypto from 'crypto';
+import glob from 'glob';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
 const rollup = require('rollup') as typeof import('rollup');
 /* eslint-enable @typescript-eslint/no-var-requires */
 
-function createProject(overrideSettings?: ts.Settings) {
-  return ts.createProject('tsconfig.json', {
+function createProject(overrideSettings?: gulpTs.Settings) {
+  return gulpTs.createProject('tsconfig.json', {
     ...overrideSettings,
-    getCustomTransformers: (program?: Program) => {
+    getCustomTransformers: (program?: ts.Program) => {
       if (program === undefined) throw new Error('Program is undefined');
 
       const pathsTransform = pathsTransformer(program);
@@ -42,7 +44,7 @@ function createProject(overrideSettings?: ts.Settings) {
 
       return {
         before: [
-          tsMacroTransformer(program) as unknown as CustomTransformerFactory,
+          tsMacroTransformer(program) as unknown as ts.CustomTransformerFactory,
           ...customTransformers?.before ?? []
         ],
         after: [
@@ -80,10 +82,10 @@ async function rollupTask(
   output: string,
   format: 'cjs' | 'esm' | 'umd',
   sourceMap: boolean,
-  overrideSettings?: Omit<ts.Settings, 'outDir'>
+  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
 ): Promise<void> {
   const rollupBundle = await rollup.rollup({
-    input: input,
+    input,
     context: 'this',
     plugins: [
       rollupPluginTypescript({
@@ -103,7 +105,7 @@ async function rollupTask(
   await rollupBundle.write({
     sourcemap: sourceMap,
     file: output,
-    format: format,
+    format,
     name: 'sdsl',
     exports: 'named'
   });
@@ -128,7 +130,7 @@ export function gulpFactory(
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<ts.Settings, 'outDir'>,
+  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>,
   useCjsTransform = false,
   sourceMap = true
 ): NodeJS.ReadWriteStream {
@@ -204,14 +206,67 @@ export function gulpIsolateFactory(
   format: 'cjs' | 'esm',
   input: {
     indexFile: string,
+    isolateBuildConfig: {
+      builds: {
+        name: string,
+        sourceRoot: string
+      }[]
+    },
+    buildName: string,
     globs: string | string[],
     opts?: SrcOptions
-    sourceRoot: string
   },
   output: string,
-  overrideSettings?: Omit<ts.Settings, 'outDir'>
+  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
 ) {
   output = `dist/isolate/${output}`;
+  const buildDataDir = 'dist/isolate/.build-data';
+
+  async function generateIndex() {
+    // get files from glob
+    const globs = Array.isArray(input.globs) ? input.globs : [input.globs];
+    const files = globs
+      .map((pattern) => glob.sync(pattern, input.opts))
+      .reduce((acc, val) => acc.concat(val), []);
+    // generate sha256 hash of the source code
+    const hash = crypto.createHash('sha256');
+    hash.update(input.isolateBuildConfig.toString());
+    files.forEach((file) => hash.update(fs.readFileSync(file)));
+    const hashValue = hash.digest('hex');
+    // compare hash with the previous one
+    const previousHash = fs.existsSync(`${buildDataDir}/hash`)
+      ? fs.readFileSync(`${buildDataDir}/hash`, 'utf8')
+      : '';
+    if (previousHash === hashValue) return;
+    // generate index file
+    const project = gulpTs.createProject('tsconfig.json', {
+      target: 'ESNext',
+      declaration: true,
+      getCustomTransformers: (program) => {
+        if (program === undefined) throw new Error('program is undefined');
+        return exportTransformer(program, {
+          indexOutputPath: `${buildDataDir}/transformed-index.json`,
+          indexFile: input.indexFile,
+          builds: input.isolateBuildConfig.builds
+            .map((build) => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
+        });
+      }
+    });
+    await new Promise((resolve) => {
+      gulp.src(input.globs, input.opts)
+        .pipe(project())
+        .on('error', (e) => {
+          throw new Error(e);
+        })
+        .on('end', resolve)
+        .on('finish', resolve);
+    });
+    // save hash
+    fs.mkdirSync(buildDataDir, { recursive: true });
+    fs.writeFileSync(`${buildDataDir}/hash`, hashValue);
+  }
+
+  generateIndex.displayName = `${format}-generate-index`;
 
   function cleanBuild() {
     return gulp.src(output, { read: false, allowEmpty: true })
@@ -220,27 +275,52 @@ export function gulpIsolateFactory(
 
   cleanBuild.displayName = `${format}-clean`;
 
-  async function buildJs() {
+  const baseDir = input.opts?.base ?? '.';
+  const copyDir = `${buildDataDir}/copied-source`;
+  const relativeIndexFilePath = path.relative(baseDir, input.indexFile);
+  const copyIndexFilePath = path.join(copyDir, relativeIndexFilePath);
+
+  async function copySource() {
+    if (fs.existsSync(copyDir)) fs.rmSync(copyDir, { recursive: true });
+    fs.mkdirSync(copyDir, { recursive: true });
+    // copy source files
+    const globs = Array.isArray(input.globs) ? input.globs : [input.globs];
+    const files = globs
+      .map((pattern) => glob.sync(pattern, input.opts))
+      .reduce((acc, val) => acc.concat(val), []);
+    files.forEach((file) => {
+      const relativeFilePath = path.relative(baseDir, file);
+      const copyFilePath = path.join(copyDir, relativeFilePath);
+      fs.mkdirSync(path.dirname(copyFilePath), { recursive: true });
+      fs.copyFileSync(file, copyFilePath);
+    });
+    // copy index file
+    const transformedIndexFilePaths = `${buildDataDir}/transformed-index.json`;
+    if (!fs.existsSync(transformedIndexFilePaths)) throw new Error('index file does not exist');
+    const transformedIndexFiles =
+      JSON.parse(fs.readFileSync(transformedIndexFilePaths, 'utf8')) as { [key: string]: string };
+    const indexFileContent = transformedIndexFiles[input.buildName];
+    fs.writeFileSync(copyIndexFilePath, indexFileContent);
+  }
+
+  copySource.displayName = `${format}-copy-source`;
+
+  async function build() {
     macros.clear();
     const rollupBundle = await rollup.rollup({
-      input: input.indexFile,
+      input: copyIndexFilePath,
       plugins: [
         rollupPluginTs({
           browserslist: false,
           tsconfig: {
             ...tsConfig.compilerOptions as object,
-            ...overrideSettings,
-            declaration: false
+            ...overrideSettings
           },
           transformers: (options) => {
             const program = options.program;
             if (program === undefined) throw new Error('program is undefined');
 
             const pathsTransform = pathsTransformer(program);
-            const exportTransform = exportTransformer(program, {
-              indexFile: input.indexFile,
-              sourceRoots: [input.sourceRoot]
-            });
 
             const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
             if (typeof (overrideGetCustomTransformers) === 'string') {
@@ -250,17 +330,15 @@ export function gulpIsolateFactory(
 
             return {
               before: [
-                tsMacroTransformer(program) as unknown as CustomTransformerFactory,
+                tsMacroTransformer(program) as unknown as ts.CustomTransformerFactory,
                 ...customTransformers?.before ?? []
               ],
               after: [
                 ...pathsTransform.after,
-                ...exportTransform.after,
                 ...customTransformers?.after ?? []
               ],
               afterDeclarations: [
                 ...pathsTransform.afterDeclarations,
-                ...exportTransform.afterDeclarations,
                 ...customTransformers?.afterDeclarations ?? []
               ]
             };
@@ -277,95 +355,25 @@ export function gulpIsolateFactory(
     await rollupBundle.write({
       sourcemap: true,
       file: `${output}/index.js`,
-      format: format,
+      format,
       exports: 'named'
     });
 
     await rollupBundle.close();
   }
 
-  buildJs.displayName = `${format}-build-js`;
+  build.displayName = `${format}-build`;
 
-  function buildDeclaration() {
-    macros.clear();
-    const tsProject = createProject({
-      ...overrideSettings,
-      outDir: output,
-      getCustomTransformers: (program?: Program) => {
-        if (program === undefined) throw new Error('Program is undefined');
-
-        const exportTransform = exportTransformer(program, {
-          indexFile: input.indexFile,
-          sourceRoots: [input.sourceRoot]
-        });
-
-        const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
-        if (typeof (overrideGetCustomTransformers) === 'string') {
-          throw new Error('getCustomTransformers should be a function');
-        }
-        const customTransformers = overrideGetCustomTransformers?.(program);
-
-        return {
-          before: [
-            ...customTransformers?.before ?? []
-          ],
-          after: [
-            ...exportTransform.after,
-            ...customTransformers?.after ?? []
-          ],
-          afterDeclarations: [
-            ...exportTransform.afterDeclarations,
-            ...customTransformers?.afterDeclarations ?? []
-          ]
-        };
-      }
-    });
-    return gulp.src(input.globs, input.opts)
-      .pipe(tsProject()).dts
-      .pipe(filter(['**/*', '!**/*.macro.d.ts']))
-      .pipe(gulp.dest(output));
+  function mangle() {
+    return gulp
+      .src([`${output}/index.js`])
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(terserStream())
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(`${output}`));
   }
 
-  buildDeclaration.displayName = `${format}-build-declaration`;
+  mangle.displayName = `${format}-mangle`;
 
-  async function bundleDeclaration() {
-    function replaceExtension(fileName: string, extension: string) {
-      const fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, '');
-      return fileNameWithoutExtension + extension;
-    }
-
-    let sourceRoot = process.cwd();
-    if (input.opts?.base) {
-      sourceRoot = path.join(sourceRoot, input.opts.base);
-    }
-
-    {
-      const indexDtsFileName = replaceExtension(input.indexFile, '.d.ts');
-      const indexDtsRelativePath = path.relative(sourceRoot, indexDtsFileName);
-
-      const rollupBundle = await rollup.rollup({
-        input: `${output}/${indexDtsRelativePath}`,
-        plugins: [rollupPluginDts()]
-      });
-
-      await rollupBundle.write({
-        file: `${output}/${path.basename(indexDtsFileName)}`,
-        format: format
-      });
-
-      await rollupBundle.close();
-    }
-  }
-
-  bundleDeclaration.displayName = `${format}-bundle-declaration`;
-
-  function afterCleanBuild() {
-    return gulp.src(`${output}/*`, { read: false, allowEmpty: true })
-      .pipe(filter(['**', '!index.*']))
-      .pipe(clean());
-  }
-
-  afterCleanBuild.displayName = `${format}-after-clean`;
-
-  return gulp.series(cleanBuild, buildJs, buildDeclaration, bundleDeclaration, afterCleanBuild);
+  return gulp.series(generateIndex, cleanBuild, copySource, build, mangle);
 }

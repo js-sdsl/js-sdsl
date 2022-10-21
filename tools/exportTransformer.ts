@@ -8,18 +8,10 @@ import ts, { factory } from 'typescript';
 class DependencyGraph<T> {
   private readonly graph: Map<T, Set<T>> = new Map();
   private readonly includedDependencies = new Set<T>();
-  private graphNeedCompute = true;
-  protected readonly sourceRoots: readonly T[];
-  constructor(sourceRoots: readonly T[]) {
-    this.sourceRoots = sourceRoots;
-  }
-  private computeDependencies() {
-    if (!this.graphNeedCompute) return;
-    this.graphNeedCompute = false;
-
+  computeDependencies(sourceRoots: T[]) {
     const visited = this.includedDependencies;
     visited.clear();
-    const stack = [...this.sourceRoots];
+    const stack = [...sourceRoots];
 
     while (stack.length > 0) {
       const current = stack.pop() as T;
@@ -35,32 +27,29 @@ class DependencyGraph<T> {
     const deps = this.graph.get(from) || new Set();
     deps.add(to);
     this.graph.set(from, deps);
-    this.graphNeedCompute = true;
   }
   clear() {
     this.graph.clear();
-    this.graphNeedCompute = true;
   }
   getIncludedDependencies() {
-    this.computeDependencies();
     return [...this.includedDependencies];
   }
   isIncludedDependency(item: T) {
-    this.computeDependencies();
     return this.includedDependencies.has(item);
   }
 }
 
 class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
   private readonly program: ts.Program;
-  constructor(program: ts.Program, sourceRoots: readonly string[]) {
-    super(
-      sourceRoots
-        .map((path) => SymbolDependencyGraph.pathToSymbol(program, path))
-        .filter((symbol): symbol is ts.Symbol => symbol !== undefined)
-    );
-
+  constructor(program: ts.Program) {
+    super();
     this.program = program;
+  }
+  computeDependenciesFromSourceRootNames(sourceRoots: readonly string[]) {
+    const symbols = sourceRoots
+      .map((path) => SymbolDependencyGraph.pathToSymbol(this.program, path))
+      .filter((symbol): symbol is ts.Symbol => symbol !== undefined);
+    this.computeDependencies(symbols);
   }
   buildGraph(typeOnly: boolean) {
     this.clear();
@@ -69,7 +58,8 @@ class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
     const queue: ts.Symbol[] = [];
     const visited = new Set<ts.Symbol>();
 
-    for (const sourceSymbol of this.sourceRoots) {
+    for (const sourceFile of this.program.getSourceFiles()) {
+      const sourceSymbol = typeChecker.getSymbolAtLocation(sourceFile);
       if (sourceSymbol === undefined) continue;
       for (const entryExportSymbol of TsUtils.getExportsForSourceFile(typeChecker, sourceSymbol)) {
         this.addDependency(sourceSymbol, entryExportSymbol);
@@ -203,10 +193,10 @@ class TsUtils {
         : (transformBundle(node as ts.Bundle) as T);
     };
   }
-  static saveSourceFile(sourceFile: ts.SourceFile, filePath: string) {
+  static sourceFileToString(sourceFile: ts.SourceFile) {
     const printer = ts.createPrinter();
     const source = printer.printFile(sourceFile);
-    fs.writeFileSync(filePath, source);
+    return source;
   }
   static getActualSymbol(symbol: ts.Symbol, typeChecker: ts.TypeChecker): ts.Symbol {
     if (symbol.flags & ts.SymbolFlags.Alias) {
@@ -289,29 +279,49 @@ class TransformerBuilder {
   private readonly indexFile: string;
   private readonly extension: '.d.ts' | '.js';
   private readonly symbolGraph: SymbolDependencyGraph;
+  private readonly indexOutputPath: string;
+  private readonly builds: transformerConfig['builds'];
   constructor(
     program: ts.Program,
     config: transformerConfig,
     extension: '.d.ts' | '.js'
   ) {
     this.program = program;
-    this.indexFile = path.resolve(program.getCurrentDirectory(), config.indexFile);
+    this.indexFile = path.isAbsolute(config.indexFile)
+      ? config.indexFile
+      : path.resolve(program.getCurrentDirectory(), config.indexFile);
     this.extension = extension;
-    this.symbolGraph = new SymbolDependencyGraph(
-      this.program,
-      config.sourceRoots
-    );
+    this.symbolGraph = new SymbolDependencyGraph(this.program);
     this.symbolGraph.buildGraph(this.extension === '.d.ts');
+    this.indexOutputPath = path.isAbsolute(config.indexOutputPath)
+      ? config.indexOutputPath
+      : path.resolve(program.getCurrentDirectory(), config.indexOutputPath);
+    this.builds = config.builds;
   }
   makeTransformer<T extends ts.Bundle | ts.SourceFile>(
     context: ts.TransformationContext
   ): ts.Transformer<T> {
     const visitor = (sourceFile: ts.SourceFile) => {
-      if (path.resolve(sourceFile.fileName) !== this.indexFile) {
-        return sourceFile;
+      if (path.resolve(sourceFile.fileName) === this.indexFile) {
+        const transformResults: { [key: string]: string; } = {};
+        const builds = this.builds;
+        for (let i = 0; i < builds.length; ++i) {
+          const build = builds[i];
+          this.symbolGraph.computeDependenciesFromSourceRootNames(build.sourceRoots);
+          const result = this.transformTypelevelTreeShake(sourceFile, context);
+          transformResults[build.name] = TsUtils.sourceFileToString(result);
+        }
+        const dir = path.dirname(this.indexOutputPath);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.writeFileSync(
+          this.indexOutputPath,
+          JSON.stringify(transformResults, null, 2)
+        );
       }
 
-      return this.transformTypelevelTreeShake(sourceFile, context);
+      return sourceFile;
     };
 
     return TsUtils.chainBundle(visitor);
@@ -468,12 +478,15 @@ class TransformerBuilder {
 }
 
 export type transformerConfig = {
-  sourceRoots: string[];
+  indexOutputPath: string;
+  builds: {
+    name: string;
+    sourceRoots: string[];
+  }[];
   indexFile: string;
 }
 
 export default function transformer(program: ts.Program, config: transformerConfig) {
-  const jsBuilder = new TransformerBuilder(program, config, '.js');
   const dtsBuilder = new TransformerBuilder(program, config, '.d.ts');
 
   function createTransformerBuilder<T extends ts.SourceFile | ts.Bundle>(
@@ -483,11 +496,8 @@ export default function transformer(program: ts.Program, config: transformerConf
   }
 
   return {
-    after: [
-      createTransformerBuilder<ts.SourceFile>(jsBuilder.makeTransformer.bind(jsBuilder))
-    ],
-    afterDeclarations: [
-      createTransformerBuilder(dtsBuilder.makeTransformer.bind(dtsBuilder))
+    before: [
+      createTransformerBuilder<ts.SourceFile>(dtsBuilder.makeTransformer.bind(dtsBuilder))
     ]
   };
 }
