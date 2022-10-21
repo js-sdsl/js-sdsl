@@ -4,7 +4,7 @@ import TreeIterator from './Base/TreeIterator';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 
-class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
+export class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   get pointer() {
     if (this._node === this._header) {
       throw new RangeError('OrderedMap iterator access denied');
@@ -27,8 +27,6 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     return new OrderedMapIterator(this._node, this._header, this.iteratorType);
   }
 }
-
-export type { OrderedMapIterator };
 
 class OrderedMap<K, V> extends TreeContainer<K, V> {
   /**
