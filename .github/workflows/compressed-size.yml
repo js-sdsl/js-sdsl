@@ -12,7 +12,6 @@ on:
       - tsconfig.json
       - package.json
       - yarn.lock
-      - .github/workflow/compressed-size.yml
     branches:
       - dev
       - main
