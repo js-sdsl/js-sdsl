@@ -31,4 +31,3 @@ jobs:
         with:
           pattern: ./dist/**/*.js
           compression: none
-          build-script: build
