@@ -217,7 +217,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 The special thanks to these sponsors or backers because they provided support at a very early stage:
 
-<img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150">
+<a href="https://eslint.org/"><img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
 
 Thanks also give to these sponsors or backers:
 
