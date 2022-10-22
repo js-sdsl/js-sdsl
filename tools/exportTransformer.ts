@@ -31,9 +31,6 @@ class DependencyGraph<T> {
   clear() {
     this.graph.clear();
   }
-  getIncludedDependencies() {
-    return [...this.includedDependencies];
-  }
   isIncludedDependency(item: T) {
     return this.includedDependencies.has(item);
   }
@@ -154,29 +151,6 @@ export type ClassMember =
   | ts.SetAccessorDeclaration;
 
 class TsUtils {
-  static isRequireCall(
-    node: ts.Node,
-    checkArgumentIsStringLiteralLike: boolean
-  ): node is ts.CallExpression {
-    if (!ts.isCallExpression(node)) {
-      return false;
-    }
-    const { expression, arguments: args } = node;
-    if (!ts.isIdentifier(expression) || expression.escapedText !== 'require') {
-      return false;
-    }
-    if (args.length !== 1) {
-      return false;
-    }
-    const [arg] = args;
-
-    return !checkArgumentIsStringLiteralLike || ts.isStringLiteralLike(arg);
-  }
-  static isImportCall(node: ts.Node): node is ts.CallExpression {
-    return (
-      ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword
-    );
-  }
   static chainBundle<T extends ts.SourceFile | ts.Bundle>(
     transformSourceFile: (x: ts.SourceFile) => ts.SourceFile | undefined
   ): (x: T) => T {
@@ -192,11 +166,6 @@ class TsUtils {
         ? (transformSourceFile(node) as T)
         : (transformBundle(node as ts.Bundle) as T);
     };
-  }
-  static sourceFileToString(sourceFile: ts.SourceFile) {
-    const printer = ts.createPrinter();
-    const source = printer.printFile(sourceFile);
-    return source;
   }
   static getActualSymbol(symbol: ts.Symbol, typeChecker: ts.TypeChecker): ts.Symbol {
     if (symbol.flags & ts.SymbolFlags.Alias) {
@@ -309,7 +278,7 @@ class TransformerBuilder {
           const build = builds[i];
           this.symbolGraph.computeDependenciesFromSourceRootNames(build.sourceRoots);
           const result = this.transformTypelevelTreeShake(sourceFile, context);
-          transformResults[build.name] = TsUtils.sourceFileToString(result);
+          transformResults[build.name] = ts.createPrinter().printFile(result);
         }
         const dir = path.dirname(this.indexOutputPath);
         if (!fs.existsSync(dir)) {
