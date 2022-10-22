@@ -19,6 +19,10 @@ on:
       - dev
       - main
 
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   unit-test:
     strategy:
