@@ -14,7 +14,7 @@ export class LinkNode<T> {
   }
 }
 
-export class LinkListIterator<T> extends ContainerIterator<T> {
+class LinkListIterator<T> extends ContainerIterator<T> {
   /**
    * @internal
    */
@@ -94,6 +94,8 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
     );
   }
 }
+
+export type { LinkListIterator };
 
 class LinkList<T> extends SequentialContainer<T> {
   /**
