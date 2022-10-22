@@ -1,37 +1,8 @@
 import gulp from 'gulp';
-import ts from 'gulp-typescript';
 import fs from 'fs';
 import path from 'path';
-import { SrcOptions } from 'vinyl-fs';
 import { gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
-
-function createIsolateTask(
-  taskPrefix: string,
-  input: {
-    indexFile: string,
-    globs: string | string[],
-    opts?: SrcOptions
-  },
-  overrideSettings: Omit<ts.Settings, 'outDir'>,
-  useCjsTransform = false,
-  task: {
-    name: string,
-    sourceRoots: string | string[],
-    output: string
-  }
-) {
-  return gulpIsolateFactory(
-    taskPrefix,
-    {
-      sourceRoots: task.sourceRoots,
-      ...input
-    },
-    task.output,
-    overrideSettings,
-    useCjsTransform
-  );
-}
 
 function createSharedFilesCopyTask(
   config: IsolateBuildConfig,
@@ -72,7 +43,7 @@ export type IsolateBuildConfig = {
   builds: {
     name: string;
     version: string;
-    sourceRoots: string | string[];
+    sourceRoot: string;
   }[],
   sharedFiles: string | string[]
 };
@@ -81,40 +52,36 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
   const tasks: string[] = [];
 
   for (const build of config.builds) {
-    const isolateCjsBuildTask = createIsolateTask(
+    const isolateCjsBuildTask = gulpIsolateFactory(
       'cjs',
       {
         indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
+      `${build.name}/dist/cjs`,
       {
         module: 'ES2015',
         declaration: true
-      },
-      true,
-      {
-        ...build,
-        output: `dist/isolate/${build.name}/dist/cjs`
       }
     );
 
-    const isolateEsmBuildTask = createIsolateTask(
+    const isolateEsmBuildTask = gulpIsolateFactory(
       'esm',
       {
         indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
+      `${build.name}/dist/esm`,
       {
         target: 'ES5',
         module: 'ES2015',
         declaration: true
-      },
-      false,
-      {
-        ...build,
-        output: `dist/isolate/${build.name}/dist/esm`
       }
     );
 
