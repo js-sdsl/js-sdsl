@@ -219,7 +219,7 @@ $ npm run dev   # development mode
 
 特别鸣谢下列赞助商和支持者们，他们在非常早期的时候为我们提供了支持：
 
-<img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150">
+<a href="https://eslint.org/"><img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
 
 同样感谢这些赞助商和支持者们：
 
