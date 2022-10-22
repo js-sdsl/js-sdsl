@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run unit test
@@ -33,7 +32,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run browser test
@@ -47,7 +45,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run performance test
