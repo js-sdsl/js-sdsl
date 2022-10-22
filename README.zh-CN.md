@@ -163,6 +163,23 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 您也可以访问[我们的网站](https://js-sdsl.github.io/#/zh-cn/test/performance-test)来获取结果
 
+## 开发
+
+可以使用 Gitpod 进行在线编辑：
+
+[![Open in Gippod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/js-sdsl/js-sdsl)
+
+或者在本地使用以下命令获取源码进行开发：
+
+```bash
+$ git clone https://github.com/js-sdsl/js-sdl.git
+$ cd js-sdsl
+$ npm install
+$ npm run dev   # development mode
+```
+
+之后您在 `dist/cjs` 文件夹中可以看到在 `dev` 模式下打包生成的产物
+
 ## 维护者
 
 [@ZLY201](https://github.com/ZLY201)

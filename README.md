@@ -161,6 +161,23 @@ We tested most of the functions for efficiency. You can go to [`gh-pages/perform
 
 You can also visit [here](https://js-sdsl.github.io/#/test/performance-test) to get the result.
 
+## Development
+
+Use Gitpod, a free online dev environment for GitHub.
+
+[![Open in Gippod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/js-sdsl/js-sdsl)
+
+Or clone locally:
+
+```bash
+$ git clone https://github.com/js-sdsl/js-sdl.git
+$ cd js-sdsl
+$ npm install
+$ npm run dev   # development mode
+```
+
+Then you can see the output in `dist/cjs` folder.
+
 ## Maintainers
 
 [@ZLY201](https://github.com/ZLY201)

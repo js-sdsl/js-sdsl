@@ -1,0 +1,4 @@
+tasks:
+  - name: setup dev mode
+    init: npm install
+    command: npm run dev
