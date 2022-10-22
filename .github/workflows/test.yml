@@ -58,7 +58,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run chrome test
@@ -72,7 +71,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Setup firefox
@@ -90,7 +88,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Setup edge
@@ -106,11 +103,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run safari test
         run: yarn test:safari
+  isolation-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Run isolation test
+        run: yarn test:isolate
   performance-test:
     runs-on: ubuntu-latest
     steps:
@@ -120,7 +129,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run performance test
