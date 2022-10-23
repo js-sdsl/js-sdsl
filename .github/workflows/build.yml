@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run browser test
-        run: yarn test:browser
+        run: yarn test:chrome
   performance-test:
     runs-on: ubuntu-latest
     steps:
@@ -76,6 +76,8 @@ jobs:
       - name: Read package.json
         uses: tyankatsu0105/read-package-version-actions@v1
         id: package-version
+      - name: Remove markdown files
+        run: rm -rf docs/README.md docs/README.zh-CN.md docs/performance.md
       - name: Save a copy
         uses: JamesIves/github-pages-deploy-action@v4
         folder: docs
