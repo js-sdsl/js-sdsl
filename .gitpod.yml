@@ -1,3 +1,7 @@
+github:
+  prebuilds:
+    addCheck: false
+    addComment: true
 tasks:
   - name: setup dev mode
     init: npm install
