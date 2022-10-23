@@ -1,5 +1,6 @@
 import { Stack } from 'dist/isolate/stack';
 import { Queue } from 'dist/isolate/queue';
+import { PriorityQueue } from 'dist/isolate/priority-queue';
 import { Vector } from 'dist/isolate/vector';
 import { LinkList } from 'dist/isolate/link-list';
 import { Deque } from 'dist/isolate/deque';
@@ -10,10 +11,11 @@ import { HashMap } from 'dist/isolate/hash-map';
 import { expect } from 'chai';
 
 describe('isolation test', () => {
-  const arr = [1, 2, 3];
+  const arr = [3, 1, 2];
   const containerArr = [
     new Stack(arr),
     new Queue(arr),
+    new PriorityQueue(arr),
     new Vector(arr),
     new LinkList(arr),
     new Deque(arr),
