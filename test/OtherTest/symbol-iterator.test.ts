@@ -59,4 +59,12 @@ describe('symbol iterator test', () => {
       }
     }
   });
+
+  it('forEach test', () => {
+    const baseArr = [...containerArr, new HashSet([1]), new HashMap([[1, 1] as [number, number]])];
+    baseArr.forEach((container) =>
+      container.forEach((element, index, _container) =>
+        expect(container === _container).to.equal(true)
+      ));
+  });
 });
