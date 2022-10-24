@@ -39,6 +39,7 @@ module.exports = function (config: Config) {
         target: 'ES5',
         module: 'commonjs'
       },
+      exclude: ['test/IsolationTest/*.ts'],
       tsconfig: 'tsconfig.json'
     },
 
