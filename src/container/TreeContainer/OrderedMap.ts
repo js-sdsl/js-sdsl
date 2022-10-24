@@ -86,9 +86,9 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     const maxNode = this._header._right as TreeNode<K, V>;
     return [maxNode._key, maxNode._value] as [K, V];
   }
-  forEach(callback: (element: [K, V], index: number) => void) {
+  forEach(callback: (element: [K, V], index: number, map: OrderedMap<K, V>) => void) {
     let index = 0;
-    for (const pair of this) callback(pair, index++);
+    for (const pair of this) callback(pair, index++, this);
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
