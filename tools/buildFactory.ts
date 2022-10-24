@@ -11,7 +11,7 @@ import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
-import rollupPluginTypescript from 'rollup-plugin-typescript2';
+import rollupPluginTypescript from '@rollup/plugin-typescript';
 import rollupPluginTs from 'rollup-plugin-ts';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import ts from 'typescript';
@@ -90,9 +90,7 @@ async function rollupTask(
     plugins: [
       rollupPluginTypescript({
         typescript: ttypescript,
-        tsconfigOverride: {
-          compilerOptions: overrideSettings
-        }
+        compilerOptions: overrideSettings
       }),
       rollupBabel({
         babelHelpers: 'bundled',
@@ -275,21 +273,22 @@ export function gulpIsolateFactory(
 
   cleanBuild.displayName = `${format}-clean`;
 
-  const baseDir = input.opts?.base ?? '.';
   const copyDir = `${buildDataDir}/copied-source`;
-  const relativeIndexFilePath = path.relative(baseDir, input.indexFile);
+  const relativeIndexFilePath = path.relative('.', input.indexFile);
   const copyIndexFilePath = path.join(copyDir, relativeIndexFilePath);
 
   async function copySource() {
     if (fs.existsSync(copyDir)) fs.rmSync(copyDir, { recursive: true });
     fs.mkdirSync(copyDir, { recursive: true });
+    // copy tsconfig.json
+    fs.copyFileSync('tsconfig.json', path.join(copyDir, 'tsconfig.json'));
     // copy source files
     const globs = Array.isArray(input.globs) ? input.globs : [input.globs];
     const files = globs
       .map((pattern) => glob.sync(pattern, input.opts))
       .reduce((acc, val) => acc.concat(val), []);
     files.forEach((file) => {
-      const relativeFilePath = path.relative(baseDir, file);
+      const relativeFilePath = path.relative('.', file);
       const copyFilePath = path.join(copyDir, relativeFilePath);
       fs.mkdirSync(path.dirname(copyFilePath), { recursive: true });
       fs.copyFileSync(file, copyFilePath);
@@ -306,42 +305,38 @@ export function gulpIsolateFactory(
   copySource.displayName = `${format}-copy-source`;
 
   async function build() {
-    macros.clear();
-    const rollupBundle = await rollup.rollup({
+    const dtsRollupBundle = await rollup.rollup({
       input: copyIndexFilePath,
       plugins: [
         rollupPluginTs({
           browserslist: false,
           tsconfig: {
             ...tsConfig.compilerOptions as object,
-            ...overrideSettings
-          },
-          transformers: (options) => {
-            const program = options.program;
-            if (program === undefined) throw new Error('program is undefined');
+            ...overrideSettings,
+            baseUrl: copyDir
+          }
+        })
+      ]
+    });
 
-            const pathsTransform = pathsTransformer(program);
+    await dtsRollupBundle.write({
+      file: `${output}/index.js`,
+      format,
+      exports: 'named'
+    });
 
-            const overrideGetCustomTransformers = overrideSettings?.getCustomTransformers;
-            if (typeof (overrideGetCustomTransformers) === 'string') {
-              throw new Error('getCustomTransformers should be a function');
-            }
-            const customTransformers = overrideGetCustomTransformers?.(program);
+    await dtsRollupBundle.close();
 
-            return {
-              before: [
-                tsMacroTransformer(program) as unknown as ts.CustomTransformerFactory,
-                ...customTransformers?.before ?? []
-              ],
-              after: [
-                ...pathsTransform.after,
-                ...customTransformers?.after ?? []
-              ],
-              afterDeclarations: [
-                ...pathsTransform.afterDeclarations,
-                ...customTransformers?.afterDeclarations ?? []
-              ]
-            };
+    macros.clear();
+    const jsRollupBundle = await rollup.rollup({
+      input: copyIndexFilePath,
+      plugins: [
+        rollupPluginTypescript({
+          typescript: ttypescript,
+          tsconfig: `${copyDir}/tsconfig.json`,
+          compilerOptions: {
+            ...overrideSettings,
+            declaration: false
           }
         }),
         rollupBabel({
@@ -352,14 +347,14 @@ export function gulpIsolateFactory(
       ]
     });
 
-    await rollupBundle.write({
+    await jsRollupBundle.write({
       sourcemap: true,
       file: `${output}/index.js`,
       format,
       exports: 'named'
     });
 
-    await rollupBundle.close();
+    await jsRollupBundle.close();
   }
 
   build.displayName = `${format}-build`;
