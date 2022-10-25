@@ -60,7 +60,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
-      `${build.name}/dist/cjs`,
+      `dist/isolate/${build.name}/dist/cjs`,
       {
         format: 'cjs',
         overrideSettings: {
@@ -78,7 +78,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
-      `${build.name}/dist/esm`,
+      `dist/isolate/${build.name}/dist/esm`,
       {
         format: 'esm',
         overrideSettings: {
@@ -86,6 +86,27 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
           module: 'ES2015',
           declaration: true
         }
+      }
+    );
+
+    const isolateUmdBuildTask = gulpIsolateFactory(
+      {
+        indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      `dist/isolate/${build.name}/dist/umd`,
+      {
+        format: 'umd',
+        overrideSettings: {
+          target: 'ES5'
+        },
+        sourceMap: false,
+        mangling: false,
+        generateMin: true,
+        outputFileName: 'js-sdsl.js'
       }
     );
 
@@ -105,6 +126,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       gulp.series(
         isolateCjsBuildTask,
         isolateEsmBuildTask,
+        isolateUmdBuildTask,
         copySharedFilesTask,
         createPackageJsonTask
       )

@@ -172,7 +172,7 @@ export function gulpUmdFactory(
 
   function cleanStream() {
     return gulp
-      .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
+      .src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
@@ -181,7 +181,7 @@ export function gulpUmdFactory(
   async function build() {
     await rollupTask(
       input,
-      `dist/umd/${output}`,
+      output,
       'umd',
       false,
       overrideSettings
@@ -224,13 +224,22 @@ export function gulpIsolateFactory(
   settings: {
     format: 'cjs' | 'esm' | 'umd',
     overrideSettings?: PartialCompilerOptions,
-    sourceMap?: boolean
+    buildDataDir?: string,
+    sourceMap?: boolean,
+    mangling?: boolean,
+    generateMin?: boolean,
+    outputFileName?: string
   }
 ) {
-  settings.sourceMap ??= true;
-
-  output = `dist/isolate/${output}`;
-  const buildDataDir = 'dist/isolate/.build-data';
+  const initializedSettings = {
+    format: settings.format,
+    overrideSettings: settings.overrideSettings,
+    buildDataDir: settings.buildDataDir ?? 'dist/isolate/.build-data',
+    sourceMap: settings.sourceMap ?? true,
+    mangling: settings.mangling ?? true,
+    generateMin: settings.generateMin ?? false,
+    outputFileName: settings.outputFileName ?? 'index.js'
+  };
 
   async function generateIndex() {
     // get files from glob
@@ -244,8 +253,8 @@ export function gulpIsolateFactory(
     files.forEach((file) => hash.update(fs.readFileSync(file)));
     const hashValue = hash.digest('hex');
     // compare hash with the previous one
-    const previousHash = fs.existsSync(`${buildDataDir}/hash`)
-      ? fs.readFileSync(`${buildDataDir}/hash`, 'utf8')
+    const previousHash = fs.existsSync(`${initializedSettings.buildDataDir}/hash`)
+      ? fs.readFileSync(`${initializedSettings.buildDataDir}/hash`, 'utf8')
       : '';
     if (previousHash === hashValue) return;
     // generate index file
@@ -255,7 +264,7 @@ export function gulpIsolateFactory(
       getCustomTransformers: (program) => {
         if (program === undefined) throw new Error('program is undefined');
         return exportTransformer(program, {
-          indexOutputPath: `${buildDataDir}/transformed-index.json`,
+          indexOutputPath: `${initializedSettings.buildDataDir}/transformed-index.json`,
           indexFile: input.indexFile,
           builds: input.isolateBuildConfig.builds
             .map((build) => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
@@ -272,20 +281,20 @@ export function gulpIsolateFactory(
         .on('finish', resolve);
     });
     // save hash
-    fs.mkdirSync(buildDataDir, { recursive: true });
-    fs.writeFileSync(`${buildDataDir}/hash`, hashValue);
+    fs.mkdirSync(initializedSettings.buildDataDir, { recursive: true });
+    fs.writeFileSync(`${initializedSettings.buildDataDir}/hash`, hashValue);
   }
 
-  generateIndex.displayName = `${settings.format}-generate-index`;
+  generateIndex.displayName = `${initializedSettings.format}-generate-index`;
 
   function cleanBuild() {
     return gulp.src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
-  cleanBuild.displayName = `${settings.format}-clean`;
+  cleanBuild.displayName = `${initializedSettings.format}-clean`;
 
-  const copyDir = `${buildDataDir}/copied-source`;
+  const copyDir = `${initializedSettings.buildDataDir}/copied-source`;
   const relativeIndexFilePath = path.relative('.', input.indexFile);
   const copyIndexFilePath = path.join(copyDir, relativeIndexFilePath);
 
@@ -306,7 +315,7 @@ export function gulpIsolateFactory(
       fs.copyFileSync(file, copyFilePath);
     });
     // copy index file
-    const transformedIndexFilePaths = `${buildDataDir}/transformed-index.json`;
+    const transformedIndexFilePaths = `${initializedSettings.buildDataDir}/transformed-index.json`;
     if (!fs.existsSync(transformedIndexFilePaths)) throw new Error('index file does not exist');
     const transformedIndexFiles =
       JSON.parse(fs.readFileSync(transformedIndexFilePaths, 'utf8')) as { [key: string]: string };
@@ -314,12 +323,12 @@ export function gulpIsolateFactory(
     fs.writeFileSync(copyIndexFilePath, indexFileContent);
   }
 
-  copySource.displayName = `${settings.format}-copy-source`;
+  copySource.displayName = `${initializedSettings.format}-copy-source`;
 
   async function build() {
     const generateDeclaration =
       (tsConfig.compilerOptions as unknown as ts.CompilerOptions).declaration ??
-      settings.overrideSettings?.declaration ??
+      initializedSettings.overrideSettings?.declaration ??
       false;
 
     if (generateDeclaration) {
@@ -330,7 +339,7 @@ export function gulpIsolateFactory(
             browserslist: false,
             tsconfig: {
               ...tsConfig.compilerOptions as object,
-              ...settings.overrideSettings,
+              ...initializedSettings.overrideSettings,
               baseUrl: copyDir
             }
           })
@@ -338,9 +347,10 @@ export function gulpIsolateFactory(
       });
 
       await dtsRollupBundle.write({
-        file: `${output}/index.js`,
-        format: settings.format,
-        exports: 'named'
+        file: `${output}/${initializedSettings.outputFileName}`,
+        format: initializedSettings.format,
+        exports: 'named',
+        name: 'sdsl'
       });
 
       await dtsRollupBundle.close();
@@ -354,7 +364,7 @@ export function gulpIsolateFactory(
           typescript: ttypescript,
           tsconfig: `${copyDir}/tsconfig.json`,
           compilerOptions: {
-            ...settings.overrideSettings,
+            ...initializedSettings.overrideSettings,
             declaration: false
           }
         }),
@@ -367,27 +377,56 @@ export function gulpIsolateFactory(
     });
 
     await jsRollupBundle.write({
-      sourcemap: settings.sourceMap,
-      file: `${output}/index.js`,
-      format: settings.format,
-      exports: 'named'
+      sourcemap: initializedSettings.sourceMap,
+      file: `${output}/${initializedSettings.outputFileName}`,
+      format: initializedSettings.format,
+      exports: 'named',
+      name: 'sdsl'
     });
 
     await jsRollupBundle.close();
   }
 
-  build.displayName = `${settings.format}-build`;
+  build.displayName = `${initializedSettings.format}-build`;
 
   function mangle() {
     return gulp
-      .src([`${output}/index.js`])
-      .pipe(settings.sourceMap ? sourcemaps.init({ loadMaps: true }) : tap(() => { /* */ }))
+      .src([`${output}/${initializedSettings.outputFileName}`])
+      .pipe(initializedSettings.sourceMap
+        ? sourcemaps.init({ loadMaps: true })
+        : tap(() => { /* */ }))
       .pipe(terserStream())
-      .pipe(settings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
+      .pipe(initializedSettings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
       .pipe(gulp.dest(`${output}`));
   }
 
-  mangle.displayName = `${settings.format}-mangle`;
+  mangle.displayName = `${initializedSettings.format}-mangle`;
 
-  return gulp.series(generateIndex, cleanBuild, copySource, build, mangle);
+  function generateMin() {
+    let minFileName = path.basename(
+      initializedSettings.outputFileName,
+      path.extname(initializedSettings.outputFileName)
+    );
+    minFileName += '.min.js';
+
+    return gulpUmdMinFactory(
+      `${output}/${initializedSettings.outputFileName}`,
+      `${output}/${minFileName}`
+    );
+  }
+
+  generateMin.displayName = `${initializedSettings.format}-generate-min`;
+
+  const tasks: ((() => Promise<unknown>) | (() => NodeJS.ReadWriteStream))[] = [
+    generateIndex,
+    cleanBuild,
+    copySource,
+    build
+  ];
+
+  if (initializedSettings.mangling) tasks.push(mangle);
+
+  if (initializedSettings.generateMin) tasks.push(generateMin);
+
+  return gulp.series(...tasks);
 }

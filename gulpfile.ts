@@ -65,7 +65,7 @@ gulp.task(
   'umd',
   gulpUmdFactory(
     'src/index.ts',
-    'js-sdsl.js',
+    'dist/umd/js-sdsl.js',
     {
       target: 'ES5'
     }
