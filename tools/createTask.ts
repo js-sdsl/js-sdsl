@@ -106,7 +106,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         sourceMap: false,
         mangling: false,
         generateMin: true,
-        outputFileName: 'js-sdsl.js'
+        outputFileName: `${build.name}.js`
       }
     );
 

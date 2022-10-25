@@ -417,7 +417,7 @@ export function gulpIsolateFactory(
 
   generateMin.displayName = `${initializedSettings.format}-generate-min`;
 
-  const tasks: ((() => Promise<unknown>) | (() => NodeJS.ReadWriteStream))[] = [
+  const tasks: (() => Promise<unknown> | NodeJS.ReadWriteStream)[] = [
     generateIndex,
     cleanBuild,
     copySource,
@@ -428,5 +428,5 @@ export function gulpIsolateFactory(
 
   if (initializedSettings.generateMin) tasks.push(generateMin);
 
-  return gulp.series(...tasks);
+  return gulp.series(tasks);
 }
