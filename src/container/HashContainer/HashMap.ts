@@ -70,12 +70,12 @@ class HashMap<K, V> extends HashContainer<K> {
     }
     this._hashTable = newHashTable;
   }
-  forEach(callback: (element: [K, V], index: number) => void) {
+  forEach(callback: (element: [K, V], index: number, map: HashMap<K, V>) => void) {
     const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
-      containers[i].forEach(element => callback(element, index++));
+      containers[i].forEach(element => callback(element, index++, this));
     }
   }
   /**

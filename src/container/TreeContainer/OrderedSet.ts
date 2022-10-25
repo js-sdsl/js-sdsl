@@ -73,9 +73,9 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   back() {
     return this._header._right ? this._header._right._key : undefined;
   }
-  forEach(callback: (element: K, index: number) => void) {
+  forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
     let index = 0;
-    for (const element of this) callback(element, index++);
+    for (const element of this) callback(element, index++, this);
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);

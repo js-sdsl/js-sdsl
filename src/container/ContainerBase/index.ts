@@ -154,7 +154,7 @@ export abstract class Container<T> extends Base {
    * @param callback Callback function like Array.forEach.
    * @example container.forEach((element, index) => console.log(element, index));
    */
-  abstract forEach(callback: (element: T, index: number) => void): void;
+  abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
   /**
    * @param element The element you want to find.
    * @return An iterator pointing to the element if found, or super end if not found.

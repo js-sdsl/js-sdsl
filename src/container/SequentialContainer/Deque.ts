@@ -236,9 +236,9 @@ class Deque<T> extends SequentialContainer<T> {
     }
     this._length -= 1;
   }
-  forEach(callback: (element: T, index: number) => void) {
+  forEach(callback: (element: T, index: number, deque: Deque<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
-      callback(this.getElementByPos(i), i);
+      callback(this.getElementByPos(i), i, this);
     }
   }
   getElementByPos(pos: number) {

@@ -137,12 +137,12 @@ class LinkList<T> extends SequentialContainer<T> {
   back() {
     return this._tail ? this._tail._value : undefined;
   }
-  forEach(callback: (element: T, index: number) => void) {
+  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
     if (!this._length) return;
     let curNode = this._head as LinkNode<T>;
     let index = 0;
     while (curNode !== this._header) {
-      callback(curNode._value as T, index++);
+      callback(curNode._value as T, index++, this);
       curNode = curNode._next as LinkNode<T>;
     }
   }

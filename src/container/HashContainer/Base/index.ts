@@ -67,7 +67,9 @@ abstract class HashContainer<K> extends Base {
    * @param callback Callback function like Array.forEach.
    * @example container.forEach((element, index) => console.log(element, index));
    */
-  abstract forEach(callback: (element: unknown, index: number) => void): void;
+  abstract forEach(
+    callback: (element: unknown, index: number, hashContainer: HashContainer<K>) => void
+  ): void;
   /**
    * @description Remove the elements of the specified value.
    * @param key The element you want to remove.
