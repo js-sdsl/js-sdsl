@@ -11,7 +11,7 @@ import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer, { macros } from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
-import rollupPluginTypescript from '@rollup/plugin-typescript';
+import rollupPluginTypescript, { PartialCompilerOptions } from '@rollup/plugin-typescript';
 import rollupPluginTs from 'rollup-plugin-ts';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import ts from 'typescript';
@@ -82,7 +82,7 @@ async function rollupTask(
   output: string,
   format: 'cjs' | 'esm' | 'umd',
   sourceMap: boolean,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
+  overrideSettings?: PartialCompilerOptions
 ): Promise<void> {
   const rollupBundle = await rollup.rollup({
     input,
@@ -128,22 +128,27 @@ export function gulpFactory(
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>,
-  useCjsTransform = false,
-  sourceMap = true
+  settings: {
+    overrideSettings?: gulpTs.Settings,
+    useCjsTransform?: boolean,
+    sourceMap?: boolean,
+  }
 ): NodeJS.ReadWriteStream {
+  settings.useCjsTransform ??= false;
+  settings.sourceMap ??= true;
+
   macros.clear();
   const tsProject = createProject({
-    ...overrideSettings,
+    ...settings.overrideSettings,
     outDir: output
   });
   const cleanStream = gulp.src(output, { read: false, allowEmpty: true })
     .pipe(clean());
   const tsBuildResult = gulp.src(input.globs, input.opts)
-    .pipe(sourceMap ? sourcemaps.init() : tap(() => { /* */ }))
+    .pipe(settings.sourceMap ? sourcemaps.init() : tap(() => { /* */ }))
     .pipe(tsProject());
   const jsBuildResult = tsBuildResult.js
-    .pipe(babelStream(true, useCjsTransform))
+    .pipe(babelStream(true, settings.useCjsTransform))
     .pipe(terserStream());
   return merge(
     cleanStream,
@@ -152,13 +157,17 @@ export function gulpFactory(
         .pipe(filter(['**/*.ts', '!**/*.macro.d.ts'])),
       jsBuildResult
         .pipe(filter(['**/*.js', '!**/*.macro.js']))
-        .pipe(sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
+        .pipe(settings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
     ])
       .pipe(gulp.dest(output))
   );
 }
 
-export function gulpUmdFactory(input: string, output: string) {
+export function gulpUmdFactory(
+  input: string,
+  output: string,
+  overrideSettings?: PartialCompilerOptions
+) {
   macros.clear();
 
   function cleanStream() {
@@ -175,9 +184,7 @@ export function gulpUmdFactory(input: string, output: string) {
       `dist/umd/${output}`,
       'umd',
       false,
-      {
-        target: 'es5'
-      }
+      overrideSettings
     );
   }
 
@@ -189,19 +196,18 @@ export function gulpUmdFactory(input: string, output: string) {
 export async function gulpUmdMinFactory(input: string, output: string) {
   macros.clear();
   return gulp
-    .src([`dist/umd/${output}`, `dist/umd/${output}.map`], { read: false, allowEmpty: true })
+    .src([`${output}`, `${output}.map`], { read: false, allowEmpty: true })
     .pipe(clean())
     .pipe(gulp.src(input))
     .pipe(sourcemaps.init())
     .pipe(terserStream())
     .pipe(GulpUglify({ compress: true }))
-    .pipe(rename(output))
+    .pipe(rename(path.basename(output)))
     .pipe(sourcemaps.write('.', { includeContent: false }))
-    .pipe(gulp.dest('dist/umd'));
+    .pipe(gulp.dest(path.dirname(output)));
 }
 
 export function gulpIsolateFactory(
-  format: 'cjs' | 'esm',
   input: {
     indexFile: string,
     isolateBuildConfig: {
@@ -215,8 +221,14 @@ export function gulpIsolateFactory(
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
+  settings: {
+    format: 'cjs' | 'esm' | 'umd',
+    overrideSettings?: PartialCompilerOptions,
+    sourceMap?: boolean
+  }
 ) {
+  settings.sourceMap ??= true;
+
   output = `dist/isolate/${output}`;
   const buildDataDir = 'dist/isolate/.build-data';
 
@@ -264,14 +276,14 @@ export function gulpIsolateFactory(
     fs.writeFileSync(`${buildDataDir}/hash`, hashValue);
   }
 
-  generateIndex.displayName = `${format}-generate-index`;
+  generateIndex.displayName = `${settings.format}-generate-index`;
 
   function cleanBuild() {
     return gulp.src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
-  cleanBuild.displayName = `${format}-clean`;
+  cleanBuild.displayName = `${settings.format}-clean`;
 
   const copyDir = `${buildDataDir}/copied-source`;
   const relativeIndexFilePath = path.relative('.', input.indexFile);
@@ -302,30 +314,37 @@ export function gulpIsolateFactory(
     fs.writeFileSync(copyIndexFilePath, indexFileContent);
   }
 
-  copySource.displayName = `${format}-copy-source`;
+  copySource.displayName = `${settings.format}-copy-source`;
 
   async function build() {
-    const dtsRollupBundle = await rollup.rollup({
-      input: copyIndexFilePath,
-      plugins: [
-        rollupPluginTs({
-          browserslist: false,
-          tsconfig: {
-            ...tsConfig.compilerOptions as object,
-            ...overrideSettings,
-            baseUrl: copyDir
-          }
-        })
-      ]
-    });
+    const generateDeclaration =
+      (tsConfig.compilerOptions as unknown as ts.CompilerOptions).declaration ??
+      settings.overrideSettings?.declaration ??
+      false;
 
-    await dtsRollupBundle.write({
-      file: `${output}/index.js`,
-      format,
-      exports: 'named'
-    });
+    if (generateDeclaration) {
+      const dtsRollupBundle = await rollup.rollup({
+        input: copyIndexFilePath,
+        plugins: [
+          rollupPluginTs({
+            browserslist: false,
+            tsconfig: {
+              ...tsConfig.compilerOptions as object,
+              ...settings.overrideSettings,
+              baseUrl: copyDir
+            }
+          })
+        ]
+      });
 
-    await dtsRollupBundle.close();
+      await dtsRollupBundle.write({
+        file: `${output}/index.js`,
+        format: settings.format,
+        exports: 'named'
+      });
+
+      await dtsRollupBundle.close();
+    }
 
     macros.clear();
     const jsRollupBundle = await rollup.rollup({
@@ -335,7 +354,7 @@ export function gulpIsolateFactory(
           typescript: ttypescript,
           tsconfig: `${copyDir}/tsconfig.json`,
           compilerOptions: {
-            ...overrideSettings,
+            ...settings.overrideSettings,
             declaration: false
           }
         }),
@@ -348,27 +367,27 @@ export function gulpIsolateFactory(
     });
 
     await jsRollupBundle.write({
-      sourcemap: true,
+      sourcemap: settings.sourceMap,
       file: `${output}/index.js`,
-      format,
+      format: settings.format,
       exports: 'named'
     });
 
     await jsRollupBundle.close();
   }
 
-  build.displayName = `${format}-build`;
+  build.displayName = `${settings.format}-build`;
 
   function mangle() {
     return gulp
       .src([`${output}/index.js`])
-      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(settings.sourceMap ? sourcemaps.init({ loadMaps: true }) : tap(() => { /* */ }))
       .pipe(terserStream())
-      .pipe(sourcemaps.write('.'))
+      .pipe(settings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
       .pipe(gulp.dest(`${output}`));
   }
 
-  mangle.displayName = `${format}-mangle`;
+  mangle.displayName = `${settings.format}-mangle`;
 
   return gulp.series(generateIndex, cleanBuild, copySource, build, mangle);
 }

@@ -53,7 +53,6 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
 
   for (const build of config.builds) {
     const isolateCjsBuildTask = gulpIsolateFactory(
-      'cjs',
       {
         indexFile: 'src/index.ts',
         isolateBuildConfig: config,
@@ -63,13 +62,15 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       },
       `${build.name}/dist/cjs`,
       {
-        module: 'ES2015',
-        declaration: true
+        format: 'cjs',
+        overrideSettings: {
+          module: 'ES2015',
+          declaration: true
+        }
       }
     );
 
     const isolateEsmBuildTask = gulpIsolateFactory(
-      'esm',
       {
         indexFile: 'src/index.ts',
         isolateBuildConfig: config,
@@ -79,9 +80,12 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       },
       `${build.name}/dist/esm`,
       {
-        target: 'ES5',
-        module: 'ES2015',
-        declaration: true
+        format: 'esm',
+        overrideSettings: {
+          target: 'ES5',
+          module: 'ES2015',
+          declaration: true
+        }
       }
     );
 
