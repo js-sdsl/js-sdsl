@@ -20,24 +20,24 @@
 
 <p align="center">English | <a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
 
-## Included data structures
+## ✨ Included data structures
 
-- Vector
-- Stack
-- Queue
-- LinkList
-- Deque
-- PriorityQueue
-- OrderedSet (using RBTree)
-- OrderedMap (using RBTree)
-- HashSet
-- HashMap
+- **Stack** - first in first out stack.
+- **Queue** - first in last out queue.
+- **Vector** - protected array, cannot to operate properties like `length` directly.
+- **LinkList** - linked list of non-contiguous memory addresses.
+- **Deque** - double-ended-queue, O(1) time complexity to inserting elements front and back or getting elements by index.
+- **PriorityQueue** - heap-implemented priority queue.
+- **OrderedSet** - sorted set which implemented by red black Tree.
+- **OrderedMap** - sorted map which implemented by red black Tree.
+- **HashSet** - refer to the hash set implemented by java.
+- **HashMap** - refer to the hash map implemented by java.
 
-## Benchmark
+## ⚔️ Benchmark
 
 We are benchmarking against other popular data structure libraries. In some ways we're better than the best library. See [benchmark](https://js-sdsl.github.io/#/test/benchmark-analyze).
 
-## Supported platforms
+## 🖥 Supported platforms
 
 <table>
   <tr align="center">
@@ -76,7 +76,7 @@ We are benchmarking against other popular data structure libraries. In some ways
   </tr>
 </table>
 
-## Download
+## 📦 Download
 
 Download directly
 
@@ -104,7 +104,7 @@ Or you can download the isolation packages containing only the containers you wa
 | [@js-sdsl/hash-set](https://js-sdsl.github.io/js-sdsl/classes/HashSet.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-set)](https://www.npmjs.com/package/@js-sdsl/hash-set)             | `npm i @js-sdsl/hash-set`       |
 | [@js-sdsl/hash-map](https://js-sdsl.github.io/js-sdsl/classes/HashMap.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-map)](https://www.npmjs.com/package/@js-sdsl/hash-map)             | `npm i @js-sdsl/hash-map`       |
 
-## Usage
+## 🪒 Usage
 
 You can visit our [official website](https://js-sdsl.github.io/) to get more information.
 
@@ -145,11 +145,7 @@ myOrderedMap.setElement(1, 2);
 console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
-## Build by source code
-
-You can pull this repository and run `yarn build` to rebuild this library.
-
-## Test
+## 🛠 Test
 
 ### Unit test
 
@@ -161,7 +157,7 @@ We tested most of the functions for efficiency. You can go to [`gh-pages/perform
 
 You can also visit [here](https://js-sdsl.github.io/#/test/performance-test) to get the result.
 
-## Development
+## ⌨️ Development
 
 Use Gitpod, a free online dev environment for GitHub.
 
@@ -178,11 +174,7 @@ $ npm run dev   # development mode
 
 Then you can see the output in `dist/cjs` folder.
 
-## Maintainers
-
-[@ZLY201](https://github.com/ZLY201)
-
-## Contributing
+## 🤝 Contributing
 
 Feel free to dive in! Open an issue or submit PRs. It may be helpful to read the [Contributor Guide](https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md).
 
@@ -209,11 +201,7 @@ Thanks goes to these wonderful people:
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-## License
-
-[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © ZLY201
-
-## Sponsors and Backers
+## ❤️ Sponsors and Backers
 
 The special thanks to these sponsors or backers because they provided support at a very early stage:
 
@@ -221,6 +209,10 @@ The special thanks to these sponsors or backers because they provided support at
 
 Thanks also give to these sponsors or backers:
 
-[![](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+[![sponsors](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
 
-[![](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+[![backers](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+## 🪪 License
+
+[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
