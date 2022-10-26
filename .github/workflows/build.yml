@@ -73,6 +73,7 @@ jobs:
         with:
           folder: docs
           branch: gh-pages
+          clean-exclude: previous/
       - name: Read package.json
         uses: tyankatsu0105/read-package-version-actions@v1
         id: package-version
@@ -82,7 +83,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         folder: docs
         branch: gh-pages
-        target-folder: previous/${{ steps.package-version.outputs.version }}
+        target-folder: previous/v${{ steps.package-version.outputs.version }}
   publish-main:
     needs: [unit-test, browser-test, performance-test]
     runs-on: ubuntu-latest

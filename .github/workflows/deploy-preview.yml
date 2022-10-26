@@ -2,6 +2,11 @@ name: Deploy PR previews
 
 on:
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
     branches:
       - main
 
@@ -20,6 +25,14 @@ jobs:
       - name: Generate type documentation
         run: yarn generate
       - name: Deploy preview
+        if: contains(['opened', 'reopened', 'synchronize'], github.event.action)
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
+          action: deploy
+      - name: Remove preview
+        if: github.event.action == "closed"
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs/
+          action: remove
