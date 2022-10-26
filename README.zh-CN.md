@@ -24,10 +24,10 @@
 
 - **Stack** - 先进先出的堆栈
 - **Queue** - 先进后出的队列
+- **PriorityQueue** - 堆实现的优先级队列
 - **Vector** - 受保护的数组，不能直接操作像 `length` 这样的属性
 - **LinkList** - 非连续内存地址的链表
 - **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的 O(1) 时间复杂度
-- **PriorityQueue** - 堆实现的优先级队列
 - **OrderedSet** - 由红黑树实现的排序集合
 - **OrderedMap** - 由红黑树实现的排序字典
 - **HashSet** - 参考 java 实现的哈希集合

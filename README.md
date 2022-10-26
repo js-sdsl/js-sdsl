@@ -24,10 +24,10 @@
 
 - **Stack** - first in first out stack.
 - **Queue** - first in last out queue.
+- **PriorityQueue** - heap-implemented priority queue.
 - **Vector** - protected array, cannot to operate properties like `length` directly.
 - **LinkList** - linked list of non-contiguous memory addresses.
 - **Deque** - double-ended-queue, O(1) time complexity to inserting elements front and back or getting elements by index.
-- **PriorityQueue** - heap-implemented priority queue.
 - **OrderedSet** - sorted set which implemented by red black Tree.
 - **OrderedMap** - sorted map which implemented by red black Tree.
 - **HashSet** - refer to the hash set implemented by java.
