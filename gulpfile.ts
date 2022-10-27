@@ -1,11 +1,13 @@
 import gulp from 'gulp';
 import {
+  createLicenseText,
   gulpFactory,
   gulpUmdFactory,
   gulpUmdMinFactory
 } from './tools/buildFactory';
 import { createIsolateTasksFromConfig } from './tools/createTask';
 import isolateBuildConfig from './conf/isolate.config.json';
+import PackageJson from './package.json';
 
 gulp.task(
   'cjs',
@@ -64,10 +66,16 @@ gulp.task(
 gulp.task(
   'umd',
   gulpUmdFactory(
-    'src/index.ts',
+    {
+      indexFile: 'src/index.ts',
+      include: ['src/**/*.ts']
+    },
     'dist/umd/js-sdsl.js',
     {
-      target: 'ES5'
+      overrideSettings: {
+        target: 'ES5'
+      },
+      umdBanner: createLicenseText(PackageJson.name, PackageJson.version)
     }
   )
 );

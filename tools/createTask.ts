@@ -1,7 +1,7 @@
 import gulp from 'gulp';
 import fs from 'fs';
 import path from 'path';
-import { gulpIsolateFactory } from './buildFactory';
+import { createLicenseText, gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
 
 function createSharedFilesCopyTask(
@@ -106,7 +106,8 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         sourceMap: false,
         mangling: false,
         generateMin: true,
-        outputFileName: `${build.name}.js`
+        outputFileName: `${build.name}.js`,
+        umdBanner: createLicenseText(build.name, build.version)
       }
     );
 

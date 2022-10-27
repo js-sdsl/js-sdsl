@@ -13,6 +13,7 @@ import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
 import rollupPluginTypescript, { PartialCompilerOptions } from '@rollup/plugin-typescript';
 import rollupPluginTs from 'rollup-plugin-ts';
+import rollupPluginLicense from 'rollup-plugin-license';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import ts from 'typescript';
 import ttypescript from 'ttypescript';
@@ -78,32 +79,48 @@ function terserStream() {
 }
 
 async function rollupTask(
-  input: string,
+  input: {
+    indexFile: string,
+    include: string[]
+  },
   output: string,
-  format: 'cjs' | 'esm' | 'umd',
-  sourceMap: boolean,
-  overrideSettings?: PartialCompilerOptions
+  settings: {
+    format: 'cjs' | 'esm' | 'umd',
+    sourceMap: boolean,
+    overrideSettings?: PartialCompilerOptions,
+    umdBanner?: string,
+  }
 ): Promise<void> {
   const rollupBundle = await rollup.rollup({
-    input,
+    input: input.indexFile,
     context: 'this',
     plugins: [
       rollupPluginTypescript({
         typescript: ttypescript,
-        compilerOptions: overrideSettings
+        compilerOptions: settings.overrideSettings,
+        include: input.include
       }),
       rollupBabel({
         babelHelpers: 'bundled',
         extensions: ['.ts', '.js'],
         plugins: ['babel-plugin-remove-unused-import']
-      })
+      }),
+      settings.format === 'umd' && settings.umdBanner
+        ? rollupPluginLicense({
+          sourcemap: settings.sourceMap,
+          banner: {
+            commentStyle: 'ignored',
+            content: settings.umdBanner
+          }
+        })
+        : undefined
     ]
   });
 
   await rollupBundle.write({
-    sourcemap: sourceMap,
+    sourcemap: settings.sourceMap,
     file: output,
-    format,
+    format: settings.format,
     name: 'sdsl',
     exports: 'named'
   });
@@ -120,6 +137,14 @@ function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
       ].filter((plugin) => plugin !== undefined) as string[]
     })
     : tap(() => { /* */ });
+}
+
+export function createLicenseText(packageName: string, packageVersion: string): string {
+  const licenseText = fs.readFileSync('conf/umd-banner.txt', 'utf8')
+    .replace(/<package>/g, packageName)
+    .replace(/<version>/g, packageVersion);
+
+  return licenseText;
 }
 
 export function gulpFactory(
@@ -164,9 +189,15 @@ export function gulpFactory(
 }
 
 export function gulpUmdFactory(
-  input: string,
+  input: {
+    indexFile: string,
+    include: string[]
+  },
   output: string,
-  overrideSettings?: PartialCompilerOptions
+  settings: {
+    overrideSettings?: PartialCompilerOptions,
+    umdBanner?: string
+  }
 ) {
   macros.clear();
 
@@ -182,9 +213,12 @@ export function gulpUmdFactory(
     await rollupTask(
       input,
       output,
-      'umd',
-      false,
-      overrideSettings
+      {
+        format: 'umd',
+        sourceMap: false,
+        overrideSettings: settings.overrideSettings,
+        umdBanner: settings.umdBanner
+      }
     );
   }
 
@@ -201,7 +235,12 @@ export async function gulpUmdMinFactory(input: string, output: string) {
     .pipe(gulp.src(input))
     .pipe(sourcemaps.init())
     .pipe(terserStream())
-    .pipe(GulpUglify({ compress: true }))
+    .pipe(GulpUglify({
+      compress: true,
+      output: {
+        comments: /^!/
+      }
+    }))
     .pipe(rename(path.basename(output)))
     .pipe(sourcemaps.write('.', { includeContent: false }))
     .pipe(gulp.dest(path.dirname(output)));
@@ -228,7 +267,8 @@ export function gulpIsolateFactory(
     sourceMap?: boolean,
     mangling?: boolean,
     generateMin?: boolean,
-    outputFileName?: string
+    outputFileName?: string,
+    umdBanner?: string
   }
 ) {
   const initializedSettings = {
@@ -238,7 +278,8 @@ export function gulpIsolateFactory(
     sourceMap: settings.sourceMap ?? true,
     mangling: settings.mangling ?? true,
     generateMin: settings.generateMin ?? false,
-    outputFileName: settings.outputFileName ?? 'index.js'
+    outputFileName: settings.outputFileName ?? 'index.js',
+    umdBanner: settings.umdBanner
   };
 
   async function generateIndex() {
@@ -372,7 +413,16 @@ export function gulpIsolateFactory(
           babelHelpers: 'bundled',
           extensions: ['.ts', '.js'],
           plugins: ['babel-plugin-remove-unused-import']
-        })
+        }),
+        initializedSettings.format === 'umd' && initializedSettings.umdBanner
+          ? rollupPluginLicense({
+            sourcemap: initializedSettings.sourceMap,
+            banner: {
+              commentStyle: 'ignored',
+              content: initializedSettings.umdBanner
+            }
+          })
+          : undefined
       ]
     });
 
