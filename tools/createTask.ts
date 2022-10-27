@@ -107,7 +107,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         mangling: false,
         generateMin: true,
         outputFileName: `${build.name}.js`,
-        umdBanner: createLicenseText(build.name, build.version)
+        umdBanner: createLicenseText(`@js-sdsl/${build.name}`, build.version)
       }
     );
 
