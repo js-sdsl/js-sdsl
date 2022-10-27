@@ -20,26 +20,26 @@
 
 <p align="center"><a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.md">English</a> | 简体中文</p>
 
-## 包含的数据结构
+## ✨ 包含的数据结构
 
-- Vector
-- Stack
-- Queue
-- LinkList
-- Deque
-- PriorityQueue
-- OrderedSet (using RBTree)
-- OrderedMap (using RBTree)
-- HashSet
-- HashMap
+- **Stack** - 先进先出的堆栈
+- **Queue** - 先进后出的队列
+- **PriorityQueue** - 堆实现的优先级队列
+- **Vector** - 受保护的数组，不能直接操作像 `length` 这样的属性
+- **LinkList** - 非连续内存地址的链表
+- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的 O(1) 时间复杂度
+- **OrderedSet** - 由红黑树实现的排序集合
+- **OrderedMap** - 由红黑树实现的排序字典
+- **HashSet** - 参考 java 实现的哈希集合
+- **HashMap** - 参考 java 实现的哈希字典
 
-## 基准测试
+## ⚔️ 基准测试
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
 查看 [benchmark](https://js-sdsl.github.io/#/zh-cn/test/benchmark-analyze) 以获取更多信息
 
-## 支持的平台
+## 🖥 支持的平台
 
 <table>
   <tr align="center">
@@ -78,7 +78,7 @@
   </tr>
 </table>
 
-## 下载
+## 📦 下载
 
 使用 cdn 直接引入
 
@@ -106,7 +106,7 @@ npm install js-sdsl
 | [@js-sdsl/hash-set](https://js-sdsl.github.io/js-sdsl/classes/HashSet.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-set)](https://www.npmjs.com/package/@js-sdsl/hash-set)             | `npm i @js-sdsl/hash-set`       |
 | [@js-sdsl/hash-map](https://js-sdsl.github.io/js-sdsl/classes/HashMap.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-map)](https://www.npmjs.com/package/@js-sdsl/hash-map)             | `npm i @js-sdsl/hash-map`       |
 
-## 使用说明
+## 🪒 使用说明
 
 您可以[访问我们的主页](https://js-sdsl.github.io/)获取更多信息
 
@@ -147,11 +147,7 @@ myOrderedMap.setElement(1, 2);
 console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
-## 从源码构建
-
-您可以克隆此仓库后运行 `yarn build` 命令重新构建这个库
-
-## 测试
+## 🛠 测试
 
 ### 单元测试
 
@@ -163,7 +159,7 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 您也可以访问[我们的网站](https://js-sdsl.github.io/#/zh-cn/test/performance-test)来获取结果
 
-## 开发
+## ⌨️ 开发
 
 可以使用 Gitpod 进行在线编辑：
 
@@ -180,11 +176,7 @@ $ npm run dev   # development mode
 
 之后您在 `dist/cjs` 文件夹中可以看到在 `dev` 模式下打包生成的产物
 
-## 维护者
-
-[@ZLY201](https://github.com/ZLY201)
-
-## 贡献
+## 🤝 贡献
 
 我们欢迎所有的开发人员提交 issue 或 pull request，阅读[贡献者指南](https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md)可能会有所帮助
 
@@ -211,11 +203,7 @@ $ npm run dev   # development mode
 
 本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。 欢迎任何形式的贡献！
 
-## 许可证
-
-[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © ZLY201
-
-## 赞助者
+## ❤️ 赞助者
 
 特别鸣谢下列赞助商和支持者们，他们在非常早期的时候为我们提供了支持：
 
@@ -223,6 +211,10 @@ $ npm run dev   # development mode
 
 同样感谢这些赞助商和支持者们：
 
-[![](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+[![sponsors](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
 
-[![](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+[![backers](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+## 🪪 许可证
+
+[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
