@@ -1,4 +1,5 @@
 import gulp from 'gulp';
+import gulpTs from 'gulp-typescript';
 import {
   gulpFactory,
   gulpUmdFactory,
@@ -73,3 +74,27 @@ gulp.task(
 gulp.task('default', gulp.series('cjs', 'esm', 'umd', 'umd:min'));
 
 gulp.task('isolate', gulp.series(createIsolateTasksFromConfig(isolateBuildConfig)));
+
+const project: { ref?: gulpTs.Project } = { };
+
+gulp.task(
+  'dev',
+  gulp.series(
+    function build() {
+      return gulpFactory(
+        { globs: 'src/**/*.ts' },
+        'dist/dev',
+        {
+          module: 'ES2015',
+          declaration: true
+        },
+        true,
+        false,
+        project
+      );
+    },
+    function watch() {
+      return gulp.watch('src/**/*.ts', gulp.series('dev'));
+    }
+  )
+);

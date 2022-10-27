@@ -8,7 +8,7 @@ import GulpUglify from 'gulp-uglify';
 import babel from 'gulp-babel';
 import rename from 'gulp-rename';
 import sourcemaps from 'gulp-sourcemaps';
-import tsMacroTransformer, { macros } from 'ts-macros';
+import tsMacroTransformer from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
 import rollupPluginTypescript from '@rollup/plugin-typescript';
@@ -130,13 +130,16 @@ export function gulpFactory(
   output: string,
   overrideSettings?: Omit<gulpTs.Settings, 'outDir'>,
   useCjsTransform = false,
-  sourceMap = true
+  sourceMap = true,
+  project: { ref?: gulpTs.Project } = { }
 ): NodeJS.ReadWriteStream {
-  macros.clear();
-  const tsProject = createProject({
-    ...overrideSettings,
-    outDir: output
-  });
+  let tsProject = project.ref;
+  if (tsProject === undefined) {
+    tsProject = project.ref = createProject({
+      ...overrideSettings,
+      outDir: output
+    });
+  }
   const cleanStream = gulp.src(output, { read: false, allowEmpty: true })
     .pipe(clean());
   const tsBuildResult = gulp.src(input.globs, input.opts)
@@ -159,8 +162,6 @@ export function gulpFactory(
 }
 
 export function gulpUmdFactory(input: string, output: string) {
-  macros.clear();
-
   function cleanStream() {
     return gulp
       .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
@@ -187,7 +188,6 @@ export function gulpUmdFactory(input: string, output: string) {
 }
 
 export async function gulpUmdMinFactory(input: string, output: string) {
-  macros.clear();
   return gulp
     .src([`dist/umd/${output}`, `dist/umd/${output}.map`], { read: false, allowEmpty: true })
     .pipe(clean())
@@ -327,7 +327,6 @@ export function gulpIsolateFactory(
 
     await dtsRollupBundle.close();
 
-    macros.clear();
     const jsRollupBundle = await rollup.rollup({
       input: copyIndexFilePath,
       plugins: [
