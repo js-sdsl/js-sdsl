@@ -112,7 +112,13 @@ npm install js-sdsl
 
 并且我们提供了完整的 [API 文档](https://js-sdsl.github.io/js-sdsl/index.html)供您参考
 
-想要查看以前版本的文档，请访问 `https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html` ，比如[这样](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
+想要查看从前版本的文档，请访问：
+
+`https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html`
+
+例如：
+
+[https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
 
 ### 在浏览器中使用
 
