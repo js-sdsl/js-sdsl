@@ -1,0 +1,4 @@
+<package> v<version>
+https://github.com/js-sdsl/js-sdsl
+(c) 2021-present ZLY201 <zilongyao1366@gmail.com>
+MIT license
