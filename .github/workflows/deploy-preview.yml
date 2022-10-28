@@ -25,7 +25,7 @@ jobs:
       - name: Generate type documentation
         run: yarn generate
       - name: Deploy preview
-        if: contains(['opened', 'reopened', 'synchronize'], github.event.action)
+        if: contains(fromJson('["opened", "reopened", "synchronize"]'), github.event.action)
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
