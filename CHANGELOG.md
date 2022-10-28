@@ -10,6 +10,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Add `ts` sourcemap for debug mode.
 - Add `this` param for `forEach` function.
+- Support single package umd build.
 
 ### Changed
 

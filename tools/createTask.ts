@@ -1,7 +1,7 @@
 import gulp from 'gulp';
 import fs from 'fs';
 import path from 'path';
-import { gulpIsolateFactory } from './buildFactory';
+import { createLicenseText, gulpIsolateFactory } from './buildFactory';
 import PackageJson from '../package.json';
 
 function createSharedFilesCopyTask(
@@ -53,7 +53,6 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
 
   for (const build of config.builds) {
     const isolateCjsBuildTask = gulpIsolateFactory(
-      'cjs',
       {
         indexFile: 'src/index.ts',
         isolateBuildConfig: config,
@@ -61,15 +60,17 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
-      `${build.name}/dist/cjs`,
+      `dist/isolate/${build.name}/dist/cjs`,
       {
-        module: 'ES2015',
-        declaration: true
+        format: 'cjs',
+        overrideSettings: {
+          module: 'ES2015',
+          declaration: true
+        }
       }
     );
 
     const isolateEsmBuildTask = gulpIsolateFactory(
-      'esm',
       {
         indexFile: 'src/index.ts',
         isolateBuildConfig: config,
@@ -77,11 +78,36 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
         globs: 'src/**/*.ts',
         opts: { base: 'src' }
       },
-      `${build.name}/dist/esm`,
+      `dist/isolate/${build.name}/dist/esm`,
       {
-        target: 'ES5',
-        module: 'ES2015',
-        declaration: true
+        format: 'esm',
+        overrideSettings: {
+          target: 'ES5',
+          module: 'ES2015',
+          declaration: true
+        }
+      }
+    );
+
+    const isolateUmdBuildTask = gulpIsolateFactory(
+      {
+        indexFile: 'src/index.ts',
+        isolateBuildConfig: config,
+        buildName: build.name,
+        globs: 'src/**/*.ts',
+        opts: { base: 'src' }
+      },
+      `dist/isolate/${build.name}/dist/umd`,
+      {
+        format: 'umd',
+        overrideSettings: {
+          target: 'ES5'
+        },
+        sourceMap: false,
+        mangling: false,
+        generateMin: true,
+        outputFileName: `${build.name}.js`,
+        umdBanner: createLicenseText(`@js-sdsl/${build.name}`, build.version)
       }
     );
 
@@ -101,6 +127,7 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       gulp.series(
         isolateCjsBuildTask,
         isolateEsmBuildTask,
+        isolateUmdBuildTask,
         copySharedFilesTask,
         createPackageJsonTask
       )

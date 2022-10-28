@@ -1,12 +1,14 @@
 import gulp from 'gulp';
 import gulpTs from 'gulp-typescript';
 import {
+  createLicenseText,
   gulpFactory,
   gulpUmdFactory,
   gulpUmdMinFactory
 } from './tools/buildFactory';
 import { createIsolateTasksFromConfig } from './tools/createTask';
 import isolateBuildConfig from './conf/isolate.config.json';
+import PackageJson from './package.json';
 
 gulp.task(
   'cjs',
@@ -14,10 +16,12 @@ gulp.task(
     { globs: 'src/**/*.ts' },
     'dist/cjs',
     {
-      module: 'ES2015',
-      declaration: true
-    },
-    true
+      overrideSettings: {
+        module: 'ES2015',
+        declaration: true
+      },
+      useCjsTransform: true
+    }
   )
 );
 
@@ -27,10 +31,13 @@ gulp.task(
     { globs: 'src/**/*.ts' },
     'dist/esm',
     {
-      target: 'ES5',
-      module: 'ES2015',
-      declaration: true
-    })
+      overrideSettings: {
+        target: 'ES5',
+        module: 'ES2015',
+        declaration: true
+      }
+    }
+  )
 );
 
 gulp.task(
@@ -47,19 +54,30 @@ gulp.task(
     },
     'dist/performance',
     {
-      module: 'ES2015',
-      declaration: false
-    },
-    true,
-    false
+      overrideSettings: {
+        module: 'ES2015',
+        declaration: false
+      },
+      useCjsTransform: true,
+      sourceMap: false
+    }
   )
 );
 
 gulp.task(
   'umd',
   gulpUmdFactory(
-    'src/index.ts',
-    'js-sdsl.js'
+    {
+      indexFile: 'src/index.ts',
+      include: ['src/**/*.ts']
+    },
+    'dist/umd/js-sdsl.js',
+    {
+      overrideSettings: {
+        target: 'ES5'
+      },
+      umdBanner: createLicenseText(PackageJson.name, PackageJson.version)
+    }
   )
 );
 
@@ -67,7 +85,7 @@ gulp.task(
   'umd:min',
   () => gulpUmdMinFactory(
     'dist/umd/js-sdsl.js',
-    'js-sdsl.min.js'
+    'dist/umd/js-sdsl.min.js'
   )
 );
 

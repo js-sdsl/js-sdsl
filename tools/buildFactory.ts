@@ -11,8 +11,9 @@ import sourcemaps from 'gulp-sourcemaps';
 import tsMacroTransformer from 'ts-macros';
 import pathsTransformer from 'ts-transform-paths';
 import exportTransformer from './exportTransformer';
-import rollupPluginTypescript from '@rollup/plugin-typescript';
+import rollupPluginTypescript, { PartialCompilerOptions } from '@rollup/plugin-typescript';
 import rollupPluginTs from 'rollup-plugin-ts';
+import rollupPluginLicense from 'rollup-plugin-license';
 import { babel as rollupBabel } from '@rollup/plugin-babel';
 import ts from 'typescript';
 import ttypescript from 'ttypescript';
@@ -78,32 +79,48 @@ function terserStream() {
 }
 
 async function rollupTask(
-  input: string,
+  input: {
+    indexFile: string,
+    include: string[]
+  },
   output: string,
-  format: 'cjs' | 'esm' | 'umd',
-  sourceMap: boolean,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
+  settings: {
+    format: 'cjs' | 'esm' | 'umd',
+    sourceMap: boolean,
+    overrideSettings?: PartialCompilerOptions,
+    umdBanner?: string,
+  }
 ): Promise<void> {
   const rollupBundle = await rollup.rollup({
-    input,
+    input: input.indexFile,
     context: 'this',
     plugins: [
       rollupPluginTypescript({
         typescript: ttypescript,
-        compilerOptions: overrideSettings
+        compilerOptions: settings.overrideSettings,
+        include: input.include
       }),
       rollupBabel({
         babelHelpers: 'bundled',
         extensions: ['.ts', '.js'],
         plugins: ['babel-plugin-remove-unused-import']
-      })
+      }),
+      settings.format === 'umd' && settings.umdBanner
+        ? rollupPluginLicense({
+          sourcemap: settings.sourceMap,
+          banner: {
+            commentStyle: 'ignored',
+            content: settings.umdBanner
+          }
+        })
+        : undefined
     ]
   });
 
   await rollupBundle.write({
-    sourcemap: sourceMap,
+    sourcemap: settings.sourceMap,
     file: output,
-    format,
+    format: settings.format,
     name: 'sdsl',
     exports: 'named'
   });
@@ -122,31 +139,45 @@ function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
     : tap(() => { /* */ });
 }
 
+export function createLicenseText(packageName: string, packageVersion: string): string {
+  const licenseText = fs.readFileSync('conf/umd-banner.txt', 'utf8')
+    .replace(/<package>/g, packageName)
+    .replace(/<version>/g, packageVersion);
+
+  return licenseText;
+}
+
 export function gulpFactory(
   input: {
     globs: string | string[],
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>,
-  useCjsTransform = false,
-  sourceMap = true,
-  project: { ref?: gulpTs.Project } = { }
+  settings: {
+    overrideSettings?: gulpTs.Settings,
+    useCjsTransform?: boolean,
+    sourceMap?: boolean,
+    project?: { ref?: gulpTs.Project }
+  }
 ): NodeJS.ReadWriteStream {
-  let tsProject = project.ref;
+  settings.useCjsTransform ??= false;
+  settings.sourceMap ??= true;
+  settings.project ??= {};
+
+  let tsProject = settings.project.ref;
   if (tsProject === undefined) {
-    tsProject = project.ref = createProject({
-      ...overrideSettings,
+    tsProject = settings.project.ref = createProject({
+      ...settings.overrideSettings,
       outDir: output
     });
   }
   const cleanStream = gulp.src(output, { read: false, allowEmpty: true })
     .pipe(clean());
   const tsBuildResult = gulp.src(input.globs, input.opts)
-    .pipe(sourceMap ? sourcemaps.init() : tap(() => { /* */ }))
+    .pipe(settings.sourceMap ? sourcemaps.init() : tap(() => { /* */ }))
     .pipe(tsProject());
   const jsBuildResult = tsBuildResult.js
-    .pipe(babelStream(true, useCjsTransform))
+    .pipe(babelStream(true, settings.useCjsTransform))
     .pipe(terserStream());
   return merge(
     cleanStream,
@@ -155,16 +186,26 @@ export function gulpFactory(
         .pipe(filter(['**/*.ts', '!**/*.macro.d.ts'])),
       jsBuildResult
         .pipe(filter(['**/*.js', '!**/*.macro.js']))
-        .pipe(sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
+        .pipe(settings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
     ])
       .pipe(gulp.dest(output))
   );
 }
 
-export function gulpUmdFactory(input: string, output: string) {
+export function gulpUmdFactory(
+  input: {
+    indexFile: string,
+    include: string[]
+  },
+  output: string,
+  settings: {
+    overrideSettings?: PartialCompilerOptions,
+    umdBanner?: string
+  }
+) {
   function cleanStream() {
     return gulp
-      .src([`dist/umd/${output}`], { read: false, allowEmpty: true })
+      .src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
@@ -173,11 +214,12 @@ export function gulpUmdFactory(input: string, output: string) {
   async function build() {
     await rollupTask(
       input,
-      `dist/umd/${output}`,
-      'umd',
-      false,
+      output,
       {
-        target: 'es5'
+        format: 'umd',
+        sourceMap: false,
+        overrideSettings: settings.overrideSettings,
+        umdBanner: settings.umdBanner
       }
     );
   }
@@ -189,19 +231,23 @@ export function gulpUmdFactory(input: string, output: string) {
 
 export async function gulpUmdMinFactory(input: string, output: string) {
   return gulp
-    .src([`dist/umd/${output}`, `dist/umd/${output}.map`], { read: false, allowEmpty: true })
+    .src([`${output}`, `${output}.map`], { read: false, allowEmpty: true })
     .pipe(clean())
     .pipe(gulp.src(input))
     .pipe(sourcemaps.init())
     .pipe(terserStream())
-    .pipe(GulpUglify({ compress: true }))
-    .pipe(rename(output))
+    .pipe(GulpUglify({
+      compress: true,
+      output: {
+        comments: /^!/
+      }
+    }))
+    .pipe(rename(path.basename(output)))
     .pipe(sourcemaps.write('.', { includeContent: false }))
-    .pipe(gulp.dest('dist/umd'));
+    .pipe(gulp.dest(path.dirname(output)));
 }
 
 export function gulpIsolateFactory(
-  format: 'cjs' | 'esm',
   input: {
     indexFile: string,
     isolateBuildConfig: {
@@ -215,10 +261,27 @@ export function gulpIsolateFactory(
     opts?: SrcOptions
   },
   output: string,
-  overrideSettings?: Omit<gulpTs.Settings, 'outDir'>
+  settings: {
+    format: 'cjs' | 'esm' | 'umd',
+    overrideSettings?: PartialCompilerOptions,
+    buildDataDir?: string,
+    sourceMap?: boolean,
+    mangling?: boolean,
+    generateMin?: boolean,
+    outputFileName?: string,
+    umdBanner?: string
+  }
 ) {
-  output = `dist/isolate/${output}`;
-  const buildDataDir = 'dist/isolate/.build-data';
+  const initializedSettings = {
+    format: settings.format,
+    overrideSettings: settings.overrideSettings,
+    buildDataDir: settings.buildDataDir ?? 'dist/isolate/.build-data',
+    sourceMap: settings.sourceMap ?? true,
+    mangling: settings.mangling ?? true,
+    generateMin: settings.generateMin ?? false,
+    outputFileName: settings.outputFileName ?? 'index.js',
+    umdBanner: settings.umdBanner
+  };
 
   async function generateIndex() {
     // get files from glob
@@ -232,8 +295,8 @@ export function gulpIsolateFactory(
     files.forEach((file) => hash.update(fs.readFileSync(file)));
     const hashValue = hash.digest('hex');
     // compare hash with the previous one
-    const previousHash = fs.existsSync(`${buildDataDir}/hash`)
-      ? fs.readFileSync(`${buildDataDir}/hash`, 'utf8')
+    const previousHash = fs.existsSync(`${initializedSettings.buildDataDir}/hash`)
+      ? fs.readFileSync(`${initializedSettings.buildDataDir}/hash`, 'utf8')
       : '';
     if (previousHash === hashValue) return;
     // generate index file
@@ -243,7 +306,7 @@ export function gulpIsolateFactory(
       getCustomTransformers: (program) => {
         if (program === undefined) throw new Error('program is undefined');
         return exportTransformer(program, {
-          indexOutputPath: `${buildDataDir}/transformed-index.json`,
+          indexOutputPath: `${initializedSettings.buildDataDir}/transformed-index.json`,
           indexFile: input.indexFile,
           builds: input.isolateBuildConfig.builds
             .map((build) => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
@@ -260,20 +323,20 @@ export function gulpIsolateFactory(
         .on('finish', resolve);
     });
     // save hash
-    fs.mkdirSync(buildDataDir, { recursive: true });
-    fs.writeFileSync(`${buildDataDir}/hash`, hashValue);
+    fs.mkdirSync(initializedSettings.buildDataDir, { recursive: true });
+    fs.writeFileSync(`${initializedSettings.buildDataDir}/hash`, hashValue);
   }
 
-  generateIndex.displayName = `${format}-generate-index`;
+  generateIndex.displayName = `${initializedSettings.format}-generate-index`;
 
   function cleanBuild() {
     return gulp.src(output, { read: false, allowEmpty: true })
       .pipe(clean());
   }
 
-  cleanBuild.displayName = `${format}-clean`;
+  cleanBuild.displayName = `${initializedSettings.format}-clean`;
 
-  const copyDir = `${buildDataDir}/copied-source`;
+  const copyDir = `${initializedSettings.buildDataDir}/copied-source`;
   const relativeIndexFilePath = path.relative('.', input.indexFile);
   const copyIndexFilePath = path.join(copyDir, relativeIndexFilePath);
 
@@ -294,7 +357,7 @@ export function gulpIsolateFactory(
       fs.copyFileSync(file, copyFilePath);
     });
     // copy index file
-    const transformedIndexFilePaths = `${buildDataDir}/transformed-index.json`;
+    const transformedIndexFilePaths = `${initializedSettings.buildDataDir}/transformed-index.json`;
     if (!fs.existsSync(transformedIndexFilePaths)) throw new Error('index file does not exist');
     const transformedIndexFiles =
       JSON.parse(fs.readFileSync(transformedIndexFilePaths, 'utf8')) as { [key: string]: string };
@@ -302,30 +365,38 @@ export function gulpIsolateFactory(
     fs.writeFileSync(copyIndexFilePath, indexFileContent);
   }
 
-  copySource.displayName = `${format}-copy-source`;
+  copySource.displayName = `${initializedSettings.format}-copy-source`;
 
   async function build() {
-    const dtsRollupBundle = await rollup.rollup({
-      input: copyIndexFilePath,
-      plugins: [
-        rollupPluginTs({
-          browserslist: false,
-          tsconfig: {
-            ...tsConfig.compilerOptions as object,
-            ...overrideSettings,
-            baseUrl: copyDir
-          }
-        })
-      ]
-    });
+    const generateDeclaration =
+      (tsConfig.compilerOptions as unknown as ts.CompilerOptions).declaration ??
+      initializedSettings.overrideSettings?.declaration ??
+      false;
 
-    await dtsRollupBundle.write({
-      file: `${output}/index.js`,
-      format,
-      exports: 'named'
-    });
+    if (generateDeclaration) {
+      const dtsRollupBundle = await rollup.rollup({
+        input: copyIndexFilePath,
+        plugins: [
+          rollupPluginTs({
+            browserslist: false,
+            tsconfig: {
+              ...tsConfig.compilerOptions as object,
+              ...initializedSettings.overrideSettings,
+              baseUrl: copyDir
+            }
+          })
+        ]
+      });
 
-    await dtsRollupBundle.close();
+      await dtsRollupBundle.write({
+        file: `${output}/${initializedSettings.outputFileName}`,
+        format: initializedSettings.format,
+        exports: 'named',
+        name: 'sdsl'
+      });
+
+      await dtsRollupBundle.close();
+    }
 
     const jsRollupBundle = await rollup.rollup({
       input: copyIndexFilePath,
@@ -334,7 +405,7 @@ export function gulpIsolateFactory(
           typescript: ttypescript,
           tsconfig: `${copyDir}/tsconfig.json`,
           compilerOptions: {
-            ...overrideSettings,
+            ...initializedSettings.overrideSettings,
             declaration: false
           }
         }),
@@ -342,32 +413,70 @@ export function gulpIsolateFactory(
           babelHelpers: 'bundled',
           extensions: ['.ts', '.js'],
           plugins: ['babel-plugin-remove-unused-import']
-        })
+        }),
+        initializedSettings.format === 'umd' && initializedSettings.umdBanner
+          ? rollupPluginLicense({
+            sourcemap: initializedSettings.sourceMap,
+            banner: {
+              commentStyle: 'ignored',
+              content: initializedSettings.umdBanner
+            }
+          })
+          : undefined
       ]
     });
 
     await jsRollupBundle.write({
-      sourcemap: true,
-      file: `${output}/index.js`,
-      format,
-      exports: 'named'
+      sourcemap: initializedSettings.sourceMap,
+      file: `${output}/${initializedSettings.outputFileName}`,
+      format: initializedSettings.format,
+      exports: 'named',
+      name: 'sdsl'
     });
 
     await jsRollupBundle.close();
   }
 
-  build.displayName = `${format}-build`;
+  build.displayName = `${initializedSettings.format}-build`;
 
   function mangle() {
     return gulp
-      .src([`${output}/index.js`])
-      .pipe(sourcemaps.init({ loadMaps: true }))
+      .src([`${output}/${initializedSettings.outputFileName}`])
+      .pipe(initializedSettings.sourceMap
+        ? sourcemaps.init({ loadMaps: true })
+        : tap(() => { /* */ }))
       .pipe(terserStream())
-      .pipe(sourcemaps.write('.'))
+      .pipe(initializedSettings.sourceMap ? sourcemaps.write('.') : tap(() => { /* */ }))
       .pipe(gulp.dest(`${output}`));
   }
 
-  mangle.displayName = `${format}-mangle`;
+  mangle.displayName = `${initializedSettings.format}-mangle`;
 
-  return gulp.series(generateIndex, cleanBuild, copySource, build, mangle);
+  function generateMin() {
+    let minFileName = path.basename(
+      initializedSettings.outputFileName,
+      path.extname(initializedSettings.outputFileName)
+    );
+    minFileName += '.min.js';
+
+    return gulpUmdMinFactory(
+      `${output}/${initializedSettings.outputFileName}`,
+      `${output}/${minFileName}`
+    );
+  }
+
+  generateMin.displayName = `${initializedSettings.format}-generate-min`;
+
+  const tasks: (() => Promise<unknown> | NodeJS.ReadWriteStream)[] = [
+    generateIndex,
+    cleanBuild,
+    copySource,
+    build
+  ];
+
+  if (initializedSettings.mangling) tasks.push(mangle);
+
+  if (initializedSettings.generateMin) tasks.push(generateMin);
+
+  return gulp.series(tasks);
 }

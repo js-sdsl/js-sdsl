@@ -28,8 +28,8 @@
 - **Vector** - protected array, cannot to operate properties like `length` directly.
 - **LinkList** - linked list of non-contiguous memory addresses.
 - **Deque** - double-ended-queue, O(1) time complexity to inserting elements front and back or getting elements by index.
-- **OrderedSet** - sorted set which implemented by red black Tree.
-- **OrderedMap** - sorted map which implemented by red black Tree.
+- **OrderedSet** - sorted set which implemented by red black tree.
+- **OrderedMap** - sorted map which implemented by red black tree.
 - **HashSet** - refer to the hash set implemented by java.
 - **HashMap** - refer to the hash map implemented by java.
 
@@ -78,12 +78,12 @@ We are benchmarking against other popular data structure libraries. In some ways
 
 ## 📦 Download
 
-Download directly
+Download directly by cdn:
 
 - [js-sdsl.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.js) (for development)
 - [js-sdsl.min.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js) (for production)
 
-Or install js-sdsl using npm
+Or install js-sdsl using npm:
 
 ```bash
 npm install js-sdsl
