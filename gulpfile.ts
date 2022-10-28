@@ -103,12 +103,14 @@ gulp.task(
         { globs: 'src/**/*.ts' },
         'dist/dev',
         {
-          module: 'ES2015',
-          declaration: true
-        },
-        true,
-        false,
-        project
+          overrideSettings: {
+            module: 'ES2015',
+            declaration: true
+          },
+          useCjsTransform: true,
+          sourceMap: false,
+          project
+        }
       );
     },
     function watch() {
