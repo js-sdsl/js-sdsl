@@ -31,7 +31,7 @@ jobs:
           source-dir: ./docs/
           action: deploy
       - name: Remove preview
-        if: ${{ github.event.action == "closed" }}
+        if: ${{ github.event.action == 'closed' }}
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ./docs/
