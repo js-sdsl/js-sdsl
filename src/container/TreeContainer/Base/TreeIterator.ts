@@ -65,6 +65,9 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    *                Note:
    *              </strong>
    *              This function only takes effect when the specified tree container `enableIndex = true`.
+   * @example
+   * const st = new OrderedSet([1, 2, 3], true);
+   * console.log(st.begin().next().index);  // 1
    */
   get index() {
     let _node = this._node as TreeNodeEnableIndex<K, V>;

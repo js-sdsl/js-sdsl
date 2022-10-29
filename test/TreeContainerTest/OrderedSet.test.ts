@@ -8,7 +8,7 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
-  expect(myOrderedSet.getHeight()).to.lessThanOrEqual(2 * Math.log2(myOrderedSet.size() + 1));
+  expect(myOrderedSet.getHeight()).to.lessThan(2 * Math.log2(myOrderedSet.size() + 1) + 1);
   expect(myOrderedSet.size()).to.equal(myVector.size());
   myVector.sort((x, y) => x - y);
   myOrderedSet.forEach((element, index) => {

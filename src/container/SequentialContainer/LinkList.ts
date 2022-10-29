@@ -14,7 +14,7 @@ export class LinkNode<T> {
   }
 }
 
-export class LinkListIterator<T> extends ContainerIterator<T> {
+class LinkListIterator<T> extends ContainerIterator<T> {
   /**
    * @internal
    */
@@ -95,6 +95,8 @@ export class LinkListIterator<T> extends ContainerIterator<T> {
   }
 }
 
+export type { LinkListIterator };
+
 class LinkList<T> extends SequentialContainer<T> {
   /**
    * @internal
@@ -135,12 +137,12 @@ class LinkList<T> extends SequentialContainer<T> {
   back() {
     return this._tail ? this._tail._value : undefined;
   }
-  forEach(callback: (element: T, index: number) => void) {
+  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
     if (!this._length) return;
     let curNode = this._head as LinkNode<T>;
     let index = 0;
     while (curNode !== this._header) {
-      callback(curNode._value as T, index++);
+      callback(curNode._value as T, index++, this);
       curNode = curNode._next as LinkNode<T>;
     }
   }
@@ -347,6 +349,10 @@ class LinkList<T> extends SequentialContainer<T> {
   /**
    * @description Merges two sorted lists.
    * @param list The other list you want to merge (must be sorted).
+   * @example
+   * const linkA = new LinkList([1, 3, 5]);
+   * const linkB = new LinkList([2, 4, 6]);
+   * linkA.merge(linkB);  // [1, 2, 3, 4, 5];
    */
   merge(list: LinkList<T>) {
     if (!this._head) {

@@ -20,32 +20,65 @@
 
 <p align="center"><a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.md">English</a> | 简体中文</p>
 
-## 包含的数据结构
+## ✨ 包含的数据结构
 
-- Vector
-- Stack
-- Queue
-- LinkList
-- Deque
-- PriorityQueue
-- OrderedSet (using RBTree)
-- OrderedMap (using RBTree)
-- HashSet
-- HashMap
+- **Stack** - 先进先出的堆栈
+- **Queue** - 先进后出的队列
+- **PriorityQueue** - 堆实现的优先级队列
+- **Vector** - 受保护的数组，不能直接操作像 `length` 这样的属性
+- **LinkList** - 非连续内存地址的链表
+- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的 O(1) 时间复杂度
+- **OrderedSet** - 由红黑树实现的排序集合
+- **OrderedMap** - 由红黑树实现的排序字典
+- **HashSet** - 参考 java 实现的哈希集合
+- **HashMap** - 参考 java 实现的哈希字典
 
-## 基准测试
+## ⚔️ 基准测试
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
 查看 [benchmark](https://js-sdsl.github.io/#/zh-cn/test/benchmark-analyze) 以获取更多信息
 
-## 支持的平台
+## 🖥 支持的平台
 
-- node.js (using es6)
-- react/vue (using es5)
-- browser (support most browsers)
+<table>
+  <tr align="center">
+    <td>
+      <img alt="IE / Edge" src="https://www.w3schools.com/images/compatible_edge2020.png" />
+      <div>IE / Edge</div>
+    </td>
+    <td>
+      <img alt="Firefox" src="https://www.w3schools.com/images/compatible_firefox2020.png" />
+      <div>Firefox</div>
+    </td>
+    <td>
+      <img alt="Chrome" src="https://www.w3schools.com/images/compatible_chrome2020.png" />
+      <div>Chrome</div>
+    </td>
+    <td>
+      <img alt="Safari" src="https://www.w3schools.com/images/compatible_safari2020.png" />
+      <div>Safari</div>
+    </td>
+    <td>
+      <img alt="Opera" src="https://www.w3schools.com/images/compatible_opera2020.png" />
+      <div>Opera</div>
+    </td>
+    <td>
+      <img alt="NodeJs" src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png" width="20" />
+      <div>NodeJs</div>
+    </td>
+  </tr>
+  <tr align="center">
+    <td>Edge 12</td>
+    <td>31</td>
+    <td>49</td>
+    <td>10</td>
+    <td>36</td>
+    <td>10</td>
+  </tr>
+</table>
 
-## 下载
+## 📦 下载
 
 使用 cdn 直接引入
 
@@ -60,24 +93,32 @@ npm install js-sdsl
 
 或者根据需要安装以下任意单个包
 
-```bash
-npm i @js-sdsl/stack
-npm i @js-sdsl/queue
-npm i @js-sdsl/priority-queue
-npm i @js-sdsl/vector
-npm i @js-sdsl/linklist
-npm i @js-sdsl/deque
-npm i @js-sdsl/ordered-set
-npm i @js-sdsl/ordered-map
-npm i @js-sdsl/hash-set
-npm i @js-sdsl/hash-map
-```
+| package                                                                                 | npm                                                                                                                           | install                         |
+|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| [@js-sdsl/stack](https://js-sdsl.github.io/js-sdsl/classes/Stack.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/stack)](https://www.npmjs.com/package/@js-sdsl/stack)                   | `npm i @js-sdsl/stack`          |
+| [@js-sdsl/queue](https://js-sdsl.github.io/js-sdsl/classes/Queue.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/queue)](https://www.npmjs.com/package/@js-sdsl/queue)                   | `npm i @js-sdsl/queue`          |
+| [@js-sdsl/priority-queue](https://js-sdsl.github.io/js-sdsl/classes/PriorityQueue.html) | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/priority-queue)](https://www.npmjs.com/package/@js-sdsl/priority-queue) | `npm i @js-sdsl/priority-queue` |
+| [@js-sdsl/vector](https://js-sdsl.github.io/js-sdsl/classes/Vector.html)                | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/vector)](https://www.npmjs.com/package/@js-sdsl/vector)                 | `npm i @js-sdsl/vector`         |
+| [@js-sdsl/link-list](https://js-sdsl.github.io/js-sdsl/classes/LinkList.html)           | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/link-list)](https://www.npmjs.com/package/@js-sdsl/link-list)           | `npm i @js-sdsl/link-list`      |
+| [@js-sdsl/deque](https://js-sdsl.github.io/js-sdsl/classes/Deque.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/deque)](https://www.npmjs.com/package/@js-sdsl/deque)                   | `npm i @js-sdsl/deque`          |
+| [@js-sdsl/ordered-set](https://js-sdsl.github.io/js-sdsl/classes/OrderedSet.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-set)](https://www.npmjs.com/package/@js-sdsl/ordered-set)       | `npm i @js-sdsl/ordered-set`    |
+| [@js-sdsl/ordered-map](https://js-sdsl.github.io/js-sdsl/classes/OrderedMap.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-map)](https://www.npmjs.com/package/@js-sdsl/ordered-map)       | `npm i @js-sdsl/ordered-map`    |
+| [@js-sdsl/hash-set](https://js-sdsl.github.io/js-sdsl/classes/HashSet.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-set)](https://www.npmjs.com/package/@js-sdsl/hash-set)             | `npm i @js-sdsl/hash-set`       |
+| [@js-sdsl/hash-map](https://js-sdsl.github.io/js-sdsl/classes/HashMap.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-map)](https://www.npmjs.com/package/@js-sdsl/hash-map)             | `npm i @js-sdsl/hash-map`       |
 
-## 使用说明
+## 🪒 使用说明
 
 您可以[访问我们的主页](https://js-sdsl.github.io/)获取更多信息
 
 并且我们提供了完整的 [API 文档](https://js-sdsl.github.io/js-sdsl/index.html)供您参考
+
+想要查看从前版本的文档，请访问：
+
+`https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html`
+
+例如：
+
+[https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
 
 ### 在浏览器中使用
 
@@ -114,11 +155,7 @@ myOrderedMap.setElement(1, 2);
 console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
-## 从源码构建
-
-您可以克隆此仓库后运行 `yarn build` 命令重新构建这个库
-
-## 测试
+## 🛠 测试
 
 ### 单元测试
 
@@ -130,11 +167,24 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 您也可以访问[我们的网站](https://js-sdsl.github.io/#/zh-cn/test/performance-test)来获取结果
 
-## 维护者
+## ⌨️ 开发
 
-[@ZLY201](https://github.com/ZLY201)
+可以使用 Gitpod 进行在线编辑：
 
-## 贡献
+[![Open in Gippod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/js-sdsl/js-sdsl)
+
+或者在本地使用以下命令获取源码进行开发：
+
+```bash
+$ git clone https://github.com/js-sdsl/js-sdl.git
+$ cd js-sdsl
+$ npm install
+$ npm run dev   # development mode
+```
+
+之后您在 `dist/cjs` 文件夹中可以看到在 `dev` 模式下打包生成的产物
+
+## 🤝 贡献
 
 我们欢迎所有的开发人员提交 issue 或 pull request，阅读[贡献者指南](https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md)可能会有所帮助
 
@@ -161,6 +211,18 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。 欢迎任何形式的贡献！
 
-## 许可证
+## ❤️ 赞助者
 
-[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © ZLY201
+特别鸣谢下列赞助商和支持者们，他们在非常早期的时候为我们提供了支持：
+
+<a href="https://eslint.org/"><img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
+
+同样感谢这些赞助商和支持者们：
+
+[![sponsors](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+[![backers](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+## 🪪 许可证
+
+[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)

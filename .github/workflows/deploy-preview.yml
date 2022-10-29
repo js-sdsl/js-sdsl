@@ -1,0 +1,38 @@
+name: Deploy PR previews
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+    branches:
+      - main
+
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: yarn install
+      - name: Generate type documentation
+        run: yarn generate
+      - name: Deploy preview
+        if: ${{ contains(fromJson('["opened", "reopened", "synchronize"]'), github.event.action) }}
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs/
+          action: deploy
+      - name: Remove preview
+        if: ${{ github.event.action == 'closed' }}
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs/
+          action: remove

@@ -21,12 +21,12 @@ class HashMap<K, V> extends HashContainer<K, V> {
     super(hashFunc, cmp);
     container.forEach(element => this.setElement(element[0], element[1]));
   }
-  forEach(callback: (element: [K, V], index: number) => void) {
+  forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
     const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
-      containers[i].forEach(element => callback(element, index++));
+      containers[i].forEach(element => callback(element, index++, this));
     }
   }
   /**
@@ -66,6 +66,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
   /**
    * @description Get the value of the element which has the specified key.
    * @param key The key you want to get.
+   * @example const value = container.getElementByKey(1);
    */
   getElementByKey(key: K) {
     const index = this._hashFunc(key) & HashContainerConst.maxBucketNum;

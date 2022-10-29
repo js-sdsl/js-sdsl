@@ -22,17 +22,18 @@ class HashSet<K> extends HashContainer<K, undefined> {
     this._hashTable.length = HashContainerConst.maxBucketNum + 1;
     container.forEach(element => this.insert(element));
   }
-  forEach(callback: (element: K, index: number) => void) {
+  forEach(callback: (element: K, index: number, hashSet: HashSet<K>) => void) {
     const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
-      containers[i].forEach(element => callback(element, index++));
+      containers[i].forEach(element => callback(element, index++, this));
     }
   }
   /**
    * @description Insert element to hash set.
    * @param element The element you want to insert.
+   * @example container.insert(1);
    */
   insert(element: K) {
     const index = this._hashFunc(element) & HashContainerConst.maxBucketNum;

@@ -1,10 +1,17 @@
 import type { Config } from 'karma';
 
 module.exports = function (config: Config) {
+  const infinity = 1 << 30;
+
+  process.env.EDGE_BIN = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
+
+    browserDisconnectTimeout: infinity,
+    browserNoActivityTimeout: infinity,
 
     // frameworks to use
     // available frameworks: https://www.npmjs.com/search?q=keywords:karma-adapter
@@ -13,7 +20,7 @@ module.exports = function (config: Config) {
     // list of files / patterns to load in the browser
     files: [
       'src/**/*.ts',
-      'test/**/*.ts'
+      'test/**/*.test.ts'
     ],
 
     // list of files / patterns to exclude
@@ -43,7 +50,7 @@ module.exports = function (config: Config) {
     client: {
       // @ts-ignore
       mocha: {
-        timeout: 10000
+        timeout: infinity
       }
     },
 
@@ -62,7 +69,7 @@ module.exports = function (config: Config) {
 
     // start these browsers
     // available browser launchers: https://www.npmjs.com/search?q=keywords:karma-launcher
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadless', 'Firefox', 'Edge', 'SafariNative'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -77,7 +84,10 @@ module.exports = function (config: Config) {
       'karma-requirejs',
       'karma-typescript',
       'karma-mocha-reporter',
-      'karma-chrome-launcher'
+      'karma-edge-launcher',
+      'karma-chrome-launcher',
+      'karma-firefox-launcher',
+      'karma-safarinative-launcher'
     ]
   });
 };
