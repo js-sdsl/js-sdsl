@@ -110,6 +110,14 @@ You can visit our [official website](https://js-sdsl.github.io/) to get more inf
 
 To help you have a better use, we also provide this [API document](https://js-sdsl.github.io/js-sdsl/index.html).
 
+For previous versions of the documentation, please visit:
+
+`https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html`
+
+E.g.
+
+[https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
+
 ### For browser
 
 ```html

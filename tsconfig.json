@@ -25,6 +25,9 @@
       }
     ]
   },
+  "exclude": [
+    "./test/IsolationTest/*.ts"
+  ],
   "ts-node": {
     "compilerOptions": {
         "module": "commonjs"
