@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.10.24
+## [4.2.0-beta.0] - 2022.10.30
 
 ### Added
 
