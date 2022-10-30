@@ -8,6 +8,13 @@ class HashMap<K, V> extends HashContainer<K> {
    * @internal
    */
   protected _hashTable: (Vector<[K, V]> | OrderedMap<K, V>)[] = [];
+  /**
+   * @description HashMap's constructor.
+   * @param container Initialize container, must have a forEach function.
+   * @param initBucketNum Initialize bucket num, must be an integer power of 2 and greater than 16.
+   * @param hashFunc The hash function, convert key element from type T to a number.
+   * @example new HashMap([[0, 1], [2, 1], [3, 2]], 1 << 10, x => x);
+   */
   constructor(
     container: initContainer<[K, V]> = [],
     initBucketNum? :number,
@@ -63,12 +70,12 @@ class HashMap<K, V> extends HashContainer<K> {
     }
     this._hashTable = newHashTable;
   }
-  forEach(callback: (element: [K, V], index: number) => void) {
+  forEach(callback: (element: [K, V], index: number, map: HashMap<K, V>) => void) {
     const containers = Object.values(this._hashTable);
     const containersNum = containers.length;
     let index = 0;
     for (let i = 0; i < containersNum; ++i) {
-      containers[i].forEach(element => callback(element, index++));
+      containers[i].forEach(element => callback(element, index++, this));
     }
   }
   /**
@@ -115,6 +122,7 @@ class HashMap<K, V> extends HashContainer<K> {
   /**
    * @description Get the value of the element which has the specified key.
    * @param key The key you want to get.
+   * @example const value = container.getElementByKey(1);
    */
   getElementByKey(key: K) {
     const index = this._hashFunc(key) & (this._bucketNum - 1);

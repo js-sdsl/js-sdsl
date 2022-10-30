@@ -20,47 +20,103 @@
 
 <p align="center">English | <a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
 
-## Included data structures
+## ✨ Included data structures
 
-- Vector
-- Stack
-- Queue
-- LinkList
-- Deque
-- PriorityQueue
-- OrderedSet (using RBTree)
-- OrderedMap (using RBTree)
-- HashSet
-- HashMap
+- **Stack** - first in first out stack.
+- **Queue** - first in last out queue.
+- **PriorityQueue** - heap-implemented priority queue.
+- **Vector** - protected array, cannot to operate properties like `length` directly.
+- **LinkList** - linked list of non-contiguous memory addresses.
+- **Deque** - double-ended-queue, O(1) time complexity to inserting elements front and back or getting elements by index.
+- **OrderedSet** - sorted set which implemented by red black tree.
+- **OrderedMap** - sorted map which implemented by red black tree.
+- **HashSet** - refer to the hash set implemented by java.
+- **HashMap** - refer to the hash map implemented by java.
 
-## Benchmark
+## ⚔️ Benchmark
 
 We are benchmarking against other popular data structure libraries. In some ways we're better than the best library. See [benchmark](https://js-sdsl.github.io/#/test/benchmark-analyze).
 
-## Supported platforms
+## 🖥 Supported platforms
 
-- node.js (using es6)
-- react/vue (using es5)
-- browser (support most browsers)
+<table>
+  <tr align="center">
+    <td>
+      <img alt="IE / Edge" src="https://www.w3schools.com/images/compatible_edge2020.png" />
+      <div>IE / Edge</div>
+    </td>
+    <td>
+      <img alt="Firefox" src="https://www.w3schools.com/images/compatible_firefox2020.png" />
+      <div>Firefox</div>
+    </td>
+    <td>
+      <img alt="Chrome" src="https://www.w3schools.com/images/compatible_chrome2020.png" />
+      <div>Chrome</div>
+    </td>
+    <td>
+      <img alt="Safari" src="https://www.w3schools.com/images/compatible_safari2020.png" />
+      <div>Safari</div>
+    </td>
+    <td>
+      <img alt="Opera" src="https://www.w3schools.com/images/compatible_opera2020.png" />
+      <div>Opera</div>
+    </td>
+    <td>
+      <img alt="NodeJs" src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png" width="20" />
+      <div>NodeJs</div>
+    </td>
+  </tr>
+  <tr align="center">
+    <td>Edge 12</td>
+    <td>31</td>
+    <td>49</td>
+    <td>10</td>
+    <td>36</td>
+    <td>10</td>
+  </tr>
+</table>
 
-## Download
+## 📦 Download
 
-Download directly
+Download directly by cdn:
 
 - [js-sdsl.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.js) (for development)
 - [js-sdsl.min.js](https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js) (for production)
 
-Or install js-sdsl using npm
+Or install js-sdsl using npm:
 
 ```bash
 npm install js-sdsl
 ```
 
-## Usage
+Or you can download the isolation packages containing only the containers you want:
+
+| package                                                                                 | npm                                                                                                                           | install                         |
+|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| [@js-sdsl/stack](https://js-sdsl.github.io/js-sdsl/classes/Stack.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/stack)](https://www.npmjs.com/package/@js-sdsl/stack)                   | `npm i @js-sdsl/stack`          |
+| [@js-sdsl/queue](https://js-sdsl.github.io/js-sdsl/classes/Queue.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/queue)](https://www.npmjs.com/package/@js-sdsl/queue)                   | `npm i @js-sdsl/queue`          |
+| [@js-sdsl/priority-queue](https://js-sdsl.github.io/js-sdsl/classes/PriorityQueue.html) | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/priority-queue)](https://www.npmjs.com/package/@js-sdsl/priority-queue) | `npm i @js-sdsl/priority-queue` |
+| [@js-sdsl/vector](https://js-sdsl.github.io/js-sdsl/classes/Vector.html)                | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/vector)](https://www.npmjs.com/package/@js-sdsl/vector)                 | `npm i @js-sdsl/vector`         |
+| [@js-sdsl/link-list](https://js-sdsl.github.io/js-sdsl/classes/LinkList.html)           | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/link-list)](https://www.npmjs.com/package/@js-sdsl/link-list)           | `npm i @js-sdsl/link-list`      |
+| [@js-sdsl/deque](https://js-sdsl.github.io/js-sdsl/classes/Deque.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/deque)](https://www.npmjs.com/package/@js-sdsl/deque)                   | `npm i @js-sdsl/deque`          |
+| [@js-sdsl/ordered-set](https://js-sdsl.github.io/js-sdsl/classes/OrderedSet.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-set)](https://www.npmjs.com/package/@js-sdsl/ordered-set)       | `npm i @js-sdsl/ordered-set`    |
+| [@js-sdsl/ordered-map](https://js-sdsl.github.io/js-sdsl/classes/OrderedMap.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-map)](https://www.npmjs.com/package/@js-sdsl/ordered-map)       | `npm i @js-sdsl/ordered-map`    |
+| [@js-sdsl/hash-set](https://js-sdsl.github.io/js-sdsl/classes/HashSet.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-set)](https://www.npmjs.com/package/@js-sdsl/hash-set)             | `npm i @js-sdsl/hash-set`       |
+| [@js-sdsl/hash-map](https://js-sdsl.github.io/js-sdsl/classes/HashMap.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-map)](https://www.npmjs.com/package/@js-sdsl/hash-map)             | `npm i @js-sdsl/hash-map`       |
+
+## 🪒 Usage
 
 You can visit our [official website](https://js-sdsl.github.io/) to get more information.
 
 To help you have a better use, we also provide this [API document](https://js-sdsl.github.io/js-sdsl/index.html).
+
+For previous versions of the documentation, please visit:
+
+`https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html`
+
+E.g.
+
+[https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
 
 ### For browser
 
@@ -97,11 +153,7 @@ myOrderedMap.setElement(1, 2);
 console.log(myOrderedMap.getElementByKey(1)); // 2
 ```
 
-## Build by source code
-
-You can pull this repository and run `yarn build` to rebuild this library.
-
-## Test
+## 🛠 Test
 
 ### Unit test
 
@@ -113,11 +165,24 @@ We tested most of the functions for efficiency. You can go to [`gh-pages/perform
 
 You can also visit [here](https://js-sdsl.github.io/#/test/performance-test) to get the result.
 
-## Maintainers
+## ⌨️ Development
 
-[@ZLY201](https://github.com/ZLY201)
+Use Gitpod, a free online dev environment for GitHub.
 
-## Contributing
+[![Open in Gippod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/js-sdsl/js-sdsl)
+
+Or clone locally:
+
+```bash
+$ git clone https://github.com/js-sdsl/js-sdl.git
+$ cd js-sdsl
+$ npm install
+$ npm run dev   # development mode
+```
+
+Then you can see the output in `dist/cjs` folder.
+
+## 🤝 Contributing
 
 Feel free to dive in! Open an issue or submit PRs. It may be helpful to read the [Contributor Guide](https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md).
 
@@ -144,6 +209,18 @@ Thanks goes to these wonderful people:
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-## License
+## ❤️ Sponsors and Backers
 
-[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © ZLY201
+The special thanks to these sponsors or backers because they provided support at a very early stage:
+
+<a href="https://eslint.org/"><img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
+
+Thanks also give to these sponsors or backers:
+
+[![sponsors](https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+[![backers](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
+
+## 🪪 License
+
+[MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)

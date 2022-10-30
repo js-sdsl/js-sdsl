@@ -5,30 +5,51 @@ on:
     branches:
       - dev
   pull_request:
+    paths:
+      - src/**/*.ts
+      - test/**/*.ts
+      - performance/**/*.ts
+      - tools/*.ts
+      - gulpfile.ts
+      - karma.config.ts
+      - tsconfig.json
+      - package.json
+      - yarn.lock
     branches:
       - dev
       - main
 
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   unit-test:
+    strategy:
+      matrix:
+        version: [ 10, 16, 17, 18 ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - name: Use node.js lts/Gallium
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run unit test
+      - name: Use node.js ${{ matrix.version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.version }}
+      - name: Run unit test without coverage
+        if: ${{ matrix.version != '16' }}
+        run: ./node_modules/.bin/ts-mocha --paths 'test/**/*.test.ts' --timeout 10000
+      - name: Run unit test with coverage
+        if: ${{ matrix.version == '16' }}
         run: yarn test:unit
       - name: Coveralls report
+        if: ${{ matrix.version == '16' }}
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ github.token }}
-  browser-test:
+  browser-chrome-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -37,11 +58,68 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
-      - name: Run browser test
-        run: yarn test:browser
+      - name: Run chrome test
+        run: yarn test:chrome
+  browser-firefox-test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Setup firefox
+        uses: browser-actions/setup-firefox@latest
+        with:
+          firefox-version: '31.0'
+      - name: Run firefox test
+        run: FIREFOX_BIN=$(which firefox) yarn test:firefox
+  browser-edge-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Setup edge
+        uses: browser-actions/setup-edge@latest
+      - name: Run edge test
+        run: yarn test:edge
+  browser-safari-test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Run safari test
+        run: yarn test:safari
+  isolation-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Run isolation test
+        run: yarn test:isolate
   performance-test:
     runs-on: ubuntu-latest
     steps:
@@ -51,7 +129,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run performance test

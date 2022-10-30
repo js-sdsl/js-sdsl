@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run unit test
@@ -33,11 +32,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run browser test
-        run: yarn test:browser
+        run: yarn test:chrome
+  isolation-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Use node.js lts/Gallium
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/Gallium
+      - name: Install dependencies
+        run: yarn install
+      - name: Run isolation test
+        run: yarn test:isolate
   performance-test:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +58,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/Gallium
-          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Run performance test
@@ -58,7 +68,7 @@ jobs:
           name: performance.md
           path: dist/performance
   deploy:
-    needs: [unit-test, browser-test, performance-test]
+    needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -76,8 +86,19 @@ jobs:
         with:
           folder: docs
           branch: gh-pages
+          clean-exclude: previous/
+      - name: Read package.json
+        uses: tyankatsu0105/read-package-version-actions@v1
+        id: package-version
+      - name: Remove markdown files
+        run: rm -rf docs/README.md docs/README.zh-CN.md docs/performance.md
+      - name: Save a copy
+        uses: JamesIves/github-pages-deploy-action@v4
+        folder: docs
+        branch: gh-pages
+        target-folder: previous/v${{ steps.package-version.outputs.version }}
   publish-main:
-    needs: [unit-test, browser-test, performance-test]
+    needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
@@ -92,7 +113,7 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   publish-isolate:
-    needs: [unit-test, browser-test, performance-test]
+    needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:
@@ -101,11 +122,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Publish isolate
-        run: ts-node tools/publishIsolate.ts
+        run: ./node_modules/.bin/ts-node tools/publishIsolate.ts
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   release:
-    needs: [unit-test, browser-test, performance-test]
+    needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, 'publish@') }}
     steps:

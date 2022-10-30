@@ -65,20 +65,29 @@ abstract class HashContainer<K> extends Base {
   /**
    * @description Iterate over all elements in the container.
    * @param callback Callback function like Array.forEach.
+   * @example container.forEach((element, index) => console.log(element, index));
    */
-  abstract forEach(callback: (element: unknown, index: number) => void): void;
+  abstract forEach(
+    callback: (element: unknown, index: number, hashContainer: HashContainer<K>) => void
+  ): void;
   /**
    * @description Remove the elements of the specified value.
    * @param key The element you want to remove.
+   * @example container.eraseElementByKey(1);
    */
   abstract eraseElementByKey(key: K): void;
   /**
    * @param key The element you want to find.
    * @return Boolean about if the specified element in the hash set.
+   * @example container.find(1).equals(container.end());
    */
   abstract find(key: K): void;
   /**
    * @description Using for `for...of` syntax like Array.
+   * @example
+   * for (const element of container) {
+   *   console.log(element);
+   * }
    */
   abstract [Symbol.iterator](): Generator<K | [K, unknown], void, undefined>;
 }

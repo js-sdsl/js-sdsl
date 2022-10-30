@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [4.2.0-beta.0] - 2022.10.30
+
+### Added
+
+- Add `ts` sourcemap for debug mode.
+- Add `this` param for `forEach` function.
+- Support single package umd build.
+
+### Changed
+
+- Changed the packaging method of isolation packages release and the method of the member export.
+
 ## [4.1.5] - 2022.09.30
 
 ### Added

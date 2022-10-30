@@ -3,7 +3,7 @@ import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 
-export class VectorIterator<T> extends RandomIterator<T> {
+class VectorIterator<T> extends RandomIterator<T> {
   copy() {
     return new VectorIterator(
       this._node,
@@ -14,6 +14,8 @@ export class VectorIterator<T> extends RandomIterator<T> {
     );
   }
 }
+
+export type { VectorIterator };
 
 class Vector<T> extends SequentialContainer<T> {
   /**
@@ -83,9 +85,9 @@ class Vector<T> extends SequentialContainer<T> {
   back() {
     return this._vector[this._length - 1] as (T | undefined);
   }
-  forEach(callback: (element: T, index: number) => void) {
+  forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
-      callback(this._vector[i], i);
+      callback(this._vector[i], i, this);
     }
   }
   getElementByPos(pos: number) {

@@ -4,7 +4,7 @@ import TreeIterator from './Base/TreeIterator';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 
-export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
+class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   get pointer() {
     if (this._node === this._header) {
       throw new RangeError('OrderedSet iterator access denied!');
@@ -16,11 +16,18 @@ export class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   }
 }
 
+export type { OrderedSetIterator };
+
 class OrderedSet<K> extends TreeContainer<K, undefined> {
   /**
    * @param container The initialization container.
    * @param cmp The compare function.
    * @param enableIndex Whether to enable iterator indexing function.
+   * @example
+   * new OrderedSet();
+   * new OrderedSet([0, 1, 2]);
+   * new OrderedSet([0, 1, 2], (x, y) => x - y);
+   * new OrderedSet([0, 1, 2], (x, y) => x - y, true);
    */
   constructor(
     container: initContainer<K> = [],
@@ -66,9 +73,9 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   back() {
     return this._header._right ? this._header._right._key : undefined;
   }
-  forEach(callback: (element: K, index: number) => void) {
+  forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
     let index = 0;
-    for (const element of this) callback(element, index++);
+    for (const element of this) callback(element, index++, this);
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -85,11 +92,16 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
-   * @param _key The _key want to insert.
+   * @param key The key want to insert.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @example
+   * const st = new OrderedSet([2, 4, 5]);
+   * const iter = st.begin();
+   * st.insert(1);
+   * st.insert(3, iter);  // give a hint will be faster.
    */
-  insert(_key: K, hint?: OrderedSetIterator<K>) {
-    this._set(_key, undefined, hint);
+  insert(key: K, hint?: OrderedSetIterator<K>) {
+    this._set(key, undefined, hint);
   }
   find(element: K) {
     const curNode = this._findElementNode(this._root, element);
@@ -98,20 +110,20 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     }
     return this.end();
   }
-  lowerBound(_key: K) {
-    const resNode = this._lowerBound(this._root, _key);
+  lowerBound(key: K) {
+    const resNode = this._lowerBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  upperBound(_key: K) {
-    const resNode = this._upperBound(this._root, _key);
+  upperBound(key: K) {
+    const resNode = this._upperBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  reverseLowerBound(_key: K) {
-    const resNode = this._reverseLowerBound(this._root, _key);
+  reverseLowerBound(key: K) {
+    const resNode = this._reverseLowerBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
-  reverseUpperBound(_key: K) {
-    const resNode = this._reverseUpperBound(this._root, _key);
+  reverseUpperBound(key: K) {
+    const resNode = this._reverseUpperBound(this._root, key);
     return new OrderedSetIterator(resNode, this._header);
   }
   union(other: OrderedSet<K>) {

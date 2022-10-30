@@ -64,7 +64,7 @@ async function main() {
     await new Promise<void>((resolve) => {
       const childProcessInstance = childProcess.spawn(
         'yarn',
-        ['publish', filePath]
+        ['publish', filePath, '--access', 'public']
       );
 
       childProcessInstance.stdout.on('data', (data) => {
