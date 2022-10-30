@@ -94,9 +94,10 @@ jobs:
         run: rm -rf docs/README.md docs/README.zh-CN.md docs/performance.md
       - name: Save a copy
         uses: JamesIves/github-pages-deploy-action@v4
-        folder: docs
-        branch: gh-pages
-        target-folder: previous/v${{ steps.package-version.outputs.version }}
+        with:
+          folder: docs
+          branch: gh-pages
+          target-folder: previous/v${{ steps.package-version.outputs.version }}
   publish-main:
     needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest
