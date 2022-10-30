@@ -1,95 +1,107 @@
-import { Base, Container } from '@/container/ContainerBase';
+import { Base } from '@/container/ContainerBase';
 
-/**
- * @internal
- */
-export const enum HashContainerConst {
-  sigma = 0.75,
-  treeifyThreshold = 8,
-  untreeifyThreshold = 6,
-  minTreeifySize = 64,
-  maxBucketNum = (1 << 30)
-}
-
-abstract class HashContainer<K> extends Base {
+abstract class HashContainer<K, V> extends Base {
   /**
    * @internal
    */
-  protected _bucketNum: number;
+  protected _objMap: [K, V][] = [];
   /**
    * @internal
    */
-  protected _initBucketNum: number;
+  protected _originMap: Record<string, V> = {};
   /**
    * @internal
    */
-  protected _hashFunc: (x: K) => number;
+  protected static readonly HASH_KEY_TAG = 'JS_SDSL_HASH_KEY_TAG';
   /**
    * @internal
    */
-  protected abstract _hashTable: Container<unknown>[];
-  protected constructor(
-    initBucketNum = 16,
-    hashFunc: (x: K) => number =
-    (x: K) => {
-      let str;
-      if (typeof x !== 'string') {
-        str = JSON.stringify(x);
-      } else str = x;
-      let hashCode = 0;
-      const strLength = str.length;
-      for (let i = 0; i < strLength; i++) {
-        const ch = str.charCodeAt(i);
-        hashCode = ((hashCode << 5) - hashCode) + ch;
-        hashCode |= 0;
-      }
-      return hashCode >>> 0;
-    }) {
-    super();
-    if (initBucketNum < 16 || (initBucketNum & (initBucketNum - 1)) !== 0) {
-      throw new RangeError('InitBucketNum range error');
+  protected static HASH_CODE_PREFIX_MAP: Record<string, (el: string) => unknown> = {
+    U: function () {
+      return undefined;
+    },
+    B: Boolean,
+    N: Number,
+    S: String
+  };
+  /**
+   * @internal
+   */
+  protected _hash(key: K) {
+    let suffix;
+    const t = typeof key;
+    if (t === 'string') suffix = 'S';
+    else if (t === 'number') suffix = 'N';
+    else if (t === 'boolean') suffix = 'B';
+    else if (key === undefined || key === null) suffix = 'U';
+    else return '';
+    return key + '_' + suffix;
+  }
+  /**
+   * @internal
+   */
+  protected _set(key: K, value: V) {
+    if (value === undefined || value === null) {
+      this.eraseElementByKey(key);
+      return;
     }
-    this._bucketNum = this._initBucketNum = initBucketNum;
-    this._hashFunc = hashFunc;
+    let originValue;
+    const t = typeof key;
+    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+      const hashCode = this._hash(key);
+      originValue = this._originMap[hashCode];
+      this._originMap[hashCode] = value;
+    } else {
+      const index = (key as unknown as Record<string, unknown>)[HashContainer.HASH_KEY_TAG];
+      if (index !== undefined) {
+        this._objMap[index as number][1] = value;
+        return;
+      }
+      Object.defineProperty(key, HashContainer.HASH_KEY_TAG, {
+        value: this._objMap.length,
+        configurable: true
+      });
+      this._objMap.push([key, value]);
+    }
+    if (originValue === undefined) this._length += 1;
   }
   clear() {
+    this._objMap.forEach(function (el) {
+      delete (el[0] as unknown as Record<string, unknown>)[HashContainer.HASH_KEY_TAG];
+    });
+    this._objMap = [];
+    this._originMap = {};
     this._length = 0;
-    this._bucketNum = this._initBucketNum;
-    this._hashTable = [];
   }
-  /**
-   * @description Growth the hash table.
-   * @internal
-   */
-  protected abstract _reAllocate(): void;
-  /**
-   * @description Iterate over all elements in the container.
-   * @param callback Callback function like Array.forEach.
-   * @example container.forEach((element, index) => console.log(element, index));
-   */
+  eraseElementByKey(key: K) {
+    const t = typeof key;
+    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+      const hashCode = this._hash(key);
+      if (this._originMap[hashCode] === undefined) return;
+      delete this._originMap[hashCode];
+    } else {
+      const index = (key as unknown as Record<string, unknown>)[
+        HashContainer.HASH_KEY_TAG
+      ] as number | undefined;
+      if (index === undefined) return;
+      delete this._objMap[index];
+    }
+    this._length -= 1;
+  }
+  find(key: K) {
+    const t = typeof key;
+    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+      const hashCode = this._hash(key);
+      return this._originMap[hashCode] !== undefined;
+    } else {
+      return typeof (key as unknown as Record<string, unknown>)[HashContainer.HASH_KEY_TAG] ===
+        'number';
+    }
+  }
   abstract forEach(
-    callback: (element: unknown, index: number, hashContainer: HashContainer<K>) => void
+    callback: (element: K | [K, V], index: number, hashContainer: HashContainer<K, V>) => void
   ): void;
-  /**
-   * @description Remove the elements of the specified value.
-   * @param key The element you want to remove.
-   * @example container.eraseElementByKey(1);
-   */
-  abstract eraseElementByKey(key: K): void;
-  /**
-   * @param key The element you want to find.
-   * @return Boolean about if the specified element in the hash set.
-   * @example container.find(1).equals(container.end());
-   */
-  abstract find(key: K): void;
-  /**
-   * @description Using for `for...of` syntax like Array.
-   * @example
-   * for (const element of container) {
-   *   console.log(element);
-   * }
-   */
-  abstract [Symbol.iterator](): Generator<K | [K, unknown], void, undefined>;
+  abstract [Symbol.iterator](): Generator<K | [K, V], void, undefined>;
 }
 
 export default HashContainer;

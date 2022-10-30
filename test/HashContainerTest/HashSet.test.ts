@@ -1,5 +1,4 @@
-import { HashContainerConst } from '@/container/HashContainer/Base';
-import { Vector, HashSet } from '@/index';
+import { HashSet } from '@/index';
 import { expect } from 'chai';
 
 function generateRandom(low = 0, high = 1e6, fix = 6) {
@@ -21,8 +20,6 @@ function judgeHashSet(myHashSet: HashSet<string>, stdSet: Set<string>) {
 
 describe('HashSet test', () => {
   it('constructor test', () => {
-    // eslint-disable-next-line no-new
-    expect(() => new HashSet([], 28)).to.throw(RangeError);
     expect(new HashSet().size()).to.equal(0);
   });
 
@@ -100,20 +97,6 @@ describe('HashSet test', () => {
     myHashSet.insert(arr[0]);
     myHashSet.insert(arr[0]);
     expect(myHashSet.size()).to.equal(1);
-    // @ts-ignore
-    const bucketNum = myHashSet._bucketNum;
-    // @ts-ignore
-    myHashSet._bucketNum = HashContainerConst.maxBucketNum;
-    // @ts-ignore
-    myHashSet._reAllocate();
-    // @ts-ignore
-    myHashSet._hashTable[0] = new Vector();
-    // @ts-ignore
-    myHashSet._hashTable[myHashSet.bucketNum - 5] = new Vector();
-    // @ts-ignore
-    myHashSet._reAllocate(myHashSet.bucketNum);
-    // @ts-ignore
-    myHashSet._bucketNum = bucketNum;
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myHashSet) {}
   });
@@ -135,82 +118,49 @@ describe('HashSet test', () => {
   });
 
   it('HashSet hash func test', () => {
-    const normalSet = new HashSet<string>();
-    const st = new HashSet<string>([], undefined, () => -1);
+    const st = new HashSet<string>([]);
     const stdSet = new Set<string>();
     const arr: string[] = [];
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       st.insert(random);
-      normalSet.insert(random);
       stdSet.add(random);
       arr.push(random);
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         st.eraseElementByKey(arr[i]);
-        normalSet.eraseElementByKey(arr[i]);
         stdSet.delete(arr[i]);
       }
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     arr.length = 0;
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       st.insert(random);
-      normalSet.insert(random);
       stdSet.add(random);
       arr.push(random);
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         st.eraseElementByKey(arr[i]);
-        normalSet.eraseElementByKey(arr[i]);
         stdSet.delete(arr[i]);
       }
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random().toFixed(6);
       st.insert(random);
-      normalSet.insert(random);
       stdSet.add(random);
       arr.push(random);
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
     for (let i = 0; i < testNum; ++i) {
       st.eraseElementByKey(arr[i]);
-      normalSet.eraseElementByKey(arr[i]);
       stdSet.delete(arr[i]);
     }
-    judgeHashSet(normalSet, stdSet);
     judgeHashSet(st, stdSet);
-  });
-
-  it('difficult test', () => {
-    const hashSetList: HashSet<string>[] = [];
-    for (let i = -10; i <= 10; ++i) {
-      hashSetList.push(new HashSet<string>([], undefined, () => i));
-    }
-    const arr: string[] = [];
-    for (let i = 0; i < testNum; ++i) {
-      const random = Math.random().toFixed(6);
-      stdSet.add(random);
-      hashSetList.forEach(st => st.insert(random));
-      arr.push(random);
-    }
-    hashSetList.forEach(st => judgeHashSet(st, stdSet));
-    arr.forEach(v => {
-      stdSet.delete(v);
-      hashSetList.forEach(st => st.eraseElementByKey(v));
-    });
-    hashSetList.forEach(st => judgeHashSet(st, stdSet));
   });
 });
