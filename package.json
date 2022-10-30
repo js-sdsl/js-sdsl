@@ -10,7 +10,11 @@
     "url": "https://github.com/js-sdsl/js-sdsl"
   },
   "sideEffects": false,
-  "homepage": "https://js-sdsl.github.io",
+  "homepage": "https://js-sdsl.org",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/js-sdsl"
+  },
   "scripts": {
     "setup": "rm -rf node_modules && yarn install",
     "dev": "ttsc --project tsconfig.dev.json --watch",
