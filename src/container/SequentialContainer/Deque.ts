@@ -1,7 +1,7 @@
 import SequentialContainer from './Base';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { IteratorType, initContainer } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 
 class DequeIterator<T> extends RandomIterator<T> {
   copy() {

@@ -1,5 +1,5 @@
-import { Deque } from '@/index';
 import testSequentialContainer from './SequentialContainer.performance';
+import { Deque } from '@/index';
 
 function testDeque(arr: number[], testNum: number) {
   const myDeque = new Deque(arr);

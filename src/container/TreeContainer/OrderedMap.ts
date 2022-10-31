@@ -1,8 +1,8 @@
 import TreeContainer from './Base';
-import { TreeNode } from './Base/TreeNode';
 import TreeIterator from './Base/TreeIterator';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   get pointer() {

@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import {
   Vector,
   LinkList,
@@ -7,7 +8,6 @@ import {
   Container,
   ContainerIterator
 } from '@/index';
-import { expect } from 'chai';
 
 let arr: number[] = [];
 const testNum = 10000;

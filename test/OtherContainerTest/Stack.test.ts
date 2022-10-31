@@ -1,5 +1,5 @@
-import { Vector, Stack } from '@/index';
 import { expect } from 'chai';
+import { Vector, Stack } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;

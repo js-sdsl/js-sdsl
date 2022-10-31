@@ -1,4 +1,3 @@
-import { HashMap } from '@/index';
 import { expect } from 'chai';
 import {
   generateRandomNumber,
@@ -10,6 +9,7 @@ import {
   generateRandomObject,
   generateRandomFunction
 } from '../utils/generateRandom';
+import { HashMap } from '@/index';
 
 const testNum = 10000;
 

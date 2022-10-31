@@ -1,8 +1,8 @@
-import gulp from 'gulp';
 import fs from 'fs';
 import path from 'path';
-import { createLicenseText, gulpIsolateFactory } from './buildFactory';
+import gulp from 'gulp';
 import PackageJson from '../package.json';
+import { createLicenseText, gulpIsolateFactory } from './buildFactory';
 
 function createSharedFilesCopyTask(
   config: IsolateBuildConfig,

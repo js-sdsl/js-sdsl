@@ -1,8 +1,8 @@
 import TreeContainer from './Base';
-import { TreeNode } from './Base/TreeNode';
 import TreeIterator from './Base/TreeIterator';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   get pointer() {
@@ -35,7 +35,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    container.forEach((element) => this.insert(element));
+    container.forEach(element => this.insert(element));
   }
   /**
    * @internal
@@ -127,7 +127,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return new OrderedSetIterator(resNode, this._header);
   }
   union(other: OrderedSet<K>) {
-    other.forEach((element) => this.insert(element));
+    other.forEach(element => this.insert(element));
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

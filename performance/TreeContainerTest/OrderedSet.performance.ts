@@ -1,5 +1,5 @@
-import { OrderedSet } from '@/index';
 import type { testReportFormat } from '../index';
+import { OrderedSet } from '@/index';
 
 function testOrderedSet(arr: number[], testNum: number) {
   let startTime, endTime;

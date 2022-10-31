@@ -1,5 +1,5 @@
-import { Vector, OrderedSet } from '@/index';
 import { expect } from 'chai';
+import { Vector, OrderedSet } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;

@@ -7,23 +7,48 @@
   "extends": [
     "eslint:recommended",
     "plugin:compat/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2016,
+    "ecmaVersion": 6,
     "sourceType": "module"
   },
   "plugins": [
     "compat",
+    "import",
     "@typescript-eslint"
   ],
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/"
-  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   "rules": {
     "compat/compat": "error",
+    "import/no-unresolved":[
+      "error",
+      {
+        "ignore": ["^dist/*"]
+      }
+    ],
+    "import/no-named-as-default-member": "off",
+    "import/no-named-as-default": "off",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "never",
+        "alphabetize": {
+          "order": "asc"
+        }
+      }
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
     "no-var": "error",
     "object-shorthand": [
       "error",

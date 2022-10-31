@@ -1,5 +1,5 @@
-import { Vector, PriorityQueue } from '@/index';
 import { expect } from 'chai';
+import { Vector, PriorityQueue } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
