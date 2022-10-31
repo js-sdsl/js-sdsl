@@ -234,7 +234,7 @@ $ npm run dev   # development mode
 [stack-umd-link]: https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js
 [stack-docs]: https://js-sdsl.org/js-sdsl/classes/Stack.html
 
-[queue-package]: ./src/container/OtherContainer/Queue.ts.ts
+[queue-package]: ./src/container/OtherContainer/Queue.ts
 [queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/queue
 [queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/queue
 [queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js?compression=gzip&style=flat-square/
