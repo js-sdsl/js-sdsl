@@ -10,6 +10,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
       self.setElement(el[0], el[1]);
     });
   }
+  /**
+   * @description Insert a key-value pair or set value by the given key.
+   * @param key The key want to insert.
+   * @param value The value want to set.
+   */
   setElement(key: K, value: V) {
     if (value === undefined || value === null) {
       this.eraseElementByKey(key);
@@ -17,6 +22,10 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     this._set(key, value);
   }
+  /**
+   * @description Get the value of the element of the specified key.
+   * @example const val = container.getElementByKey(1);
+   */
   getElementByKey(key: K) {
     if (checkNotObject(key)) {
       const value = this._originMap[<string><unknown>key];

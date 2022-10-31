@@ -48,6 +48,10 @@ abstract class HashContainer<K, V> extends Base {
     this._originMap = {};
     this._length = 0;
   }
+  /**
+   * @description Remove the element of the specified key.
+   * @param key The key you want to remove.
+   */
   eraseElementByKey(key: K) {
     if (checkNotObject(key)) {
       if (this._originMap[<string><unknown>key] === undefined) return;
@@ -60,6 +64,11 @@ abstract class HashContainer<K, V> extends Base {
     }
     this._length -= 1;
   }
+  /**
+   * @description Check key if exist in container.
+   * @param key The element you want to search.
+   * @return Boolean about if key exist in container.
+   */
   find(key: K) {
     if (checkNotObject(key)) {
       return this._originMap[<string><unknown>key] !== undefined;
@@ -67,9 +76,21 @@ abstract class HashContainer<K, V> extends Base {
       return typeof (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG] === 'number';
     }
   }
+  /**
+   * @description Iterate over all elements in the container.
+   * @param callback Callback function like Array.forEach.
+   * @example container.forEach((element, index) => console.log(element, index));
+   */
   abstract forEach(
     callback: (element: K | [K, V], index: number, hashContainer: HashContainer<K, V>) => void
   ): void;
+  /**
+   * @description Using for `for...of` syntax like Array.
+   * @example
+   * for (const element of container) {
+   *   console.log(element);
+   * }
+   */
   abstract [Symbol.iterator](): Generator<K | [K, V], void, undefined>;
 }
 

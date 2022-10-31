@@ -9,6 +9,10 @@ class HashSet<K> extends HashContainerBase<K, undefined> {
       self.insert(el);
     });
   }
+  /**
+   * @description Insert element to set.
+   * @param key The key want to insert.
+   */
   insert(key: K) {
     this._set(key);
   }
