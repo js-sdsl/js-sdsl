@@ -47,7 +47,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    container.forEach(([_key, _value]) => this.setElement(_key, _value));
+    container.forEach(([key, value]) => this.setElement(key, value));
   }
   /**
    * @internal
@@ -149,7 +149,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return res as [K, V];
   }
   union(other: OrderedMap<K, V>) {
-    other.forEach(([_key, _value]) => this.setElement(_key, _value));
+    other.forEach(([key, value]) => this.setElement(key, value));
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

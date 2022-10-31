@@ -6,7 +6,7 @@ function testHashSet(arr: number[], testNum: number) {
   const reportList: testReportFormat['reportList'] = [];
 
   startTime = Date.now();
-  const myHashSet = new HashSet(arr, (1 << 21));
+  const myHashSet = new HashSet(arr);
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',
