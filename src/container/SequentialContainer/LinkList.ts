@@ -1,6 +1,6 @@
 import SequentialContainer from './Base';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 
 /**
  * @internal
@@ -307,7 +307,7 @@ class LinkList<T> extends SequentialContainer<T> {
     this.forEach(element => arr.push(element));
     arr.sort(cmp);
     let curNode: LinkNode<T> = this._head as LinkNode<T>;
-    arr.forEach((element) => {
+    arr.forEach(element => {
       curNode._value = element;
       curNode = curNode._next as LinkNode<T>;
     });

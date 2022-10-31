@@ -1,4 +1,3 @@
-import { HashSet } from '@/index';
 import { expect } from 'chai';
 import {
   generateRandomNumber,
@@ -10,12 +9,13 @@ import {
   generateRandomObject,
   generateRandomFunction
 } from '../utils/generateRandom';
+import { HashSet } from '@/index';
 
 const testNum = 10000;
 
 function judgeHashSet(myHashSet: HashSet<unknown>, stdSet: Set<unknown>) {
   expect(myHashSet.size()).to.equal(stdSet.size);
-  stdSet.forEach((element) => {
+  stdSet.forEach(element => {
     expect(myHashSet.find(element)).to.equal(true);
   });
 }

@@ -1,5 +1,5 @@
-import { Queue } from '@/index';
 import type { testReportFormat } from '../index';
+import { Queue } from '@/index';
 
 function testQueue(arr: number[], testNum: number) {
   const myQueue = new Queue(arr);

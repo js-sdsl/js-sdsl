@@ -1,5 +1,5 @@
-import { LinkList } from '@/index';
 import testSequentialContainer from './SequentialContainer.performance';
+import { LinkList } from '@/index';
 
 function testLinkList(arr: number[], testNum: number) {
   const myLinkList = new LinkList(arr);

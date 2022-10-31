@@ -1,7 +1,7 @@
 import type TreeIterator from './TreeIterator';
+import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
 import { Container } from '@/container/ContainerBase';
 import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
-import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**

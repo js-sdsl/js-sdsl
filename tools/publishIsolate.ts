@@ -1,8 +1,8 @@
+import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import childProcess from 'child_process';
-import getNpmPackageVersion from 'get-npm-package-version';
 import { compareVersions } from 'compare-versions';
+import getNpmPackageVersion from 'get-npm-package-version';
 import isolateBuildConfig from '../conf/isolate.config.json';
 import PackageJson from '../package.json';
 
@@ -26,21 +26,21 @@ async function main() {
 
     // build
     // eslint-disable-next-line compat/compat
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       const buildProcess = childProcess.spawn(
         'gulp',
         [`isolate:${configPackage.buildName}`]
       );
 
-      buildProcess.stdout.on('data', (data) => {
+      buildProcess.stdout.on('data', data => {
         process.stdout.write(data);
       });
 
-      buildProcess.stderr.on('data', (data) => {
+      buildProcess.stderr.on('data', data => {
         process.stderr.write(data);
       });
 
-      buildProcess.on('close', (code) => {
+      buildProcess.on('close', code => {
         if (code === 0) {
           resolve();
         } else {
@@ -61,21 +61,21 @@ async function main() {
 
     // publish
     // eslint-disable-next-line compat/compat
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       const childProcessInstance = childProcess.spawn(
         'yarn',
         ['publish', filePath, '--access', 'public']
       );
 
-      childProcessInstance.stdout.on('data', (data) => {
+      childProcessInstance.stdout.on('data', data => {
         process.stdout.write(data);
       });
 
-      childProcessInstance.stderr.on('data', (data) => {
+      childProcessInstance.stderr.on('data', data => {
         process.stderr.write(data);
       });
 
-      childProcessInstance.on('close', (code) => {
+      childProcessInstance.on('close', code => {
         if (code !== 0) {
           throw new Error(`Failed to publish package ${isolatePackageName}`);
         }

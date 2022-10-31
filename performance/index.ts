@@ -1,3 +1,5 @@
+import { writeFileSync } from 'fs';
+import path from 'path';
 import testHashMap from './HashContainerTest/HashMap.performance';
 import testHashSet from './HashContainerTest/HashSet.performance';
 import testPriorityQueue from './OtherContainerTest/PriorityQueue.performance';
@@ -7,9 +9,7 @@ import testDeque from './SequentialContainerTest/Deque.performance';
 import testLinkList from './SequentialContainerTest/LinkList.performance';
 import testOrderedMap from './TreeContainerTest/OrderedMap.performance';
 import testOrderedSet from './TreeContainerTest/OrderedSet.performance';
-import path from 'path';
 import env from './utils/env';
-import { writeFileSync } from 'fs';
 
 export type testReportFormat = {
   containerName: string,

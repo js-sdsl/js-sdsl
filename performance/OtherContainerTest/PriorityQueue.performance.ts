@@ -1,5 +1,5 @@
-import { PriorityQueue } from '@/index';
 import type { testReportFormat } from '../index';
+import { PriorityQueue } from '@/index';
 
 function testPriorityQueue(arr: number[], testNum: number) {
   let startTime, endTime;

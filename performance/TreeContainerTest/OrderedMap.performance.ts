@@ -1,5 +1,5 @@
-import { OrderedMap } from '@/index';
 import type { testReportFormat } from '../index';
+import { OrderedMap } from '@/index';
 
 function testOrderedMap(arr: number[], testNum: number) {
   let startTime, endTime;

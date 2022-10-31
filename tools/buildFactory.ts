@@ -1,28 +1,28 @@
-import gulp from 'gulp';
-import tap from 'gulp-tap';
-import filter from 'gulp-filter';
-import merge from 'merge-stream';
-import gulpTs from 'gulp-typescript';
-import terser from 'gulp-terser';
-import GulpUglify from 'gulp-uglify';
-import babel from 'gulp-babel';
-import rename from 'gulp-rename';
-import sourcemaps from 'gulp-sourcemaps';
-import tsMacroTransformer, { macros } from 'ts-macros';
-import pathsTransformer from 'ts-transform-paths';
-import exportTransformer from './exportTransformer';
-import rollupPluginTypescript, { PartialCompilerOptions } from '@rollup/plugin-typescript';
-import rollupPluginTs from 'rollup-plugin-ts';
-import rollupPluginLicense from 'rollup-plugin-license';
-import { babel as rollupBabel } from '@rollup/plugin-babel';
-import ts from 'typescript';
-import ttypescript from 'ttypescript';
-import tsConfig from '../tsconfig.json';
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { SrcOptions } from 'vinyl-fs';
-import crypto from 'crypto';
+import { babel as rollupBabel } from '@rollup/plugin-babel';
+import rollupPluginTypescript, { PartialCompilerOptions } from '@rollup/plugin-typescript';
 import glob from 'glob';
+import gulp from 'gulp';
+import babel from 'gulp-babel';
+import filter from 'gulp-filter';
+import rename from 'gulp-rename';
+import sourcemaps from 'gulp-sourcemaps';
+import tap from 'gulp-tap';
+import terser from 'gulp-terser';
+import gulpTs from 'gulp-typescript';
+import GulpUglify from 'gulp-uglify';
+import merge from 'merge-stream';
+import rollupPluginLicense from 'rollup-plugin-license';
+import rollupPluginTs from 'rollup-plugin-ts';
+import tsMacroTransformer, { macros } from 'ts-macros';
+import pathsTransformer from 'ts-transform-paths';
+import ttypescript from 'ttypescript';
+import ts from 'typescript';
+import { SrcOptions } from 'vinyl-fs';
+import tsConfig from '../tsconfig.json';
+import exportTransformer from './exportTransformer';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const clean = require('gulp-clean') as () => NodeJS.ReadWriteStream;
@@ -134,7 +134,7 @@ function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
       plugins: [
         removeUnusedImport ? 'babel-plugin-remove-unused-import' : undefined,
         cjsTransform ? '@babel/plugin-transform-modules-commonjs' : undefined
-      ].filter((plugin) => plugin !== undefined) as string[]
+      ].filter(plugin => plugin !== undefined) as string[]
     })
     : tap(() => { /* */ });
 }
@@ -286,12 +286,12 @@ export function gulpIsolateFactory(
     // get files from glob
     const globs = Array.isArray(input.globs) ? input.globs : [input.globs];
     const files = globs
-      .map((pattern) => glob.sync(pattern, input.opts))
+      .map(pattern => glob.sync(pattern, input.opts))
       .reduce((acc, val) => acc.concat(val), []);
     // generate sha256 hash of the source code
     const hash = crypto.createHash('sha256');
     hash.update(input.isolateBuildConfig.toString());
-    files.forEach((file) => hash.update(fs.readFileSync(file)));
+    files.forEach(file => hash.update(fs.readFileSync(file)));
     const hashValue = hash.digest('hex');
     // compare hash with the previous one
     const previousHash = fs.existsSync(`${initializedSettings.buildDataDir}/hash`)
@@ -302,20 +302,20 @@ export function gulpIsolateFactory(
     const project = gulpTs.createProject('tsconfig.json', {
       target: 'ESNext',
       declaration: true,
-      getCustomTransformers: (program) => {
+      getCustomTransformers: program => {
         if (program === undefined) throw new Error('program is undefined');
         return exportTransformer(program, {
           indexOutputPath: `${initializedSettings.buildDataDir}/transformed-index.json`,
           indexFile: input.indexFile,
           builds: input.isolateBuildConfig.builds
-            .map((build) => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
+            .map(build => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
         });
       }
     });
-    await new Promise((resolve) => {
+    await new Promise(resolve => {
       gulp.src(input.globs, input.opts)
         .pipe(project())
-        .on('error', (e) => {
+        .on('error', e => {
           throw new Error(e);
         })
         .on('end', resolve)
@@ -347,9 +347,9 @@ export function gulpIsolateFactory(
     // copy source files
     const globs = Array.isArray(input.globs) ? input.globs : [input.globs];
     const files = globs
-      .map((pattern) => glob.sync(pattern, input.opts))
+      .map(pattern => glob.sync(pattern, input.opts))
       .reduce((acc, val) => acc.concat(val), []);
-    files.forEach((file) => {
+    files.forEach(file => {
       const relativeFilePath = path.relative('.', file);
       const copyFilePath = path.join(copyDir, relativeFilePath);
       fs.mkdirSync(path.dirname(copyFilePath), { recursive: true });
