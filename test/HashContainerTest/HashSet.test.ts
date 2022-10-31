@@ -92,9 +92,11 @@ describe('HashSet test', () => {
     hashSetTest(generateRandomSymbol);
   });
 
-  it('HashSet BigInt test', () => {
-    hashSetTest(generateRandomBigInt);
-  });
+  if (typeof BigInt === 'function') {
+    it('HashSet BigInt test', () => {
+      hashSetTest(generateRandomBigInt);
+    });
+  }
 
   it('HashSet Boolean test', () => {
     hashSetTest(generateRandomBoolean);

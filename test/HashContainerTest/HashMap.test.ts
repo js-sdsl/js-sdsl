@@ -117,9 +117,11 @@ describe('HashMap test', () => {
     hashMapTest(generateRandomSymbol);
   });
 
-  it('HashMap BigInt test', () => {
-    hashMapTest(generateRandomBigInt);
-  });
+  if (typeof BigInt === 'function') {
+    it('HashMap BigInt test', () => {
+      hashMapTest(generateRandomBigInt);
+    });
+  }
 
   it('HashMap Boolean test', () => {
     hashMapTest(generateRandomBoolean);
