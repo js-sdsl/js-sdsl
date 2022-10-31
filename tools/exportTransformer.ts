@@ -168,7 +168,8 @@ class TsUtils {
     };
   }
   static getActualSymbol(symbol: ts.Symbol, typeChecker: ts.TypeChecker): ts.Symbol {
-    if (symbol.flags & ts.SymbolFlags.Alias) {
+    const tag = symbol.flags & ts.SymbolFlags.Alias;
+    if (tag) {
       symbol = typeChecker.getAliasedSymbol(symbol);
     }
 
