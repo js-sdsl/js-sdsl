@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import {
   generateRandomNumber,
   generateRandomString,
-  generateRandomObject
+  generateRandomSymbol,
+  generateRandomBigInt,
+  generateRandomBoolean,
+  generateRandomNull,
+  generateRandomObject,
+  generateRandomFunction
 } from '../utils/generateRandom';
 
 const testNum = 10000;
@@ -63,7 +68,7 @@ function hashSetTest(generateRandom: () => unknown) {
   stdSet.clear();
   judgeHashSet(myHashSet, stdSet);
 
-  if (typeof arr[0] === 'object') {
+  if (arr[0] && typeof arr[0] === 'object') {
     for (const item of arr) {
       const hasOwnProperty = Object.hasOwnProperty.bind(item);
       expect(hasOwnProperty(
@@ -83,7 +88,27 @@ describe('HashSet test', () => {
     hashSetTest(generateRandomString);
   });
 
+  it('HashSet Symbol test', () => {
+    hashSetTest(generateRandomSymbol);
+  });
+
+  it('HashSet BigInt test', () => {
+    hashSetTest(generateRandomBigInt);
+  });
+
+  it('HashSet Boolean test', () => {
+    hashSetTest(generateRandomBoolean);
+  });
+
+  it('HashSet Null test', () => {
+    hashSetTest(generateRandomNull);
+  });
+
   it('HashSet Object test', () => {
     hashSetTest(generateRandomObject);
+  });
+
+  it('HashSet Function test', () => {
+    hashSetTest(generateRandomFunction);
   });
 });

@@ -1,5 +1,6 @@
 import { initContainer } from '@/container/ContainerBase';
 import HashContainer from '@/container/HashContainer/Base';
+import { checkNotObject } from '@/utils/checkNotObject';
 
 class HashMap<K, V> extends HashContainer<K, V> {
   constructor(container: initContainer<[K, V]> = []) {
@@ -17,8 +18,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     this._set(key, value);
   }
   getElementByKey(key: K) {
-    const t = typeof key;
-    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+    if (checkNotObject(key)) {
       const value = this._originMap[<string><unknown>key];
       return value ? value[1] : undefined;
     }
@@ -44,6 +44,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
       const originMapLength = keys.length;
       for (let i = 0; i < originMapLength; ++i) {
         yield this._originMap[keys[i]];
+      }
+      const symbols = Object.getOwnPropertySymbols(this._originMap);
+      const symbolsLength = symbols.length;
+      for (let i = 0; i < symbolsLength; ++i) {
+        yield this._originMap[symbols[i]];
       }
     }.bind(this)();
   }

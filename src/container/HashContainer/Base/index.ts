@@ -1,4 +1,5 @@
 import { Base } from '@/container/ContainerBase';
+import { checkNotObject } from '@/utils/checkNotObject';
 
 abstract class HashContainer<K, V> extends Base {
   /**
@@ -8,7 +9,7 @@ abstract class HashContainer<K, V> extends Base {
   /**
    * @internal
    */
-  protected _originMap: Record<string, [K, V]> = {};
+  protected _originMap: Record<string | symbol, [K, V]> = {};
   /**
    * @internal
    */
@@ -17,8 +18,7 @@ abstract class HashContainer<K, V> extends Base {
    * @internal
    */
   protected _set(key: K, value?: V) {
-    const t = typeof key;
-    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+    if (checkNotObject(key)) {
       const originValue = this._originMap[<string><unknown>key];
       if (originValue) {
         originValue[1] = <V>value;
@@ -49,8 +49,7 @@ abstract class HashContainer<K, V> extends Base {
     this._length = 0;
   }
   eraseElementByKey(key: K) {
-    const t = typeof key;
-    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+    if (checkNotObject(key)) {
       if (this._originMap[<string><unknown>key] === undefined) return;
       delete this._originMap[<string><unknown>key];
     } else {
@@ -62,8 +61,7 @@ abstract class HashContainer<K, V> extends Base {
     this._length -= 1;
   }
   find(key: K) {
-    const t = typeof key;
-    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+    if (checkNotObject(key)) {
       return this._originMap[<string><unknown>key] !== undefined;
     } else {
       return typeof (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG] === 'number';

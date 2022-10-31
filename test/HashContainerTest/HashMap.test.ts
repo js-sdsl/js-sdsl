@@ -2,8 +2,13 @@ import { HashMap } from '@/index';
 import { expect } from 'chai';
 import {
   generateRandomNumber,
+  generateRandomString,
+  generateRandomSymbol,
+  generateRandomBigInt,
+  generateRandomBoolean,
+  generateRandomNull,
   generateRandomObject,
-  generateRandomString
+  generateRandomFunction
 } from '../utils/generateRandom';
 
 const testNum = 10000;
@@ -88,7 +93,7 @@ function hashMapTest(generateRandom: () => unknown) {
   stdMap.clear();
   judgeHashMap(myHashMap, stdMap);
 
-  if (typeof arr[0] === 'object') {
+  if (arr[0] && typeof arr[0] === 'object') {
     for (const item of arr) {
       const hasOwnProperty = Object.hasOwnProperty.bind(item);
       expect(hasOwnProperty(
@@ -108,7 +113,27 @@ describe('HashMap test', () => {
     hashMapTest(generateRandomString);
   });
 
+  it('HashMap Symbol test', () => {
+    hashMapTest(generateRandomSymbol);
+  });
+
+  it('HashMap BigInt test', () => {
+    hashMapTest(generateRandomBigInt);
+  });
+
+  it('HashMap Boolean test', () => {
+    hashMapTest(generateRandomBoolean);
+  });
+
+  it('HashMap Null test', () => {
+    hashMapTest(generateRandomNull);
+  });
+
   it('HashMap Object test', () => {
     hashMapTest(generateRandomObject);
+  });
+
+  it('HashMap Function test', () => {
+    hashMapTest(generateRandomFunction);
   });
 });
