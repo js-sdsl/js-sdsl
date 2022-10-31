@@ -140,11 +140,9 @@ function babelStream(removeUnusedImport: boolean, cjsTransform: boolean) {
 }
 
 export function createLicenseText(packageName: string, packageVersion: string): string {
-  const licenseText = fs.readFileSync('conf/umd-banner.txt', 'utf8')
+  return fs.readFileSync('conf/umd-banner.txt', 'utf8')
     .replace(/<package>/g, packageName)
     .replace(/<version>/g, packageVersion);
-
-  return licenseText;
 }
 
 export function gulpFactory(
