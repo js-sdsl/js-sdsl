@@ -22,8 +22,8 @@ class HashMap<K, V> extends HashContainer<K, V> {
       const value = this._originMap[<string><unknown>key];
       return value ? value[1] : undefined;
     }
-    const index = (<Record<symbol, number>><unknown>key)[HashContainer.HASH_KEY_TAG];
-    return index === undefined ? this._objMap[index][1] : undefined;
+    const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+    return index !== undefined ? this._objMap[index][1] : undefined;
   }
   forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
     const objMapLength = this._objMap.length;

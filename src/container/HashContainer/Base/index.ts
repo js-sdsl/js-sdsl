@@ -12,7 +12,7 @@ abstract class HashContainer<K, V> extends Base {
   /**
    * @internal
    */
-  protected static readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
+  protected readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
   /**
    * @internal
    */
@@ -26,12 +26,12 @@ abstract class HashContainer<K, V> extends Base {
       }
       this._originMap[<string><unknown>key] = [key, <V>value];
     } else {
-      const index = (<Record<symbol, number>><unknown>key)[HashContainer.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
       if (index !== undefined) {
         this._objMap[<number>index][1] = <V>value;
         return;
       }
-      Object.defineProperty(key, HashContainer.HASH_KEY_TAG, {
+      Object.defineProperty(key, this.HASH_KEY_TAG, {
         value: this._objMap.length,
         configurable: true
       });
@@ -40,8 +40,9 @@ abstract class HashContainer<K, V> extends Base {
     this._length += 1;
   }
   clear() {
+    const self = this;
     this._objMap.forEach(function (el) {
-      delete (<Record<symbol, number>><unknown>el[0])[HashContainer.HASH_KEY_TAG];
+      delete (<Record<symbol, number>><unknown>el[0])[self.HASH_KEY_TAG];
     });
     this._objMap = [];
     this._originMap = {};
@@ -53,8 +54,9 @@ abstract class HashContainer<K, V> extends Base {
       if (this._originMap[<string><unknown>key] === undefined) return;
       delete this._originMap[<string><unknown>key];
     } else {
-      const index = (<Record<symbol, number>><unknown>key)[HashContainer.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
       if (index === undefined) return;
+      delete (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
       delete this._objMap[index];
     }
     this._length -= 1;
@@ -64,7 +66,7 @@ abstract class HashContainer<K, V> extends Base {
     if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
       return this._originMap[<string><unknown>key] !== undefined;
     } else {
-      return typeof (<Record<symbol, number>><unknown>key)[HashContainer.HASH_KEY_TAG] === 'number';
+      return typeof (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG] === 'number';
     }
   }
   abstract forEach(
