@@ -5,9 +5,8 @@ import { checkNotObject } from '@/utils/checkNotObject';
 class HashMap<K, V> extends HashContainer<K, V> {
   constructor(container: initContainer<[K, V]> = []) {
     super();
-    const self = this;
-    container.forEach(function (el) {
-      self.setElement(el[0], el[1]);
+    container.forEach(el => {
+      this.setElement(el[0], el[1]);
     });
   }
   /**

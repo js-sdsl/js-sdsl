@@ -4,9 +4,8 @@ import HashContainerBase from '@/container/HashContainer/Base';
 class HashSet<K> extends HashContainerBase<K, undefined> {
   constructor(container: initContainer<K> = []) {
     super();
-    const self = this;
-    container.forEach(function (el) {
-      self.insert(el);
+    container.forEach(el => {
+      this.insert(el);
     });
   }
   /**

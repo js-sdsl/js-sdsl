@@ -40,9 +40,8 @@ abstract class HashContainer<K, V> extends Base {
     this._length += 1;
   }
   clear() {
-    const self = this;
-    this._objMap.forEach(function (el) {
-      delete (<Record<symbol, number>><unknown>el[0])[self.HASH_KEY_TAG];
+    this._objMap.forEach(el => {
+      delete (<Record<symbol, number>><unknown>el[0])[this.HASH_KEY_TAG];
     });
     this._objMap = [];
     this._originMap = {};
