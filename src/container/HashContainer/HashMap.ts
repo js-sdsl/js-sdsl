@@ -10,34 +10,32 @@ class HashMap<K, V> extends HashContainer<K, V> {
     });
   }
   setElement(key: K, value: V) {
+    if (value === undefined || value === null) {
+      this.eraseElementByKey(key);
+      return;
+    }
     this._set(key, value);
   }
   getElementByKey(key: K) {
-    const hashCode = this._hash(key);
-    if (hashCode === '') {
-      return this._objMap[
-        (key as unknown as Record<string, number>)[HashContainer.HASH_KEY_TAG]
-      ][1];
-    } else return this._originMap[hashCode];
+    const t = typeof key;
+    if (t === 'string' || t === 'number' || t === 'boolean' || key === undefined || key === null) {
+      const value = this._originMap[<string><unknown>key];
+      return value ? value[1] : undefined;
+    }
+    const index = (<Record<symbol, number>><unknown>key)[HashContainer.HASH_KEY_TAG];
+    return index === undefined ? this._objMap[index][1] : undefined;
   }
   forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
-    let index = 0;
-    const self = this;
-    this._objMap.forEach(function (el) {
-      callback(el, index++, self);
-    });
-    Object.keys(this._originMap).forEach((el) => {
-      const [elString, suffix] = el.split('_') as [string, string];
-      callback(
-        [
-          HashContainer.HASH_CODE_PREFIX_MAP[
-            suffix
-          ](elString) as K, this._originMap[el]
-        ],
-        index++,
-        self
-      );
-    });
+    const objMapLength = this._objMap.length;
+    for (let i = 0; i < objMapLength; ++i) {
+      callback(this._objMap[i], i, this);
+    }
+    const keys = Object.keys(this._originMap);
+    const originMapLength = keys.length;
+    let index = objMapLength;
+    for (let i = 0; i < originMapLength; ++i) {
+      callback(this._originMap[keys[i]], index++, this);
+    }
   }
   [Symbol.iterator]() {
     return function * (this: HashMap<K, V>) {
@@ -45,11 +43,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
       const keys = Object.keys(this._originMap);
       const originMapLength = keys.length;
       for (let i = 0; i < originMapLength; ++i) {
-        const el = keys[i];
-        const [elString, suffix] = el.split('_') as [string, string];
-        yield [
-          HashContainer.HASH_CODE_PREFIX_MAP[suffix](elString), this._originMap[el]
-        ] as [K, V];
+        yield this._originMap[keys[i]];
       }
     }.bind(this)();
   }
