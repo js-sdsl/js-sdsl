@@ -16,7 +16,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(i);
+  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(Math.random() * 1000000);
   endTime = Date.now();
   reportList.push({
     testFunc: 'insert',
