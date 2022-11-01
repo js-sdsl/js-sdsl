@@ -112,7 +112,10 @@ class LinkList<T> extends SequentialContainer<T> {
   private _tail: LinkNode<T> | undefined = undefined;
   constructor(container: initContainer<T> = []) {
     super();
-    container.forEach(element => this.pushBack(element));
+    const self = this;
+    container.forEach(function (el) {
+      self.pushBack(el);
+    });
   }
   clear() {
     this._length = 0;
@@ -304,10 +307,12 @@ class LinkList<T> extends SequentialContainer<T> {
   sort(cmp?: (x: T, y: T) => number) {
     if (this._length <= 1) return;
     const arr: T[] = [];
-    this.forEach(element => arr.push(element));
+    this.forEach(function (el) {
+      arr.push(el);
+    });
     arr.sort(cmp);
     let curNode: LinkNode<T> = this._head as LinkNode<T>;
-    arr.forEach(element => {
+    arr.forEach(function (element) {
       curNode._value = element;
       curNode = curNode._next as LinkNode<T>;
     });
@@ -355,27 +360,30 @@ class LinkList<T> extends SequentialContainer<T> {
    * linkA.merge(linkB);  // [1, 2, 3, 4, 5];
    */
   merge(list: LinkList<T>) {
+    const self = this;
     if (!this._head) {
-      list.forEach(element => this.pushBack(element));
+      list.forEach(function (el) {
+        self.pushBack(el);
+      });
       return;
     }
     let curNode: LinkNode<T> = this._head;
-    list.forEach(element => {
+    list.forEach(function (element) {
       while (
         curNode &&
-        curNode !== this._header &&
+        curNode !== self._header &&
         (curNode._value as T) <= element
       ) {
         curNode = curNode._next as LinkNode<T>;
       }
-      if (curNode === this._header) {
-        this.pushBack(element);
-        curNode = this._tail as LinkNode<T>;
-      } else if (curNode === this._head) {
-        this.pushFront(element);
-        curNode = this._head;
+      if (curNode === self._header) {
+        self.pushBack(element);
+        curNode = self._tail as LinkNode<T>;
+      } else if (curNode === self._head) {
+        self.pushFront(element);
+        curNode = self._head;
       } else {
-        this._length += 1;
+        self._length += 1;
         const _pre = curNode._pre as LinkNode<T>;
         _pre._next = new LinkNode(element);
         _pre._next._pre = _pre;

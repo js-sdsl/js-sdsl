@@ -40,7 +40,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   protected constructor(
     cmp: (x: K, y: K) => number =
-    (x: K, y: K) => {
+    function (x: K, y: K) {
       if (x < y) return -1;
       if (x > y) return 1;
       return 0;
@@ -296,15 +296,16 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @description InOrder traversal the tree.
    * @internal
    */
-  protected _inOrderTraversal:
-  (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => boolean =
-      (curNode: TreeNode<K, V> | undefined, callback: (curNode: TreeNode<K, V>) => boolean) => {
-        if (curNode === undefined) return false;
-        const ifReturn = this._inOrderTraversal(curNode._left, callback);
-        if (ifReturn) return true;
-        if (callback(curNode)) return true;
-        return this._inOrderTraversal(curNode._right, callback);
-      };
+  protected _inOrderTraversal(
+    curNode: TreeNode<K, V> | undefined,
+    callback: (curNode: TreeNode<K, V>) => boolean
+  ): boolean {
+    if (curNode === undefined) return false;
+    const ifReturn = this._inOrderTraversal(curNode._left, callback);
+    if (ifReturn) return true;
+    if (callback(curNode)) return true;
+    return this._inOrderTraversal(curNode._right, callback);
+  }
   /**
    * @internal
    */
@@ -534,11 +535,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     let index = 0;
+    const self = this;
     this._inOrderTraversal(
       this._root,
-      curNode => {
+      function (curNode) {
         if (pos === index) {
-          this._eraseNode(curNode);
+          self._eraseNode(curNode);
           return true;
         }
         index += 1;
@@ -589,9 +591,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   getHeight() {
     if (!this._length) return 0;
-    const traversal:
-      (curNode: TreeNode<K, V> | undefined) => number =
-      (curNode: TreeNode<K, V> | undefined) => {
+    const traversal =
+      function (curNode: TreeNode<K, V> | undefined): number {
         if (!curNode) return 0;
         return Math.max(traversal(curNode._left), traversal(curNode._right)) + 1;
       };
