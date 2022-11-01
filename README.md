@@ -91,7 +91,7 @@ npm install js-sdsl
 
 Or you can download the isolation packages containing only the containers you want:
 
-| package                                           | npm                                                                   | size                                                             | documentation               |
+| package                                           | npm                                                                   | size                                                             | docs                        |
 |---------------------------------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------|-----------------------------|
 | [@js-sdsl/stack][stack-package]                   | [![NPM Package][stack-npm-version]][stack-npm-link]                   | [![GZIP Size][stack-umd-size]][stack-umd-link]                   | [link][stack-docs]          |
 | [@js-sdsl/queue][queue-package]                   | [![NPM Package][queue-npm-version]][queue-npm-link]                   | [![GZIP Size][queue-umd-size]][queue-umd-link]                   | [link][queue-docs]          |
