@@ -27,11 +27,11 @@
 - **PriorityQueue** - 堆实现的优先级队列
 - **Vector** - 受保护的数组，不能直接操作像 `length` 这样的属性
 - **LinkList** - 非连续内存地址的链表
-- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的 O(1) 时间复杂度
+- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的时间复杂度为 O(1)
 - **OrderedSet** - 由红黑树实现的排序集合
 - **OrderedMap** - 由红黑树实现的排序字典
-- **HashSet** - 参考 java 实现的哈希集合
-- **HashMap** - 参考 java 实现的哈希字典
+- **HashSet** - 参考 [ES6 Set polyfill](https://github.com/rousan/collections-es6) 实现的哈希集合
+- **HashMap** - 参考 [ES6 Set polyfill](https://github.com/rousan/collections-es6) 实现的哈希字典
 
 ## ⚔️ 基准测试
 
@@ -93,7 +93,7 @@ npm install js-sdsl
 
 或者根据需要安装以下任意单个包
 
-| package                                           | npm                                                                   | size                                                             | documentation               |
+| package                                           | npm                                                                   | size                                                             | docs                        |
 |---------------------------------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------|-----------------------------|
 | [@js-sdsl/stack][stack-package]                   | [![NPM Package][stack-npm-version]][stack-npm-link]                   | [![GZIP Size][stack-umd-size]][stack-umd-link]                   | [link][stack-docs]          |
 | [@js-sdsl/queue][queue-package]                   | [![NPM Package][queue-npm-version]][queue-npm-link]                   | [![GZIP Size][queue-umd-size]][queue-umd-link]                   | [link][queue-docs]          |
