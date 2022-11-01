@@ -14,6 +14,10 @@ abstract class HashContainer<K, V> extends Base {
    * @internal
    */
   protected readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
+  protected constructor() {
+    super();
+    Object.setPrototypeOf(this._originMap, null);
+  }
   /**
    * @internal
    */
@@ -46,6 +50,7 @@ abstract class HashContainer<K, V> extends Base {
     });
     this._objMap = [];
     this._originMap = {};
+    Object.setPrototypeOf(this._originMap, null);
     this._length = 0;
   }
   /**
