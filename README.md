@@ -27,11 +27,11 @@
 - **PriorityQueue** - heap-implemented priority queue.
 - **Vector** - protected array, cannot to operate properties like `length` directly.
 - **LinkList** - linked list of non-contiguous memory addresses.
-- **Deque** - double-ended-queue, O(1) time complexity to inserting elements front and back or getting elements by index.
+- **Deque** - double-ended-queue, O(1) time complexity to `unshift` or getting elements by index.
 - **OrderedSet** - sorted set which implemented by red black tree.
 - **OrderedMap** - sorted map which implemented by red black tree.
-- **HashSet** - refer to the hash set implemented by java.
-- **HashMap** - refer to the hash map implemented by java.
+- **HashSet** - refer to the [polyfill of ES6 Set](https://github.com/rousan/collections-es6).
+- **HashMap** - refer to the [polyfill of ES6 Map](https://github.com/rousan/collections-es6).
 
 ## ⚔️ Benchmark
 
