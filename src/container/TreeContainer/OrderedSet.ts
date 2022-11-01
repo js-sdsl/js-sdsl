@@ -35,19 +35,22 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    container.forEach(element => this.insert(element));
+    const self = this;
+    container.forEach(function (el) {
+      self.insert(el);
+    });
   }
   /**
    * @internal
    */
-  private readonly _iterationFunc:
-  (curNode: TreeNode<K, undefined> | undefined) => Generator<K, void, undefined> =
-      function * (this: OrderedSet<K>, curNode: TreeNode<K, undefined> | undefined) {
-        if (curNode === undefined) return;
-        yield * this._iterationFunc(curNode._left);
-        yield curNode._key as K;
-        yield * this._iterationFunc(curNode._right);
-      };
+  private * _iterationFunc(
+    curNode: TreeNode<K, undefined> | undefined
+  ): Generator<K, void, undefined> {
+    if (curNode === undefined) return;
+    yield * this._iterationFunc(curNode._left);
+    yield curNode._key as K;
+    yield * this._iterationFunc(curNode._right);
+  }
   begin() {
     return new OrderedSetIterator(
       this._header._left || this._header,
@@ -127,7 +130,10 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return new OrderedSetIterator(resNode, this._header);
   }
   union(other: OrderedSet<K>) {
-    other.forEach(element => this.insert(element));
+    const self = this;
+    other.forEach(function (el) {
+      self.insert(el);
+    });
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

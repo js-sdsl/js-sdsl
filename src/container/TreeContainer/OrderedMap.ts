@@ -9,16 +9,17 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     if (this._node === this._header) {
       throw new RangeError('OrderedMap iterator access denied');
     }
+    const self = this;
     return new Proxy([] as unknown as [K, V], {
-      get: (_, props: '0' | '1') => {
-        if (props === '0') return this._node._key;
-        else if (props === '1') return this._node._value;
+      get(_, props: '0' | '1') {
+        if (props === '0') return self._node._key;
+        else if (props === '1') return self._node._value;
       },
-      set: (_, props: '1', newValue: V) => {
+      set(_, props: '1', newValue: V) {
         if (props !== '1') {
           throw new TypeError('props must be 1');
         }
-        this._node._value = newValue;
+        self._node._value = newValue;
         return true;
       }
     });
@@ -47,19 +48,22 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
-    container.forEach(([key, value]) => this.setElement(key, value));
+    const self = this;
+    container.forEach(function (el) {
+      self.setElement(el[0], el[1]);
+    });
   }
   /**
    * @internal
    */
-  private readonly _iterationFunc:
-  (curNode: TreeNode<K, V> | undefined) => Generator<[K, V], void, undefined> =
-      function * (this: OrderedMap<K, V>, curNode: TreeNode<K, V> | undefined) {
-        if (curNode === undefined) return;
-        yield * this._iterationFunc(curNode._left);
-        yield [curNode._key, curNode._value] as [K, V];
-        yield * this._iterationFunc(curNode._right);
-      };
+  private * _iterationFunc(
+    curNode: TreeNode<K, V> | undefined
+  ): Generator<[K, V], void, undefined> {
+    if (curNode === undefined) return;
+    yield * this._iterationFunc(curNode._left);
+    yield [curNode._key, curNode._value] as [K, V];
+    yield * this._iterationFunc(curNode._right);
+  }
   begin() {
     return new OrderedMapIterator(this._header._left || this._header, this._header);
   }
@@ -149,7 +153,10 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return res as [K, V];
   }
   union(other: OrderedMap<K, V>) {
-    other.forEach(([key, value]) => this.setElement(key, value));
+    const self = this;
+    other.forEach(function (el) {
+      self.setElement(el[0], el[1]);
+    });
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

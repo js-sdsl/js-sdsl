@@ -68,7 +68,10 @@ class Deque<T> extends SequentialContainer<T> {
     const needBucketNum = Math.ceil(_length / this._bucketSize);
     this._first = this._last = (this._bucketNum >> 1) - (needBucketNum >> 1);
     this._curFirst = this._curLast = (this._bucketSize - _length % this._bucketSize) >> 1;
-    container.forEach(element => this.pushBack(element));
+    const self = this;
+    container.forEach(function (element) {
+      self.pushBack(element);
+    });
     this.size = this.size.bind(this);
     this.getElementByPos = this.getElementByPos.bind(this);
     this.setElementByPos = this.setElementByPos.bind(this);
@@ -302,7 +305,10 @@ class Deque<T> extends SequentialContainer<T> {
       }
       this.cut(pos);
       this.popBack();
-      arr.forEach(element => this.pushBack(element));
+      const self = this;
+      arr.forEach(function (el) {
+        self.pushBack(el);
+      });
     }
   }
   eraseElementByValue(value: T) {
@@ -372,7 +378,9 @@ class Deque<T> extends SequentialContainer<T> {
   shrinkToFit() {
     if (!this._length) return;
     const arr: T[] = [];
-    this.forEach(element => arr.push(element));
+    this.forEach(function (el) {
+      arr.push(el);
+    });
     this._bucketNum = Math.max(Math.ceil(this._length / this._bucketSize), 1);
     this._length = this._first = this._last = this._curFirst = this._curLast = 0;
     this._map = [];

@@ -24,7 +24,7 @@ class PriorityQueue<T> extends Base {
   constructor(
     container: initContainer<T> = [],
     cmp: (x: T, y: T) => number =
-    (x: T, y: T) => {
+    function (x: T, y: T) {
       if (x > y) return -1;
       if (x < y) return 1;
       return 0;
@@ -37,7 +37,10 @@ class PriorityQueue<T> extends Base {
       this._priorityQueue = copy ? [...container] : container;
     } else {
       this._priorityQueue = [];
-      container.forEach(element => this._priorityQueue.push(element));
+      const self = this;
+      container.forEach(function (el) {
+        self._priorityQueue.push(el);
+      });
     }
     this._length = this._priorityQueue.length;
     const halfLength = this._length >> 1;
