@@ -1,18 +1,19 @@
-import { HashContainerConst } from '@/container/HashContainer/Base';
-import { Vector, HashMap } from '@/index';
 import { expect } from 'chai';
+import {
+  generateRandomNumber,
+  generateRandomString,
+  generateRandomSymbol,
+  generateRandomBigInt,
+  generateRandomBoolean,
+  generateRandomNull,
+  generateRandomObject,
+  generateRandomFunction
+} from '../utils/generateRandom';
+import { HashMap } from '@/index';
 
-function generateRandom(low = 0, high = 1e6, fix = 6) {
-  return (low + Math.random() * (high - low)).toFixed(fix);
-}
-
-const arr: string[] = [];
 const testNum = 10000;
-for (let i = 0; i < testNum; ++i) {
-  arr.push(generateRandom());
-}
 
-function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, number>) {
+function judgeHashMap(myHashMap: HashMap<unknown, unknown>, stdMap: Map<unknown, unknown>) {
   expect(myHashMap.size()).to.equal(stdMap.size);
   stdMap.forEach((value, key) => {
     expect(myHashMap.getElementByKey(key)).to.equal(value);
@@ -20,215 +21,121 @@ function judgeHashMap(myHashMap: HashMap<string, number>, stdMap: Map<string, nu
   });
 }
 
+function hashMapTest(generateRandom: () => unknown) {
+  const arr: unknown[] = [];
+  for (let i = 0; i < testNum; ++i) {
+    arr.push(generateRandom());
+  }
+
+  const stdMap = new Map<unknown, unknown>(
+    arr.map(
+      (el, index) => {
+        return [el, index];
+      }
+    ));
+  const myHashMap = new HashMap<unknown, unknown>(
+    arr.map(
+      (el, index) => {
+        return [el, index];
+      }
+    ));
+  judgeHashMap(myHashMap, stdMap);
+
+  let i = 0;
+  myHashMap.forEach((el, index, hashMap) => {
+    expect(hashMap).to.equal(myHashMap);
+    expect(stdMap.get(el[0])).to.equal(el[1]);
+    expect(i++).to.equal(index);
+  });
+
+  for (let i = 0; i < testNum; ++i) {
+    const random = generateRandom();
+    expect(myHashMap.find(random)).to.equal(stdMap.has(random));
+    expect(myHashMap.getElementByKey(random)).to.equal(stdMap.get(random));
+  }
+
+  i = 0;
+  for (const item of myHashMap) {
+    ++i;
+    expect(stdMap.get(item[0])).to.equal(item[1]);
+  }
+  expect(i).to.equal(stdMap.size);
+
+  for (const item of arr) {
+    if (Math.random() > 0.6) {
+      stdMap.delete(item);
+      myHashMap.eraseElementByKey(item);
+    }
+  }
+  judgeHashMap(myHashMap, stdMap);
+
+  for (let i = 0; i < testNum; ++i) {
+    const random = generateRandom();
+    stdMap.delete(random);
+    myHashMap.eraseElementByKey(random);
+  }
+  judgeHashMap(myHashMap, stdMap);
+
+  for (let i = 0; i < testNum; ++i) {
+    myHashMap.setElement(arr[i], i - 1);
+    stdMap.set(arr[i], i - 1);
+  }
+  judgeHashMap(myHashMap, stdMap);
+
+  for (let i = 0; i < testNum; ++i) {
+    const random = generateRandom();
+    stdMap.delete(random);
+    myHashMap.setElement(random, undefined);
+  }
+  judgeHashMap(myHashMap, stdMap);
+
+  myHashMap.clear();
+  stdMap.clear();
+  judgeHashMap(myHashMap, stdMap);
+
+  if (arr[0] && typeof arr[0] === 'object') {
+    for (const item of arr) {
+      const hasOwnProperty = Object.hasOwnProperty.bind(item);
+      expect(hasOwnProperty(
+        // @ts-ignore
+        myHashMap.HASH_KEY_TAG
+      )).to.equal(false);
+    }
+  }
+}
+
 describe('HashMap test', () => {
-  const myHashMap = new HashMap(arr.map((element, index) => [element, index]));
-  const stdMap = new Map(arr.map((element, index) => [element, index]));
-
-  it('HashSet hash function test', () => {
-    judgeHashMap(
-      // @ts-ignore
-      new HashMap(arr.map(x => [Math.floor(Number(x)), 1])),
-      new Map(arr.map(x => [Math.floor(Number(x)), 1]))
-    );
+  it('HashMap Number test', () => {
+    hashMapTest(generateRandomNumber);
   });
 
-  it('constructor test', () => {
-    expect(new HashMap().size()).to.equal(0);
+  it('HashMap String test', () => {
+    hashMapTest(generateRandomString);
   });
 
-  it('HashMap setElement function test', () => {
-    for (let i = 0; i <= testNum; ++i) {
-      myHashMap.setElement(i.toString(), i);
-      stdMap.set(i.toString(), i);
-    }
-    for (let i = 0; i <= testNum / 10; ++i) {
-      myHashMap.setElement(i.toString(), i);
-    }
-    for (let i = testNum; i < testNum * 2; ++i) {
-      const random = generateRandom();
-      myHashMap.setElement(random, i);
-      stdMap.set(random, i);
-    }
-    judgeHashMap(myHashMap, stdMap);
+  it('HashMap Symbol test', () => {
+    hashMapTest(generateRandomSymbol);
   });
 
-  it('HashMap forEach function test', () => {
-    myHashMap.forEach(([key, value]) => {
-      expect(stdMap.get(key)).to.equal(value);
+  if (typeof BigInt === 'function') {
+    it('HashMap BigInt test', () => {
+      hashMapTest(generateRandomBigInt);
     });
-    expect(myHashMap.find('-1')).to.equal(false);
-    let cnt = 0;
-    for (const element of myHashMap) {
-      ++cnt;
-      expect(stdMap.has(element[0])).to.equal(true);
-    }
-    expect(cnt).to.equal(myHashMap.size());
+  }
+
+  it('HashMap Boolean test', () => {
+    hashMapTest(generateRandomBoolean);
   });
 
-  it('HashMap eraseElementByKey function test', () => {
-    for (let i = 0; i < testNum; ++i) {
-      const str = i.toString();
-      myHashMap.eraseElementByKey(str);
-      stdMap.delete(str);
-    }
-    myHashMap.eraseElementByKey('-1');
-    myHashMap.eraseElementByKey('-2');
-    myHashMap.eraseElementByKey('-3');
-    myHashMap.eraseElementByKey('-4');
-    myHashMap.eraseElementByKey('-5');
-    myHashMap.eraseElementByKey('-6');
-    myHashMap.eraseElementByKey('-7');
-    myHashMap.eraseElementByKey('-8');
-    myHashMap.eraseElementByKey('-9');
-    expect(myHashMap.getElementByKey('-1')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-2')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-3')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-4')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-5')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-6')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-7')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-8')).to.equal(undefined);
-    expect(myHashMap.getElementByKey('-9')).to.equal(undefined);
-    expect(myHashMap.find('-1')).to.equal(false);
-    expect(myHashMap.find('-2')).to.equal(false);
-    expect(myHashMap.find('-3')).to.equal(false);
-    expect(myHashMap.find('-4')).to.equal(false);
-    expect(myHashMap.find('-5')).to.equal(false);
-    expect(myHashMap.find('-6')).to.equal(false);
-    expect(myHashMap.find('-7')).to.equal(false);
-    expect(myHashMap.find('-8')).to.equal(false);
-    expect(myHashMap.find('-9')).to.equal(false);
-    judgeHashMap(myHashMap, stdMap);
+  it('HashMap Null test', () => {
+    hashMapTest(generateRandomNull);
   });
 
-  it('HashMap clear function test', () => {
-    myHashMap.clear();
-    stdMap.clear();
-    judgeHashMap(myHashMap, stdMap);
+  it('HashMap Object test', () => {
+    hashMapTest(generateRandomObject);
   });
 
-  it('HashMap empty test', () => {
-    myHashMap.eraseElementByKey('1');
-    expect(myHashMap.find('1')).to.equal(false);
-    for (let i = -1; i >= -1000; --i) {
-      expect(myHashMap.getElementByKey(i.toString())).to.equal(undefined);
-      expect(myHashMap.find(i.toString())).to.equal(false);
-    }
-    // @ts-ignore
-    const bucketNum = myHashMap._bucketNum;
-    // @ts-ignore
-    myHashMap._bucketNum = HashContainerConst.maxBucketNum;
-    // @ts-ignore
-    myHashMap._reAllocate();
-    // @ts-ignore
-    myHashMap._hashTable[0] = new Vector();
-    // @ts-ignore
-    myHashMap._hashTable[myHashMap._bucketNum - 5] = new Vector();
-    // @ts-ignore
-    myHashMap._reAllocate(myHashMap._bucketNum);
-    // @ts-ignore
-    myHashMap._bucketNum = bucketNum;
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
-    for (const _ of myHashMap) {}
-  });
-
-  it('HashMap normal test', () => {
-    const mp = new HashMap<string, number>();
-    const stdMap = new Map();
-    for (let i = 0; i < testNum; ++i) {
-      const str = i.toString();
-      mp.setElement(str, i);
-      stdMap.set(str, i);
-    }
-    judgeHashMap(mp, stdMap);
-    let size = testNum;
-    for (let i = 0; i < testNum; ++i) {
-      mp.eraseElementByKey(i.toString());
-      expect(mp.size()).to.equal(--size);
-    }
-    expect(mp.size()).to.equal(0);
-  });
-
-  it('HashMap hash func test', () => {
-    const normalMap = new HashMap<string, number>();
-    const mp = new HashMap<string, number>([], undefined, () => -1);
-    const stdMap = new Map<string, number>();
-    const arr: string[] = [];
-    for (let i = 0; i < testNum; ++i) {
-      const random = Math.random().toFixed(6);
-      mp.setElement(random, i);
-      normalMap.setElement(random, i);
-      stdMap.set(random, i);
-      arr.push(random);
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    for (let i = 0; i < testNum; ++i) {
-      if (Math.random() > 0.5) {
-        mp.eraseElementByKey(arr[i]);
-        normalMap.eraseElementByKey(arr[i]);
-        stdMap.delete(arr[i]);
-      }
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    arr.length = 0;
-    for (let i = 0; i < testNum; ++i) {
-      const random = Math.random().toFixed(6);
-      mp.setElement(random, i);
-      normalMap.setElement(random, i);
-      stdMap.set(random, i);
-      arr.push(random);
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    for (let i = 0; i < testNum; ++i) {
-      if (Math.random() > 0.5) {
-        mp.eraseElementByKey(arr[i]);
-        normalMap.eraseElementByKey(arr[i]);
-        stdMap.delete(arr[i]);
-      }
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    for (let i = 0; i < testNum; ++i) {
-      const random = Math.random().toFixed(6);
-      mp.setElement(random, i);
-      normalMap.setElement(random, i);
-      stdMap.set(random, i);
-      arr.push(random);
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    for (let i = 0; i < testNum; ++i) {
-      mp.eraseElementByKey(arr[i]);
-      normalMap.eraseElementByKey(arr[i]);
-      stdMap.delete(arr[i]);
-    }
-    judgeHashMap(normalMap, stdMap);
-    judgeHashMap(mp, stdMap);
-    normalMap.clear();
-    mp.clear();
-    stdMap.clear();
-  });
-
-  it('difficult test', () => {
-    const hashMapList: HashMap<string, number>[] = [];
-    for (let i = -10; i <= 10; ++i) {
-      hashMapList.push(new HashMap<string, number>([], undefined, () => i));
-    }
-    const arr: string[] = [];
-    for (let i = 0; i < testNum; ++i) {
-      const random = Math.random().toFixed(6);
-      stdMap.set(random, i);
-      hashMapList.forEach(mp => mp.setElement(random, i));
-      arr.push(random);
-    }
-    hashMapList.forEach(mp => judgeHashMap(mp, stdMap));
-    arr.forEach(v => {
-      stdMap.delete(v);
-      hashMapList.forEach(mp => mp.eraseElementByKey(v));
-    });
-    hashMapList.forEach(mp => judgeHashMap(mp, stdMap));
+  it('HashMap Function test', () => {
+    hashMapTest(generateRandomFunction);
   });
 });

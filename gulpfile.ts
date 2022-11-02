@@ -1,4 +1,6 @@
 import gulp from 'gulp';
+import isolateBuildConfig from './conf/isolate.config.json';
+import PackageJson from './package.json';
 import {
   createLicenseText,
   gulpFactory,
@@ -6,8 +8,6 @@ import {
   gulpUmdMinFactory
 } from './tools/buildFactory';
 import { createIsolateTasksFromConfig } from './tools/createTask';
-import isolateBuildConfig from './conf/isolate.config.json';
-import PackageJson from './package.json';
 
 gulp.task(
   'cjs',

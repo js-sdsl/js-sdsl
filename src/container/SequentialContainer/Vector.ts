@@ -1,7 +1,7 @@
 import SequentialContainer from './Base';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
+import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
 
 class VectorIterator<T> extends RandomIterator<T> {
   copy() {
@@ -35,7 +35,10 @@ class Vector<T> extends SequentialContainer<T> {
       this._length = container.length;
     } else {
       this._vector = [];
-      container.forEach(element => this.pushBack(element));
+      const self = this;
+      container.forEach(function (el) {
+        self.pushBack(el);
+      });
     }
     this.size = this.size.bind(this);
     this.getElementByPos = this.getElementByPos.bind(this);

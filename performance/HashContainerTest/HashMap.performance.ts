@@ -1,12 +1,12 @@
-import { HashMap } from '@/index';
 import type { testReportFormat } from '../index';
+import { HashMap } from '@/index';
 
 function testHashMap(arr: number[], testNum: number) {
   let startTime, endTime;
   const reportList: testReportFormat['reportList'] = [];
 
   startTime = Date.now();
-  const myHashMap = new HashMap(arr.map((element, index) => [index, element]), (1 << 21));
+  const myHashMap = new HashMap(arr.map((element, index) => [element, index]));
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',
@@ -16,7 +16,7 @@ function testHashMap(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myHashMap.setElement(i, Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) myHashMap.setElement(Math.random() * 1000000, i);
   endTime = Date.now();
   reportList.push({
     testFunc: 'setElement',
@@ -35,13 +35,15 @@ function testHashMap(arr: number[], testNum: number) {
     runTime: endTime - startTime
   });
 
+  const stdSet = new Set<number>();
+  myHashMap.forEach(element => stdSet.add(element[0]));
   const size = myHashMap.size();
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myHashMap.eraseElementByKey(i);
+  stdSet.forEach(element => myHashMap.eraseElementByKey(element));
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByKey',
-    testNum,
+    testNum: stdSet.size,
     containerSize: size,
     runTime: endTime - startTime
   });

@@ -1,14 +1,14 @@
-import { Stack } from 'dist/isolate/stack';
-import { Queue } from 'dist/isolate/queue';
-import { PriorityQueue } from 'dist/isolate/priority-queue';
-import { Vector } from 'dist/isolate/vector';
-import { LinkList } from 'dist/isolate/link-list';
-import { Deque } from 'dist/isolate/deque';
-import { OrderedSet } from 'dist/isolate/ordered-set';
-import { OrderedMap } from 'dist/isolate/ordered-map';
-import { HashSet } from 'dist/isolate/hash-set';
-import { HashMap } from 'dist/isolate/hash-map';
 import { expect } from 'chai';
+import { Deque } from 'dist/isolate/deque';
+import { HashMap } from 'dist/isolate/hash-map';
+import { HashSet } from 'dist/isolate/hash-set';
+import { LinkList } from 'dist/isolate/link-list';
+import { OrderedMap } from 'dist/isolate/ordered-map';
+import { OrderedSet } from 'dist/isolate/ordered-set';
+import { PriorityQueue } from 'dist/isolate/priority-queue';
+import { Queue } from 'dist/isolate/queue';
+import { Stack } from 'dist/isolate/stack';
+import { Vector } from 'dist/isolate/vector';
 
 describe('isolation test', () => {
   const arr = [3, 1, 2];

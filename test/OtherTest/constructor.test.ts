@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import {
   Vector,
   LinkList,
@@ -10,7 +11,6 @@ import {
   Queue,
   PriorityQueue
 } from '@/index';
-import { expect } from 'chai';
 
 const containerArr = [
   new Stack(),

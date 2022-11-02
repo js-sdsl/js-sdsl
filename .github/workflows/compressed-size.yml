@@ -4,11 +4,8 @@ on:
   pull_request:
     paths:
       - src/**/*.ts
-      - test/**/*.ts
-      - performance/**/*.ts
       - tools/*.ts
       - gulpfile.ts
-      - karma.config.ts
       - tsconfig.json
       - package.json
       - yarn.lock

@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://js-sdsl.github.io/" target="_blank" rel="noopener noreferrer">
-    <img src="https://js-sdsl.github.io/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
+  <a href="https://js-sdsl.org/" target="_blank" rel="noopener noreferrer">
+    <img src="https://js-sdsl.org/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
   </a>
 </p>
 
@@ -27,17 +27,17 @@
 - **PriorityQueue** - 堆实现的优先级队列
 - **Vector** - 受保护的数组，不能直接操作像 `length` 这样的属性
 - **LinkList** - 非连续内存地址的链表
-- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的 O(1) 时间复杂度
+- **Deque** - 双端队列，向前和向后插入元素或按索引获取元素的时间复杂度为 O(1)
 - **OrderedSet** - 由红黑树实现的排序集合
 - **OrderedMap** - 由红黑树实现的排序字典
-- **HashSet** - 参考 java 实现的哈希集合
-- **HashMap** - 参考 java 实现的哈希字典
+- **HashSet** - 参考 [ES6 Set polyfill](https://github.com/rousan/collections-es6) 实现的哈希集合
+- **HashMap** - 参考 [ES6 Set polyfill](https://github.com/rousan/collections-es6) 实现的哈希字典
 
 ## ⚔️ 基准测试
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
-查看 [benchmark](https://js-sdsl.github.io/#/zh-cn/test/benchmark-analyze) 以获取更多信息
+查看 [benchmark](https://js-sdsl.org/#/zh-cn/test/benchmark-analyze) 以获取更多信息
 
 ## 🖥 支持的平台
 
@@ -93,32 +93,32 @@ npm install js-sdsl
 
 或者根据需要安装以下任意单个包
 
-| package                                                                                 | npm                                                                                                                           | install                         |
-|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
-| [@js-sdsl/stack](https://js-sdsl.github.io/js-sdsl/classes/Stack.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/stack)](https://www.npmjs.com/package/@js-sdsl/stack)                   | `npm i @js-sdsl/stack`          |
-| [@js-sdsl/queue](https://js-sdsl.github.io/js-sdsl/classes/Queue.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/queue)](https://www.npmjs.com/package/@js-sdsl/queue)                   | `npm i @js-sdsl/queue`          |
-| [@js-sdsl/priority-queue](https://js-sdsl.github.io/js-sdsl/classes/PriorityQueue.html) | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/priority-queue)](https://www.npmjs.com/package/@js-sdsl/priority-queue) | `npm i @js-sdsl/priority-queue` |
-| [@js-sdsl/vector](https://js-sdsl.github.io/js-sdsl/classes/Vector.html)                | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/vector)](https://www.npmjs.com/package/@js-sdsl/vector)                 | `npm i @js-sdsl/vector`         |
-| [@js-sdsl/link-list](https://js-sdsl.github.io/js-sdsl/classes/LinkList.html)           | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/link-list)](https://www.npmjs.com/package/@js-sdsl/link-list)           | `npm i @js-sdsl/link-list`      |
-| [@js-sdsl/deque](https://js-sdsl.github.io/js-sdsl/classes/Deque.html)                  | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/deque)](https://www.npmjs.com/package/@js-sdsl/deque)                   | `npm i @js-sdsl/deque`          |
-| [@js-sdsl/ordered-set](https://js-sdsl.github.io/js-sdsl/classes/OrderedSet.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-set)](https://www.npmjs.com/package/@js-sdsl/ordered-set)       | `npm i @js-sdsl/ordered-set`    |
-| [@js-sdsl/ordered-map](https://js-sdsl.github.io/js-sdsl/classes/OrderedMap.html)       | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/ordered-map)](https://www.npmjs.com/package/@js-sdsl/ordered-map)       | `npm i @js-sdsl/ordered-map`    |
-| [@js-sdsl/hash-set](https://js-sdsl.github.io/js-sdsl/classes/HashSet.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-set)](https://www.npmjs.com/package/@js-sdsl/hash-set)             | `npm i @js-sdsl/hash-set`       |
-| [@js-sdsl/hash-map](https://js-sdsl.github.io/js-sdsl/classes/HashMap.html)             | [![NPM Package](https://img.shields.io/npm/v/@js-sdsl/hash-map)](https://www.npmjs.com/package/@js-sdsl/hash-map)             | `npm i @js-sdsl/hash-map`       |
+| package                                           | npm                                                                   | size                                                             | docs                        |
+|---------------------------------------------------|-----------------------------------------------------------------------|------------------------------------------------------------------|-----------------------------|
+| [@js-sdsl/stack][stack-package]                   | [![NPM Package][stack-npm-version]][stack-npm-link]                   | [![GZIP Size][stack-umd-size]][stack-umd-link]                   | [link][stack-docs]          |
+| [@js-sdsl/queue][queue-package]                   | [![NPM Package][queue-npm-version]][queue-npm-link]                   | [![GZIP Size][queue-umd-size]][queue-umd-link]                   | [link][queue-docs]          |
+| [@js-sdsl/priority-queue][priority-queue-package] | [![NPM Package][priority-queue-npm-version]][priority-queue-npm-link] | [![GZIP Size][priority-queue-umd-size]][priority-queue-umd-link] | [link][priority-queue-docs] |
+| [@js-sdsl/vector][vector-package]                 | [![NPM Package][vector-npm-version]][vector-npm-link]                 | [![GZIP Size][vector-umd-size]][vector-umd-link]                 | [link][vector-docs]         |
+| [@js-sdsl/link-list][link-list-package]           | [![NPM Package][link-list-npm-version]][link-list-npm-link]           | [![GZIP Size][link-list-umd-size]][link-list-umd-link]           | [link][link-list-docs]      |
+| [@js-sdsl/deque][deque-package]                   | [![NPM Package][deque-npm-version]][deque-npm-link]                   | [![GZIP Size][deque-umd-size]][deque-umd-link]                   | [link][deque-docs]          |
+| [@js-sdsl/ordered-set][ordered-set-package]       | [![NPM Package][ordered-set-npm-version]][ordered-set-npm-link]       | [![GZIP Size][ordered-set-umd-size]][ordered-set-umd-link]       | [link][ordered-set-docs]    |
+| [@js-sdsl/ordered-map][ordered-map-package]       | [![NPM Package][ordered-map-npm-version]][ordered-map-npm-link]       | [![GZIP Size][ordered-map-umd-size]][ordered-map-umd-link]       | [link][ordered-map-docs]    |
+| [@js-sdsl/hash-set][hash-set-package]             | [![NPM Package][hash-set-npm-version]][hash-set-npm-link]             | [![GZIP Size][hash-set-umd-size]][hash-set-umd-link]             | [link][hash-set-docs]       |
+| [@js-sdsl/hash-map][hash-map-package]             | [![NPM Package][hash-map-npm-version]][hash-map-npm-link]             | [![GZIP Size][hash-map-umd-size]][hash-map-umd-link]             | [link][hash-map-docs]       |
 
 ## 🪒 使用说明
 
-您可以[访问我们的主页](https://js-sdsl.github.io/)获取更多信息
+您可以[访问我们的主页](https://js-sdsl.org/)获取更多信息
 
-并且我们提供了完整的 [API 文档](https://js-sdsl.github.io/js-sdsl/index.html)供您参考
+并且我们提供了完整的 [API 文档](https://js-sdsl.org/js-sdsl/index.html)供您参考
 
 想要查看从前版本的文档，请访问：
 
-`https://js-sdsl.github.io/js-sdsl/previous/v${version}/index.html`
+`https://js-sdsl.org/js-sdsl/previous/v${version}/index.html`
 
 例如：
 
-[https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.github.io/js-sdsl/previous/v4.1.5/index.html)
+[https://js-sdsl.org/js-sdsl/previous/v4.1.5/index.html](https://js-sdsl.org/js-sdsl/previous/v4.1.5/index.html)
 
 ### 在浏览器中使用
 
@@ -165,7 +165,7 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 我们对于编写的所有 API 进行了性能测试，并将结果同步到了 [`gh-pages/performance.md`](https://github.com/js-sdsl/js-sdsl/blob/gh-pages/performance.md) 中，你可以通过 `yarn test:performance` 命令来重现它
 
-您也可以访问[我们的网站](https://js-sdsl.github.io/#/zh-cn/test/performance-test)来获取结果
+您也可以访问[我们的网站](https://js-sdsl.org/#/zh-cn/test/performance-test)来获取结果
 
 ## ⌨️ 开发
 
@@ -215,7 +215,7 @@ $ npm run dev   # development mode
 
 特别鸣谢下列赞助商和支持者们，他们在非常早期的时候为我们提供了支持：
 
-<a href="https://eslint.org/"><img src="https://js-sdsl.github.io/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
+<a href="https://eslint.org/"><img src="https://js-sdsl.org/assets/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a>
 
 同样感谢这些赞助商和支持者们：
 
@@ -226,3 +226,73 @@ $ npm run dev   # development mode
 ## 🪪 许可证
 
 [MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
+
+[stack-package]: ./src/container/OtherContainer/Stack.ts
+[stack-npm-version]: https://img.shields.io/npm/v/@js-sdsl/stack
+[stack-npm-link]: https://www.npmjs.com/package/@js-sdsl/stack
+[stack-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js?compression=gzip&style=flat-square/
+[stack-umd-link]: https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js
+[stack-docs]: https://js-sdsl.org/js-sdsl/classes/Stack.html
+
+[queue-package]: ./src/container/OtherContainer/Queue.ts
+[queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/queue
+[queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/queue
+[queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js?compression=gzip&style=flat-square/
+[queue-umd-link]: https://unpkg.com/@js-sdsl/queue/dist/umd/stack.min.js
+[queue-docs]: https://js-sdsl.org/js-sdsl/classes/Queue.html
+
+[priority-queue-package]: ./src/container/OtherContainer/PriorityQueue.ts
+[priority-queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/priority-queue
+[priority-queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/priority-queue
+[priority-queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js?compression=gzip&style=flat-square/
+[priority-queue-umd-link]: https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js
+[priority-queue-docs]: https://js-sdsl.org/js-sdsl/classes/PriorityQueue.html
+
+[vector-package]: ./src/container/SequentialContainer/Vector.ts
+[vector-npm-version]: https://img.shields.io/npm/v/@js-sdsl/vector
+[vector-npm-link]: https://www.npmjs.com/package/@js-sdsl/vector
+[vector-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js?compression=gzip&style=flat-square/
+[vector-umd-link]: https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js
+[vector-docs]: https://js-sdsl.org/js-sdsl/classes/Vector.html
+
+[link-list-package]: ./src/container/SequentialContainer/LinkList.ts
+[link-list-npm-version]: https://img.shields.io/npm/v/@js-sdsl/link-list
+[link-list-npm-link]: https://www.npmjs.com/package/@js-sdsl/link-list
+[link-list-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js?compression=gzip&style=flat-square/
+[link-list-umd-link]: https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js
+[link-list-docs]: https://js-sdsl.org/js-sdsl/classes/LinkList.html
+
+[deque-package]: ./src/container/SequentialContainer/Deque.ts
+[deque-npm-version]: https://img.shields.io/npm/v/@js-sdsl/deque
+[deque-npm-link]: https://www.npmjs.com/package/@js-sdsl/deque
+[deque-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js?compression=gzip&style=flat-square/
+[deque-umd-link]: https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js
+[deque-docs]: https://js-sdsl.org/js-sdsl/classes/Deque.html
+
+[ordered-set-package]: ./src/container/TreeContainer/OrderedSet.ts
+[ordered-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-set
+[ordered-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-set
+[ordered-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js?compression=gzip&style=flat-square/
+[ordered-set-umd-link]: https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js
+[ordered-set-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedSet.html
+
+[ordered-map-package]: ./src/container/TreeContainer/OrderedMap.ts
+[ordered-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-map
+[ordered-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-map
+[ordered-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js?compression=gzip&style=flat-square/
+[ordered-map-umd-link]: https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js
+[ordered-map-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedMap.html
+
+[hash-set-package]: ./src/container/HashContainer/HashSet.ts
+[hash-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-set
+[hash-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-set
+[hash-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js?compression=gzip&style=flat-square/
+[hash-set-umd-link]: https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js
+[hash-set-docs]: https://js-sdsl.org/js-sdsl/classes/HashSet.html
+
+[hash-map-package]: ./src/container/HashContainer/HashMap.ts
+[hash-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-map
+[hash-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-map
+[hash-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js?compression=gzip&style=flat-square/
+[hash-map-umd-link]: https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js
+[hash-map-docs]: https://js-sdsl.org/js-sdsl/classes/HashMap.html

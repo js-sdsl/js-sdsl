@@ -1,12 +1,12 @@
-import { HashSet } from '@/index';
 import type { testReportFormat } from '../index';
+import { HashSet } from '@/index';
 
 function testHashSet(arr: number[], testNum: number) {
   let startTime, endTime;
   const reportList: testReportFormat['reportList'] = [];
 
   startTime = Date.now();
-  const myHashSet = new HashSet(arr, (1 << 21));
+  const myHashSet = new HashSet(arr);
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',

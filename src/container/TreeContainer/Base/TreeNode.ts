@@ -31,9 +31,9 @@ export class TreeNode<K, V> {
    * @internal
    */
   _parent: TreeNode<K, V> | undefined = undefined;
-  constructor(_key?: K, _value?: V) {
-    this._key = _key;
-    this._value = _value;
+  constructor(key?: K, value?: V) {
+    this._key = key;
+    this._value = value;
   }
   /**
    * @description Get the pre node.

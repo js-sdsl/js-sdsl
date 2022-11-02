@@ -1,5 +1,5 @@
-import { Vector, LinkList, SequentialContainer } from '@/index';
 import { expect } from 'chai';
+import { Vector, LinkList, SequentialContainer } from '@/index';
 
 function judgeSequentialContainer(
   container: SequentialContainer<number>,

@@ -1,5 +1,5 @@
-import { Vector, LinkList, Deque, SequentialContainer } from '@/index';
 import { expect } from 'chai';
+import { Vector, LinkList, Deque, SequentialContainer } from '@/index';
 
 const arr: number[] = [];
 const testNum = 1000;

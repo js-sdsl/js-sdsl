@@ -11,7 +11,7 @@ on:
       - performance/**/*.ts
       - tools/*.ts
       - gulpfile.ts
-      - karma.config.ts
+      - karma.conf.ts
       - tsconfig.json
       - package.json
       - yarn.lock
