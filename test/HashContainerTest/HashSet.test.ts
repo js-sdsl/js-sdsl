@@ -10,6 +10,7 @@ import {
   generateRandomFunction
 } from '../utils/generateRandom';
 import { HashSet } from '@/index';
+import checkObject from '@/utils/checkObject';
 
 const testNum = 10000;
 
@@ -26,6 +27,8 @@ function hashSetTest(generateRandom: () => unknown) {
     arr.push(generateRandom());
   }
 
+  const isObject = checkObject(arr[0]);
+
   const stdSet = new Set<unknown>(arr);
   const myHashSet = new HashSet<unknown>(arr);
   judgeHashSet(myHashSet, stdSet);
@@ -39,7 +42,7 @@ function hashSetTest(generateRandom: () => unknown) {
 
   for (let i = 0; i < testNum; ++i) {
     const random = generateRandom();
-    expect(myHashSet.find(random)).to.equal(stdSet.has(random));
+    expect(myHashSet.find(random, isObject)).to.equal(stdSet.has(random));
   }
 
   i = 0;
@@ -52,7 +55,7 @@ function hashSetTest(generateRandom: () => unknown) {
   for (const item of arr) {
     if (Math.random() > 0.6) {
       stdSet.delete(item);
-      myHashSet.eraseElementByKey(item);
+      myHashSet.eraseElementByKey(item, isObject);
     }
   }
   judgeHashSet(myHashSet, stdSet);
@@ -60,7 +63,7 @@ function hashSetTest(generateRandom: () => unknown) {
   for (let i = 0; i < testNum; ++i) {
     const random = generateRandom();
     stdSet.delete(random);
-    myHashSet.eraseElementByKey(random);
+    myHashSet.eraseElementByKey(random, isObject);
   }
   judgeHashSet(myHashSet, stdSet);
 

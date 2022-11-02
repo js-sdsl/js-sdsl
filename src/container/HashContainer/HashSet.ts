@@ -12,9 +12,11 @@ class HashSet<K> extends HashContainerBase<K, undefined> {
   /**
    * @description Insert element to set.
    * @param key The key want to insert.
+   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                 If a `undefined` value is passed in, the type will be automatically judged.
    */
-  insert(key: K) {
-    this._set(key);
+  insert(key: K, isObject?: boolean) {
+    this._set(key, undefined, isObject);
   }
   forEach(callback: (element: K, index: number, hashSet: HashSet<K>) => void) {
     const objMapLength = this._objMap.length;
