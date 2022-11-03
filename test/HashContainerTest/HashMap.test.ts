@@ -50,6 +50,7 @@ function hashMapTest(generateRandom: () => unknown) {
     expect(stdMap.get(el[0])).to.equal(el[1]);
     expect(i++).to.equal(index);
   });
+  expect(i).to.equal(stdMap.size);
 
   for (let i = 0; i < testNum; ++i) {
     const random = generateRandom();

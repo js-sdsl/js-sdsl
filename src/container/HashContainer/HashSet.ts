@@ -29,6 +29,11 @@ class HashSet<K> extends HashContainerBase<K, undefined> {
     for (let i = 0; i < originMapLength; ++i) {
       callback(this._originMap[keys[i]][0], index++, this);
     }
+    const symbols = Object.getOwnPropertySymbols(this._originMap);
+    const symbolsLength = symbols.length;
+    for (let i = 0; i < symbolsLength; ++i) {
+      callback(this._originMap[symbols[i]][0], index++, this);
+    }
   }
   [Symbol.iterator]() {
     return function * (this: HashSet<K>) {

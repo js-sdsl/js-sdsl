@@ -39,6 +39,7 @@ function hashSetTest(generateRandom: () => unknown) {
     expect(stdSet.has(el)).to.equal(true);
     expect(i++).to.equal(index);
   });
+  expect(i).to.equal(stdSet.size);
 
   for (let i = 0; i < testNum; ++i) {
     const random = generateRandom();

@@ -47,6 +47,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
     for (let i = 0; i < originMapLength; ++i) {
       callback(this._originMap[keys[i]], index++, this);
     }
+    const symbols = Object.getOwnPropertySymbols(this._originMap);
+    const symbolsLength = symbols.length;
+    for (let i = 0; i < symbolsLength; ++i) {
+      callback(this._originMap[symbols[i]], index++, this);
+    }
   }
   [Symbol.iterator]() {
     return function * (this: HashMap<K, V>) {
