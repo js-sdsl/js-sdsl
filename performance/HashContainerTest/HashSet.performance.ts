@@ -18,7 +18,9 @@ function testHashSet(arr: number[], testNum: number) {
   const stdSet = new Set(arr);
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myHashSet.insert(Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) {
+    myHashSet.insert(Math.random() * 1000000, false);
+  }
   endTime = Date.now();
   reportList.push({
     testFunc: 'insert',
@@ -28,7 +30,7 @@ function testHashSet(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  myHashSet.forEach(element => myHashSet.find(element));
+  myHashSet.forEach(element => myHashSet.find(element, false));
   endTime = Date.now();
   reportList.push({
     testFunc: 'find',
@@ -40,7 +42,7 @@ function testHashSet(arr: number[], testNum: number) {
   myHashSet.forEach(element => stdSet.add(element));
   const size = myHashSet.size();
   startTime = Date.now();
-  stdSet.forEach(element => myHashSet.eraseElementByKey(element));
+  stdSet.forEach(element => myHashSet.eraseElementByKey(element, false));
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByKey',

@@ -16,7 +16,9 @@ function testHashMap(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myHashMap.setElement(Math.random() * 1000000, i);
+  for (let i = 0; i < testNum; ++i) {
+    myHashMap.setElement(Math.random() * 1000000, i, false);
+  }
   endTime = Date.now();
   reportList.push({
     testFunc: 'setElement',
@@ -26,7 +28,7 @@ function testHashMap(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  myHashMap.forEach(([key]) => myHashMap.getElementByKey(key));
+  myHashMap.forEach(([key]) => myHashMap.getElementByKey(key, false));
   endTime = Date.now();
   reportList.push({
     testFunc: 'getElementByKey',
@@ -39,7 +41,7 @@ function testHashMap(arr: number[], testNum: number) {
   myHashMap.forEach(element => stdSet.add(element[0]));
   const size = myHashMap.size();
   startTime = Date.now();
-  stdSet.forEach(element => myHashMap.eraseElementByKey(element));
+  stdSet.forEach(element => myHashMap.eraseElementByKey(element, false));
   endTime = Date.now();
   reportList.push({
     testFunc: 'eraseElementByKey',
