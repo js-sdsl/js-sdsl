@@ -3,7 +3,7 @@
     "target": "ES6",
     "outDir": "dist",
     "strict": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "downlevelIteration": true,
     "moduleResolution": "Node",

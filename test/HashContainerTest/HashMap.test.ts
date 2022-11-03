@@ -10,6 +10,7 @@ import {
   generateRandomFunction
 } from '../utils/generateRandom';
 import { HashMap } from '@/index';
+import checkObject from '@/utils/checkObject';
 
 const testNum = 10000;
 
@@ -26,6 +27,8 @@ function hashMapTest(generateRandom: () => unknown) {
   for (let i = 0; i < testNum; ++i) {
     arr.push(generateRandom());
   }
+
+  const isObject = checkObject(arr[0]);
 
   const stdMap = new Map<unknown, unknown>(
     arr.map(
@@ -47,11 +50,12 @@ function hashMapTest(generateRandom: () => unknown) {
     expect(stdMap.get(el[0])).to.equal(el[1]);
     expect(i++).to.equal(index);
   });
+  expect(i).to.equal(stdMap.size);
 
   for (let i = 0; i < testNum; ++i) {
     const random = generateRandom();
-    expect(myHashMap.find(random)).to.equal(stdMap.has(random));
-    expect(myHashMap.getElementByKey(random)).to.equal(stdMap.get(random));
+    expect(myHashMap.find(random, isObject)).to.equal(stdMap.has(random));
+    expect(myHashMap.getElementByKey(random, isObject)).to.equal(stdMap.get(random));
   }
 
   i = 0;
@@ -64,7 +68,7 @@ function hashMapTest(generateRandom: () => unknown) {
   for (const item of arr) {
     if (Math.random() > 0.6) {
       stdMap.delete(item);
-      myHashMap.eraseElementByKey(item);
+      myHashMap.eraseElementByKey(item, isObject);
     }
   }
   judgeHashMap(myHashMap, stdMap);
@@ -77,15 +81,8 @@ function hashMapTest(generateRandom: () => unknown) {
   judgeHashMap(myHashMap, stdMap);
 
   for (let i = 0; i < testNum; ++i) {
-    myHashMap.setElement(arr[i], i - 1);
     stdMap.set(arr[i], i - 1);
-  }
-  judgeHashMap(myHashMap, stdMap);
-
-  for (let i = 0; i < testNum; ++i) {
-    const random = generateRandom();
-    stdMap.delete(random);
-    myHashMap.setElement(random, undefined);
+    myHashMap.setElement(arr[i], i - 1, isObject);
   }
   judgeHashMap(myHashMap, stdMap);
 
