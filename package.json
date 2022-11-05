@@ -1,9 +1,10 @@
 {
   "name": "js-sdsl",
-  "version": "4.2.0-beta.0",
+  "version": "4.2.0-beta.1",
   "description": "javascript standard data structure library which benchmark against C++ STL",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "author": {
     "name": "ZLY201",
     "email": "951711127@qq.com",
@@ -34,8 +35,8 @@
     "test:isolate": "yarn build:isolate && ts-mocha --paths 'test/IsolationTest/*.ts'",
     "test:performance": "gulp performance && node dist/performance/performance/index.js",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
-    "generate": "typedoc src/index.ts",
-    "generate:dev": "typedoc src/index.ts --watch",
+    "generate": "typedoc src/index.ts --includeVersion",
+    "generate:dev": "yarn generate --watch",
     "prepare": "husky install"
   },
   "lint-staged": {
