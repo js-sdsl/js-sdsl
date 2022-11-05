@@ -53,6 +53,7 @@
   ],
   "sharedFiles": [
     "README.**",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ]
 }
