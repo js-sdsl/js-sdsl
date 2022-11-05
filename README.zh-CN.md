@@ -227,70 +227,70 @@ $ npm run dev   # development mode
 
 [MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
 
-[stack-package]: ./src/container/OtherContainer/Stack.ts
+[stack-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Stack.ts
 [stack-npm-version]: https://img.shields.io/npm/v/@js-sdsl/stack
 [stack-npm-link]: https://www.npmjs.com/package/@js-sdsl/stack
 [stack-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js?compression=gzip&style=flat-square/
 [stack-umd-link]: https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js
 [stack-docs]: https://js-sdsl.org/js-sdsl/classes/Stack.html
 
-[queue-package]: ./src/container/OtherContainer/Queue.ts
+[queue-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Queue.ts
 [queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/queue
 [queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/queue
 [queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js?compression=gzip&style=flat-square/
 [queue-umd-link]: https://unpkg.com/@js-sdsl/queue/dist/umd/stack.min.js
 [queue-docs]: https://js-sdsl.org/js-sdsl/classes/Queue.html
 
-[priority-queue-package]: ./src/container/OtherContainer/PriorityQueue.ts
+[priority-queue-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/PriorityQueue.ts
 [priority-queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/priority-queue
 [priority-queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/priority-queue
 [priority-queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js?compression=gzip&style=flat-square/
 [priority-queue-umd-link]: https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js
 [priority-queue-docs]: https://js-sdsl.org/js-sdsl/classes/PriorityQueue.html
 
-[vector-package]: ./src/container/SequentialContainer/Vector.ts
+[vector-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Vector.ts
 [vector-npm-version]: https://img.shields.io/npm/v/@js-sdsl/vector
 [vector-npm-link]: https://www.npmjs.com/package/@js-sdsl/vector
 [vector-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js?compression=gzip&style=flat-square/
 [vector-umd-link]: https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js
 [vector-docs]: https://js-sdsl.org/js-sdsl/classes/Vector.html
 
-[link-list-package]: ./src/container/SequentialContainer/LinkList.ts
+[link-list-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/LinkList.ts
 [link-list-npm-version]: https://img.shields.io/npm/v/@js-sdsl/link-list
 [link-list-npm-link]: https://www.npmjs.com/package/@js-sdsl/link-list
 [link-list-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js?compression=gzip&style=flat-square/
 [link-list-umd-link]: https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js
 [link-list-docs]: https://js-sdsl.org/js-sdsl/classes/LinkList.html
 
-[deque-package]: ./src/container/SequentialContainer/Deque.ts
+[deque-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Deque.ts
 [deque-npm-version]: https://img.shields.io/npm/v/@js-sdsl/deque
 [deque-npm-link]: https://www.npmjs.com/package/@js-sdsl/deque
 [deque-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js?compression=gzip&style=flat-square/
 [deque-umd-link]: https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js
 [deque-docs]: https://js-sdsl.org/js-sdsl/classes/Deque.html
 
-[ordered-set-package]: ./src/container/TreeContainer/OrderedSet.ts
+[ordered-set-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedSet.ts
 [ordered-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-set
 [ordered-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-set
 [ordered-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js?compression=gzip&style=flat-square/
 [ordered-set-umd-link]: https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js
 [ordered-set-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedSet.html
 
-[ordered-map-package]: ./src/container/TreeContainer/OrderedMap.ts
+[ordered-map-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedMap.ts
 [ordered-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-map
 [ordered-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-map
 [ordered-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js?compression=gzip&style=flat-square/
 [ordered-map-umd-link]: https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js
 [ordered-map-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedMap.html
 
-[hash-set-package]: ./src/container/HashContainer/HashSet.ts
+[hash-set-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashSet.ts
 [hash-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-set
 [hash-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-set
 [hash-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js?compression=gzip&style=flat-square/
 [hash-set-umd-link]: https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js
 [hash-set-docs]: https://js-sdsl.org/js-sdsl/classes/HashSet.html
 
-[hash-map-package]: ./src/container/HashContainer/HashMap.ts
+[hash-map-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashMap.ts
 [hash-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-map
 [hash-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-map
 [hash-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js?compression=gzip&style=flat-square/
