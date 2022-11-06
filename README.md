@@ -236,7 +236,7 @@ Thanks also give to these sponsors or backers:
 [queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/queue
 [queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/queue
 [queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js?compression=gzip&style=flat-square/
-[queue-umd-link]: https://unpkg.com/@js-sdsl/queue/dist/umd/stack.min.js
+[queue-umd-link]: https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js
 [queue-docs]: https://js-sdsl.org/js-sdsl/classes/Queue.html
 
 [priority-queue-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/PriorityQueue.ts
