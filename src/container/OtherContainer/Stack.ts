@@ -7,7 +7,10 @@ class Stack<T> extends Base {
   private _stack: T[] = [];
   constructor(container: initContainer<T> = []) {
     super();
-    container.forEach(element => this.push(element));
+    const self = this;
+    container.forEach(function (el) {
+      self.push(el);
+    });
   }
   clear() {
     this._length = 0;

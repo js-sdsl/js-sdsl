@@ -1,5 +1,5 @@
-import { OrderedSet } from '@/index';
 import type { testReportFormat } from '../index';
+import { OrderedSet } from '@/index';
 
 function testOrderedSet(arr: number[], testNum: number) {
   let startTime, endTime;
@@ -16,7 +16,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(i);
+  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(Math.random() * 1000000);
   endTime = Date.now();
   reportList.push({
     testFunc: 'insert',

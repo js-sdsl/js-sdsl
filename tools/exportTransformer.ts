@@ -44,7 +44,7 @@ class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
   }
   computeDependenciesFromSourceRootNames(sourceRoots: readonly string[]) {
     const symbols = sourceRoots
-      .map((path) => SymbolDependencyGraph.pathToSymbol(this.program, path))
+      .map(path => SymbolDependencyGraph.pathToSymbol(this.program, path))
       .filter((symbol): symbol is ts.Symbol => symbol !== undefined);
     this.computeDependencies(symbols);
   }
@@ -126,7 +126,7 @@ class SymbolDependencyGraph extends DependencyGraph<ts.Symbol> {
       }
     }
 
-    ts.forEachChild(node, (node) => {
+    ts.forEachChild(node, node => {
       SymbolDependencyGraph.getDependencySymbols(typeChecker, node, symbols, typeOnly);
     });
   }
@@ -168,7 +168,8 @@ class TsUtils {
     };
   }
   static getActualSymbol(symbol: ts.Symbol, typeChecker: ts.TypeChecker): ts.Symbol {
-    if (symbol.flags & ts.SymbolFlags.Alias) {
+    const tag = symbol.flags & ts.SymbolFlags.Alias;
+    if (tag) {
       symbol = typeChecker.getAliasedSymbol(symbol);
     }
 
@@ -440,7 +441,7 @@ class TransformerBuilder {
     // #endregion
 
     const filteredChildren = sourceFile.statements
-      .filter((node) => !removeStatements.has(node));
+      .filter(node => !removeStatements.has(node));
 
     return factory.updateSourceFile(sourceFile, filteredChildren);
   }

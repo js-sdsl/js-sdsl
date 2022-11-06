@@ -1,5 +1,5 @@
-import { OrderedMap } from '@/index';
 import type { testReportFormat } from '../index';
+import { OrderedMap } from '@/index';
 
 function testOrderedMap(arr: number[], testNum: number) {
   let startTime, endTime;
@@ -16,7 +16,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myMap.setElement(i, Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) myMap.setElement(Math.random() * 1000000, i);
   endTime = Date.now();
   reportList.push({
     testFunc: 'setElement',

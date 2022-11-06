@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import {
   Vector,
   LinkList,
@@ -7,7 +8,6 @@ import {
   HashSet,
   HashMap
 } from '@/index';
-import { expect } from 'chai';
 
 let arr: number[] = [];
 const testNum = 10000;
@@ -62,7 +62,7 @@ describe('symbol iterator test', () => {
 
   it('forEach test', () => {
     const baseArr = [...containerArr, new HashSet([1]), new HashMap([[1, 1] as [number, number]])];
-    baseArr.forEach((container) =>
+    baseArr.forEach(container =>
       container.forEach((element, index, _container) =>
         expect(container === _container).to.equal(true)
       ));

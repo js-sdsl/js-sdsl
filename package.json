@@ -1,16 +1,21 @@
 {
   "name": "js-sdsl",
-  "version": "4.2.0-beta.0",
+  "version": "4.2.0-beta.1",
   "description": "javascript standard data structure library which benchmark against C++ STL",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "author": {
     "name": "ZLY201",
     "email": "951711127@qq.com",
     "url": "https://github.com/js-sdsl/js-sdsl"
   },
   "sideEffects": false,
-  "homepage": "https://js-sdsl.github.io",
+  "homepage": "https://js-sdsl.org",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/js-sdsl"
+  },
   "scripts": {
     "setup": "rm -rf node_modules && yarn install",
     "dev": "ttsc --project tsconfig.dev.json --watch",
@@ -30,8 +35,8 @@
     "test:isolate": "yarn build:isolate && ts-mocha --paths 'test/IsolationTest/*.ts'",
     "test:performance": "gulp performance && node dist/performance/performance/index.js",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
-    "generate": "typedoc src/index.ts",
-    "generate:dev": "typedoc src/index.ts --watch",
+    "generate": "typedoc src/index.ts --includeVersion",
+    "generate:dev": "yarn generate --watch",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -68,10 +73,11 @@
     "commitlint": "^17.0.3",
     "compare-versions": "^5.0.1",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "crypto": "^1.0.1",
     "delete-empty": "^3.0.0",
     "eslint": "^8.23.1",
+    "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
     "get-npm-package-version": "^1.1.1",
     "gh-pages": "^3.2.3",
     "gulp": "^4.0.2",
