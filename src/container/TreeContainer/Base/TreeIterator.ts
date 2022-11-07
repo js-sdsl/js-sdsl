@@ -80,14 +80,14 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     let index = 0;
     if (_node._left) {
-      index += _node._left._subTreeSize;
+      index += (_node._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
     }
     while (_node !== root) {
       const _parent = _node._parent as TreeNodeEnableIndex<K, V>;
       if (_node === _parent._right) {
         index += 1;
         if (_parent._left) {
-          index += _parent._left._subTreeSize;
+          index += (_parent._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
         }
       }
       _node = _parent;
