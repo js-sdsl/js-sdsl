@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [UnReleased] - 2022.11.07
+
+### Changed
+
+- Optimized the structure of class `TreeNodeEnableIndex`.
+
 ## [4.2.0-beta.1] - 2022.11.06
 
 ### Changed

@@ -136,18 +136,6 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   /**
    * @internal
    */
-  _left: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
-  _right: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
-  _parent: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
   _subTreeSize = 1;
   /**
    * @description Rotate left and do recount.
@@ -163,7 +151,7 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
    * @description Rotate right and do recount.
    * @return TreeNode about moved to original position after rotation.
    */
-  rotateRight(): TreeNode<K, V> {
+  rotateRight() {
     const parent = super.rotateRight() as TreeNodeEnableIndex<K, V>;
     this.recount();
     parent.recount();
@@ -171,7 +159,11 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   }
   recount() {
     this._subTreeSize = 1;
-    if (this._left) this._subTreeSize += this._left._subTreeSize;
-    if (this._right) this._subTreeSize += this._right._subTreeSize;
+    if (this._left) {
+      this._subTreeSize += (this._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
+    }
+    if (this._right) {
+      this._subTreeSize += (this._right as TreeNodeEnableIndex<K, V>)._subTreeSize;
+    }
   }
 }
