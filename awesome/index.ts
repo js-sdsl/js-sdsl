@@ -1,18 +1,20 @@
-import { OrderedMap } from '@/index';
+import { OrderedMap, OrderedMapIterator } from '@/index';
 
 class OrderedMapWithRollback<K, V> extends OrderedMap<K, V> {
   private isRecording = false;
   private recordNow: ([K, V] | K)[] = [];
   private recordAll: ([K, V] | K)[][] = [];
+  private endIter: OrderedMapIterator<K, V> = super.end();
   setElement(key: K, value: V) {
     this.recordNow.push(key);
     super.setElement(key, value);
   }
   eraseElementByKey(key: K) {
-    const value = super.getElementByKey(key);
-    if (value === undefined) return;
-    this.recordNow.push([key, value]);
-    super.eraseElementByKey(key);
+    const iter = super.find(key);
+    if (iter.equals(this.endIter)) return;
+    const pointer = iter.pointer;
+    this.recordNow.push([pointer[0], pointer[1]]);
+    super.eraseElementByIterator(iter);
   }
   startRecord() {
     if (this.isRecording) return;
