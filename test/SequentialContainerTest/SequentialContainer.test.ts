@@ -127,7 +127,7 @@ describe('SequentialContainer test', () => {
     myVector.insert(0, 100);
     expect(() => {
       myVector.find(0).pointer = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myVector.clear();
     myVector.popBack();
   });
@@ -136,11 +136,11 @@ describe('SequentialContainer test', () => {
     const myLinkList = new LinkList(arr);
     expect(() => {
       testSequentialContainer(myLinkList);
-    }).not.to.to.throw(Error);
+    }).not.to.throw(Error);
   });
 
   it('Deque standard test', () => {
     const myDeque = new Deque(arr);
-    expect(() => testSequentialContainer(myDeque)).not.to.to.throw(Error);
+    expect(() => testSequentialContainer(myDeque)).not.to.throw(Error);
   });
 });

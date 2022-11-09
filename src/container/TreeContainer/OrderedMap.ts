@@ -2,12 +2,13 @@ import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   get pointer() {
     if (this._node === this._header) {
-      throw new RangeError('OrderedMap iterator access denied');
+      throwIteratorAccessError();
     }
     const self = this;
     return new Proxy([] as unknown as [K, V], {
@@ -81,12 +82,12 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return new OrderedMapIterator(this._header, this._header, IteratorType.REVERSE);
   }
   front() {
-    if (!this._length) return undefined;
+    if (this._length === 0) return undefined;
     const minNode = this._header._left as TreeNode<K, V>;
     return [minNode._key, minNode._value] as [K, V];
   }
   back() {
-    if (!this._length) return undefined;
+    if (this._length === 0) return undefined;
     const maxNode = this._header._right as TreeNode<K, V>;
     return [maxNode._key, maxNode._value] as [K, V];
   }

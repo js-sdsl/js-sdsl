@@ -9,7 +9,7 @@ abstract class SequentialContainer<T> extends Container<T> {
   /**
    * @description Removes the last element.
    */
-  abstract popBack(): void;
+  abstract popBack(): T | undefined;
   /**
    * @description Sets element by position.
    * @param pos The position you want to change.

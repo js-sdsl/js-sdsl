@@ -1,6 +1,7 @@
 import SequentialContainer from './Base';
 import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 /**
  * @internal
@@ -40,7 +41,7 @@ class LinkListIterator<T> extends ContainerIterator<T> {
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node._pre === this._header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node = this._node._pre as LinkNode<T>;
         return this;
@@ -48,7 +49,7 @@ class LinkListIterator<T> extends ContainerIterator<T> {
 
       this.next = function () {
         if (this._node === this._header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node = this._node._next as LinkNode<T>;
         return this;
@@ -56,7 +57,7 @@ class LinkListIterator<T> extends ContainerIterator<T> {
     } else {
       this.pre = function () {
         if (this._node._next === this._header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node = this._node._next as LinkNode<T>;
         return this;
@@ -64,7 +65,7 @@ class LinkListIterator<T> extends ContainerIterator<T> {
 
       this.next = function () {
         if (this._node === this._header) {
-          throw new RangeError('LinkList iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node = this._node._pre as LinkNode<T>;
         return this;
@@ -73,13 +74,13 @@ class LinkListIterator<T> extends ContainerIterator<T> {
   }
   get pointer() {
     if (this._node === this._header) {
-      throw new RangeError('LinkList iterator access denied!');
+      throwIteratorAccessError();
     }
     return this._node._value as T;
   }
   set pointer(newValue: T) {
     if (this._node === this._header) {
-      throw new RangeError('LinkList iterator access denied!');
+      throwIteratorAccessError();
     }
     this._node._value = newValue;
   }
@@ -141,7 +142,7 @@ class LinkList<T> extends SequentialContainer<T> {
     return this._tail ? this._tail._value : undefined;
   }
   forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
-    if (!this._length) return;
+    if (this._length === 0) return;
     let curNode = this._head as LinkNode<T>;
     let index = 0;
     while (curNode !== this._header) {
@@ -193,7 +194,7 @@ class LinkList<T> extends SequentialContainer<T> {
   eraseElementByIterator(iter: LinkListIterator<T>) {
     const _node = iter._node;
     if (_node === this._header) {
-      throw new RangeError('Invalid iterator');
+      throwIteratorAccessError();
     }
     iter = iter.next();
     if (this._head === _node) this.popFront();
@@ -224,6 +225,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   popBack() {
     if (!this._tail) return;
+    const value = this._tail._value;
     this._length -= 1;
     if (this._head === this._tail) {
       this._head = this._tail = undefined;
@@ -233,6 +235,7 @@ class LinkList<T> extends SequentialContainer<T> {
       this._tail._next = this._header;
     }
     this._header._pre = this._tail;
+    return value;
   }
   setElementByPos(pos: number, element: T) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -341,6 +344,7 @@ class LinkList<T> extends SequentialContainer<T> {
    */
   popFront() {
     if (!this._head) return;
+    const value = this._head._value;
     this._length -= 1;
     if (this._head === this._tail) {
       this._head = this._tail = undefined;
@@ -350,6 +354,7 @@ class LinkList<T> extends SequentialContainer<T> {
       this._head._pre = this._header;
     }
     this._header._next = this._head;
+    return value;
   }
   /**
    * @description Merges two sorted lists.

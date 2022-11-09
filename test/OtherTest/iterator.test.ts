@@ -92,19 +92,19 @@ describe('iterator test', () => {
 
   for (const container of containerArr) {
     it('normal iterator next run time error test', () => {
-      expect(() => container.end().next()).to.to.throw(RangeError);
+      expect(() => container.end().next()).to.throw(RangeError);
     });
 
     it('normal iterator pre run time error test', () => {
-      expect(() => container.begin().pre()).to.to.throw(RangeError);
+      expect(() => container.begin().pre()).to.throw(RangeError);
     });
 
     it('reverse iterator next run time error test', () => {
-      expect(() => container.rEnd().next()).to.to.throw(RangeError);
+      expect(() => container.rEnd().next()).to.throw(RangeError);
     });
 
     it('reverse iterator pre run time error test', () => {
-      expect(() => container.rBegin().pre()).to.to.throw(RangeError);
+      expect(() => container.rBegin().pre()).to.throw(RangeError);
     });
   }
 

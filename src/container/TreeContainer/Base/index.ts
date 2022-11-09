@@ -1,7 +1,8 @@
 import type TreeIterator from './TreeIterator';
 import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
 import { Container } from '@/container/ContainerBase';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
@@ -505,7 +506,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
     const node = iter._node;
     if (node === this._header) {
-      throw new TypeError('Invalid iterator!');
+      throwIteratorAccessError();
     }
     if (this._length === 1) {
       node._key = key;
@@ -569,7 +570,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @param key The key you want to remove.
    */
   eraseElementByKey(key: K) {
-    if (!this._length) return;
+    if (this._length === 0) return;
     const curNode = this._findElementNode(this._root, key);
     if (curNode === undefined) return;
     this._eraseNode(curNode);
@@ -577,7 +578,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByIterator(iter: TreeIterator<K, V>) {
     const node = iter._node;
     if (node === this._header) {
-      throw new RangeError('Invalid iterator');
+      throwIteratorAccessError();
     }
     if (node._right === undefined) {
       iter = iter.next();
@@ -590,7 +591,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @return Number about the height of the RB-tree.
    */
   getHeight() {
-    if (!this._length) return 0;
+    if (this._length === 0) return 0;
     const traversal =
       function (curNode: TreeNode<K, V> | undefined): number {
         if (!curNode) return 0;

@@ -29,6 +29,7 @@ describe('iterator test', () => {
   it('empty constructor test', () => {
     for (const container of containerArr) {
       expect(container.size()).to.equal(0);
+      expect(container.length).to.equal(0);
     }
   });
 });

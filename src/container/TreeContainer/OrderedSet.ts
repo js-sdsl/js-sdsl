@@ -2,12 +2,13 @@ import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   get pointer() {
     if (this._node === this._header) {
-      throw new RangeError('OrderedSet iterator access denied!');
+      throwIteratorAccessError();
     }
     return this._node._key as K;
   }

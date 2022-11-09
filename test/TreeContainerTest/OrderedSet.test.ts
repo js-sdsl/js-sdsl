@@ -130,11 +130,11 @@ describe('OrderedSet test', () => {
     expect(st.front()).to.equal(2);
     st.eraseElementByKey(2);
     expect(st.size()).to.equal(0);
-    expect(() => st.updateKeyByIterator(st.begin(), 1)).to.to.throw(TypeError);
+    expect(() => st.updateKeyByIterator(st.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       st.insert(i * 2);
     }
-    expect(() => st.updateKeyByIterator(st.end(), 1)).to.to.throw(TypeError);
+    expect(() => st.updateKeyByIterator(st.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = st.lowerBound(i * 2);
       expect(st.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
@@ -217,37 +217,37 @@ describe('OrderedSet test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(myOrderedSet.front()).to.equal(undefined);
     expect(myOrderedSet.back()).to.equal(undefined);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.find(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.lowerBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.upperBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.reverseLowerBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.reverseUpperBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myOrderedSet.eraseElementByKey(0);
     expect(myOrderedSet.size()).to.equal(0);
     myOrderedSet.insert(1);

@@ -156,11 +156,11 @@ describe('OrderedMap test', () => {
     expect(mp.front()).to.deep.equal([2, 1]);
     mp.eraseElementByKey(2);
     expect(mp.size()).to.equal(0);
-    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).to.to.throw(TypeError);
+    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       mp.setElement(i * 2, i);
     }
-    expect(() => mp.updateKeyByIterator(mp.end(), 1)).to.to.throw(TypeError);
+    expect(() => mp.updateKeyByIterator(mp.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = mp.lowerBound(i * 2);
       expect(mp.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
@@ -246,26 +246,26 @@ describe('OrderedMap test', () => {
     expect(myOrderedMap.back()).to.equal(undefined);
     expect(() => {
       myOrderedMap.begin().pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.lowerBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.upperBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.reverseLowerBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.reverseUpperBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.find(0).pointer[0] = 2;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedMap.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myOrderedMap.setElement(1, 1);
     expect(myOrderedMap.getElementByKey(0)).to.equal(undefined);
   });

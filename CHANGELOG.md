@@ -4,11 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.11.07
+## [UnReleased] - 2022.11.09
 
 ### Changed
 
 - Optimized the structure of class `TreeNodeEnableIndex`.
+- Change the `iterator access denied` error message to reduce the packing size.
+
+### Added
+
+- Add public `length` property to all the container.
+- Add returned value to `pop` function including `popBack` and `popFront` to all the container which has such function.
+
+### Fixed
+
+- Fixed wrong error type when `updateKeyByIterator`.
 
 ## [4.2.0-beta.1] - 2022.11.06
 
