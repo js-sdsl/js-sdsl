@@ -1,7 +1,7 @@
 import SequentialContainer from './Base';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
 
 class VectorIterator<T> extends RandomIterator<T> {
   copy() {
@@ -122,9 +122,9 @@ class Vector<T> extends SequentialContainer<T> {
     this._length += 1;
   }
   popBack() {
-    if (!this._length) return;
-    this._vector.pop();
+    if (this._length === 0) return;
     this._length -= 1;
+    return this._vector.pop();
   }
   setElementByPos(pos: number, element: T) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);

@@ -103,20 +103,22 @@ class PriorityQueue<T> extends Base {
    * @example queue.pop();
    */
   pop() {
-    if (!this._length) return;
+    if (this._length === 0) return;
+    const value = this._priorityQueue[0];
     const last = this._priorityQueue.pop() as T;
     this._length -= 1;
     if (this._length) {
       this._priorityQueue[0] = last;
       this._pushDown(0, this._length >> 1);
     }
+    return value;
   }
   /**
    * @description Accesses the top element.
    * @example const top = queue.top();
    */
-  top() {
-    return this._priorityQueue[0] as (T | undefined);
+  top(): T | undefined {
+    return this._priorityQueue[0];
   }
   /**
    * @description Check if element is in heap.

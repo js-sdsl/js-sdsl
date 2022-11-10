@@ -6,7 +6,7 @@
  * @return Boolean about if access is out of bounds.
  * @internal
  */
-export function $checkWithinAccessParams(pos: number, lower: number, upper: number) {
+export default function $checkWithinAccessParams(pos: number, lower: number, upper: number) {
   if (pos < lower || pos > upper) {
     throw new RangeError();
   }

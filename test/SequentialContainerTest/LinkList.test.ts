@@ -75,7 +75,7 @@ describe('LinkList test', () => {
   });
 
   it('LinkList run time error test', () => {
-    expect(() => myLinkList.getElementByPos(myLinkList.size())).to.to.throw(RangeError);
+    expect(() => myLinkList.getElementByPos(myLinkList.size())).to.throw(RangeError);
   });
 
   it('LinkList pushFront function test', () => {
@@ -88,25 +88,25 @@ describe('LinkList test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.end().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rEnd().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myLinkList.eraseElementByIterator(myLinkList.begin());
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myLinkList.begin().pointer = 0;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myLinkList.popBack();
     expect(myLinkList.size()).to.equal(0);
     myLinkList.pushBack(1);

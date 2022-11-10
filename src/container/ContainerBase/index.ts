@@ -12,7 +12,7 @@ export abstract class ContainerIterator<T> {
   /**
    * @internal
    */
-  protected _node: unknown;
+  abstract _node: unknown;
   protected constructor(iteratorType: IteratorType = IteratorType.NORMAL) {
     this.iteratorType = iteratorType;
   }
@@ -73,6 +73,15 @@ export abstract class Base {
    * @internal
    */
   protected _length = 0;
+  /**
+   * @return The size of the container.
+   * @example
+   * const container = new Vector([1, 2]);
+   * console.log(container.length); // 2
+   */
+  get length() {
+    return this._length;
+  }
   /**
    * @return The size of the container.
    * @example
@@ -176,6 +185,7 @@ export abstract class Container<T> extends Base {
   /**
    * @description Removes element by iterator and move `iter` to next.
    * @param iter The iterator you want to erase.
+   * @return The next iterator.
    * @example
    * container.eraseElementByIterator(container.begin());
    * container.eraseElementByIterator(container.end()); // throw a RangeError

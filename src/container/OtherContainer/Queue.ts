@@ -26,8 +26,9 @@ class Queue<T> extends Base {
    * @description Removes the first element.
    */
   pop() {
-    this._queue.popFront();
-    if (this._length) this._length -= 1;
+    if (this._length === 0) return;
+    this._length -= 1;
+    return this._queue.popFront();
   }
   /**
    * @description Access the first element.

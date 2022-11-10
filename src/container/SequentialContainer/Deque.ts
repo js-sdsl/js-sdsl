@@ -1,7 +1,7 @@
 import SequentialContainer from './Base';
 import { IteratorType, initContainer } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
 
 class DequeIterator<T> extends RandomIterator<T> {
   copy() {
@@ -182,8 +182,9 @@ class Deque<T> extends SequentialContainer<T> {
     this._map[this._last][this._curLast] = element;
   }
   popBack() {
-    if (!this._length) return;
-    this._map[this._last][this._curLast] = undefined;
+    if (this._length === 0) return;
+    const value = this._map[this._last][this._curLast];
+    delete this._map[this._last][this._curLast];
     if (this._length !== 1) {
       if (this._curLast > 0) {
         this._curLast -= 1;
@@ -196,6 +197,7 @@ class Deque<T> extends SequentialContainer<T> {
       }
     }
     this._length -= 1;
+    return value;
   }
   /**
    * @description Push the element to the front.
@@ -224,8 +226,9 @@ class Deque<T> extends SequentialContainer<T> {
    * @description Remove the _first element.
    */
   popFront() {
-    if (!this._length) return;
-    this._map[this._first][this._curFirst] = undefined;
+    if (this._length === 0) return;
+    const value = this._map[this._first][this._curFirst];
+    delete this._map[this._first][this._curFirst];
     if (this._length !== 1) {
       if (this._curFirst < this._bucketSize - 1) {
         this._curFirst += 1;
@@ -238,6 +241,7 @@ class Deque<T> extends SequentialContainer<T> {
       }
     }
     this._length -= 1;
+    return value;
   }
   forEach(callback: (element: T, index: number, deque: Deque<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
@@ -312,7 +316,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   eraseElementByValue(value: T) {
-    if (!this._length) return;
+    if (this._length === 0) return;
     const arr: T[] = [];
     for (let i = 0; i < this._length; ++i) {
       const element = this.getElementByPos(i);
@@ -376,7 +380,7 @@ class Deque<T> extends SequentialContainer<T> {
    * @description Remove as much useless space as possible.
    */
   shrinkToFit() {
-    if (!this._length) return;
+    if (this._length === 0) return;
     const arr: T[] = [];
     this.forEach(function (el) {
       arr.push(el);
