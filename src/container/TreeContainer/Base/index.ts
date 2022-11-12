@@ -110,11 +110,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element not less than the given key.
-   */
-  abstract lowerBound(key: K): TreeIterator<K, V>;
-  /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
    * @return TreeNode which key is greater than the given key.
@@ -133,11 +128,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this._header : resNode;
   }
-  /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element greater than the given key.
-   */
-  abstract upperBound(key: K): TreeIterator<K, V>;
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
@@ -158,11 +148,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     return resNode === undefined ? this._header : resNode;
   }
   /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element not greater than the given key.
-   */
-  abstract reverseLowerBound(key: K): TreeIterator<K, V>;
-  /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
    * @return TreeNode which key is less than the given key.
@@ -181,16 +166,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
     return resNode === undefined ? this._header : resNode;
   }
-  /**
-   * @param key The given key you want to compare.
-   * @return An iterator to the first element less than the given key.
-   */
-  abstract reverseUpperBound(key: K): TreeIterator<K, V>;
-  /**
-   * @description Union the other tree to self.
-   * @param other The other tree container you want to merge.
-   */
-  abstract union(other: TreeContainer<K, V>): void;
   /**
    * @description Make self balance after erase a node.
    * @param curNode The node want to remove.
@@ -487,6 +462,23 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     this._length += 1;
     return curNode;
   }
+  /**
+   * @description Find node which key is equals to the given key.
+   * @param curNode The starting node of the search.
+   * @param key The key you want to search.
+   * @internal
+   */
+  protected _findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
+    while (curNode) {
+      const cmpResult = this._cmp(curNode._key as K, key);
+      if (cmpResult < 0) {
+        curNode = curNode._right;
+      } else if (cmpResult > 0) {
+        curNode = curNode._left;
+      } else return curNode;
+    }
+    return curNode;
+  }
   clear() {
     this._length = 0;
     this._root = undefined;
@@ -549,23 +541,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       });
   }
   /**
-   * @description Find node which key is equals to the given key.
-   * @param curNode The starting node of the search.
-   * @param key The key you want to search.
-   * @internal
-   */
-  protected _findElementNode(curNode: TreeNode<K, V> | undefined, key: K) {
-    while (curNode) {
-      const cmpResult = this._cmp(curNode._key as K, key);
-      if (cmpResult < 0) {
-        curNode = curNode._right;
-      } else if (cmpResult > 0) {
-        curNode = curNode._left;
-      } else return curNode;
-    }
-    return curNode;
-  }
-  /**
    * @description Remove the element of the specified key.
    * @param key The key you want to remove.
    */
@@ -586,6 +561,23 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     this._eraseNode(node);
     return iter;
   }
+  forEach(callback: (element: K | [K, V], index: number, tree: TreeContainer<K, V>) => void) {
+    let index = 0;
+    for (const element of this) callback(element, index++, this);
+  }
+  getElementByPos(pos: number) {
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    let res;
+    let index = 0;
+    for (const element of this) {
+      if (index === pos) {
+        res = element;
+        break;
+      }
+      index += 1;
+    }
+    return <K | [K, V]>res;
+  }
   /**
    * @description Get the height of the tree.
    * @return Number about the height of the RB-tree.
@@ -599,6 +591,31 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       };
     return traversal(this._root);
   }
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element less than the given key.
+   */
+  abstract reverseUpperBound(key: K): TreeIterator<K, V>;
+  /**
+   * @description Union the other tree to self.
+   * @param other The other tree container you want to merge.
+   */
+  abstract union(other: TreeContainer<K, V>): void;
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element not greater than the given key.
+   */
+  abstract reverseLowerBound(key: K): TreeIterator<K, V>;
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element not less than the given key.
+   */
+  abstract lowerBound(key: K): TreeIterator<K, V>;
+  /**
+   * @param key The given key you want to compare.
+   * @return An iterator to the first element greater than the given key.
+   */
+  abstract upperBound(key: K): TreeIterator<K, V>;
 }
 
 export default TreeContainer;

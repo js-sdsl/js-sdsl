@@ -62,9 +62,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   }
   /**
    * @description Get the sequential index of the iterator in the tree container.<br/>
-   *              <strong>
-   *                Note:
-   *              </strong>
+   *              <strong>Note:</strong>
    *              This function only takes effect when the specified tree container `enableIndex = true`.
    * @example
    * const st = new OrderedSet([1, 2, 3], true);
