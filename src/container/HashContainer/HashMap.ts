@@ -81,18 +81,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams(pos, 0, this._length - 1);
-    let index = 0;
     let node = this._head;
-    let res;
-    while (node !== this._header) {
-      if (index === pos) {
-        res = [node._key, node._value];
-        break;
-      }
+    while (pos--) {
       node = node._next;
-      ++index;
     }
-    return <[K, V]>res;
+    return <[K, V]>[node._key, node._value];
   }
   /**
    * @description Get the value of the element of the specified key.

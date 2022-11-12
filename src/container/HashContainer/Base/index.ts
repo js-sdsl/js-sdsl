@@ -79,9 +79,9 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    */
   protected _originMap: Record<string, HashLinkNode<K, V>> = {};
   /**
-   * @internal
+   * @description unique tag used to tag object.
    */
-  protected readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
+  readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
   /**
    * @internal
    */

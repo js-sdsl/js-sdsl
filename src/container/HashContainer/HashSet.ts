@@ -64,18 +64,11 @@ class HashSet<K> extends HashContainer<K, undefined> {
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams(pos, 0, this._length - 1);
-    let index = 0;
     let node = this._head;
-    let res;
-    while (node !== this._header) {
-      if (index === pos) {
-        res = node._key;
-        break;
-      }
+    while (pos--) {
       node = node._next;
-      ++index;
     }
-    return <K>res;
+    return node._key;
   }
   forEach(callback: (element: K, index: number, container: HashSet<K>) => void) {
     let index = 0;
