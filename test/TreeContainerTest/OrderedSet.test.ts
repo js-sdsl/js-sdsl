@@ -115,17 +115,26 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  // it('OrderedSet eraseElementByIterator function test', () => {
-  //   for (let i = 0; i < testNum / 10; ++i) {
-  //     let iter = myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
-  //     expect(iter.equals(myOrderedSet.begin())).to.equal(true);
-  //     myVector.eraseElementByPos(0);
-  //     iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rEnd());
-  //     expect(iter.equals(myOrderedSet.rEnd())).to.equal(true);
-  //     myVector.popBack();
-  //   }
-  //   judgeSet(myOrderedSet, myVector);
-  // });
+  it('OrderedSet eraseElementByIterator function test', () => {
+    for (let i = 0; i < testNum / 10; ++i) {
+      let iter = myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      expect(iter.equals(myOrderedSet.begin())).to.equal(true);
+      myVector.eraseElementByPos(0);
+      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin().next());
+      expect(iter.equals(myOrderedSet.rBegin().next())).to.equal(true);
+      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin());
+      expect(iter.equals(myOrderedSet.rBegin())).to.equal(true);
+      myVector.popBack();
+      myVector.popBack();
+    }
+    const eraseQueue = [1, 10, 1000];
+    for (const index of eraseQueue) {
+      const el = myVector.getElementByPos(index);
+      myVector.eraseElementByPos(index);
+      myOrderedSet.eraseElementByIterator(myOrderedSet.find(el));
+    }
+    judgeSet(myOrderedSet, myVector);
+  });
 
   it('OrderedSet updateKeyByIterator function test', () => {
     const st = new OrderedSet();

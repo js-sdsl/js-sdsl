@@ -1,6 +1,6 @@
 import type TreeIterator from './TreeIterator';
 import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
-import { Container } from '@/container/ContainerBase';
+import { Container, IteratorType } from '@/container/ContainerBase';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
@@ -555,8 +555,16 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     if (node === this._header) {
       throwIteratorAccessError();
     }
-    if (node._right === undefined) {
-      iter = iter.next();
+    const hasNoRight = node._right === undefined;
+    const isNormal = iter.iteratorType === IteratorType.NORMAL;
+    // For the normal iterator, the `next` node will be swapped to `this` node when has right.
+    if (isNormal) {
+      // So we should move it to next when it's right is null.
+      if (hasNoRight) iter.next();
+    } else {
+      // For the reverse iterator, only when it doesn't have right and has left the `next` node will be swapped.
+      // So when it has right, or it is a leaf node we should move it to `next`.
+      if (!hasNoRight || node._left === undefined) iter.next();
     }
     this._eraseNode(node);
     return iter;
