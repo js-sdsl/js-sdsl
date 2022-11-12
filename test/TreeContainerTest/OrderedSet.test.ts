@@ -117,8 +117,12 @@ describe('OrderedSet test', () => {
 
   it('OrderedSet eraseElementByIterator function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      let iter = myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      expect(iter.equals(myOrderedSet.begin())).to.equal(true);
       myVector.eraseElementByPos(0);
+      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rEnd());
+      expect(iter.equals(myOrderedSet.rEnd())).to.equal(true);
+      myVector.popBack();
     }
     judgeSet(myOrderedSet, myVector);
   });
