@@ -21,14 +21,6 @@ export function generateRandomBigInt() {
   return BigInt(generateRandomNumber(0, 1e20, 0));
 }
 
-export function generateRandomBoolean() {
-  return Math.random() > 0.5;
-}
-
-export function generateRandomNull() {
-  return Math.random() > 0.5 ? undefined : null;
-}
-
 export function generateRandomObject() {
   const obj: Record<string, string> = {};
   obj[generateRandomString()] = generateRandomString();
