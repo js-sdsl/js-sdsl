@@ -18,7 +18,7 @@ function judgeHashMap(myHashMap: HashMap<unknown, unknown>, stdMap: Map<unknown,
   expect(myHashMap.size()).to.equal(stdMap.size);
   stdMap.forEach((value, key) => {
     expect(myHashMap.getElementByKey(key)).to.equal(value);
-    expect(myHashMap.find(key)).to.equal(true);
+    expect(myHashMap.find(key).pointer[1]).to.equal(value);
   });
 }
 
