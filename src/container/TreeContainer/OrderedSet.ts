@@ -2,7 +2,6 @@ import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
@@ -15,6 +14,8 @@ class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   copy() {
     return new OrderedSetIterator(this._node, this._header, this.iteratorType);
   }
+  // @ts-ignore
+  equals(iter: OrderedSetIterator<K>): boolean;
 }
 
 export type { OrderedSetIterator };
@@ -77,23 +78,6 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   back() {
     return this._header._right ? this._header._right._key : undefined;
   }
-  forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
-    let index = 0;
-    for (const element of this) callback(element, index++, this);
-  }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let res;
-    let index = 0;
-    for (const element of this) {
-      if (index === pos) {
-        res = element;
-        break;
-      }
-      index += 1;
-    }
-    return res as K;
-  }
   /**
    * @description Insert element to set.
    * @param key The key want to insert.
@@ -139,6 +123,12 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);
   }
+  // @ts-ignore
+  eraseElementByIterator(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;
+  // @ts-ignore
+  forEach(callback: (element: K, index: number, tree: OrderedSet<K>) => void): void;
+  // @ts-ignore
+  getElementByPos(pos: number): K;
 }
 
 export default OrderedSet;

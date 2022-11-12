@@ -2,7 +2,6 @@ import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
@@ -28,6 +27,8 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   copy() {
     return new OrderedMapIterator(this._node, this._header, this.iteratorType);
   }
+  // @ts-ignore
+  equals(iter: OrderedMapIterator<K, V>): boolean;
 }
 
 export type { OrderedMapIterator };
@@ -91,10 +92,6 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     const maxNode = this._header._right as TreeNode<K, V>;
     return [maxNode._key, maxNode._value] as [K, V];
   }
-  forEach(callback: (element: [K, V], index: number, map: OrderedMap<K, V>) => void) {
-    let index = 0;
-    for (const pair of this) callback(pair, index++, this);
-  }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
     return new OrderedMapIterator(resNode, this._header);
@@ -140,19 +137,6 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     const curNode = this._findElementNode(this._root, key);
     return curNode ? curNode._value : undefined;
   }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let res;
-    let index = 0;
-    for (const pair of this) {
-      if (index === pos) {
-        res = pair;
-        break;
-      }
-      index += 1;
-    }
-    return res as [K, V];
-  }
   union(other: OrderedMap<K, V>) {
     const self = this;
     other.forEach(function (el) {
@@ -162,6 +146,12 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);
   }
+  // @ts-ignore
+  eraseElementByIterator(iter: OrderedMapIterator<K, V>): OrderedMapIterator<K, V>;
+  // @ts-ignore
+  forEach(callback: (element: [K, V], index: number, map: OrderedMap<K, V>) => void): void;
+  // @ts-ignore
+  getElementByPos(pos: number): [K, V];
 }
 
 export default OrderedMap;

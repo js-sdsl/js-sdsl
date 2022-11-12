@@ -133,8 +133,15 @@ describe('OrderedMap test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const begin = myOrderedMap.begin();
       stdMap.delete(begin.pointer[0]);
-      myOrderedMap.eraseElementByIterator(begin);
+      let iter = myOrderedMap.eraseElementByIterator(begin);
+      expect(iter.equals(myOrderedMap.begin())).to.equal(true);
       expect(begin.pointer[0]).to.equal(v.getElementByPos(i + 1)[0]);
+      const rBegin = myOrderedMap.rBegin();
+      stdMap.delete(rBegin.pointer[0]);
+      iter = myOrderedMap.eraseElementByIterator(rBegin);
+      expect(iter.equals(myOrderedMap.rBegin())).to.equal(true);
+      v.popBack();
+      expect((iter.pointer)[0]).to.equal(v.back()![0]);
     }
     judgeMap(myOrderedMap, stdMap);
   });
