@@ -63,7 +63,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     return new HashSetIterator(node, this._header);
   }
   getElementByPos(pos: number) {
-    $checkWithinAccessParams(pos, 0, this._length - 1);
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
     let node = this._head;
     while (pos--) {
       node = node._next;
