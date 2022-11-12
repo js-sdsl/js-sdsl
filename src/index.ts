@@ -13,6 +13,8 @@ export type { LinkListIterator } from '@/container/SequentialContainer/LinkList'
 export type { DequeIterator } from '@/container/SequentialContainer/Deque';
 export type { OrderedSetIterator } from '@/container/TreeContainer/OrderedSet';
 export type { OrderedMapIterator } from '@/container/TreeContainer/OrderedMap';
+export type { HashSetIterator } from '@/container/HashContainer/HashSet';
+export type { HashMapIterator } from '@/container/HashContainer/HashMap';
 export type { IteratorType, Container, ContainerIterator } from '@/container/ContainerBase';
 export type { default as SequentialContainer } from '@/container/SequentialContainer/Base';
 export type { default as TreeContainer } from '@/container/TreeContainer/Base';

@@ -29,6 +29,8 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
   }
 }
 
+export type { HashMapIterator };
+
 class HashMap<K, V> extends HashContainer<K, V> {
   constructor(container: initContainer<[K, V]> = []) {
     super();

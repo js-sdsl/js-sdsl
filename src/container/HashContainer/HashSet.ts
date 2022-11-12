@@ -15,6 +15,8 @@ class HashSetIterator<K, V> extends HashContainerIterator<K, V> {
   }
 }
 
+export type { HashSetIterator };
+
 class HashSet<K> extends HashContainer<K, undefined> {
   constructor(container: initContainer<K> = []) {
     super();

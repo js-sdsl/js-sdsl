@@ -10,6 +10,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Optimized the structure of class `TreeNodeEnableIndex`.
 - Change the `iterator access denied` error message to reduce the packing size.
+- Change the internal storage of the hash container to the form of a linked list, traversing in insertion order.
+- Standardize hash container. Make it extends from `Container` and add general functions.
 
 ### Added
 
