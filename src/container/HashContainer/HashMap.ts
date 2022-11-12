@@ -10,7 +10,7 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
       throwIteratorAccessError();
     }
     const self = this;
-    return new Proxy([] as unknown as [K, V], {
+    return new Proxy(<[K, V]><unknown>[], {
       get(_, props: '0' | '1') {
         if (props === '0') return self._node._key;
         else if (props === '1') return self._node._value;
@@ -50,10 +50,12 @@ class HashMap<K, V> extends HashContainer<K, V> {
     return new HashMapIterator(this._header, this._header, IteratorType.REVERSE);
   }
   front() {
-    return this._head._key;
+    if (this._length === 0) return undefined;
+    return <[K, V]>[this._head._key, this._head._value];
   }
   back() {
-    return this._tail._key;
+    if (this._length === 0) return undefined;
+    return <[K, V]>[this._tail._key, this._tail._value];
   }
   /**
    * @description Insert a key-value pair or set value by the given key.
@@ -73,7 +75,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @return An iterator pointing to the element if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key);
+    const node = this._findElementNode(key, isObject);
     if (node === undefined) return this.end();
     return new HashMapIterator(node, this._header);
   }

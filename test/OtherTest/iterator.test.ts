@@ -6,7 +6,7 @@ import {
   OrderedSet,
   OrderedMap,
   Container,
-  ContainerIterator
+  ContainerIterator, HashSet, HashMap
 } from '@/index';
 
 let arr: number[] = [];
@@ -22,7 +22,9 @@ const containerArr: Container<unknown>[] = [
   new LinkList(arr),
   new Deque(arr),
   new OrderedSet(arr),
-  new OrderedMap(arr.map((element, index) => [index, element]))
+  new OrderedMap(arr.map((element, index) => [index, element])),
+  new HashSet(arr),
+  new HashMap(arr.map((element, index) => [index, element]))
 ];
 
 describe('iterator test', () => {
@@ -32,7 +34,7 @@ describe('iterator test', () => {
       for (let it = container.begin() as ContainerIterator<unknown>;
         !it.equals(container.end() as ContainerIterator<unknown>);
         it = it.next()) {
-        if (container instanceof OrderedMap) {
+        if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index++]);
         } else {
@@ -48,7 +50,7 @@ describe('iterator test', () => {
       for (let it = container.end().pre() as ContainerIterator<unknown>;
         !it.equals(container.begin() as ContainerIterator<unknown>);
         it = it.pre()) {
-        if (container instanceof OrderedMap) {
+        if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index--]);
         } else {
@@ -64,7 +66,7 @@ describe('iterator test', () => {
       for (let it = container.rBegin() as ContainerIterator<unknown>;
         !it.equals(container.rEnd() as ContainerIterator<unknown>);
         it = it.next()) {
-        if (container instanceof OrderedMap) {
+        if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index--]);
         } else {
@@ -80,7 +82,7 @@ describe('iterator test', () => {
       for (let it = container.rEnd().pre() as ContainerIterator<unknown>;
         !it.equals(container.rBegin() as ContainerIterator<unknown>);
         it = it.pre()) {
-        if (container instanceof OrderedMap) {
+        if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index++]);
         } else {
@@ -140,6 +142,13 @@ describe('iterator test', () => {
       expect(iter.equals(copy)).to.equal(false);
       copy.pre();
       expect(iter.equals(copy)).to.equal(true);
+    }
+  });
+
+  it('eraseElementByIterator test', () => {
+    for (const container of containerArr) {
+      expect(() => container.eraseElementByIterator(container.end())).to.throw(RangeError);
+      expect(() => container.eraseElementByIterator(container.rEnd())).to.throw(RangeError);
     }
   });
 });

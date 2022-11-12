@@ -35,10 +35,10 @@ class HashSet<K> extends HashContainer<K, undefined> {
   rEnd() {
     return new HashSetIterator(this._header, this._header, IteratorType.REVERSE);
   }
-  front() {
+  front(): K | undefined {
     return this._head._key;
   }
-  back() {
+  back(): K | undefined {
     return this._tail._key;
   }
   /**
@@ -58,7 +58,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @return An iterator pointing to the element if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key);
+    const node = this._findElementNode(key, isObject);
     if (node === undefined) return this.end();
     return new HashSetIterator(node, this._header);
   }

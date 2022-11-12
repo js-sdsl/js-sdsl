@@ -77,7 +77,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected _originMap: Record<string | symbol, HashLinkNode<K, V>> = {};
+  protected _originMap: Record<string, HashLinkNode<K, V>> = {};
   /**
    * @internal
    */
@@ -99,6 +99,16 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     Object.setPrototypeOf(this._originMap, null);
     this._header = <HashLinkNode<K, V>>{};
     this._header._pre = this._header._next = this._head = this._tail = this._header;
+  }
+  private _eraseNode(node: HashLinkNode<K, V>) {
+    const { _pre, _next } = node;
+    _pre._next = _next;
+    _next._pre = _pre;
+    if (node === this._head) {
+      this._head = _next;
+    } else if (node === this._tail) {
+      this._tail = _pre;
+    }
   }
   /**
    * @internal
@@ -140,12 +150,12 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     this._length += 1;
     if (this._length === 1) {
       this._head = newTail;
+      this._header._next = newTail;
     } else {
       this._tail._next = newTail;
-      newTail._pre = this._tail;
-      this._header._pre = this._tail;
     }
     this._tail = newTail;
+    this._header._pre = newTail;
   }
   clear() {
     const self = this;
@@ -179,26 +189,24 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       delete this._originMap[<string><unknown>key];
     }
     this._length -= 1;
-    const { _pre, _next } = node;
-    _pre._next = _next;
-    _next._pre = _pre;
+    this._eraseNode(node);
   }
   eraseElementByIterator(iter: HashContainerIterator<K, V>) {
     const node = iter._node;
-    node._pre._next = node._next;
-    node._next._pre = node._pre;
+    if (node === this._header) {
+      throwIteratorAccessError();
+    }
+    this._eraseNode(node);
+    this._length -= 1;
     return iter.next();
   }
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let curNode = this._head;
+    let node = this._head;
     while (pos--) {
-      curNode = curNode._next;
+      node = node._next;
     }
-    const _pre = curNode._pre;
-    const _next = curNode._next;
-    _next._pre = _pre;
-    _pre._next = _next;
+    this._eraseNode(node);
     this._length -= 1;
   }
   /**
