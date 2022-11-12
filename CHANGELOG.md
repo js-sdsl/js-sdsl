@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.11.09
+## [UnReleased] - 2022.11.13
 
 ### Changed
 
@@ -21,6 +21,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Fixed
 
 - Fixed wrong error type when `updateKeyByIterator`.
+- Fixed wrong iterator was returned when erase tree reverse iterator.
 
 ## [4.2.0-beta.1] - 2022.11.06
 
