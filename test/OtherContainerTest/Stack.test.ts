@@ -13,8 +13,7 @@ function judge(myStack: Stack<number>, myVector: Vector<number>) {
     const s = myStack.top();
     const v = myVector.back();
     if (s !== v) return false;
-    myStack.pop();
-    myVector.popBack();
+    expect(myStack.pop()).to.equal(myVector.popBack());
   }
   expect(() => myStack.pop()).to.not.throw();
   expect(myStack.top()).to.equal(undefined);

@@ -1,20 +1,11 @@
 import { expect } from 'chai';
+import { judgeSequentialContainer } from '../utils/judge';
 import { Vector, LinkList, Deque, SequentialContainer } from '@/index';
 
 const arr: number[] = [];
 const testNum = 1000;
 for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
-}
-
-function judgeSequentialContainer(
-  container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
-) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
-  });
 }
 
 function testSequentialContainer(container: SequentialContainer<number>) {
@@ -41,8 +32,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    container.popBack();
-    myVector.popBack();
+    expect(container.popBack()).to.equal(myVector.popBack());
   }
   judgeSequentialContainer(container, myVector);
 

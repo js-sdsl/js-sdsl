@@ -1,20 +1,11 @@
 import { expect } from 'chai';
-import { Vector, Deque, SequentialContainer } from '@/index';
+import { judgeSequentialContainer } from '../utils/judge';
+import { Vector, Deque } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
 for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
-}
-
-function judgeSequentialContainer(
-  container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
-) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
-  });
 }
 
 describe('Deque test', () => {
@@ -31,8 +22,7 @@ describe('Deque test', () => {
 
   it('Deque popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myDeque.popFront();
-      tmpArr.shift();
+      expect(myDeque.popFront()).to.equal(tmpArr.shift());
     }
     judgeSequentialContainer(myDeque, new Vector(tmpArr));
   });

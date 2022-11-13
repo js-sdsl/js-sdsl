@@ -13,10 +13,11 @@ function judge(myQueue: Queue<number>, myVector: Vector<number>) {
     const s = myQueue.front();
     const v = myVector.front();
     if (s !== v) return false;
-    myQueue.pop();
+    const u = myQueue.pop();
+    expect(u).to.equal(v);
     myVector.eraseElementByPos(0);
   }
-  expect(() => myQueue.pop()).to.not.throw();
+  expect(myQueue.pop()).to.equal(undefined);
   expect(myQueue.front()).to.equal(undefined);
   return true;
 }
