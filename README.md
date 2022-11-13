@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://js-sdsl.org/" target="_blank" rel="noopener noreferrer">
-    <img src="https://js-sdsl.org/assets/logo-removebg.png" alt="js-sdsl logo" width="120" />
+    <img src="https://js-sdsl.org/assets/image/logo/logo-removebg.png" alt="js-sdsl logo" width="120" />
   </a>
 </p>
 
@@ -42,27 +42,27 @@ We are benchmarking against other popular data structure libraries. In some ways
 <table>
   <tr align="center">
     <td>
-      <img alt="IE / Edge" src="https://www.w3schools.com/images/compatible_edge2020.png" />
+      <img alt="IE / Edge" src="https://js-sdsl.org/assets/image/platform/edge.png" />
       <div>IE / Edge</div>
     </td>
     <td>
-      <img alt="Firefox" src="https://www.w3schools.com/images/compatible_firefox2020.png" />
+      <img alt="Firefox" src="https://js-sdsl.org/assets/image/platform/firefox.png" />
       <div>Firefox</div>
     </td>
     <td>
-      <img alt="Chrome" src="https://www.w3schools.com/images/compatible_chrome2020.png" />
+      <img alt="Chrome" src="https://js-sdsl.org/assets/image/platform/chrome.png" />
       <div>Chrome</div>
     </td>
     <td>
-      <img alt="Safari" src="https://www.w3schools.com/images/compatible_safari2020.png" />
+      <img alt="Safari" src="https://js-sdsl.org/assets/image/platform/safari.png" />
       <div>Safari</div>
     </td>
     <td>
-      <img alt="Opera" src="https://www.w3schools.com/images/compatible_opera2020.png" />
+      <img alt="Opera" src="https://js-sdsl.org/assets/image/platform/opera.png" />
       <div>Opera</div>
     </td>
     <td>
-      <img alt="NodeJs" src="https://cdn-icons-png.flaticon.com/512/5968/5968322.png" width="20" />
+      <img alt="NodeJs" src="https://js-sdsl.org/assets/image/platform/nodejs.png" />
       <div>NodeJs</div>
     </td>
   </tr>
