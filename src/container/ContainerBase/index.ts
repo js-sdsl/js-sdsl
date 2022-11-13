@@ -17,6 +17,14 @@ export abstract class ContainerIterator<T> {
     this.iteratorType = iteratorType;
   }
   /**
+   * @param iter The other iterator you want to compare.
+   * @return Boolean about if this equals to obj.
+   * @example container.find(1).equals(container.end());
+   */
+  equals(iter: ContainerIterator<T>) {
+    return this._node === iter._node;
+  }
+  /**
    * @description Pointers to element.
    * @return The value of the pointer's element.
    * @example const val = container.begin().pointer;
@@ -48,12 +56,6 @@ export abstract class ContainerIterator<T> {
    * console.log(next.pointer, iter.pointer); // 2, 2
    */
   abstract next(): this;
-  /**
-   * @param obj The other iterator you want to compare.
-   * @return Boolean about if this equals to obj.
-   * @example container.find(1).equals(container.end());
-   */
-  abstract equals(obj: ContainerIterator<T>): boolean;
   /**
    * @description Get a copy of itself.
    * @return The copy of self.

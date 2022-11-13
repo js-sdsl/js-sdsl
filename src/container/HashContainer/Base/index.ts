@@ -18,7 +18,7 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
   /**
    * @internal
    */
-  _header: HashLinkNode<K, V>;
+  protected readonly _header: HashLinkNode<K, V>;
   pre: () => this;
   next: () => this;
   /**
@@ -64,9 +64,6 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
       };
     }
   }
-  equals(iter: ContainerIterator<[K, V] | K>) {
-    return this._node === iter._node;
-  }
 }
 
 export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
@@ -93,7 +90,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected _header: HashLinkNode<K, V>;
+  protected readonly _header: HashLinkNode<K, V>;
   protected constructor() {
     super();
     Object.setPrototypeOf(this._originMap, null);
@@ -106,9 +103,11 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     _next._pre = _pre;
     if (node === this._head) {
       this._head = _next;
-    } else if (node === this._tail) {
+    }
+    if (node === this._tail) {
       this._tail = _pre;
     }
+    this._length -= 1;
   }
   /**
    * @internal
@@ -134,9 +133,9 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       };
       this._objMap.push(newTail);
     } else {
-      const originValue = this._originMap[<string><unknown>key];
-      if (originValue) {
-        originValue._value = <V>value;
+      const node = this._originMap[<string><unknown>key];
+      if (node) {
+        node._value = <V>value;
         return;
       }
       newTail = {
@@ -147,8 +146,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       };
       this._originMap[<string><unknown>key] = newTail;
     }
-    this._length += 1;
-    if (this._length === 1) {
+    if (this._length === 0) {
       this._head = newTail;
       this._header._next = newTail;
     } else {
@@ -156,11 +154,25 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
     this._tail = newTail;
     this._header._pre = newTail;
+    this._length += 1;
+  }
+  /**
+   * @internal
+   */
+  protected _findElementNode(key: K, isObject?: boolean) {
+    if (isObject === undefined) isObject = checkObject(key);
+    if (isObject) {
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      if (index === undefined) return;
+      return this._objMap[index];
+    } else {
+      return this._originMap[<string><unknown>key];
+    }
   }
   clear() {
-    const self = this;
+    const HASH_KEY_TAG = this.HASH_KEY_TAG;
     this._objMap.forEach(function (el) {
-      delete (<Record<symbol, number>><unknown>el._key)[self.HASH_KEY_TAG];
+      delete (<Record<symbol, number>><unknown>el._key)[HASH_KEY_TAG];
     });
     this._objMap = [];
     this._originMap = {};
@@ -184,11 +196,10 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       node = this._objMap[index];
       delete this._objMap[index];
     } else {
-      if (this._originMap[<string><unknown>key] === undefined) return;
       node = this._originMap[<string><unknown>key];
+      if (node === undefined) return;
       delete this._originMap[<string><unknown>key];
     }
-    this._length -= 1;
     this._eraseNode(node);
   }
   eraseElementByIterator(iter: HashContainerIterator<K, V>) {
@@ -197,7 +208,6 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       throwIteratorAccessError();
     }
     this._eraseNode(node);
-    this._length -= 1;
     return iter.next();
   }
   eraseElementByPos(pos: number) {
@@ -207,19 +217,5 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       node = node._next;
     }
     this._eraseNode(node);
-    this._length -= 1;
-  }
-  /**
-   * @internal
-   */
-  protected _findElementNode(key: K, isObject?: boolean) {
-    if (isObject === undefined) isObject = checkObject(key);
-    if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      if (index === undefined) return undefined;
-      return this._objMap[index];
-    } else {
-      return this._originMap[<string><unknown>key];
-    }
   }
 }

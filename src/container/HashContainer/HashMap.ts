@@ -27,6 +27,8 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
   copy() {
     return new HashMapIterator(this._node, this._header, this.iteratorType);
   }
+  // @ts-ignore
+  equals(iter: HashMapIterator<K, V>): boolean;
 }
 
 export type { HashMapIterator };
@@ -52,11 +54,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
     return new HashMapIterator(this._header, this._header, IteratorType.REVERSE);
   }
   front() {
-    if (this._length === 0) return undefined;
+    if (this._length === 0) return;
     return <[K, V]>[this._head._key, this._head._value];
   }
   back() {
-    if (this._length === 0) return undefined;
+    if (this._length === 0) return;
     return <[K, V]>[this._tail._key, this._tail._value];
   }
   /**

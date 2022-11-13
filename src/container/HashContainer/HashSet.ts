@@ -13,6 +13,8 @@ class HashSetIterator<K, V> extends HashContainerIterator<K, V> {
   copy() {
     return new HashSetIterator(this._node, this._header, this.iteratorType);
   }
+  // @ts-ignore
+  equals(iter: HashSetIterator<K, V>): boolean;
 }
 
 export type { HashSetIterator };

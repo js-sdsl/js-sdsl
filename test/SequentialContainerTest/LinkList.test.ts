@@ -1,15 +1,6 @@
 import { expect } from 'chai';
-import { Vector, LinkList, SequentialContainer } from '@/index';
-
-function judgeSequentialContainer(
-  container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
-) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
-  });
-}
+import { judgeSequentialContainer } from '../utils/judge';
+import { Vector, LinkList } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -33,8 +24,7 @@ describe('LinkList test', () => {
 
   it('LinkList popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myLinkList.popFront();
-      tmpArr.shift();
+      expect(myLinkList.popFront()).to.equal(tmpArr.shift());
     }
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
