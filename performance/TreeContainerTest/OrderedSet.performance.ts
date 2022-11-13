@@ -3,7 +3,7 @@ import { OrderedSet } from '@/index';
 
 function testOrderedSet(arr: number[], testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   const myOrderedSet = new OrderedSet(arr);

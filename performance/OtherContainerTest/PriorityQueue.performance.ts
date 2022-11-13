@@ -3,7 +3,7 @@ import { PriorityQueue } from '@/index';
 
 function testPriorityQueue(arr: number[], testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   const myPriority = new PriorityQueue(arr, (x: number, y: number) => y - x, false);

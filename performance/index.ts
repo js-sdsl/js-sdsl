@@ -9,23 +9,16 @@ import testDeque from './SequentialContainerTest/Deque.performance';
 import testLinkList from './SequentialContainerTest/LinkList.performance';
 import testOrderedMap from './TreeContainerTest/OrderedMap.performance';
 import testOrderedSet from './TreeContainerTest/OrderedSet.performance';
-import env from './utils/env';
+import getEnv from './utils/env';
 
 export type testReportFormat = {
-  containerName: string,
-  reportList: {
-    testFunc: string,
-    containerSize: number,
-    testNum: number,
-    runTime: number
-  }[];
-}
+  testFunc: string,
+  containerSize: number,
+  testNum: number,
+  runTime: number
+}[];
 
-type testFunc = (arr: number[], testNum: number) => testReportFormat['reportList'];
-
-const testNum = 1000000;
-const arr: number[] = [];
-for (let i = 0; i < testNum; ++i) arr.push(Math.random() * testNum * 2);
+type testFunc = (arr: number[], testNum: number) => testReportFormat;
 
 const testFuncMap: Record<string, testFunc> = {
   Stack: testStack,
@@ -39,65 +32,54 @@ const testFuncMap: Record<string, testFunc> = {
   HashMap: testHashMap
 };
 
+const testNum = 1000000;
+const arr: number[] = [];
+for (let i = 0; i < testNum; ++i) arr.push(Math.random() * testNum * 2);
+
 function testContainer(containerName: string) {
-  return {
-    containerName,
-    reportList: testFuncMap[containerName]([...arr], testNum)
-  };
+  return testFuncMap[containerName]([...arr], testNum);
+}
+
+function align(str: string | number, length = 25) {
+  str = str.toString();
+  return ` ${str} ${' '.repeat(length - str.length - 2)}`;
+}
+
+function getTestResult(containerName: string) {
+  const _ = '-'.repeat(25);
+  let content = `### ${containerName}
+
+|${align('testFunc')}|${align('testNum')}|${align('containerSize')}|${align('runTime / ms')}|
+|${_}|${_}|${_}|${_}|
+`;
+  const result = testContainer(containerName);
+  for (const report of result) {
+    const { testFunc, testNum, containerSize, runTime } = report;
+    content +=
+      `|${align(testFunc)}|${align(testNum)}|${align(containerSize)}|${align(runTime)}|\n`;
+  }
+  return content + '\n';
 }
 
 function main(taskQueue: string[]) {
-  const testReport: testReportFormat[] = [];
-  console.log('Container performance test start...');
-
+  if (taskQueue.length === 0) {
+    taskQueue = Object.keys(testFuncMap);
+  }
+  const env = getEnv();
+  process.stdout.write(env);
+  let content = env;
+  const title = '\n## Result\n\n';
+  process.stdout.write(title);
+  content += title;
   for (const containerName in testFuncMap) {
-    if (taskQueue.length === 0 || taskQueue.includes(containerName)) {
-      console.log(`${containerName} performance test start...`);
-      testReport.push(testContainer(containerName));
-      console.log(`${containerName} performance test end.`);
+    if (taskQueue.includes(containerName)) {
+      const result = getTestResult(containerName);
+      process.stdout.write(result);
+      content += result;
     }
   }
-
-  console.log('All container performance test end.');
-  // eslint-disable-next-line compat/compat
-  console.clear();
-
-  console.log('='.repeat(35), 'Report', '='.repeat(35));
-  testReport.forEach(report => {
-    console.log('='.repeat(35), report.containerName, '='.repeat(35));
-    // eslint-disable-next-line compat/compat
-    console.table(report.reportList);
-  });
-  console.log('='.repeat(35), 'Report', '='.repeat(35));
-
   console.log('saving result...');
-  let content = env();
-  content += '\n## Result\n\n';
   const savePath = path.resolve(__dirname, '../performance.md');
-  content += testReport.map(report => {
-    const { containerName, reportList } = report;
-    let str = `### ${containerName}
-
-<table>
-  <tr>
-    <td>testFunc</td>
-    <td>testNum</td>
-    <td>containerSize</td>
-    <td>runTime</td>
-  </tr>
-`;
-    for (const json of reportList) {
-      str += `  <tr>
-    <td>${json.testFunc}</td>
-    <td>${json.testNum}</td>
-    <td>${json.containerSize}</td>
-    <td>${json.runTime}</td>
-  </tr>
-`;
-    }
-    str += '</table>\n';
-    return str;
-  }).join('\n');
   writeFileSync(savePath, content);
   console.log('saved!');
 }
