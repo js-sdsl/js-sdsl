@@ -5,7 +5,7 @@ function testStack(arr: number[], testNum: number) {
   const myStack = new Stack(arr);
 
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   for (let i = 0; i < testNum; ++i) {
