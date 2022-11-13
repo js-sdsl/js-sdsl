@@ -13,6 +13,8 @@ class VectorIterator<T> extends RandomIterator<T> {
       this.iteratorType
     );
   }
+  // @ts-ignore
+  equals(iter: VectorIterator<T>): boolean;
 }
 
 export type { VectorIterator };

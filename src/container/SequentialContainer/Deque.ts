@@ -13,6 +13,8 @@ class DequeIterator<T> extends RandomIterator<T> {
       this.iteratorType
     );
   }
+  // @ts-ignore
+  equals(iter: DequeIterator<T>): boolean;
 }
 
 export type { DequeIterator };

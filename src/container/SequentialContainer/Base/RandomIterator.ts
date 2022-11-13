@@ -76,7 +76,4 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     $checkWithinAccessParams!(this._node, 0, this._size() - 1);
     this._setElementByPos(this._node, newValue);
   }
-  equals(obj: RandomIterator<T>) {
-    return this._node === obj._node;
-  }
 }

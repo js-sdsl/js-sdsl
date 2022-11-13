@@ -93,9 +93,6 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     return index;
   }
-  equals(obj: TreeIterator<K, V>) {
-    return this._node === obj._node;
-  }
 }
 
 export default TreeIterator;

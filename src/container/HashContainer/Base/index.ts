@@ -64,9 +64,6 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
       };
     }
   }
-  equals(iter: ContainerIterator<[K, V] | K>) {
-    return this._node === iter._node;
-  }
 }
 
 export abstract class HashContainer<K, V> extends Container<K | [K, V]> {

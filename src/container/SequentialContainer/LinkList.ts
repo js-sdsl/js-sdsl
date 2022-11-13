@@ -84,9 +84,6 @@ class LinkListIterator<T> extends ContainerIterator<T> {
     }
     this._node._value = newValue;
   }
-  equals(obj: LinkListIterator<T>) {
-    return this._node === obj._node;
-  }
   copy() {
     return new LinkListIterator(
       this._node,
@@ -94,6 +91,8 @@ class LinkListIterator<T> extends ContainerIterator<T> {
       this.iteratorType
     );
   }
+  // @ts-ignore
+  equals(iter: LinkListIterator<T>): boolean;
 }
 
 export type { LinkListIterator };

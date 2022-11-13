@@ -27,6 +27,8 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
   copy() {
     return new HashMapIterator(this._node, this._header, this.iteratorType);
   }
+  // @ts-ignore
+  equals(iter: HashMapIterator<K, V>): boolean;
 }
 
 export type { HashMapIterator };
