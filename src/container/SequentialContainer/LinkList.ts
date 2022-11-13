@@ -92,15 +92,15 @@ class LinkList<T> extends SequentialContainer<T> {
   /**
    * @internal
    */
-  private readonly _header: LinkNode<T>;
-  /**
-   * @internal
-   */
   private _head: LinkNode<T>;
   /**
    * @internal
    */
   private _tail: LinkNode<T>;
+  /**
+   * @internal
+   */
+  private readonly _header: LinkNode<T>;
   constructor(container: initContainer<T> = []) {
     super();
     this._header = <LinkNode<T>>{};
