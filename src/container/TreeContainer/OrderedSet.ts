@@ -93,10 +93,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   find(element: K) {
     const curNode = this._findElementNode(this._root, element);
-    if (curNode !== undefined) {
-      return new OrderedSetIterator(curNode, this._header);
-    }
-    return this.end();
+    return new OrderedSetIterator(curNode, this._header);
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);

@@ -477,7 +477,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         curNode = curNode._left;
       } else return curNode;
     }
-    return curNode;
+    return curNode || this._header;
   }
   clear() {
     this._length = 0;
@@ -547,7 +547,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   eraseElementByKey(key: K) {
     if (this._length === 0) return;
     const curNode = this._findElementNode(this._root, key);
-    if (curNode === undefined) return;
+    if (curNode === this._header) return;
     this._eraseNode(curNode);
   }
   eraseElementByIterator(iter: TreeIterator<K, V>) {
