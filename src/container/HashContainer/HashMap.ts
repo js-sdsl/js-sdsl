@@ -80,7 +80,6 @@ class HashMap<K, V> extends HashContainer<K, V> {
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
-    if (node === undefined) return this.end();
     return new HashMapIterator(node, this._header);
   }
   getElementByPos(pos: number) {

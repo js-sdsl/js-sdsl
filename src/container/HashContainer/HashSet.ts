@@ -63,7 +63,6 @@ class HashSet<K> extends HashContainer<K, undefined> {
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
-    if (node === undefined) return this.end();
     return new HashSetIterator(node, this._header);
   }
   getElementByPos(pos: number) {

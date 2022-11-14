@@ -163,10 +163,10 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      if (index === undefined) return;
-      return this._objMap[index];
+      if (index === undefined) return this._header;
+      return this._objMap[index] || this._header;
     } else {
-      return this._originMap[<string><unknown>key];
+      return this._originMap[<string><unknown>key] || this._header;
     }
   }
   clear() {
