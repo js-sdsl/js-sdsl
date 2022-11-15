@@ -79,16 +79,14 @@ function hashMapTest(generateRandom: () => unknown) {
   it('HashMap eraseElementByKey test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
-        stdMap.delete(item);
-        myHashMap.eraseElementByKey(item, isObject);
+        expect(myHashMap.eraseElementByKey(item, isObject)).to.equal(stdMap.delete(item));
       }
     }
     judgeHashMap(myHashMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
-      stdMap.delete(random);
-      myHashMap.eraseElementByKey(random);
+      expect(myHashMap.eraseElementByKey(random)).to.equal(stdMap.delete(random));
     }
     judgeHashMap(myHashMap, stdMap);
   });

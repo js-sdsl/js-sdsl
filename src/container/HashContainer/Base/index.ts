@@ -185,22 +185,24 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @param key The key you want to remove.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @return Boolean about whether erase successful.
    */
   eraseElementByKey(key: K, isObject?: boolean) {
     let node;
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      if (index === undefined) return;
+      if (index === undefined) return false;
       delete (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
       node = this._objMap[index];
       delete this._objMap[index];
     } else {
       node = this._originMap[<string><unknown>key];
-      if (node === undefined) return;
+      if (node === undefined) return false;
       delete this._originMap[<string><unknown>key];
     }
     this._eraseNode(node);
+    return true;
   }
   eraseElementByIterator(iter: HashContainerIterator<K, V>) {
     const node = iter._node;

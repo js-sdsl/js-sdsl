@@ -34,7 +34,8 @@ describe('OrderedSet test', () => {
       const pos = Math.floor(Math.random() * myVector.size());
       const eraseValue = myVector.getElementByPos(pos);
       myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByKey(eraseValue);
+      expect(myOrderedSet.eraseElementByKey(eraseValue)).to.equal(true);
+      expect(myOrderedSet.eraseElementByKey(-Math.random())).to.equal(false);
     }
     judgeSet(myOrderedSet, myVector);
   });

@@ -67,16 +67,14 @@ function hashSetTest(generateRandom: () => unknown) {
   it('HashSet eraseElementByKey test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
-        stdSet.delete(item);
-        myHashSet.eraseElementByKey(item, isObject);
+        expect(myHashSet.eraseElementByKey(item, isObject)).to.equal(stdSet.delete(item));
       }
     }
     judgeHashSet(myHashSet, stdSet);
 
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
-      stdSet.delete(random);
-      myHashSet.eraseElementByKey(random, isObject);
+      expect(myHashSet.eraseElementByKey(random, isObject)).to.equal(stdSet.delete(random));
     }
     judgeHashSet(myHashSet, stdSet);
   });

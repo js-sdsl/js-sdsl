@@ -40,8 +40,7 @@ describe('OrderedMap test', () => {
       }
     });
     eraseArr.forEach(key => {
-      myOrderedMap.eraseElementByKey(key);
-      stdMap.delete(key);
+      expect(myOrderedMap.eraseElementByKey(key)).to.equal(stdMap.delete(key));
     });
     judgeMap(myOrderedMap, stdMap);
   });

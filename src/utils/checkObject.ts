@@ -5,7 +5,6 @@
  * @internal
  */
 export default function checkObject<T>(key: T) {
-  if (key === null) return false;
   const t = typeof key;
-  return t === 'object' || t === 'function';
+  return (t === 'object' && key !== null) || t === 'function';
 }

@@ -543,12 +543,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @description Remove the element of the specified key.
    * @param key The key you want to remove.
+   * @return Boolean about whether erase successful.
    */
   eraseElementByKey(key: K) {
-    if (this._length === 0) return;
+    if (this._length === 0) return false;
     const curNode = this._findElementNode(this._root, key);
-    if (curNode === this._header) return;
+    if (curNode === this._header) return false;
     this._eraseNode(curNode);
+    return true;
   }
   eraseElementByIterator(iter: TreeIterator<K, V>) {
     const node = iter._node;
