@@ -18,10 +18,12 @@ class Stack<T> extends Base {
   }
   /**
    * @description Insert element to stack's end.
+   * @return The container length after erasing.
    */
   push(element: T) {
     this._stack.push(element);
     this._length += 1;
+    return this._length;
   }
   /**
    * @description Removes the end element.

@@ -539,6 +539,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         index += 1;
         return false;
       });
+    return this._length;
   }
   /**
    * @description Remove the element of the specified key.

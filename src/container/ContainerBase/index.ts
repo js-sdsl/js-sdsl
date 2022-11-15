@@ -13,7 +13,7 @@ export abstract class ContainerIterator<T> {
    * @internal
    */
   abstract _node: unknown;
-  protected constructor(iteratorType: IteratorType = IteratorType.NORMAL) {
+  protected constructor(iteratorType = IteratorType.NORMAL) {
     this.iteratorType = iteratorType;
   }
   /**
@@ -181,9 +181,11 @@ export abstract class Container<T> extends Base {
   /**
    * @description Removes the element at the specified position.
    * @param pos The element's position you want to remove.
+   * @return The container length after erasing.
+   * @example
    * container.eraseElementByPos(-1); // throw a RangeError
    */
-  abstract eraseElementByPos(pos: number): void;
+  abstract eraseElementByPos(pos: number): number;
   /**
    * @description Removes element by iterator and move `iter` to next.
    * @param iter The iterator you want to erase.

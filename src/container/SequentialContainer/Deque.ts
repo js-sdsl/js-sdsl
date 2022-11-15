@@ -182,6 +182,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     this._length += 1;
     this._map[this._last][this._curLast] = element;
+    return this._length;
   }
   popBack() {
     if (this._length === 0) return;
@@ -204,6 +205,7 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @description Push the element to the front.
    * @param element The element you want to push.
+   * @return The length of queue after pushing.
    */
   pushFront(element: T) {
     if (this._length) {
@@ -223,6 +225,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     this._length += 1;
     this._map[this._first][this._curFirst] = element;
+    return this._length;
   }
   /**
    * @description Remove the _first element.
@@ -281,6 +284,7 @@ class Deque<T> extends SequentialContainer<T> {
       for (let i = 0; i < num; ++i) this.pushBack(element);
       for (let i = 0; i < arr.length; ++i) this.pushBack(arr[i]);
     }
+    return this._length;
   }
   /**
    * @description Remove all elements after the specified position (excluding the specified position).
@@ -316,9 +320,10 @@ class Deque<T> extends SequentialContainer<T> {
         self.pushBack(el);
       });
     }
+    return this._length;
   }
   eraseElementByValue(value: T) {
-    if (this._length === 0) return;
+    if (this._length === 0) return 0;
     const arr: T[] = [];
     for (let i = 0; i < this._length; ++i) {
       const element = this.getElementByPos(i);
@@ -327,6 +332,7 @@ class Deque<T> extends SequentialContainer<T> {
     const _length = arr.length;
     for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
     this.cut(_length - 1);
+    return this._length;
   }
   eraseElementByIterator(iter: DequeIterator<T>) {
     const _node = iter._node;
@@ -358,7 +364,9 @@ class Deque<T> extends SequentialContainer<T> {
     }
   }
   unique() {
-    if (this._length <= 1) return;
+    if (this._length <= 1) {
+      return this._length;
+    }
     let index = 1;
     let pre = this.getElementByPos(0);
     for (let i = 1; i < this._length; ++i) {
@@ -369,6 +377,7 @@ class Deque<T> extends SequentialContainer<T> {
       }
     }
     while (this._length > index) this.popBack();
+    return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
     const arr: T[] = [];

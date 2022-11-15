@@ -103,6 +103,7 @@ class Vector<T> extends SequentialContainer<T> {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     this._vector.splice(pos, 1);
     this._length -= 1;
+    return this._length;
   }
   eraseElementByValue(value: T) {
     let index = 0;
@@ -112,6 +113,7 @@ class Vector<T> extends SequentialContainer<T> {
       }
     }
     this._length = this._vector.length = index;
+    return this._length;
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
     const _node = iter._node;
@@ -122,6 +124,7 @@ class Vector<T> extends SequentialContainer<T> {
   pushBack(element: T) {
     this._vector.push(element);
     this._length += 1;
+    return this._length;
   }
   popBack() {
     if (this._length === 0) return;
@@ -136,6 +139,7 @@ class Vector<T> extends SequentialContainer<T> {
     $checkWithinAccessParams!(pos, 0, this._length);
     this._vector.splice(pos, 0, ...new Array<T>(num).fill(element));
     this._length += num;
+    return this._length;
   }
   find(element: T) {
     for (let i = 0; i < this._length; ++i) {
@@ -161,6 +165,7 @@ class Vector<T> extends SequentialContainer<T> {
       }
     }
     this._length = this._vector.length = index;
+    return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
     this._vector.sort(cmp);

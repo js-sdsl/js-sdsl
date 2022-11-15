@@ -5,7 +5,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @description Push the element to the back.
    * @param element The element you want to push.
    */
-  abstract pushBack(element: T): void;
+  abstract pushBack(element: T): number;
   /**
    * @description Removes the last element.
    */
@@ -22,7 +22,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @param value The value you want to remove.
    * @example container.eraseElementByValue(-1);
    */
-  abstract eraseElementByValue(value: T): void;
+  abstract eraseElementByValue(value: T): number;
   /**
    * @description Insert several elements after the specified position.
    * @param pos The position you want to insert.
@@ -33,7 +33,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * container.insert(1, 4);  // [1, 4, 2, 3]
    * container.insert(1, 5, 3); // [1, 5, 5, 5, 4, 2, 3]
    */
-  abstract insert(pos: number, element: T, num?: number): void;
+  abstract insert(pos: number, element: T, num?: number): number;
   /**
    * @description Reverses the container.
    * @example
@@ -47,7 +47,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * const container = new Vector([1, 1, 3, 2, 2, 5, 5, 2]);
    * container.unique(); // [1, 3, 2, 5, 2]
    */
-  abstract unique(): void;
+  abstract unique(): number;
   /**
    * @description Sort the container.
    * @param cmp Comparison function.

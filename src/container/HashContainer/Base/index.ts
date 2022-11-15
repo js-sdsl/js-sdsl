@@ -76,10 +76,6 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    */
   protected _originMap: Record<string, HashLinkNode<K, V>> = {};
   /**
-   * @description unique tag used to tag object.
-   */
-  readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
-  /**
    * @internal
    */
   protected _head: HashLinkNode<K, V>;
@@ -91,13 +87,17 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @internal
    */
   protected readonly _header: HashLinkNode<K, V>;
+  /**
+   * @description unique tag used to tag object.
+   */
+  readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
   protected constructor() {
     super();
     Object.setPrototypeOf(this._originMap, null);
     this._header = <HashLinkNode<K, V>>{};
     this._header._pre = this._header._next = this._head = this._tail = this._header;
   }
-  private _eraseNode(node: HashLinkNode<K, V>) {
+  protected _eraseNode(node: HashLinkNode<K, V>) {
     const { _pre, _next } = node;
     _pre._next = _next;
     _next._pre = _pre;
@@ -219,5 +219,6 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       node = node._next;
     }
     this._eraseNode(node);
+    return this._length;
   }
 }

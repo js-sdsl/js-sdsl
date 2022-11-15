@@ -17,10 +17,12 @@ class Queue<T> extends Base {
   }
   /**
    * @description Inserts element to queue's end.
+   * @return The container length after pushing.
    */
   push(element: T) {
     this._queue.pushBack(element);
     this._length += 1;
+    return this._length;
   }
   /**
    * @description Removes the first element.

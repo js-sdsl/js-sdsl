@@ -190,6 +190,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode = curNode._next;
     }
     this._eraseNode(curNode);
+    return this._length;
   }
   eraseElementByValue(_value: T) {
     let curNode = this._head;
@@ -199,6 +200,7 @@ class LinkList<T> extends SequentialContainer<T> {
       }
       curNode = curNode._next;
     }
+    return this._length;
   }
   eraseElementByIterator(iter: LinkListIterator<T>) {
     const node = iter._node;
@@ -211,6 +213,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   pushBack(element: T) {
     this._insertNode(element, this._tail);
+    return this._length;
   }
   popBack() {
     if (this._length === 0) return;
@@ -228,7 +231,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   insert(pos: number, element: T, num = 1) {
     $checkWithinAccessParams!(pos, 0, this._length);
-    if (num <= 0) return;
+    if (num <= 0) return this._length;
     if (pos === 0) {
       while (num--) this.pushFront(element);
     } else if (pos === this._length) {
@@ -251,6 +254,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._next = next;
       next._pre = curNode;
     }
+    return this._length;
   }
   find(element: T) {
     let curNode = this._head;
@@ -277,7 +281,9 @@ class LinkList<T> extends SequentialContainer<T> {
     }
   }
   unique() {
-    if (this._length <= 1) return;
+    if (this._length <= 1) {
+      return this._length;
+    }
     let curNode = this._head;
     while (curNode !== this._header) {
       let tmpNode = curNode;
@@ -292,6 +298,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._next._pre = curNode;
       curNode = curNode._next;
     }
+    return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
     if (this._length <= 1) return;
@@ -309,9 +316,11 @@ class LinkList<T> extends SequentialContainer<T> {
   /**
    * @description Push an element to the front.
    * @param element The element you want to push.
+   * @return The length of queue after pushing.
    */
   pushFront(element: T) {
     this._insertNode(element, this._header);
+    return this._length;
   }
   /**
    * @description Removes the first element.
