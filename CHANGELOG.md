@@ -18,6 +18,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Add public `length` property to all the container.
 - Add returned value to `pop` function including `popBack` and `popFront` to all the container which has such function.
+- Add returned value to `eraseElementByKey` which means whether erase successfully.
 
 ### Fixed
 

@@ -185,7 +185,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @param key The key you want to remove.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return Boolean about whether erase successful.
+   * @return Boolean about whether erase successfully.
    */
   eraseElementByKey(key: K, isObject?: boolean) {
     let node;

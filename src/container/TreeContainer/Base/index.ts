@@ -543,7 +543,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @description Remove the element of the specified key.
    * @param key The key you want to remove.
-   * @return Boolean about whether erase successful.
+   * @return Boolean about whether erase successfully.
    */
   eraseElementByKey(key: K) {
     if (this._length === 0) return false;
