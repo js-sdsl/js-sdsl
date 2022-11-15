@@ -93,7 +93,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
-   * @return TreeNode which key is greater than or equals to the given key.
+   * @returns TreeNode which key is greater than or equals to the given key.
    * @internal
    */
   protected _lowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
@@ -112,7 +112,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
-   * @return TreeNode which key is greater than the given key.
+   * @returns TreeNode which key is greater than the given key.
    * @internal
    */
   protected _upperBound(curNode: TreeNode<K, V> | undefined, key: K) {
@@ -131,7 +131,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
-   * @return TreeNode which key is less than or equals to the given key.
+   * @returns TreeNode which key is less than or equals to the given key.
    * @internal
    */
   protected _reverseLowerBound(curNode: TreeNode<K, V> | undefined, key: K) {
@@ -150,7 +150,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @param curNode The starting node of the search.
    * @param key The key you want to search.
-   * @return TreeNode which key is less than the given key.
+   * @returns TreeNode which key is less than the given key.
    * @internal
    */
   protected _reverseUpperBound(curNode: TreeNode<K, V> | undefined, key: K) {
@@ -489,7 +489,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @description Update node's key by iterator.
    * @param iter The iterator you want to change.
    * @param key The key you want to update.
-   * @return Boolean about if the modification is successful.
+   * @returns Boolean about whether the modification is successful.
    * @example
    * const st = new orderedSet([1, 2, 5]);
    * const iter = st.find(2);
@@ -544,7 +544,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @description Remove the element of the specified key.
    * @param key The key you want to remove.
-   * @return Boolean about whether erase successfully.
+   * @returns Boolean about whether erase successfully.
    */
   eraseElementByKey(key: K) {
     if (this._length === 0) return false;
@@ -591,7 +591,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   /**
    * @description Get the height of the tree.
-   * @return Number about the height of the RB-tree.
+   * @returns Number about the height of the RB-tree.
    */
   getHeight() {
     if (this._length === 0) return 0;
@@ -604,7 +604,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   /**
    * @param key The given key you want to compare.
-   * @return An iterator to the first element less than the given key.
+   * @returns An iterator to the first element less than the given key.
    */
   abstract reverseUpperBound(key: K): TreeIterator<K, V>;
   /**
@@ -614,17 +614,17 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   abstract union(other: TreeContainer<K, V>): void;
   /**
    * @param key The given key you want to compare.
-   * @return An iterator to the first element not greater than the given key.
+   * @returns An iterator to the first element not greater than the given key.
    */
   abstract reverseLowerBound(key: K): TreeIterator<K, V>;
   /**
    * @param key The given key you want to compare.
-   * @return An iterator to the first element not less than the given key.
+   * @returns An iterator to the first element not less than the given key.
    */
   abstract lowerBound(key: K): TreeIterator<K, V>;
   /**
    * @param key The given key you want to compare.
-   * @return An iterator to the first element greater than the given key.
+   * @returns An iterator to the first element greater than the given key.
    */
   abstract upperBound(key: K): TreeIterator<K, V>;
 }

@@ -6,7 +6,8 @@ export const enum IteratorType {
 export abstract class ContainerIterator<T> {
   /**
    * @description Iterator's type.
-   * @example console.log(container.end().iteratorType === IteratorType.NORMAL);  // true
+   * @example
+   * console.log(container.end().iteratorType === IteratorType.NORMAL);  // true
    */
   readonly iteratorType: IteratorType;
   /**
@@ -18,22 +19,25 @@ export abstract class ContainerIterator<T> {
   }
   /**
    * @param iter The other iterator you want to compare.
-   * @return Boolean about if this equals to obj.
-   * @example container.find(1).equals(container.end());
+   * @returns Boolean about if this equals to obj.
+   * @example
+   * container.find(1).equals(container.end());
    */
   equals(iter: ContainerIterator<T>) {
     return this._node === iter._node;
   }
   /**
    * @description Pointers to element.
-   * @return The value of the pointer's element.
-   * @example const val = container.begin().pointer;
+   * @returns The value of the pointer's element.
+   * @example
+   * const val = container.begin().pointer;
    */
   abstract get pointer(): T;
   /**
    * @description Set pointer's value (some containers are unavailable).
    * @param newValue The new value you want to set.
-   * @example (<LinkList<number>>container).begin().pointer = 1;
+   * @example
+   * (<LinkList<number>>container).begin().pointer = 1;
    */
   abstract set pointer(newValue: T);
   /**
@@ -58,7 +62,7 @@ export abstract class ContainerIterator<T> {
   abstract next(): this;
   /**
    * @description Get a copy of itself.
-   * @return The copy of self.
+   * @returns The copy of self.
    * @example
    * const iter = container.find(1);  // container = [1, 2]
    * const next = iter.copy().next();
@@ -76,7 +80,7 @@ export abstract class Base {
    */
   protected _length = 0;
   /**
-   * @return The size of the container.
+   * @returns The size of the container.
    * @example
    * const container = new Vector([1, 2]);
    * console.log(container.length); // 2
@@ -85,7 +89,7 @@ export abstract class Base {
     return this._length;
   }
   /**
-   * @return The size of the container.
+   * @returns The size of the container.
    * @example
    * const container = new Vector([1, 2]);
    * console.log(container.size()); // 2
@@ -94,7 +98,7 @@ export abstract class Base {
     return this._length;
   }
   /**
-   * @return Boolean about if the container is empty.
+   * @returns Boolean about if the container is empty.
    * @example
    * container.clear();
    * console.log(container.empty());  // true
@@ -113,7 +117,7 @@ export abstract class Base {
 
 export abstract class Container<T> extends Base {
   /**
-   * @return Iterator pointing to the beginning element.
+   * @returns Iterator pointing to the beginning element.
    * @example
    * const begin = container.begin();
    * const end = container.end();
@@ -123,7 +127,7 @@ export abstract class Container<T> extends Base {
    */
   abstract begin(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the super end like c++.
+   * @returns Iterator pointing to the super end like c++.
    * @example
    * const begin = container.begin();
    * const end = container.end();
@@ -133,7 +137,7 @@ export abstract class Container<T> extends Base {
    */
   abstract end(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the end element.
+   * @returns Iterator pointing to the end element.
    * @example
    * const rBegin = container.rBegin();
    * const rEnd = container.rEnd();
@@ -143,7 +147,7 @@ export abstract class Container<T> extends Base {
    */
   abstract rBegin(): ContainerIterator<T>;
   /**
-   * @return Iterator pointing to the super begin like c++.
+   * @returns Iterator pointing to the super begin like c++.
    * @example
    * const rBegin = container.rBegin();
    * const rEnd = container.rEnd();
@@ -153,23 +157,25 @@ export abstract class Container<T> extends Base {
    */
   abstract rEnd(): ContainerIterator<T>;
   /**
-   * @return The first element of the container.
+   * @returns The first element of the container.
    */
   abstract front(): T | undefined;
   /**
-   * @return The last element of the container.
+   * @returns The last element of the container.
    */
   abstract back(): T | undefined;
   /**
    * @description Iterate over all elements in the container.
    * @param callback Callback function like Array.forEach.
-   * @example container.forEach((element, index) => console.log(element, index));
+   * @example
+   * container.forEach((element, index) => console.log(element, index));
    */
   abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
   /**
    * @param element The element you want to find.
-   * @return An iterator pointing to the element if found, or super end if not found.
-   * @example container.find(1).equals(container.end());
+   * @returns An iterator pointing to the element if found, or super end if not found.
+   * @example
+   * container.find(1).equals(container.end());
    */
   abstract find(element: T): ContainerIterator<T>;
   /**
@@ -181,7 +187,7 @@ export abstract class Container<T> extends Base {
   /**
    * @description Removes the element at the specified position.
    * @param pos The element's position you want to remove.
-   * @return The container length after erasing.
+   * @returns The container length after erasing.
    * @example
    * container.eraseElementByPos(-1); // throw a RangeError
    */
@@ -189,7 +195,7 @@ export abstract class Container<T> extends Base {
   /**
    * @description Removes element by iterator and move `iter` to next.
    * @param iter The iterator you want to erase.
-   * @return The next iterator.
+   * @returns The next iterator.
    * @example
    * container.eraseElementByIterator(container.begin());
    * container.eraseElementByIterator(container.end()); // throw a RangeError

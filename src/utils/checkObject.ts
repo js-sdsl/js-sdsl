@@ -1,7 +1,7 @@
 /**
  * @description Determine whether the type of key is `object`.
  * @param key The key want to check.
- * @return Boolean about whether the type of key is `object`.
+ * @returns Boolean about whether the type of key is `object`.
  * @internal
  */
 export default function checkObject<T>(key: T) {

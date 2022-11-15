@@ -91,8 +91,9 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Push element into a container in order.
    * @param item The element you want to push.
-   * @return The length of heap after pushing.
-   * @example queue.push(1);
+   * @returns The length of heap after pushing.
+   * @example
+   * queue.push(1);
    */
   push(item: T) {
     this._priorityQueue.push(item);
@@ -101,7 +102,8 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Removes the top element.
-   * @example queue.pop();
+   * @example
+   * queue.pop();
    */
   pop() {
     if (this._length === 0) return;
@@ -116,7 +118,8 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Accesses the top element.
-   * @example const top = queue.top();
+   * @example
+   * const top = queue.top();
    */
   top(): T | undefined {
     return this._priorityQueue[0];
@@ -124,7 +127,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Check if element is in heap.
    * @param item The item want to find.
-   * @return Boolean about if element is in heap.
+   * @returns Boolean about if element is in heap.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };
@@ -137,7 +140,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Remove specified item from heap.
    * @param item The item want to remove.
-   * @return Boolean about if remove success.
+   * @returns Boolean about whether remove success.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };
@@ -163,7 +166,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Update item and it's pos in the heap.
    * @param item The item want to update.
-   * @return Boolean about if update success.
+   * @returns Boolean about whether update success.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };
@@ -179,8 +182,9 @@ class PriorityQueue<T> extends Base {
     return true;
   }
   /**
-   * @return Return a copy array of heap.
-   * @example const arr = queue.toArray();
+   * @returns Return a copy array of heap.
+   * @example
+   * const arr = queue.toArray();
    */
   toArray() {
     return [...this._priorityQueue];

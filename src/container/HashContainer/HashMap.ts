@@ -67,7 +67,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param value The value want to set.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return The length of container after setting.
+   * @returns The length of container after setting.
    */
   setElement(key: K, value: V, isObject?: boolean) {
     this._set(key, value, isObject);
@@ -78,7 +78,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param key The element you want to search.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return An iterator pointing to the element if found, or super end if not found.
+   * @returns An iterator pointing to the element if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
@@ -97,7 +97,8 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param key The key want to search.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @example const val = container.getElementByKey(1);
+   * @example
+   * const val = container.getElementByKey(1);
    */
   getElementByKey(key: K, isObject?: boolean) {
     if (isObject === undefined) isObject = checkObject(key);

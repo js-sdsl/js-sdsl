@@ -18,7 +18,7 @@ class Stack<T> extends Base {
   }
   /**
    * @description Insert element to stack's end.
-   * @return The container length after erasing.
+   * @returns The container length after erasing.
    */
   push(element: T) {
     this._stack.push(element);

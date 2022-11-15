@@ -50,7 +50,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @param key The key want to insert.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return The length of container after inserting.
+   * @returns The length of container after inserting.
    */
   insert(key: K, isObject?: boolean) {
     this._set(key, undefined, isObject);
@@ -61,7 +61,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @param key The element you want to search.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return An iterator pointing to the element if found, or super end if not found.
+   * @returns An iterator pointing to the element if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);

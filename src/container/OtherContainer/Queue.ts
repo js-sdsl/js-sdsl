@@ -17,7 +17,7 @@ class Queue<T> extends Base {
   }
   /**
    * @description Inserts element to queue's end.
-   * @return The container length after pushing.
+   * @returns The container length after pushing.
    */
   push(element: T) {
     this._queue.pushBack(element);

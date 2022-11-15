@@ -316,7 +316,7 @@ class LinkList<T> extends SequentialContainer<T> {
   /**
    * @description Push an element to the front.
    * @param element The element you want to push.
-   * @return The length of queue after pushing.
+   * @returns The length of queue after pushing.
    */
   pushFront(element: T) {
     this._insertNode(element, this._header);

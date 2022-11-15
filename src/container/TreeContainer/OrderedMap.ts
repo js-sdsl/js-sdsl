@@ -128,7 +128,8 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   /**
    * @description Get the value of the element of the specified key.
-   * @example const val = container.getElementByKey(1);
+   * @example
+   * const val = container.getElementByKey(1);
    */
   getElementByKey(key: K) {
     const curNode = this._findElementNode(this._root, key);

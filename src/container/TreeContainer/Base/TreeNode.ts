@@ -37,7 +37,7 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Get the pre node.
-   * @return TreeNode about the pre node.
+   * @returns TreeNode about the pre node.
    */
   pre() {
     let preNode: TreeNode<K, V> = this;
@@ -63,7 +63,7 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Get the next node.
-   * @return TreeNode about the next node.
+   * @returns TreeNode about the next node.
    */
   next() {
     let nextNode: TreeNode<K, V> = this;
@@ -86,7 +86,7 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Rotate left.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
   rotateLeft() {
     const PP = this._parent!;
@@ -109,7 +109,7 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Rotate right.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
   rotateRight() {
     const PP = this._parent!;
@@ -139,7 +139,7 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   _subTreeSize = 1;
   /**
    * @description Rotate left and do recount.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
   rotateLeft() {
     const parent = super.rotateLeft() as TreeNodeEnableIndex<K, V>;
@@ -149,7 +149,7 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   }
   /**
    * @description Rotate right and do recount.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
   rotateRight() {
     const parent = super.rotateRight() as TreeNodeEnableIndex<K, V>;
