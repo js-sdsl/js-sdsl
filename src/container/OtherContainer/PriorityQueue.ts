@@ -105,7 +105,7 @@ class PriorityQueue<T> extends Base {
   pop() {
     if (this._length === 0) return;
     const value = this._priorityQueue[0];
-    const last = this._priorityQueue.pop() as T;
+    const last = this._priorityQueue.pop()!;
     this._length -= 1;
     if (this._length) {
       this._priorityQueue[0] = last;
@@ -152,7 +152,7 @@ class PriorityQueue<T> extends Base {
       this._priorityQueue.pop();
       this._length -= 1;
     } else {
-      this._priorityQueue.splice(index, 1, this._priorityQueue.pop() as T);
+      this._priorityQueue.splice(index, 1, this._priorityQueue.pop()!);
       this._length -= 1;
       this._pushUp(index);
       this._pushDown(index, this._length >> 1);

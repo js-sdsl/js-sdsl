@@ -256,7 +256,7 @@ class Deque<T> extends SequentialContainer<T> {
       curNodeBucketIndex,
       curNodePointerIndex
     } = this._getElementIndex(pos);
-    return this._map[curNodeBucketIndex][curNodePointerIndex] as T;
+    return this._map[curNodeBucketIndex][curNodePointerIndex]!;
   }
   setElementByPos(pos: number, element: T) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);

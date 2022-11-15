@@ -9,7 +9,7 @@ class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
     if (this._node === this._header) {
       throwIteratorAccessError();
     }
-    return this._node._key as K;
+    return this._node._key!;
   }
   copy() {
     return new OrderedSetIterator(this._node, this._header, this.iteratorType);
@@ -50,7 +50,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   ): Generator<K, void, undefined> {
     if (curNode === undefined) return;
     yield * this._iterationFunc(curNode._left);
-    yield curNode._key as K;
+    yield curNode._key!;
     yield * this._iterationFunc(curNode._right);
   }
   begin() {

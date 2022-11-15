@@ -84,11 +84,11 @@ class Vector<T> extends SequentialContainer<T> {
       IteratorType.REVERSE
     );
   }
-  front() {
-    return this._vector[0] as (T | undefined);
+  front(): T | undefined {
+    return this._vector[0];
   }
-  back() {
-    return this._vector[this._length - 1] as (T | undefined);
+  back(): T | undefined {
+    return this._vector[this._length - 1];
   }
   forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
     for (let i = 0; i < this._length; ++i) {

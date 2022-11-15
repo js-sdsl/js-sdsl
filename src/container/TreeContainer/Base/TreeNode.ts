@@ -43,19 +43,19 @@ export class TreeNode<K, V> {
     let preNode: TreeNode<K, V> = this;
     if (
       preNode._color === TreeNodeColor.RED &&
-      (preNode._parent as TreeNode<K, V>)._parent === preNode
+      preNode._parent!._parent === preNode
     ) {
-      preNode = preNode._right as TreeNode<K, V>;
+      preNode = preNode._right!;
     } else if (preNode._left) {
       preNode = preNode._left;
       while (preNode._right) {
         preNode = preNode._right;
       }
     } else {
-      let pre = preNode._parent as TreeNode<K, V>;
+      let pre = preNode._parent!;
       while (pre._left === preNode) {
         preNode = pre;
-        pre = preNode._parent as TreeNode<K, V>;
+        pre = preNode._parent!;
       }
       preNode = pre;
     }
@@ -74,10 +74,10 @@ export class TreeNode<K, V> {
       }
       return nextNode;
     } else {
-      let pre = nextNode._parent as TreeNode<K, V>;
+      let pre = nextNode._parent!;
       while (pre._right === nextNode) {
         nextNode = pre;
-        pre = nextNode._parent as TreeNode<K, V>;
+        pre = nextNode._parent!;
       }
       if (nextNode._right !== pre) {
         return pre;
@@ -89,8 +89,8 @@ export class TreeNode<K, V> {
    * @return TreeNode about moved to original position after rotation.
    */
   rotateLeft() {
-    const PP = this._parent as TreeNode<K, V>;
-    const V = this._right as TreeNode<K, V>;
+    const PP = this._parent!;
+    const V = this._right!;
     const R = V._left;
 
     if (PP._parent === this) PP._parent = V;
@@ -112,8 +112,8 @@ export class TreeNode<K, V> {
    * @return TreeNode about moved to original position after rotation.
    */
   rotateRight() {
-    const PP = this._parent as TreeNode<K, V>;
-    const F = this._left as TreeNode<K, V>;
+    const PP = this._parent!;
+    const F = this._left!;
     const K = F._right;
 
     if (PP._parent === this) PP._parent = F;

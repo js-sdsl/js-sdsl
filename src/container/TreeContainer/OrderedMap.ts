@@ -10,7 +10,7 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
       throwIteratorAccessError();
     }
     const self = this;
-    return new Proxy([] as unknown as [K, V], {
+    return new Proxy(<[K, V]><unknown>[], {
       get(_, props: '0' | '1') {
         if (props === '0') return self._node._key;
         else if (props === '1') return self._node._value;
@@ -63,7 +63,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   ): Generator<[K, V], void, undefined> {
     if (curNode === undefined) return;
     yield * this._iterationFunc(curNode._left);
-    yield [curNode._key, curNode._value] as [K, V];
+    yield <[K, V]>[curNode._key, curNode._value];
     yield * this._iterationFunc(curNode._right);
   }
   begin() {
@@ -84,13 +84,13 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   front() {
     if (this._length === 0) return;
-    const minNode = this._header._left as TreeNode<K, V>;
-    return [minNode._key, minNode._value] as [K, V];
+    const minNode = this._header._left!;
+    return <[K, V]>[minNode._key, minNode._value];
   }
   back() {
     if (this._length === 0) return;
-    const maxNode = this._header._right as TreeNode<K, V>;
-    return [maxNode._key, maxNode._value] as [K, V];
+    const maxNode = this._header._right!;
+    return <[K, V]>[maxNode._key, maxNode._value];
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
