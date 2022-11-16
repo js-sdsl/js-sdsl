@@ -16,17 +16,17 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  private readonly _cmp: (x: K, y: K) => number;
+  protected readonly _cmp: (x: K, y: K) => number;
   /**
    * @internal
    */
-  private readonly _TreeNodeClass: typeof TreeNode | typeof TreeNodeEnableIndex;
+  protected readonly _TreeNodeClass: typeof TreeNode | typeof TreeNodeEnableIndex;
   /**
    * @description Remove a node.
    * @param curNode The node you want to remove.
    * @internal
    */
-  private readonly _eraseNode: (curNode: TreeNode<K, V>) => void;
+  protected readonly _eraseNode: (curNode: TreeNode<K, V>) => void;
   /**
    * @description Insert a key-value pair or set value by the given key.
    * @param key The key want to insert.
@@ -174,7 +174,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @param curNode The node want to remove.
    * @internal
    */
-  private _eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
+  protected _eraseNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode._parent!;
       if (parentNode === this._header) return;
@@ -240,7 +240,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  private _preEraseNode(curNode: TreeNode<K, V>) {
+  protected _preEraseNode(curNode: TreeNode<K, V>) {
     if (this._length === 1) {
       this.clear();
       return this._header;
@@ -288,7 +288,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  private _insertNodeSelfBalance(curNode: TreeNode<K, V>) {
+  protected _insertNodeSelfBalance(curNode: TreeNode<K, V>) {
     while (true) {
       const parentNode = curNode._parent!;
       if (parentNode._color === TreeNodeColor.BLACK) return;
@@ -374,7 +374,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  private _preSet(key: K, value?: V, hint?: TreeIterator<K, V>) {
+  protected _preSet(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this._root === undefined) {
       this._length += 1;
       this._root = new this._TreeNodeClass(key, value);
