@@ -94,7 +94,8 @@ function hashMapTest(generateRandom: () => unknown) {
   it('HashMap setElement test', () => {
     for (let i = 0; i < testNum; ++i) {
       stdMap.set(arr[i], i - 1);
-      myHashMap.setElement(arr[i], i - 1, isObject);
+      const size = myHashMap.setElement(arr[i], i - 1, isObject);
+      expect(size).to.equal(stdMap.size);
     }
     judgeHashMap(myHashMap, stdMap);
   });

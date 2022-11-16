@@ -205,7 +205,7 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @description Push the element to the front.
    * @param element The element you want to push.
-   * @returns The length of queue after pushing.
+   * @returns The size of queue after pushing.
    */
   pushFront(element: T) {
     if (this._length) {

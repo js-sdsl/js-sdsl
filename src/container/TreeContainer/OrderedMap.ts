@@ -113,6 +113,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * @param key The key want to insert.
    * @param value The value want to set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @return The size of container after setting.
    * @example
    * const mp = new OrderedMap([[2, 0], [4, 0], [5, 0]]);
    * const iter = mp.begin();
@@ -120,7 +121,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * mp.setElement(3, 0, iter);  // give a hint will be faster.
    */
   setElement(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
-    this._set(key, value, hint);
+    return this._set(key, value, hint);
   }
   find(key: K) {
     const curNode = this._findElementNode(this._root, key);

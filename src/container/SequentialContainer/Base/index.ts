@@ -4,7 +4,7 @@ abstract class SequentialContainer<T> extends Container<T> {
   /**
    * @description Push the element to the back.
    * @param element The element you want to push.
-   * @returns The length of container after pushing.
+   * @returns The size of container after pushing.
    */
   abstract pushBack(element: T): number;
   /**
@@ -22,7 +22,7 @@ abstract class SequentialContainer<T> extends Container<T> {
   /**
    * @description Removes the elements of the specified value.
    * @param value The value you want to remove.
-   * @returns The length of container after erasing.
+   * @returns The size of container after erasing.
    * @example
    * container.eraseElementByValue(-1);
    */
@@ -32,7 +32,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @param pos The position you want to insert.
    * @param element The element you want to insert.
    * @param num The number of elements you want to insert (default 1).
-   * @returns The length of container after inserting.
+   * @returns The size of container after inserting.
    * @example
    * const container = new Vector([1, 2, 3]);
    * container.insert(1, 4);  // [1, 4, 2, 3]
@@ -48,7 +48,7 @@ abstract class SequentialContainer<T> extends Container<T> {
   abstract reverse(): void;
   /**
    * @description Removes the duplication of elements in the container.
-   * @returns The length of container after inserting.
+   * @returns The size of container after inserting.
    * @example
    * const container = new Vector([1, 1, 3, 2, 2, 5, 5, 2]);
    * container.unique(); // [1, 3, 2, 5, 2]

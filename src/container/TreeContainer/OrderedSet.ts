@@ -82,6 +82,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * @description Insert element to set.
    * @param key The key want to insert.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @return The size of container after setting.
    * @example
    * const st = new OrderedSet([2, 4, 5]);
    * const iter = st.begin();
@@ -89,7 +90,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * st.insert(3, iter);  // give a hint will be faster.
    */
   insert(key: K, hint?: OrderedSetIterator<K>) {
-    this._set(key, undefined, hint);
+    return this._set(key, undefined, hint);
   }
   find(element: K) {
     const curNode = this._findElementNode(this._root, element);

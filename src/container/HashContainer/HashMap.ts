@@ -67,11 +67,10 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param value The value want to set.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns The length of container after setting.
+   * @returns The size of container after setting.
    */
   setElement(key: K, value: V, isObject?: boolean) {
-    this._set(key, value, isObject);
-    return this._length;
+    return this._set(key, value, isObject);
   }
   /**
    * @description Check key if exist in container.

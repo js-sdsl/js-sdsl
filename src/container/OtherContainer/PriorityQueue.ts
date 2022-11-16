@@ -91,7 +91,7 @@ class PriorityQueue<T> extends Base {
   /**
    * @description Push element into a container in order.
    * @param item The element you want to push.
-   * @returns The length of heap after pushing.
+   * @returns The size of heap after pushing.
    * @example
    * queue.push(1);
    */

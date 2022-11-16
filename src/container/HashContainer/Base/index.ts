@@ -119,7 +119,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
       if (index !== undefined) {
         this._objMap[<number>index]._value = <V>value;
-        return;
+        return this._length;
       }
       Object.defineProperty(key, this.HASH_KEY_TAG, {
         value: this._objMap.length,
@@ -136,7 +136,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       const node = this._originMap[<string><unknown>key];
       if (node) {
         node._value = <V>value;
-        return;
+        return this._length;
       }
       newTail = {
         _key: key,
@@ -154,7 +154,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
     this._tail = newTail;
     this._header._pre = newTail;
-    this._length += 1;
+    return ++this._length;
   }
   /**
    * @internal

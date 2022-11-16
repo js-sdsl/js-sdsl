@@ -100,8 +100,9 @@ function hashSetTest(generateRandom: () => unknown) {
     const eraseQueue = [1, 10, 100, 1000];
     for (const index of eraseQueue) {
       const el = myHashSet.getElementByPos(index);
-      myHashSet.eraseElementByPos(index);
+      const size = myHashSet.eraseElementByPos(index);
       stdSet.delete(el);
+      expect(size).equal(stdSet.size);
     }
     judgeHashSet(myHashSet, stdSet);
   });

@@ -50,11 +50,10 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @param key The key want to insert.
    * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns The length of container after inserting.
+   * @returns The size of container after inserting.
    */
   insert(key: K, isObject?: boolean) {
-    this._set(key, undefined, isObject);
-    return this._length;
+    return this._set(key, undefined, isObject);
   }
   /**
    * @description Check key if exist in container.

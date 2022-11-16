@@ -32,9 +32,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @param key The key want to insert.
    * @param value The value want to set.
    * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @return The size of container after setting.
    * @internal
    */
-  protected _set: (key: K, value: V, hint?: TreeIterator<K, V>) => void;
+  protected _set: (key: K, value: V, hint?: TreeIterator<K, V>) => number;
   /**
    * @param cmp The compare function.
    * @param enableIndex Whether to enable iterator indexing function.
@@ -72,6 +73,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
             curNode.recount();
           }
         }
+        return this._length;
       };
       this._eraseNode = function (curNode) {
         let p = this._preEraseNode(curNode) as TreeNodeEnableIndex<K, V>;
@@ -85,6 +87,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       this._set = function (key, value, hint) {
         const curNode = this._preSet(key, value, hint);
         if (curNode) this._insertNodeSelfBalance(curNode);
+        return this._length;
       };
       this._eraseNode = this._preEraseNode;
     }

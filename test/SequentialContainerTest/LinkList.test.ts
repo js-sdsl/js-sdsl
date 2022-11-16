@@ -14,8 +14,7 @@ describe('LinkList test', () => {
 
   it('LinkList pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myLinkList.pushFront(i);
-      tmpArr.unshift(i);
+      expect(myLinkList.pushFront(i)).to.equal(tmpArr.unshift(i));
     }
     myLinkList.begin().pointer = 100;
     tmpArr[0] = 100;

@@ -47,8 +47,8 @@ describe('OrderedMap test', () => {
 
   it('OrderedMap setElement function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -218,8 +218,8 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     let i = testNum;
     stdMap.forEach((value, key) => {
