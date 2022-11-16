@@ -55,6 +55,14 @@ class HashSet<K> extends HashContainer<K, undefined> {
   insert(key: K, isObject?: boolean) {
     return this._set(key, undefined, isObject);
   }
+  getElementByPos(pos: number) {
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    let node = this._head;
+    while (pos--) {
+      node = node._next;
+    }
+    return node._key;
+  }
   /**
    * @description Check key if exist in container.
    * @param key - The element you want to search.
@@ -65,14 +73,6 @@ class HashSet<K> extends HashContainer<K, undefined> {
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
     return new HashSetIterator(node, this._header);
-  }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let node = this._head;
-    while (pos--) {
-      node = node._next;
-    }
-    return node._key;
   }
   forEach(callback: (element: K, index: number, container: HashSet<K>) => void) {
     let index = 0;

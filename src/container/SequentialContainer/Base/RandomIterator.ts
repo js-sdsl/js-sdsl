@@ -19,8 +19,6 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
    * @internal
    */
   protected readonly _setElementByPos: (pos: number, element: T) => void;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -76,4 +74,8 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     $checkWithinAccessParams!(this._node, 0, this._size() - 1);
     this._setElementByPos(this._node, newValue);
   }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }

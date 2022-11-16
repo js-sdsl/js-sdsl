@@ -79,18 +79,6 @@ class HashMap<K, V> extends HashContainer<K, V> {
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns An iterator pointing to the element if found, or super end if not found.
    */
-  find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key, isObject);
-    return new HashMapIterator(node, this._header);
-  }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let node = this._head;
-    while (pos--) {
-      node = node._next;
-    }
-    return <[K, V]>[node._key, node._value];
-  }
   /**
    * @description Get the value of the element of the specified key.
    * @param key - The key want to search.
@@ -107,6 +95,18 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     const node = this._originMap[<string><unknown>key];
     return node ? node._value : undefined;
+  }
+  getElementByPos(pos: number) {
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    let node = this._head;
+    while (pos--) {
+      node = node._next;
+    }
+    return <[K, V]>[node._key, node._value];
+  }
+  find(key: K, isObject?: boolean) {
+    const node = this._findElementNode(key, isObject);
+    return new HashMapIterator(node, this._header);
   }
   forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
     let index = 0;

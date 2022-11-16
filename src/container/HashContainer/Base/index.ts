@@ -19,8 +19,6 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
    * @internal
    */
   protected readonly _header: HashLinkNode<K, V>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -64,6 +62,10 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
       };
     }
   }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export abstract class HashContainer<K, V> extends Container<K | [K, V]> {

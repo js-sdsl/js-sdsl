@@ -173,19 +173,19 @@ export abstract class Container<T> extends Base {
    */
   abstract back(): T | undefined;
   /**
-   * @description Iterate over all elements in the container.
-   * @param callback - Callback function like Array.forEach.
-   * @example
-   * container.forEach((element, index) => console.log(element, index));
-   */
-  abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
-  /**
    * @param element - The element you want to find.
    * @returns An iterator pointing to the element if found, or super end if not found.
    * @example
    * container.find(1).equals(container.end());
    */
   abstract find(element: T): ContainerIterator<T>;
+  /**
+   * @description Iterate over all elements in the container.
+   * @param callback - Callback function like Array.forEach.
+   * @example
+   * container.forEach((element, index) => console.log(element, index));
+   */
+  abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
   /**
    * @description Gets the value of the element at the specified position.
    * @example

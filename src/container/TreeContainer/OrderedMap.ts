@@ -60,7 +60,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    */
   private * _iterationFunc(
     curNode: TreeNode<K, V> | undefined
-  ): Generator<[K, V], void, undefined> {
+  ): Generator<[K, V], void> {
     if (curNode === undefined) return;
     yield * this._iterationFunc(curNode._left);
     yield <[K, V]>[curNode._key, curNode._value];

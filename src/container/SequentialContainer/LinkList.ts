@@ -167,14 +167,6 @@ class LinkList<T> extends SequentialContainer<T> {
   back() {
     return this._tail._value;
   }
-  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
-    let curNode = this._head;
-    let index = 0;
-    while (curNode !== this._header) {
-      callback(curNode._value, index++, this);
-      curNode = curNode._next;
-    }
-  }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     let curNode = this._head;
@@ -219,6 +211,25 @@ class LinkList<T> extends SequentialContainer<T> {
     if (this._length === 0) return;
     const value = this._tail._value;
     this._eraseNode(this._tail);
+    return value;
+  }
+  /**
+   * @description Push an element to the front.
+   * @param element - The element you want to push.
+   * @returns The size of queue after pushing.
+   */
+  pushFront(element: T) {
+    this._insertNode(element, this._header);
+    return this._length;
+  }
+  /**
+   * @description Removes the first element.
+   * @returns The element you popped.
+   */
+  popFront() {
+    if (this._length === 0) return;
+    const value = this._head._value;
+    this._eraseNode(this._head);
     return value;
   }
   setElementByPos(pos: number, element: T) {
@@ -314,25 +325,6 @@ class LinkList<T> extends SequentialContainer<T> {
     });
   }
   /**
-   * @description Push an element to the front.
-   * @param element - The element you want to push.
-   * @returns The size of queue after pushing.
-   */
-  pushFront(element: T) {
-    this._insertNode(element, this._header);
-    return this._length;
-  }
-  /**
-   * @description Removes the first element.
-   * @returns The element you popped.
-   */
-  popFront() {
-    if (this._length === 0) return;
-    const value = this._head._value;
-    this._eraseNode(this._head);
-    return value;
-  }
-  /**
    * @description Merges two sorted lists.
    * @param list - The other list you want to merge (must be sorted).
    * @returns The size of list after merging.
@@ -360,6 +352,14 @@ class LinkList<T> extends SequentialContainer<T> {
       });
     }
     return this._length;
+  }
+  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
+    let curNode = this._head;
+    let index = 0;
+    while (curNode !== this._header) {
+      callback(curNode._value, index++, this);
+      curNode = curNode._next;
+    }
   }
   [Symbol.iterator]() {
     return function * (this: LinkList<T>) {

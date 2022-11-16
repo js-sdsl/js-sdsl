@@ -47,7 +47,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    */
   private * _iterationFunc(
     curNode: TreeNode<K, undefined> | undefined
-  ): Generator<K, void, undefined> {
+  ): Generator<K, void> {
     if (curNode === undefined) return;
     yield * this._iterationFunc(curNode._left);
     yield curNode._key!;

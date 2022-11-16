@@ -89,11 +89,6 @@ class Vector<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._vector[this._length - 1];
   }
-  forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
-    for (let i = 0; i < this._length; ++i) {
-      callback(this._vector[i], i, this);
-    }
-  }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     return this._vector[pos];
@@ -168,6 +163,11 @@ class Vector<T> extends SequentialContainer<T> {
   }
   sort(cmp?: (x: T, y: T) => number) {
     this._vector.sort(cmp);
+  }
+  forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
+    for (let i = 0; i < this._length; ++i) {
+      callback(this._vector[i], i, this);
+    }
   }
   [Symbol.iterator]() {
     return function * (this: Vector<T>) {

@@ -12,8 +12,6 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    * @internal
    */
   protected _header: TreeNode<K, V>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -94,6 +92,10 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     return index;
   }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export default TreeIterator;
