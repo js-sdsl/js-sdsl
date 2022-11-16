@@ -105,7 +105,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   /**
    * @description Get the bucket position of the element and the pointer position by index.
-   * @param pos The element's index.
+   * @param pos - The element's index.
    * @internal
    */
   private _getElementIndex(pos: number) {
@@ -204,7 +204,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   /**
    * @description Push the element to the front.
-   * @param element The element you want to push.
+   * @param element - The element you want to push.
    * @returns The size of queue after pushing.
    */
   pushFront(element: T) {
@@ -229,6 +229,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   /**
    * @description Remove the _first element.
+   * @returns The element you popped.
    */
   popFront() {
     if (this._length === 0) return;
@@ -288,14 +289,15 @@ class Deque<T> extends SequentialContainer<T> {
   }
   /**
    * @description Remove all elements after the specified position (excluding the specified position).
-   * @param pos The previous position of the _first removed element.
+   * @param pos - The previous position of the first removed element.
+   * @returns The size of the container after cutting.
    * @example
    * deque.cut(1); // Then deque's size will be 2. deque -> [0, 1]
    */
   cut(pos: number) {
     if (pos < 0) {
       this.clear();
-      return;
+      return 0;
     }
     const {
       curNodeBucketIndex,
@@ -304,6 +306,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._last = curNodeBucketIndex;
     this._curLast = curNodePointerIndex;
     this._length = pos + 1;
+    return this._length;
   }
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -332,8 +335,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     const _length = arr.length;
     for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
-    this.cut(_length - 1);
-    return this._length;
+    return this.cut(_length - 1);
   }
   eraseElementByIterator(iter: DequeIterator<T>) {
     const _node = iter._node;

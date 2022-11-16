@@ -18,6 +18,7 @@ class Stack<T> extends Base {
   }
   /**
    * @description Insert element to stack's end.
+   * @description The element you want to push to the back.
    * @returns The container length after erasing.
    */
   push(element: T) {
@@ -27,6 +28,7 @@ class Stack<T> extends Base {
   }
   /**
    * @description Removes the end element.
+   * @returns The element you popped.
    */
   pop() {
     if (this._length === 0) return;
@@ -35,6 +37,7 @@ class Stack<T> extends Base {
   }
   /**
    * @description Accesses the end element.
+   * @returns The last element.
    */
   top(): T | undefined {
     return this._stack[this._length - 1];

@@ -37,7 +37,7 @@ describe('LinkList test', () => {
     myLinkList.sort((x, y) => x - y);
     otherLinkList.sort((x, y) => x - y);
     tmpArr.sort((x, y) => x - y);
-    myLinkList.merge(otherLinkList);
+    expect(myLinkList.merge(otherLinkList)).to.equal(tmpArr.length);
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 

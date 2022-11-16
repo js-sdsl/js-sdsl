@@ -1,5 +1,5 @@
 /**
- * @description throw iterator access error
+ * @description Throw an iterator access error.
  * @internal
  */
 export function throwIteratorAccessError() {

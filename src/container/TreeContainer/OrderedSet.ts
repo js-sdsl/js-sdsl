@@ -22,9 +22,9 @@ export type { OrderedSetIterator };
 
 class OrderedSet<K> extends TreeContainer<K, undefined> {
   /**
-   * @param container The initialization container.
-   * @param cmp The compare function.
-   * @param enableIndex Whether to enable iterator indexing function.
+   * @param container - The initialization container.
+   * @param cmp - The compare function.
+   * @param enableIndex - Whether to enable iterator indexing function.
    * @example
    * new OrderedSet();
    * new OrderedSet([0, 1, 2]);
@@ -80,8 +80,8 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
-   * @param key The key want to insert.
-   * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @param key - The key want to insert.
+   * @param hint - You can give an iterator hint to improve insertion efficiency.
    * @return The size of container after setting.
    * @example
    * const st = new OrderedSet([2, 4, 5]);
@@ -117,6 +117,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     other.forEach(function (el) {
       self.insert(el);
     });
+    return this._length;
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

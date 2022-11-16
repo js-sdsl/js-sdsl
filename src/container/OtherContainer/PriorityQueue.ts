@@ -11,10 +11,10 @@ class PriorityQueue<T> extends Base {
   private readonly _cmp: (x: T, y: T) => number;
   /**
    * @description PriorityQueue's constructor.
-   * @param container Initialize container, must have a forEach function.
-   * @param cmp Compare function.
-   * @param copy When the container is an array, you can choose to directly operate on the original object of
-   *             the array or perform a shallow copy. The default is shallow copy.
+   * @param container - Initialize container, must have a forEach function.
+   * @param cmp - Compare function.
+   * @param copy - When the container is an array, you can choose to directly operate on the original object of
+   *               the array or perform a shallow copy. The default is shallow copy.
    * @example
    * new PriorityQueue();
    * new PriorityQueue([1, 2, 3]);
@@ -90,7 +90,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Push element into a container in order.
-   * @param item The element you want to push.
+   * @param item - The element you want to push.
    * @returns The size of heap after pushing.
    * @example
    * queue.push(1);
@@ -102,6 +102,7 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Removes the top element.
+   * @returns The element you popped.
    * @example
    * queue.pop();
    */
@@ -126,8 +127,8 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Check if element is in heap.
-   * @param item The item want to find.
-   * @returns Boolean about if element is in heap.
+   * @param item - The item want to find.
+   * @returns Whether element is in heap.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };
@@ -139,8 +140,8 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Remove specified item from heap.
-   * @param item The item want to remove.
-   * @returns Boolean about whether remove success.
+   * @param item - The item want to remove.
+   * @returns Whether remove success.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };
@@ -165,8 +166,8 @@ class PriorityQueue<T> extends Base {
   }
   /**
    * @description Update item and it's pos in the heap.
-   * @param item The item want to update.
-   * @returns Boolean about whether update success.
+   * @param item - The item want to update.
+   * @returns Whether update success.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };

@@ -46,7 +46,7 @@ describe('OrderedSet test', () => {
       otherOrderedSet.insert(random);
       myVector.pushBack(random);
     }
-    myOrderedSet.union(otherOrderedSet);
+    expect(myOrderedSet.union(otherOrderedSet)).to.equal(myVector.length);
     judgeSet(myOrderedSet, myVector);
   });
 

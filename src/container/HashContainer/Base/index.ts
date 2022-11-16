@@ -88,9 +88,9 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    */
   protected readonly _header: HashLinkNode<K, V>;
   /**
-   * @description unique tag used to tag object.
+   * @description Unique symbol used to tag object.
    */
-  readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
+  readonly HASH_TAG = Symbol('@@HASH_TAG');
   protected constructor() {
     super();
     Object.setPrototypeOf(this._originMap, null);
@@ -116,12 +116,12 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     if (isObject === undefined) isObject = checkObject(key);
     let newTail;
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index !== undefined) {
         this._objMap[<number>index]._value = <V>value;
         return this._length;
       }
-      Object.defineProperty(key, this.HASH_KEY_TAG, {
+      Object.defineProperty(key, this.HASH_TAG, {
         value: this._objMap.length,
         configurable: true
       });
@@ -162,7 +162,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   protected _findElementNode(key: K, isObject?: boolean) {
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index === undefined) return this._header;
       return this._objMap[index];
     } else {
@@ -170,9 +170,9 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   clear() {
-    const HASH_KEY_TAG = this.HASH_KEY_TAG;
+    const HASH_TAG = this.HASH_TAG;
     this._objMap.forEach(function (el) {
-      delete (<Record<symbol, number>><unknown>el._key)[HASH_KEY_TAG];
+      delete (<Record<symbol, number>><unknown>el._key)[HASH_TAG];
     });
     this._objMap = [];
     this._originMap = {};
@@ -182,18 +182,18 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   }
   /**
    * @description Remove the element of the specified key.
-   * @param key The key you want to remove.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns Boolean about whether erase successfully.
+   * @param key - The key you want to remove.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns Whether erase successfully.
    */
   eraseElementByKey(key: K, isObject?: boolean) {
     let node;
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index === undefined) return false;
-      delete (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      delete (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       node = this._objMap[index];
       delete this._objMap[index];
     } else {

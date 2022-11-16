@@ -86,7 +86,7 @@ describe('OrderedMap test', () => {
       otherMap.setElement(random, i);
       stdMap.set(random, i);
     }
-    myOrderedMap.union(otherMap);
+    expect(myOrderedMap.union(otherMap)).to.equal(stdMap.size);
     judgeMap(myOrderedMap, stdMap);
   });
 

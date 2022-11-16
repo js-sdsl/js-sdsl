@@ -35,9 +35,9 @@ export type { OrderedMapIterator };
 
 class OrderedMap<K, V> extends TreeContainer<K, V> {
   /**
-   * @param container The initialization container.
-   * @param cmp The compare function.
-   * @param enableIndex Whether to enable iterator indexing function.
+   * @param container - The initialization container.
+   * @param cmp - The compare function.
+   * @param enableIndex - Whether to enable iterator indexing function.
    * @example
    * new OrderedMap();
    * new OrderedMap([[0, 1], [2, 1]]);
@@ -110,9 +110,9 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   /**
    * @description Insert a key-value pair or set value by the given key.
-   * @param key The key want to insert.
-   * @param value The value want to set.
-   * @param hint You can give an iterator hint to improve insertion efficiency.
+   * @param key - The key want to insert.
+   * @param value - The value want to set.
+   * @param hint - You can give an iterator hint to improve insertion efficiency.
    * @return The size of container after setting.
    * @example
    * const mp = new OrderedMap([[2, 0], [4, 0], [5, 0]]);
@@ -129,6 +129,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   /**
    * @description Get the value of the element of the specified key.
+   * @param key - The specified key you want to get.
    * @example
    * const val = container.getElementByKey(1);
    */
@@ -141,6 +142,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     other.forEach(function (el) {
       self.setElement(el[0], el[1]);
     });
+    return this._length;
   }
   [Symbol.iterator]() {
     return this._iterationFunc(this._root);

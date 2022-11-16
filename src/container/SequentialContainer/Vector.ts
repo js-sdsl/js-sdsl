@@ -25,10 +25,9 @@ class Vector<T> extends SequentialContainer<T> {
    */
   private readonly _vector: T[];
   /**
-   * @description Vector's constructor.
-   * @param container Initialize container, must have a forEach function.
-   * @param copy When the container is an array, you can choose to directly operate on the original object of
-   *             the array or perform a shallow copy. The default is shallow copy.
+   * @param container - Initialize container, must have a forEach function.
+   * @param copy - When the container is an array, you can choose to directly operate on the original object of
+   *               the array or perform a shallow copy. The default is shallow copy.
    */
   constructor(container: initContainer<T> = [], copy = true) {
     super();

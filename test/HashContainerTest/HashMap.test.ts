@@ -127,8 +127,7 @@ function hashMapTest(generateRandom: () => unknown) {
       for (const item of arr) {
         const hasOwnProperty = Object.hasOwnProperty.bind(item);
         expect(hasOwnProperty(
-          // @ts-ignore
-          myHashMap.HASH_KEY_TAG
+          myHashMap.HASH_TAG
         )).to.equal(false);
       }
     }

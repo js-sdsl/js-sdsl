@@ -1,9 +1,16 @@
+/**
+ * @description The iterator type including `NORMAL` and `REVERSE`.
+ */
 export const enum IteratorType {
   NORMAL = 0,
   REVERSE = 1
 }
 
 export abstract class ContainerIterator<T> {
+  /**
+   * @internal
+   */
+  abstract _node: unknown;
   /**
    * @description Iterator's type.
    * @example
@@ -13,13 +20,12 @@ export abstract class ContainerIterator<T> {
   /**
    * @internal
    */
-  abstract _node: unknown;
   protected constructor(iteratorType = IteratorType.NORMAL) {
     this.iteratorType = iteratorType;
   }
   /**
-   * @param iter The other iterator you want to compare.
-   * @returns Boolean about if this equals to obj.
+   * @param iter - The other iterator you want to compare.
+   * @returns Whether this equals to obj.
    * @example
    * container.find(1).equals(container.end());
    */
@@ -35,13 +41,14 @@ export abstract class ContainerIterator<T> {
   abstract get pointer(): T;
   /**
    * @description Set pointer's value (some containers are unavailable).
-   * @param newValue The new value you want to set.
+   * @param newValue - The new value you want to set.
    * @example
    * (<LinkList<number>>container).begin().pointer = 1;
    */
   abstract set pointer(newValue: T);
   /**
    * @description Move `this` iterator to pre.
+   * @returns The iterator's self.
    * @example
    * const iter = container.find(1);  // container = [0, 1]
    * const pre = iter.pre();
@@ -52,6 +59,7 @@ export abstract class ContainerIterator<T> {
   abstract pre(): this;
   /**
    * @description Move `this` iterator to next.
+   * @returns The iterator's self.
    * @example
    * const iter = container.find(1);  // container = [1, 2]
    * const next = iter.next();
@@ -98,7 +106,7 @@ export abstract class Base {
     return this._length;
   }
   /**
-   * @returns Boolean about if the container is empty.
+   * @returns Whether the container is empty.
    * @example
    * container.clear();
    * console.log(container.empty());  // true
@@ -166,13 +174,13 @@ export abstract class Container<T> extends Base {
   abstract back(): T | undefined;
   /**
    * @description Iterate over all elements in the container.
-   * @param callback Callback function like Array.forEach.
+   * @param callback - Callback function like Array.forEach.
    * @example
    * container.forEach((element, index) => console.log(element, index));
    */
   abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
   /**
-   * @param element The element you want to find.
+   * @param element - The element you want to find.
    * @returns An iterator pointing to the element if found, or super end if not found.
    * @example
    * container.find(1).equals(container.end());
@@ -186,7 +194,7 @@ export abstract class Container<T> extends Base {
   abstract getElementByPos(pos: number): T;
   /**
    * @description Removes the element at the specified position.
-   * @param pos The element's position you want to remove.
+   * @param pos - The element's position you want to remove.
    * @returns The container length after erasing.
    * @example
    * container.eraseElementByPos(-1); // throw a RangeError
@@ -194,7 +202,7 @@ export abstract class Container<T> extends Base {
   abstract eraseElementByPos(pos: number): number;
   /**
    * @description Removes element by iterator and move `iter` to next.
-   * @param iter The iterator you want to erase.
+   * @param iter - The iterator you want to erase.
    * @returns The next iterator.
    * @example
    * container.eraseElementByIterator(container.begin());
@@ -210,9 +218,12 @@ export abstract class Container<T> extends Base {
    *   console.log(element);
    * }
    */
-  abstract [Symbol.iterator](): Generator<T, void, undefined>;
+  abstract [Symbol.iterator](): Generator<T, void>;
 }
 
+/**
+ * @description The initial data type passed in when initializing the container.
+ */
 export type initContainer<T> = (
   { size: number } |
   { length: number } |

@@ -315,7 +315,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   /**
    * @description Push an element to the front.
-   * @param element The element you want to push.
+   * @param element - The element you want to push.
    * @returns The size of queue after pushing.
    */
   pushFront(element: T) {
@@ -324,6 +324,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   /**
    * @description Removes the first element.
+   * @returns The element you popped.
    */
   popFront() {
     if (this._length === 0) return;
@@ -333,7 +334,8 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   /**
    * @description Merges two sorted lists.
-   * @param list The other list you want to merge (must be sorted).
+   * @param list - The other list you want to merge (must be sorted).
+   * @returns The size of list after merging.
    * @example
    * const linkA = new LinkList([1, 3, 5]);
    * const linkB = new LinkList([2, 4, 6]);
@@ -345,18 +347,19 @@ class LinkList<T> extends SequentialContainer<T> {
       list.forEach(function (el) {
         self.pushBack(el);
       });
-      return;
+    } else {
+      let curNode = this._head;
+      list.forEach(function (el) {
+        while (
+          curNode !== self._header &&
+          curNode._value <= el
+        ) {
+          curNode = curNode._next;
+        }
+        self._insertNode(el, curNode._pre);
+      });
     }
-    let curNode = this._head;
-    list.forEach(function (el) {
-      while (
-        curNode !== self._header &&
-        curNode._value <= el
-      ) {
-        curNode = curNode._next;
-      }
-      self._insertNode(el, curNode._pre);
-    });
+    return this._length;
   }
   [Symbol.iterator]() {
     return function * (this: LinkList<T>) {

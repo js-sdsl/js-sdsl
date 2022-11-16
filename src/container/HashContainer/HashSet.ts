@@ -47,9 +47,9 @@ class HashSet<K> extends HashContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
-   * @param key The key want to insert.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @param key - The key want to insert.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns The size of container after inserting.
    */
   insert(key: K, isObject?: boolean) {
@@ -57,9 +57,9 @@ class HashSet<K> extends HashContainer<K, undefined> {
   }
   /**
    * @description Check key if exist in container.
-   * @param key The element you want to search.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @param key - The element you want to search.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns An iterator pointing to the element if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {

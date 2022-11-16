@@ -118,8 +118,7 @@ function hashSetTest(generateRandom: () => unknown) {
       for (const item of arr) {
         const hasOwnProperty = Object.hasOwnProperty.bind(item);
         expect(hasOwnProperty(
-          // @ts-ignore
-          myHashSet.HASH_KEY_TAG
+          myHashSet.HASH_TAG
         )).to.equal(false);
       }
     }
