@@ -35,7 +35,7 @@
     "test:isolate": "yarn build:isolate && ts-mocha --paths 'test/IsolationTest/*.ts'",
     "test:performance": "gulp performance && node dist/performance/performance/index.js",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
-    "generate": "typedoc src/index.ts --includeVersion",
+    "generate": "typedoc src/index.ts --includeVersion --sort required-first --sort instance-first --sort source-order",
     "generate:dev": "yarn generate --watch",
     "prepare": "husky install"
   },

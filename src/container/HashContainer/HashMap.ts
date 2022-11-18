@@ -63,25 +63,38 @@ class HashMap<K, V> extends HashContainer<K, V> {
   }
   /**
    * @description Insert a key-value pair or set value by the given key.
-   * @param key The key want to insert.
-   * @param value The value want to set.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @param key - The key want to insert.
+   * @param value - The value want to set.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns The size of container after setting.
    */
   setElement(key: K, value: V, isObject?: boolean) {
-    this._set(key, value, isObject);
+    return this._set(key, value, isObject);
   }
   /**
    * @description Check key if exist in container.
-   * @param key The element you want to search.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return An iterator pointing to the element if found, or super end if not found.
+   * @param key - The element you want to search.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns An iterator pointing to the element if found, or super end if not found.
    */
-  find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key, isObject);
-    if (node === undefined) return this.end();
-    return new HashMapIterator(node, this._header);
+  /**
+   * @description Get the value of the element of the specified key.
+   * @param key - The key want to search.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @example
+   * const val = container.getElementByKey(1);
+   */
+  getElementByKey(key: K, isObject?: boolean) {
+    if (isObject === undefined) isObject = checkObject(key);
+    if (isObject) {
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
+      return index !== undefined ? this._objMap[index]._value : undefined;
+    }
+    const node = this._originMap[<string><unknown>key];
+    return node ? node._value : undefined;
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -91,21 +104,9 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     return <[K, V]>[node._key, node._value];
   }
-  /**
-   * @description Get the value of the element of the specified key.
-   * @param key The key want to search.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @example const val = container.getElementByKey(1);
-   */
-  getElementByKey(key: K, isObject?: boolean) {
-    if (isObject === undefined) isObject = checkObject(key);
-    if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      return index !== undefined ? this._objMap[index]._value : undefined;
-    }
-    const node = this._originMap[<string><unknown>key];
-    return node ? node._value : undefined;
+  find(key: K, isObject?: boolean) {
+    const node = this._findElementNode(key, isObject);
+    return new HashMapIterator(node, this._header);
   }
   forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
     let index = 0;

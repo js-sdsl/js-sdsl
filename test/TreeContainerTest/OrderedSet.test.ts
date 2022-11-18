@@ -23,8 +23,7 @@ describe('OrderedSet test', () => {
   it('OrderedSet insert function test', () => {
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * testNum * 10;
-      myOrderedSet.insert(random);
-      myVector.pushBack(random);
+      expect(myOrderedSet.insert(random)).to.equal(myVector.pushBack(random));
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -34,7 +33,8 @@ describe('OrderedSet test', () => {
       const pos = Math.floor(Math.random() * myVector.size());
       const eraseValue = myVector.getElementByPos(pos);
       myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByKey(eraseValue);
+      expect(myOrderedSet.eraseElementByKey(eraseValue)).to.equal(true);
+      expect(myOrderedSet.eraseElementByKey(-Math.random())).to.equal(false);
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -46,15 +46,14 @@ describe('OrderedSet test', () => {
       otherOrderedSet.insert(random);
       myVector.pushBack(random);
     }
-    myOrderedSet.union(otherOrderedSet);
+    expect(myOrderedSet.union(otherOrderedSet)).to.equal(myVector.length);
     judgeSet(myOrderedSet, myVector);
   });
 
   it('OrderedSet eraseElementByPos function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.size());
-      myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByPos(pos);
+      expect(myOrderedSet.eraseElementByPos(pos)).to.equal(myVector.eraseElementByPos(pos));
     }
     judgeSet(myOrderedSet, myVector);
   });

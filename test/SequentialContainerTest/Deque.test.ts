@@ -14,8 +14,7 @@ describe('Deque test', () => {
 
   it('Deque pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myDeque.pushFront(i);
-      tmpArr.unshift(i);
+      expect(myDeque.pushFront(i)).to.equal(tmpArr.unshift(i));
     }
     judgeSequentialContainer(myDeque, new Vector(tmpArr));
   });

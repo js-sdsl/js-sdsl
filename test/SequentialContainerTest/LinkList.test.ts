@@ -14,8 +14,7 @@ describe('LinkList test', () => {
 
   it('LinkList pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myLinkList.pushFront(i);
-      tmpArr.unshift(i);
+      expect(myLinkList.pushFront(i)).to.equal(tmpArr.unshift(i));
     }
     myLinkList.begin().pointer = 100;
     tmpArr[0] = 100;
@@ -38,7 +37,7 @@ describe('LinkList test', () => {
     myLinkList.sort((x, y) => x - y);
     otherLinkList.sort((x, y) => x - y);
     tmpArr.sort((x, y) => x - y);
-    myLinkList.merge(otherLinkList);
+    expect(myLinkList.merge(otherLinkList)).to.equal(tmpArr.length);
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 

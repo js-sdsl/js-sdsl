@@ -79,16 +79,14 @@ function hashMapTest(generateRandom: () => unknown) {
   it('HashMap eraseElementByKey test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
-        stdMap.delete(item);
-        myHashMap.eraseElementByKey(item, isObject);
+        expect(myHashMap.eraseElementByKey(item, isObject)).to.equal(stdMap.delete(item));
       }
     }
     judgeHashMap(myHashMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
-      stdMap.delete(random);
-      myHashMap.eraseElementByKey(random);
+      expect(myHashMap.eraseElementByKey(random)).to.equal(stdMap.delete(random));
     }
     judgeHashMap(myHashMap, stdMap);
   });
@@ -96,7 +94,8 @@ function hashMapTest(generateRandom: () => unknown) {
   it('HashMap setElement test', () => {
     for (let i = 0; i < testNum; ++i) {
       stdMap.set(arr[i], i - 1);
-      myHashMap.setElement(arr[i], i - 1, isObject);
+      const size = myHashMap.setElement(arr[i], i - 1, isObject);
+      expect(size).to.equal(stdMap.size);
     }
     judgeHashMap(myHashMap, stdMap);
   });
@@ -128,8 +127,7 @@ function hashMapTest(generateRandom: () => unknown) {
       for (const item of arr) {
         const hasOwnProperty = Object.hasOwnProperty.bind(item);
         expect(hasOwnProperty(
-          // @ts-ignore
-          myHashMap.HASH_KEY_TAG
+          myHashMap.HASH_TAG
         )).to.equal(false);
       }
     }

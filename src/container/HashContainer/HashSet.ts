@@ -47,24 +47,13 @@ class HashSet<K> extends HashContainer<K, undefined> {
   }
   /**
    * @description Insert element to set.
-   * @param key The key want to insert.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @param key - The key want to insert.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns The size of container after inserting.
    */
   insert(key: K, isObject?: boolean) {
-    this._set(key, undefined, isObject);
-  }
-  /**
-   * @description Check key if exist in container.
-   * @param key The element you want to search.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
-   * @return An iterator pointing to the element if found, or super end if not found.
-   */
-  find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key, isObject);
-    if (node === undefined) return this.end();
-    return new HashSetIterator(node, this._header);
+    return this._set(key, undefined, isObject);
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -73,6 +62,17 @@ class HashSet<K> extends HashContainer<K, undefined> {
       node = node._next;
     }
     return node._key;
+  }
+  /**
+   * @description Check key if exist in container.
+   * @param key - The element you want to search.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns An iterator pointing to the element if found, or super end if not found.
+   */
+  find(key: K, isObject?: boolean) {
+    const node = this._findElementNode(key, isObject);
+    return new HashSetIterator(node, this._header);
   }
   forEach(callback: (element: K, index: number, container: HashSet<K>) => void) {
     let index = 0;

@@ -3,6 +3,9 @@ import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
+/**
+ * @internal
+ */
 type HashLinkNode<K, V> = {
   _key: K,
   _value: V,
@@ -19,8 +22,6 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
    * @internal
    */
   protected readonly _header: HashLinkNode<K, V>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -64,6 +65,10 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
       };
     }
   }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
@@ -76,10 +81,6 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    */
   protected _originMap: Record<string, HashLinkNode<K, V>> = {};
   /**
-   * @description unique tag used to tag object.
-   */
-  readonly HASH_KEY_TAG = Symbol('JS_SDSL_HASH_KEY_TAG');
-  /**
    * @internal
    */
   protected _head: HashLinkNode<K, V>;
@@ -91,13 +92,23 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @internal
    */
   protected readonly _header: HashLinkNode<K, V>;
+  /**
+   * @description Unique symbol used to tag object.
+   */
+  readonly HASH_TAG = Symbol('@@HASH_TAG');
+  /**
+   * @internal
+   */
   protected constructor() {
     super();
     Object.setPrototypeOf(this._originMap, null);
     this._header = <HashLinkNode<K, V>>{};
     this._header._pre = this._header._next = this._head = this._tail = this._header;
   }
-  private _eraseNode(node: HashLinkNode<K, V>) {
+  /**
+   * @internal
+   */
+  protected _eraseNode(node: HashLinkNode<K, V>) {
     const { _pre, _next } = node;
     _pre._next = _next;
     _next._pre = _pre;
@@ -116,12 +127,12 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     if (isObject === undefined) isObject = checkObject(key);
     let newTail;
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index !== undefined) {
         this._objMap[<number>index]._value = <V>value;
-        return;
+        return this._length;
       }
-      Object.defineProperty(key, this.HASH_KEY_TAG, {
+      Object.defineProperty(key, this.HASH_TAG, {
         value: this._objMap.length,
         configurable: true
       });
@@ -136,7 +147,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       const node = this._originMap[<string><unknown>key];
       if (node) {
         node._value = <V>value;
-        return;
+        return this._length;
       }
       newTail = {
         _key: key,
@@ -154,7 +165,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
     this._tail = newTail;
     this._header._pre = newTail;
-    this._length += 1;
+    return ++this._length;
   }
   /**
    * @internal
@@ -162,17 +173,17 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   protected _findElementNode(key: K, isObject?: boolean) {
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      if (index === undefined) return;
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
+      if (index === undefined) return this._header;
       return this._objMap[index];
     } else {
-      return this._originMap[<string><unknown>key];
+      return this._originMap[<string><unknown>key] || this._header;
     }
   }
   clear() {
-    const HASH_KEY_TAG = this.HASH_KEY_TAG;
+    const HASH_TAG = this.HASH_TAG;
     this._objMap.forEach(function (el) {
-      delete (<Record<symbol, number>><unknown>el._key)[HASH_KEY_TAG];
+      delete (<Record<symbol, number>><unknown>el._key)[HASH_TAG];
     });
     this._objMap = [];
     this._originMap = {};
@@ -182,25 +193,27 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   }
   /**
    * @description Remove the element of the specified key.
-   * @param key The key you want to remove.
-   * @param isObject Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                 If a `undefined` value is passed in, the type will be automatically judged.
+   * @param key - The key you want to remove.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns Whether erase successfully.
    */
   eraseElementByKey(key: K, isObject?: boolean) {
     let node;
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
-      const index = (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
-      if (index === undefined) return;
-      delete (<Record<symbol, number>><unknown>key)[this.HASH_KEY_TAG];
+      const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
+      if (index === undefined) return false;
+      delete (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       node = this._objMap[index];
       delete this._objMap[index];
     } else {
       node = this._originMap[<string><unknown>key];
-      if (node === undefined) return;
+      if (node === undefined) return false;
       delete this._originMap[<string><unknown>key];
     }
     this._eraseNode(node);
+    return true;
   }
   eraseElementByIterator(iter: HashContainerIterator<K, V>) {
     const node = iter._node;
@@ -217,5 +230,6 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       node = node._next;
     }
     this._eraseNode(node);
+    return this._length;
   }
 }

@@ -67,16 +67,14 @@ function hashSetTest(generateRandom: () => unknown) {
   it('HashSet eraseElementByKey test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
-        stdSet.delete(item);
-        myHashSet.eraseElementByKey(item, isObject);
+        expect(myHashSet.eraseElementByKey(item, isObject)).to.equal(stdSet.delete(item));
       }
     }
     judgeHashSet(myHashSet, stdSet);
 
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
-      stdSet.delete(random);
-      myHashSet.eraseElementByKey(random, isObject);
+      expect(myHashSet.eraseElementByKey(random, isObject)).to.equal(stdSet.delete(random));
     }
     judgeHashSet(myHashSet, stdSet);
   });
@@ -102,8 +100,9 @@ function hashSetTest(generateRandom: () => unknown) {
     const eraseQueue = [1, 10, 100, 1000];
     for (const index of eraseQueue) {
       const el = myHashSet.getElementByPos(index);
-      myHashSet.eraseElementByPos(index);
+      const size = myHashSet.eraseElementByPos(index);
       stdSet.delete(el);
+      expect(size).equal(stdSet.size);
     }
     judgeHashSet(myHashSet, stdSet);
   });
@@ -119,8 +118,7 @@ function hashSetTest(generateRandom: () => unknown) {
       for (const item of arr) {
         const hasOwnProperty = Object.hasOwnProperty.bind(item);
         expect(hasOwnProperty(
-          // @ts-ignore
-          myHashSet.HASH_KEY_TAG
+          myHashSet.HASH_TAG
         )).to.equal(false);
       }
     }

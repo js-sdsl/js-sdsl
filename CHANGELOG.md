@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2022.11.13
+## [UnReleased] - 2022.11.18
 
 ### Changed
 
@@ -18,6 +18,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Add public `length` property to all the container.
 - Add returned value to `pop` function including `popBack` and `popFront` to all the container which has such function.
+- Add returned value to `eraseElementByKey` which means whether erase successfully.
+- Add returned value to `push` or `insert` function which means the size of the container.
 
 ### Fixed
 

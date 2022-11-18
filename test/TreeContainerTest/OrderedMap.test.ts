@@ -40,16 +40,15 @@ describe('OrderedMap test', () => {
       }
     });
     eraseArr.forEach(key => {
-      myOrderedMap.eraseElementByKey(key);
-      stdMap.delete(key);
+      expect(myOrderedMap.eraseElementByKey(key)).to.equal(stdMap.delete(key));
     });
     judgeMap(myOrderedMap, stdMap);
   });
 
   it('OrderedMap setElement function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -87,7 +86,7 @@ describe('OrderedMap test', () => {
       otherMap.setElement(random, i);
       stdMap.set(random, i);
     }
-    myOrderedMap.union(otherMap);
+    expect(myOrderedMap.union(otherMap)).to.equal(stdMap.size);
     judgeMap(myOrderedMap, stdMap);
   });
 
@@ -219,8 +218,8 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     let i = testNum;
     stdMap.forEach((value, key) => {

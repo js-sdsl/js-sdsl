@@ -18,8 +18,6 @@ class LinkListIterator<T> extends ContainerIterator<T> {
    * @internal
    */
   private readonly _header: LinkNode<T>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -84,6 +82,10 @@ class LinkListIterator<T> extends ContainerIterator<T> {
   }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export type { LinkListIterator };
@@ -161,19 +163,11 @@ class LinkList<T> extends SequentialContainer<T> {
   rEnd() {
     return new LinkListIterator(this._header, this._header, IteratorType.REVERSE);
   }
-  front() {
+  front(): T | undefined {
     return this._head._value;
   }
-  back() {
+  back(): T | undefined {
     return this._tail._value;
-  }
-  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
-    let curNode = this._head;
-    let index = 0;
-    while (curNode !== this._header) {
-      callback(curNode._value, index++, this);
-      curNode = curNode._next;
-    }
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -190,6 +184,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode = curNode._next;
     }
     this._eraseNode(curNode);
+    return this._length;
   }
   eraseElementByValue(_value: T) {
     let curNode = this._head;
@@ -199,6 +194,7 @@ class LinkList<T> extends SequentialContainer<T> {
       }
       curNode = curNode._next;
     }
+    return this._length;
   }
   eraseElementByIterator(iter: LinkListIterator<T>) {
     const node = iter._node;
@@ -211,11 +207,31 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   pushBack(element: T) {
     this._insertNode(element, this._tail);
+    return this._length;
   }
   popBack() {
     if (this._length === 0) return;
     const value = this._tail._value;
     this._eraseNode(this._tail);
+    return value;
+  }
+  /**
+   * @description Push an element to the front.
+   * @param element - The element you want to push.
+   * @returns The size of queue after pushing.
+   */
+  pushFront(element: T) {
+    this._insertNode(element, this._header);
+    return this._length;
+  }
+  /**
+   * @description Removes the first element.
+   * @returns The element you popped.
+   */
+  popFront() {
+    if (this._length === 0) return;
+    const value = this._head._value;
+    this._eraseNode(this._head);
     return value;
   }
   setElementByPos(pos: number, element: T) {
@@ -228,7 +244,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   insert(pos: number, element: T, num = 1) {
     $checkWithinAccessParams!(pos, 0, this._length);
-    if (num <= 0) return;
+    if (num <= 0) return this._length;
     if (pos === 0) {
       while (num--) this.pushFront(element);
     } else if (pos === this._length) {
@@ -251,6 +267,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._next = next;
       next._pre = curNode;
     }
+    return this._length;
   }
   find(element: T) {
     let curNode = this._head;
@@ -277,7 +294,9 @@ class LinkList<T> extends SequentialContainer<T> {
     }
   }
   unique() {
-    if (this._length <= 1) return;
+    if (this._length <= 1) {
+      return this._length;
+    }
     let curNode = this._head;
     while (curNode !== this._header) {
       let tmpNode = curNode;
@@ -292,6 +311,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._next._pre = curNode;
       curNode = curNode._next;
     }
+    return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
     if (this._length <= 1) return;
@@ -307,24 +327,9 @@ class LinkList<T> extends SequentialContainer<T> {
     });
   }
   /**
-   * @description Push an element to the front.
-   * @param element The element you want to push.
-   */
-  pushFront(element: T) {
-    this._insertNode(element, this._header);
-  }
-  /**
-   * @description Removes the first element.
-   */
-  popFront() {
-    if (this._length === 0) return;
-    const value = this._head._value;
-    this._eraseNode(this._head);
-    return value;
-  }
-  /**
    * @description Merges two sorted lists.
-   * @param list The other list you want to merge (must be sorted).
+   * @param list - The other list you want to merge (must be sorted).
+   * @returns The size of list after merging.
    * @example
    * const linkA = new LinkList([1, 3, 5]);
    * const linkB = new LinkList([2, 4, 6]);
@@ -336,18 +341,27 @@ class LinkList<T> extends SequentialContainer<T> {
       list.forEach(function (el) {
         self.pushBack(el);
       });
-      return;
+    } else {
+      let curNode = this._head;
+      list.forEach(function (el) {
+        while (
+          curNode !== self._header &&
+          curNode._value <= el
+        ) {
+          curNode = curNode._next;
+        }
+        self._insertNode(el, curNode._pre);
+      });
     }
+    return this._length;
+  }
+  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
     let curNode = this._head;
-    list.forEach(function (el) {
-      while (
-        curNode !== self._header &&
-        curNode._value <= el
-      ) {
-        curNode = curNode._next;
-      }
-      self._insertNode(el, curNode._pre);
-    });
+    let index = 0;
+    while (curNode !== this._header) {
+      callback(curNode._value, index++, this);
+      curNode = curNode._next;
+    }
   }
   [Symbol.iterator]() {
     return function * (this: LinkList<T>) {

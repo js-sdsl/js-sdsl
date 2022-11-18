@@ -12,8 +12,6 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    * @internal
    */
   protected _header: TreeNode<K, V>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -31,7 +29,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
         if (this._node === this._header._left) {
           throwIteratorAccessError();
         }
-        this._node = this._node.pre();
+        this._node = this._node._pre();
         return this;
       };
 
@@ -39,7 +37,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
         if (this._node === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node.next();
+        this._node = this._node._next();
         return this;
       };
     } else {
@@ -47,7 +45,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
         if (this._node === this._header._right) {
           throwIteratorAccessError();
         }
-        this._node = this._node.next();
+        this._node = this._node._next();
         return this;
       };
 
@@ -55,7 +53,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
         if (this._node === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node.pre();
+        this._node = this._node._pre();
         return this;
       };
     }
@@ -64,6 +62,7 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    * @description Get the sequential index of the iterator in the tree container.<br/>
    *              <strong>Note:</strong>
    *              This function only takes effect when the specified tree container `enableIndex = true`.
+   * @returns The index subscript of the node in the tree.
    * @example
    * const st = new OrderedSet([1, 2, 3], true);
    * console.log(st.begin().next().index);  // 1
@@ -93,6 +92,10 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     return index;
   }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export default TreeIterator;
