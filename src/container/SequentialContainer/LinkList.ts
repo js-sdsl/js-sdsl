@@ -163,10 +163,10 @@ class LinkList<T> extends SequentialContainer<T> {
   rEnd() {
     return new LinkListIterator(this._header, this._header, IteratorType.REVERSE);
   }
-  front() {
+  front(): T | undefined {
     return this._head._value;
   }
-  back() {
+  back(): T | undefined {
     return this._tail._value;
   }
   getElementByPos(pos: number) {

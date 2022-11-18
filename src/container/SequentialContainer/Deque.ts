@@ -158,10 +158,10 @@ class Deque<T> extends SequentialContainer<T> {
       IteratorType.REVERSE
     );
   }
-  front() {
+  front(): T | undefined {
     return this._map[this._first][this._curFirst];
   }
-  back() {
+  back(): T | undefined {
     return this._map[this._last][this._curLast];
   }
   pushBack(element: T) {
@@ -249,7 +249,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._length -= 1;
     return value;
   }
-  getElementByPos(pos: number) {
+  getElementByPos(pos: number): T {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     const {
       curNodeBucketIndex,
