@@ -47,7 +47,7 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @internal
    */
-  private _map: (T | undefined)[][] = [];
+  private _map: T[][] = [];
   constructor(container: initContainer<T> = [], _bucketSize = (1 << 12)) {
     super();
     let _length;

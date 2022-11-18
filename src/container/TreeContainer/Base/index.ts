@@ -29,6 +29,9 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @internal
    */
   protected _set: (key: K, value: V, hint?: TreeIterator<K, V>) => number;
+  /**
+   * @internal
+   */
   protected constructor(
     cmp: (x: K, y: K) => number =
     function (x: K, y: K) {
@@ -57,9 +60,9 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               grandParent,
               curNode
             } = nodeList as unknown as Record<string, TreeNodeEnableIndex<K, V>>;
-            parentNode.recount();
-            grandParent.recount();
-            curNode.recount();
+            parentNode._recount();
+            grandParent._recount();
+            curNode._recount();
           }
         }
         return this._length;
@@ -163,21 +166,21 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           brother._color = TreeNodeColor.BLACK;
           parentNode._color = TreeNodeColor.RED;
           if (parentNode === this._root) {
-            this._root = parentNode.rotateLeft();
-          } else parentNode.rotateLeft();
+            this._root = parentNode._rotateLeft();
+          } else parentNode._rotateLeft();
         } else {
           if (brother._right && brother._right._color === TreeNodeColor.RED) {
             brother._color = parentNode._color;
             parentNode._color = TreeNodeColor.BLACK;
             brother._right._color = TreeNodeColor.BLACK;
             if (parentNode === this._root) {
-              this._root = parentNode.rotateLeft();
-            } else parentNode.rotateLeft();
+              this._root = parentNode._rotateLeft();
+            } else parentNode._rotateLeft();
             return;
           } else if (brother._left && brother._left._color === TreeNodeColor.RED) {
             brother._color = TreeNodeColor.RED;
             brother._left._color = TreeNodeColor.BLACK;
-            brother.rotateRight();
+            brother._rotateRight();
           } else {
             brother._color = TreeNodeColor.RED;
             curNode = parentNode;
@@ -189,21 +192,21 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           brother._color = TreeNodeColor.BLACK;
           parentNode._color = TreeNodeColor.RED;
           if (parentNode === this._root) {
-            this._root = parentNode.rotateRight();
-          } else parentNode.rotateRight();
+            this._root = parentNode._rotateRight();
+          } else parentNode._rotateRight();
         } else {
           if (brother._left && brother._left._color === TreeNodeColor.RED) {
             brother._color = parentNode._color;
             parentNode._color = TreeNodeColor.BLACK;
             brother._left._color = TreeNodeColor.BLACK;
             if (parentNode === this._root) {
-              this._root = parentNode.rotateRight();
-            } else parentNode.rotateRight();
+              this._root = parentNode._rotateRight();
+            } else parentNode._rotateRight();
             return;
           } else if (brother._right && brother._right._color === TreeNodeColor.RED) {
             brother._color = TreeNodeColor.RED;
             brother._right._color = TreeNodeColor.BLACK;
-            brother.rotateLeft();
+            brother._rotateLeft();
           } else {
             brother._color = TreeNodeColor.RED;
             curNode = parentNode;
@@ -300,8 +303,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         } else {
           parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) {
-            this._root = grandParent.rotateRight();
-          } else grandParent.rotateRight();
+            this._root = grandParent._rotateRight();
+          } else grandParent._rotateRight();
           grandParent._color = TreeNodeColor.RED;
         }
       } else {
@@ -337,8 +340,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         } else {
           parentNode._color = TreeNodeColor.BLACK;
           if (grandParent === this._root) {
-            this._root = grandParent.rotateLeft();
-          } else grandParent.rotateLeft();
+            this._root = grandParent._rotateLeft();
+          } else grandParent._rotateLeft();
           grandParent._color = TreeNodeColor.RED;
         }
       }
@@ -390,7 +393,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               iterNode._value = value;
               return;
             } else /* istanbul ignore else */ if (iterCmpRes > 0) {
-              const preNode = iterNode.pre();
+              const preNode = iterNode._pre();
               const preCmpRes = this._cmp(preNode._key!, key);
               if (preCmpRes === 0) {
                 preNode._value = value;
@@ -479,22 +482,22 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       return true;
     }
     if (node === this._header._left) {
-      if (this._cmp(node.next()._key!, key) > 0) {
+      if (this._cmp(node._next()._key!, key) > 0) {
         node._key = key;
         return true;
       }
       return false;
     }
     if (node === this._header._right) {
-      if (this._cmp(node.pre()._key!, key) < 0) {
+      if (this._cmp(node._pre()._key!, key) < 0) {
         node._key = key;
         return true;
       }
       return false;
     }
-    const preKey = node.pre()._key!;
+    const preKey = node._pre()._key!;
     if (this._cmp(preKey, key) >= 0) return false;
-    const nextKey = node.next()._key!;
+    const nextKey = node._next()._key!;
     if (this._cmp(nextKey, key) <= 0) return false;
     node._key = key;
     return true;

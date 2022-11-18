@@ -18,8 +18,6 @@ class LinkListIterator<T> extends ContainerIterator<T> {
    * @internal
    */
   private readonly _header: LinkNode<T>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -84,6 +82,10 @@ class LinkListIterator<T> extends ContainerIterator<T> {
   }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export type { LinkListIterator };

@@ -3,6 +3,9 @@ import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
+/**
+ * @internal
+ */
 type HashLinkNode<K, V> = {
   _key: K,
   _value: V,
@@ -93,12 +96,18 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @description Unique symbol used to tag object.
    */
   readonly HASH_TAG = Symbol('@@HASH_TAG');
+  /**
+   * @internal
+   */
   protected constructor() {
     super();
     Object.setPrototypeOf(this._originMap, null);
     this._header = <HashLinkNode<K, V>>{};
     this._header._pre = this._header._next = this._head = this._tail = this._header;
   }
+  /**
+   * @internal
+   */
   protected _eraseNode(node: HashLinkNode<K, V>) {
     const { _pre, _next } = node;
     _pre._next = _next;
