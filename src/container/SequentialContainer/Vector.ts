@@ -171,7 +171,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   [Symbol.iterator]() {
     return function * (this: Vector<T>) {
-      return yield * this._vector;
+      yield * this._vector;
     }.bind(this)();
   }
 }
