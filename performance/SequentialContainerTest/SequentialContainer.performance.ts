@@ -3,7 +3,7 @@ import SequentialContainer from '@/container/SequentialContainer/Base/index';
 
 function testSequentialContainer(container: SequentialContainer<number>, testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   let _testNum = testNum;
 

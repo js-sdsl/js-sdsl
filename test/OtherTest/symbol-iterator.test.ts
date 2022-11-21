@@ -22,7 +22,9 @@ const containerArr = [
   new LinkList(arr),
   new Deque(arr),
   new OrderedSet(arr),
-  new OrderedMap(arr.map((element, index) => [index, element]))
+  new OrderedMap(arr.map((element, index) => [index, element])),
+  new HashSet(arr),
+  new HashMap(arr.map((element, index) => [index, element]))
 ];
 
 describe('symbol iterator test', () => {
@@ -50,7 +52,7 @@ describe('symbol iterator test', () => {
     for (const container of containerArr) {
       let index = 0;
       for (const element of container) {
-        if (container instanceof OrderedMap) {
+        if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((element as [number, number])[1])
             .to.equal(arr[index++]);
         } else {

@@ -1,15 +1,6 @@
 import { expect } from 'chai';
-import { Vector, LinkList, SequentialContainer } from '@/index';
-
-function judgeSequentialContainer(
-  container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
-) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
-  });
-}
+import { judgeSequentialContainer } from '../utils/judge';
+import { Vector, LinkList } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -23,8 +14,7 @@ describe('LinkList test', () => {
 
   it('LinkList pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myLinkList.pushFront(i);
-      tmpArr.unshift(i);
+      expect(myLinkList.pushFront(i)).to.equal(tmpArr.unshift(i));
     }
     myLinkList.begin().pointer = 100;
     tmpArr[0] = 100;
@@ -33,8 +23,7 @@ describe('LinkList test', () => {
 
   it('LinkList popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myLinkList.popFront();
-      tmpArr.shift();
+      expect(myLinkList.popFront()).to.equal(tmpArr.shift());
     }
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
@@ -48,7 +37,7 @@ describe('LinkList test', () => {
     myLinkList.sort((x, y) => x - y);
     otherLinkList.sort((x, y) => x - y);
     tmpArr.sort((x, y) => x - y);
-    myLinkList.merge(otherLinkList);
+    expect(myLinkList.merge(otherLinkList)).to.equal(tmpArr.length);
     judgeSequentialContainer(myLinkList, new Vector(tmpArr));
   });
 
@@ -75,7 +64,7 @@ describe('LinkList test', () => {
   });
 
   it('LinkList run time error test', () => {
-    expect(() => myLinkList.getElementByPos(myLinkList.size())).to.to.throw(RangeError);
+    expect(() => myLinkList.getElementByPos(myLinkList.size())).to.throw(RangeError);
   });
 
   it('LinkList pushFront function test', () => {
@@ -88,25 +77,25 @@ describe('LinkList test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.end().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myLinkList.rEnd().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myLinkList.eraseElementByIterator(myLinkList.begin());
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myLinkList.begin().pointer = 0;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myLinkList.popBack();
     expect(myLinkList.size()).to.equal(0);
     myLinkList.pushBack(1);

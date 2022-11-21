@@ -14,27 +14,33 @@ class Stack<T> extends Base {
   }
   clear() {
     this._length = 0;
-    this._stack.length = 0;
+    this._stack = [];
   }
   /**
    * @description Insert element to stack's end.
+   * @description The element you want to push to the back.
+   * @returns The container length after erasing.
    */
   push(element: T) {
     this._stack.push(element);
     this._length += 1;
+    return this._length;
   }
   /**
    * @description Removes the end element.
+   * @returns The element you popped.
    */
   pop() {
-    this._stack.pop();
-    if (this._length > 0) this._length -= 1;
+    if (this._length === 0) return;
+    this._length -= 1;
+    return this._stack.pop();
   }
   /**
    * @description Accesses the end element.
+   * @returns The last element.
    */
-  top() {
-    return this._stack[this._length - 1] as (T | undefined);
+  top(): T | undefined {
+    return this._stack[this._length - 1];
   }
 }
 

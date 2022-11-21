@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [4.2.0] - 2022.11.20
+
+### Changed
+
+- Optimized the structure of class `TreeNodeEnableIndex`.
+- Change the `iterator access denied` error message to reduce the packing size.
+- Change the internal storage of the hash container to the form of a linked list, traversing in insertion order.
+- Standardize hash container. Make it extends from `Container` and add general functions.
+- Refactor `LinkList` to do optimization.
+
+### Added
+
+- Add public `length` property to all the container.
+- Add returned value to `pop` function including `popBack` and `popFront` to all the container which has such function.
+- Add returned value to `eraseElementByKey` which means whether erase successfully.
+- Add returned value to `push` or `insert` function which means the size of the container.
+
+### Fixed
+
+- Fixed wrong error type when `updateKeyByIterator`.
+- Fixed wrong iterator was returned when erase tree reverse iterator.
+
 ## [4.2.0-beta.1] - 2022.11.06
 
 ### Changed

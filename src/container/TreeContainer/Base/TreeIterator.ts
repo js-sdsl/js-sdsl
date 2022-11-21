@@ -1,6 +1,7 @@
 import { TreeNode } from './TreeNode';
 import type { TreeNodeEnableIndex } from './TreeNode';
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   /**
@@ -11,8 +12,6 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    * @internal
    */
   protected _header: TreeNode<K, V>;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -28,43 +27,42 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node === this._header._left) {
-          throw new RangeError('Tree iterator access denied!');
+          throwIteratorAccessError();
         }
-        this._node = this._node.pre();
+        this._node = this._node._pre();
         return this;
       };
 
       this.next = function () {
         if (this._node === this._header) {
-          throw new RangeError('Tree iterator access denied!');
+          throwIteratorAccessError();
         }
-        this._node = this._node.next();
+        this._node = this._node._next();
         return this;
       };
     } else {
       this.pre = function () {
         if (this._node === this._header._right) {
-          throw new RangeError('Tree iterator access denied!');
+          throwIteratorAccessError();
         }
-        this._node = this._node.next();
+        this._node = this._node._next();
         return this;
       };
 
       this.next = function () {
         if (this._node === this._header) {
-          throw new RangeError('Tree iterator access denied!');
+          throwIteratorAccessError();
         }
-        this._node = this._node.pre();
+        this._node = this._node._pre();
         return this;
       };
     }
   }
   /**
    * @description Get the sequential index of the iterator in the tree container.<br/>
-   *              <strong>
-   *                Note:
-   *              </strong>
+   *              <strong>Note:</strong>
    *              This function only takes effect when the specified tree container `enableIndex = true`.
+   * @returns The index subscript of the node in the tree.
    * @example
    * const st = new OrderedSet([1, 2, 3], true);
    * console.log(st.begin().next().index);  // 1
@@ -80,23 +78,24 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     let index = 0;
     if (_node._left) {
-      index += _node._left._subTreeSize;
+      index += (_node._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
     }
     while (_node !== root) {
       const _parent = _node._parent as TreeNodeEnableIndex<K, V>;
       if (_node === _parent._right) {
         index += 1;
         if (_parent._left) {
-          index += _parent._left._subTreeSize;
+          index += (_parent._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
         }
       }
       _node = _parent;
     }
     return index;
   }
-  equals(obj: TreeIterator<K, V>) {
-    return this._node === obj._node;
-  }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
 
 export default TreeIterator;

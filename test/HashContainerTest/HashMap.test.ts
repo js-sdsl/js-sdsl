@@ -4,8 +4,6 @@ import {
   generateRandomString,
   generateRandomSymbol,
   generateRandomBigInt,
-  generateRandomBoolean,
-  generateRandomNull,
   generateRandomObject,
   generateRandomFunction
 } from '../utils/generateRandom';
@@ -16,9 +14,20 @@ const testNum = 10000;
 
 function judgeHashMap(myHashMap: HashMap<unknown, unknown>, stdMap: Map<unknown, unknown>) {
   expect(myHashMap.size()).to.equal(stdMap.size);
+  let index = 0;
   stdMap.forEach((value, key) => {
+    if (index === 0) {
+      expect(myHashMap.front()).to.deep.equal([key, value]);
+      expect(myHashMap.begin().pointer[0]).to.deep.equal(key);
+    } else if (index === myHashMap.size() - 1) {
+      expect(myHashMap.back()).to.deep.equal([key, value]);
+      expect(myHashMap.rBegin().pointer[0]).to.deep.equal(key);
+    } else if (index <= 1000) {
+      expect(myHashMap.getElementByPos(index)).to.deep.equal([key, value]);
+    }
     expect(myHashMap.getElementByKey(key)).to.equal(value);
-    expect(myHashMap.find(key)).to.equal(true);
+    expect(myHashMap.find(key).pointer[1]).to.equal(value);
+    ++index;
   });
 }
 
@@ -44,95 +53,115 @@ function hashMapTest(generateRandom: () => unknown) {
     ));
   judgeHashMap(myHashMap, stdMap);
 
-  let i = 0;
-  myHashMap.forEach((el, index, hashMap) => {
-    expect(hashMap).to.equal(myHashMap);
-    expect(stdMap.get(el[0])).to.equal(el[1]);
-    expect(i++).to.equal(index);
+  it('HashMap forEach test', () => {
+    let i = 0;
+    myHashMap.forEach((el, index, hashMap) => {
+      expect(hashMap).to.equal(myHashMap);
+      expect(stdMap.get(el[0])).to.equal(el[1]);
+      expect(i++).to.equal(index);
+    });
+    expect(i).to.equal(stdMap.size);
   });
-  expect(i).to.equal(stdMap.size);
 
-  for (let i = 0; i < testNum; ++i) {
-    const random = generateRandom();
-    expect(myHashMap.find(random, isObject)).to.equal(stdMap.has(random));
-    expect(myHashMap.getElementByKey(random, isObject)).to.equal(stdMap.get(random));
-  }
-
-  i = 0;
-  for (const item of myHashMap) {
-    ++i;
-    expect(stdMap.get(item[0])).to.equal(item[1]);
-  }
-  expect(i).to.equal(stdMap.size);
-
-  for (const item of arr) {
-    if (Math.random() > 0.6) {
-      stdMap.delete(item);
-      myHashMap.eraseElementByKey(item, isObject);
+  it('HashMap find test', () => {
+    for (let i = 0; i < testNum; ++i) {
+      const random = generateRandom();
+      const iter = myHashMap.find(random, isObject);
+      if (iter.equals(myHashMap.end())) {
+        expect(stdMap.has(random)).to.equal(false);
+      } else {
+        expect(iter.pointer[1]).to.equal(stdMap.get(random));
+      }
+      expect(myHashMap.getElementByKey(random, isObject)).to.equal(stdMap.get(random));
     }
-  }
-  judgeHashMap(myHashMap, stdMap);
+  });
 
-  for (let i = 0; i < testNum; ++i) {
-    const random = generateRandom();
-    stdMap.delete(random);
-    myHashMap.eraseElementByKey(random);
-  }
-  judgeHashMap(myHashMap, stdMap);
-
-  for (let i = 0; i < testNum; ++i) {
-    stdMap.set(arr[i], i - 1);
-    myHashMap.setElement(arr[i], i - 1, isObject);
-  }
-  judgeHashMap(myHashMap, stdMap);
-
-  myHashMap.clear();
-  stdMap.clear();
-  judgeHashMap(myHashMap, stdMap);
-
-  if (arr[0] && typeof arr[0] === 'object') {
+  it('HashMap eraseElementByKey test', () => {
     for (const item of arr) {
-      const hasOwnProperty = Object.hasOwnProperty.bind(item);
-      expect(hasOwnProperty(
-        // @ts-ignore
-        myHashMap.HASH_KEY_TAG
-      )).to.equal(false);
+      if (Math.random() > 0.6) {
+        expect(myHashMap.eraseElementByKey(item, isObject)).to.equal(stdMap.delete(item));
+      }
     }
-  }
+    judgeHashMap(myHashMap, stdMap);
+
+    for (let i = 0; i < testNum; ++i) {
+      const random = generateRandom();
+      expect(myHashMap.eraseElementByKey(random)).to.equal(stdMap.delete(random));
+    }
+    judgeHashMap(myHashMap, stdMap);
+  });
+
+  it('HashMap setElement test', () => {
+    for (let i = 0; i < testNum; ++i) {
+      stdMap.set(arr[i], i - 1);
+      const size = myHashMap.setElement(arr[i], i - 1, isObject);
+      expect(size).to.equal(stdMap.size);
+    }
+    judgeHashMap(myHashMap, stdMap);
+  });
+
+  it('HashMap set iterator value test', () => {
+    stdMap.forEach((value, key) => {
+      const random = Math.random();
+      myHashMap.find(key).pointer[1] = random;
+      stdMap.set(key, random);
+    });
+    judgeHashMap(myHashMap, stdMap);
+
+    // @ts-ignore
+    expect(myHashMap.find(myHashMap.front()![0]).pointer['']).to.equal(undefined);
+
+    // @ts-ignore
+    // eslint-disable-next-line no-return-assign
+    expect(() => myHashMap.find(myHashMap.front()![0]).pointer[3] = 5).to.throw(TypeError);
+  });
+
+  it('HashMap clear test', () => {
+    myHashMap.clear();
+    stdMap.clear();
+    expect(myHashMap.front()).to.equal(undefined);
+    expect(myHashMap.back()).to.equal(undefined);
+    judgeHashMap(myHashMap, stdMap);
+
+    if (arr[0] && typeof arr[0] === 'object') {
+      for (const item of arr) {
+        const hasOwnProperty = Object.hasOwnProperty.bind(item);
+        expect(hasOwnProperty(
+          myHashMap.HASH_TAG
+        )).to.equal(false);
+      }
+    }
+
+    expect(() => myHashMap.end().pointer).to.throw(RangeError);
+  });
 }
 
 describe('HashMap test', () => {
-  it('HashMap Number test', () => {
+  expect(checkObject(null)).to.equal(false);
+
+  describe('HashMap Number test', () => {
     hashMapTest(generateRandomNumber);
   });
 
-  it('HashMap String test', () => {
+  describe('HashMap String test', () => {
     hashMapTest(generateRandomString);
   });
 
-  it('HashMap Symbol test', () => {
+  describe('HashMap Symbol test', () => {
     hashMapTest(generateRandomSymbol);
   });
 
   if (typeof BigInt === 'function') {
-    it('HashMap BigInt test', () => {
+    describe('HashMap BigInt test', () => {
       hashMapTest(generateRandomBigInt);
     });
   }
 
-  it('HashMap Boolean test', () => {
-    hashMapTest(generateRandomBoolean);
-  });
-
-  it('HashMap Null test', () => {
-    hashMapTest(generateRandomNull);
-  });
-
-  it('HashMap Object test', () => {
+  describe('HashMap Object test', () => {
     hashMapTest(generateRandomObject);
   });
 
-  it('HashMap Function test', () => {
+  describe('HashMap Function test', () => {
     hashMapTest(generateRandomFunction);
   });
 });

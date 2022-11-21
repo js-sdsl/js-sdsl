@@ -1,20 +1,11 @@
 import { expect } from 'chai';
-import { Vector, Deque, SequentialContainer } from '@/index';
+import { judgeSequentialContainer } from '../utils/judge';
+import { Vector, Deque } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
 for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
-}
-
-function judgeSequentialContainer(
-  container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
-) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
-  });
 }
 
 describe('Deque test', () => {
@@ -23,16 +14,14 @@ describe('Deque test', () => {
 
   it('Deque pushFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myDeque.pushFront(i);
-      tmpArr.unshift(i);
+      expect(myDeque.pushFront(i)).to.equal(tmpArr.unshift(i));
     }
     judgeSequentialContainer(myDeque, new Vector(tmpArr));
   });
 
   it('Deque popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myDeque.popFront();
-      tmpArr.shift();
+      expect(myDeque.popFront()).to.equal(tmpArr.shift());
     }
     judgeSequentialContainer(myDeque, new Vector(tmpArr));
   });
@@ -52,7 +41,7 @@ describe('Deque test', () => {
     expect(() => {
       const a = myDeque.find(-1).pointer;
       return a;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myDeque.pushBack(-1);
     expect(myDeque.find(-1).pointer).to.equal(-1);
     myDeque.popBack();
@@ -71,7 +60,7 @@ describe('Deque test', () => {
   });
 
   it('Deque run time error test', () => {
-    expect(() => myDeque.getElementByPos(myDeque.size())).to.to.throw(RangeError);
+    expect(() => myDeque.getElementByPos(myDeque.size())).to.throw(RangeError);
   });
 
   it('Deque empty test', () => {
@@ -92,12 +81,12 @@ describe('Deque test', () => {
     expect(new Deque(new Set([2])).size()).to.equal(1);
     expect(new Deque(new Vector([2])).size()).to.equal(1);
     // @ts-ignore
-    expect(() => new Deque({})).to.to.throw(RangeError);
+    expect(() => new Deque({})).to.throw(RangeError);
     myDeque.cut(-1);
     myDeque.popBack();
     myDeque.popFront();
     expect(myDeque.size()).to.equal(0);
-    expect(() => myDeque.eraseElementByPos(-1)).to.to.throw(RangeError);
+    expect(() => myDeque.eraseElementByPos(-1)).to.throw(RangeError);
     myDeque.eraseElementByValue(0);
     expect(myDeque.find(0).equals(myDeque.end())).to.equal(true);
     myDeque.unique();

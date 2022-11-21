@@ -3,7 +3,7 @@ import { OrderedMap } from '@/index';
 
 function testOrderedMap(arr: number[], testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   const myMap = new OrderedMap(arr.map((element, index) => [element, index]));

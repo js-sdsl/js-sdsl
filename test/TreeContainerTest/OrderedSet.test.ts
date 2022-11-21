@@ -23,8 +23,7 @@ describe('OrderedSet test', () => {
   it('OrderedSet insert function test', () => {
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * testNum * 10;
-      myOrderedSet.insert(random);
-      myVector.pushBack(random);
+      expect(myOrderedSet.insert(random)).to.equal(myVector.pushBack(random));
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -34,7 +33,8 @@ describe('OrderedSet test', () => {
       const pos = Math.floor(Math.random() * myVector.size());
       const eraseValue = myVector.getElementByPos(pos);
       myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByKey(eraseValue);
+      expect(myOrderedSet.eraseElementByKey(eraseValue)).to.equal(true);
+      expect(myOrderedSet.eraseElementByKey(-Math.random())).to.equal(false);
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -46,15 +46,14 @@ describe('OrderedSet test', () => {
       otherOrderedSet.insert(random);
       myVector.pushBack(random);
     }
-    myOrderedSet.union(otherOrderedSet);
+    expect(myOrderedSet.union(otherOrderedSet)).to.equal(myVector.length);
     judgeSet(myOrderedSet, myVector);
   });
 
   it('OrderedSet eraseElementByPos function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.size());
-      myVector.eraseElementByPos(pos);
-      myOrderedSet.eraseElementByPos(pos);
+      expect(myOrderedSet.eraseElementByPos(pos)).to.equal(myVector.eraseElementByPos(pos));
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -117,8 +116,21 @@ describe('OrderedSet test', () => {
 
   it('OrderedSet eraseElementByIterator function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      let iter = myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      expect(iter.equals(myOrderedSet.begin())).to.equal(true);
       myVector.eraseElementByPos(0);
+      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin().next());
+      expect(iter.equals(myOrderedSet.rBegin().next())).to.equal(true);
+      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin());
+      expect(iter.equals(myOrderedSet.rBegin())).to.equal(true);
+      myVector.popBack();
+      myVector.popBack();
+    }
+    const eraseQueue = [1, 10, 1000];
+    for (const index of eraseQueue) {
+      const el = myVector.getElementByPos(index);
+      myVector.eraseElementByPos(index);
+      myOrderedSet.eraseElementByIterator(myOrderedSet.find(el));
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -130,11 +142,11 @@ describe('OrderedSet test', () => {
     expect(st.front()).to.equal(2);
     st.eraseElementByKey(2);
     expect(st.size()).to.equal(0);
-    expect(() => st.updateKeyByIterator(st.begin(), 1)).to.to.throw(TypeError);
+    expect(() => st.updateKeyByIterator(st.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       st.insert(i * 2);
     }
-    expect(() => st.updateKeyByIterator(st.end(), 1)).to.to.throw(TypeError);
+    expect(() => st.updateKeyByIterator(st.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = st.lowerBound(i * 2);
       expect(st.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
@@ -217,37 +229,37 @@ describe('OrderedSet test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(myOrderedSet.front()).to.equal(undefined);
     expect(myOrderedSet.back()).to.equal(undefined);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.find(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.begin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.lowerBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.upperBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.reverseLowerBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.reverseUpperBound(0).pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myOrderedSet.eraseElementByKey(0);
     expect(myOrderedSet.size()).to.equal(0);
     myOrderedSet.insert(1);

@@ -6,30 +6,15 @@ export const enum TreeNodeColor {
   BLACK = 0
 }
 
+/**
+ * @internal
+ */
 export class TreeNode<K, V> {
-  /**
-   * @internal
-   */
   _color = TreeNodeColor.RED;
-  /**
-   * @internal
-   */
   _key: K | undefined = undefined;
-  /**
-   * @internal
-   */
   _value: V | undefined = undefined;
-  /**
-   * @internal
-   */
   _left: TreeNode<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
   _right: TreeNode<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
   _parent: TreeNode<K, V> | undefined = undefined;
   constructor(key?: K, value?: V) {
     this._key = key;
@@ -37,25 +22,25 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Get the pre node.
-   * @return TreeNode about the pre node.
+   * @returns TreeNode about the pre node.
    */
-  pre() {
+  _pre() {
     let preNode: TreeNode<K, V> = this;
     if (
       preNode._color === TreeNodeColor.RED &&
-      (preNode._parent as TreeNode<K, V>)._parent === preNode
+      preNode._parent!._parent === preNode
     ) {
-      preNode = preNode._right as TreeNode<K, V>;
+      preNode = preNode._right!;
     } else if (preNode._left) {
       preNode = preNode._left;
       while (preNode._right) {
         preNode = preNode._right;
       }
     } else {
-      let pre = preNode._parent as TreeNode<K, V>;
+      let pre = preNode._parent!;
       while (pre._left === preNode) {
         preNode = pre;
-        pre = preNode._parent as TreeNode<K, V>;
+        pre = preNode._parent!;
       }
       preNode = pre;
     }
@@ -63,9 +48,9 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Get the next node.
-   * @return TreeNode about the next node.
+   * @returns TreeNode about the next node.
    */
-  next() {
+  _next() {
     let nextNode: TreeNode<K, V> = this;
     if (nextNode._right) {
       nextNode = nextNode._right;
@@ -74,10 +59,10 @@ export class TreeNode<K, V> {
       }
       return nextNode;
     } else {
-      let pre = nextNode._parent as TreeNode<K, V>;
+      let pre = nextNode._parent!;
       while (pre._right === nextNode) {
         nextNode = pre;
-        pre = nextNode._parent as TreeNode<K, V>;
+        pre = nextNode._parent!;
       }
       if (nextNode._right !== pre) {
         return pre;
@@ -86,11 +71,11 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Rotate left.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
-  rotateLeft() {
-    const PP = this._parent as TreeNode<K, V>;
-    const V = this._right as TreeNode<K, V>;
+  _rotateLeft() {
+    const PP = this._parent!;
+    const V = this._right!;
     const R = V._left;
 
     if (PP._parent === this) PP._parent = V;
@@ -109,11 +94,11 @@ export class TreeNode<K, V> {
   }
   /**
    * @description Rotate right.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
-  rotateRight() {
-    const PP = this._parent as TreeNode<K, V>;
-    const F = this._left as TreeNode<K, V>;
+  _rotateRight() {
+    const PP = this._parent!;
+    const F = this._left!;
     const K = F._right;
 
     if (PP._parent === this) PP._parent = F;
@@ -132,46 +117,38 @@ export class TreeNode<K, V> {
   }
 }
 
+/**
+ * @internal
+ */
 export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
-  /**
-   * @internal
-   */
-  _left: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
-  _right: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
-  _parent: TreeNodeEnableIndex<K, V> | undefined = undefined;
-  /**
-   * @internal
-   */
   _subTreeSize = 1;
   /**
    * @description Rotate left and do recount.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
-  rotateLeft() {
-    const parent = super.rotateLeft() as TreeNodeEnableIndex<K, V>;
-    this.recount();
-    parent.recount();
+  _rotateLeft() {
+    const parent = super._rotateLeft() as TreeNodeEnableIndex<K, V>;
+    this._recount();
+    parent._recount();
     return parent;
   }
   /**
    * @description Rotate right and do recount.
-   * @return TreeNode about moved to original position after rotation.
+   * @returns TreeNode about moved to original position after rotation.
    */
-  rotateRight(): TreeNode<K, V> {
-    const parent = super.rotateRight() as TreeNodeEnableIndex<K, V>;
-    this.recount();
-    parent.recount();
+  _rotateRight() {
+    const parent = super._rotateRight() as TreeNodeEnableIndex<K, V>;
+    this._recount();
+    parent._recount();
     return parent;
   }
-  recount() {
+  _recount() {
     this._subTreeSize = 1;
-    if (this._left) this._subTreeSize += this._left._subTreeSize;
-    if (this._right) this._subTreeSize += this._right._subTreeSize;
+    if (this._left) {
+      this._subTreeSize += (this._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
+    }
+    if (this._right) {
+      this._subTreeSize += (this._right as TreeNodeEnableIndex<K, V>)._subTreeSize;
+    }
   }
 }

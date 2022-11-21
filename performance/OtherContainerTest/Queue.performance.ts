@@ -5,7 +5,7 @@ function testQueue(arr: number[], testNum: number) {
   const myQueue = new Queue(arr);
 
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   for (let i = 0; i < testNum; ++i) myQueue.push(i);

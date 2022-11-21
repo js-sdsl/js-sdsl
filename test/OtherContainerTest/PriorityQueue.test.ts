@@ -16,9 +16,11 @@ function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
     const u = myQueue.top() as number;
     expect(myQueue.find(u)).to.equal(true);
     expect(u).to.equal(myVector.getElementByPos(index++));
-    myQueue.pop();
+    const v = myQueue.pop();
+    expect(v).to.equal(u);
     expect(myQueue.find(-u - 1)).to.equal(false);
   }
+  expect(myQueue.pop()).to.equal(undefined);
   return true;
 }
 

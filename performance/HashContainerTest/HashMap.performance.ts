@@ -3,7 +3,7 @@ import { HashMap } from '@/index';
 
 function testHashMap(arr: number[], testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   const myHashMap = new HashMap(arr.map((element, index) => [element, index]));

@@ -3,7 +3,7 @@ import { HashSet } from '@/index';
 
 function testHashSet(arr: number[], testNum: number) {
   let startTime, endTime;
-  const reportList: testReportFormat['reportList'] = [];
+  const reportList: testReportFormat = [];
 
   startTime = Date.now();
   const myHashSet = new HashSet(arr);

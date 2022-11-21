@@ -1,7 +1,7 @@
 import SequentialContainer from './Base';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
 
 class VectorIterator<T> extends RandomIterator<T> {
   copy() {
@@ -13,6 +13,8 @@ class VectorIterator<T> extends RandomIterator<T> {
       this.iteratorType
     );
   }
+  // @ts-ignore
+  equals(iter: VectorIterator<T>): boolean;
 }
 
 export type { VectorIterator };
@@ -23,10 +25,9 @@ class Vector<T> extends SequentialContainer<T> {
    */
   private readonly _vector: T[];
   /**
-   * @description Vector's constructor.
-   * @param container Initialize container, must have a forEach function.
-   * @param copy When the container is an array, you can choose to directly operate on the original object of
-   *             the array or perform a shallow copy. The default is shallow copy.
+   * @param container - Initialize container, must have a forEach function.
+   * @param copy - When the container is an array, you can choose to directly operate on the original object of
+   *               the array or perform a shallow copy. The default is shallow copy.
    */
   constructor(container: initContainer<T> = [], copy = true) {
     super();
@@ -82,16 +83,11 @@ class Vector<T> extends SequentialContainer<T> {
       IteratorType.REVERSE
     );
   }
-  front() {
-    return this._vector[0] as (T | undefined);
+  front(): T | undefined {
+    return this._vector[0];
   }
-  back() {
-    return this._vector[this._length - 1] as (T | undefined);
-  }
-  forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
-    for (let i = 0; i < this._length; ++i) {
-      callback(this._vector[i], i, this);
-    }
+  back(): T | undefined {
+    return this._vector[this._length - 1];
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -101,6 +97,7 @@ class Vector<T> extends SequentialContainer<T> {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
     this._vector.splice(pos, 1);
     this._length -= 1;
+    return this._length;
   }
   eraseElementByValue(value: T) {
     let index = 0;
@@ -110,6 +107,7 @@ class Vector<T> extends SequentialContainer<T> {
       }
     }
     this._length = this._vector.length = index;
+    return this._length;
   }
   eraseElementByIterator(iter: VectorIterator<T>) {
     const _node = iter._node;
@@ -120,11 +118,12 @@ class Vector<T> extends SequentialContainer<T> {
   pushBack(element: T) {
     this._vector.push(element);
     this._length += 1;
+    return this._length;
   }
   popBack() {
-    if (!this._length) return;
-    this._vector.pop();
+    if (this._length === 0) return;
     this._length -= 1;
+    return this._vector.pop();
   }
   setElementByPos(pos: number, element: T) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
@@ -134,6 +133,7 @@ class Vector<T> extends SequentialContainer<T> {
     $checkWithinAccessParams!(pos, 0, this._length);
     this._vector.splice(pos, 0, ...new Array<T>(num).fill(element));
     this._length += num;
+    return this._length;
   }
   find(element: T) {
     for (let i = 0; i < this._length; ++i) {
@@ -159,13 +159,19 @@ class Vector<T> extends SequentialContainer<T> {
       }
     }
     this._length = this._vector.length = index;
+    return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
     this._vector.sort(cmp);
   }
+  forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
+    for (let i = 0; i < this._length; ++i) {
+      callback(this._vector[i], i, this);
+    }
+  }
   [Symbol.iterator]() {
     return function * (this: Vector<T>) {
-      return yield * this._vector;
+      yield * this._vector;
     }.bind(this)();
   }
 }

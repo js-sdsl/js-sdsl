@@ -40,16 +40,15 @@ describe('OrderedMap test', () => {
       }
     });
     eraseArr.forEach(key => {
-      myOrderedMap.eraseElementByKey(key);
-      stdMap.delete(key);
+      expect(myOrderedMap.eraseElementByKey(key)).to.equal(stdMap.delete(key));
     });
     judgeMap(myOrderedMap, stdMap);
   });
 
   it('OrderedMap setElement function test', () => {
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -87,7 +86,7 @@ describe('OrderedMap test', () => {
       otherMap.setElement(random, i);
       stdMap.set(random, i);
     }
-    myOrderedMap.union(otherMap);
+    expect(myOrderedMap.union(otherMap)).to.equal(stdMap.size);
     judgeMap(myOrderedMap, stdMap);
   });
 
@@ -133,8 +132,15 @@ describe('OrderedMap test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const begin = myOrderedMap.begin();
       stdMap.delete(begin.pointer[0]);
-      myOrderedMap.eraseElementByIterator(begin);
+      let iter = myOrderedMap.eraseElementByIterator(begin);
+      expect(iter.equals(myOrderedMap.begin())).to.equal(true);
       expect(begin.pointer[0]).to.equal(v.getElementByPos(i + 1)[0]);
+      const rBegin = myOrderedMap.rBegin();
+      stdMap.delete(rBegin.pointer[0]);
+      iter = myOrderedMap.eraseElementByIterator(rBegin);
+      expect(iter.equals(myOrderedMap.rBegin())).to.equal(true);
+      v.popBack();
+      expect((iter.pointer)[0]).to.equal(v.back()![0]);
     }
     judgeMap(myOrderedMap, stdMap);
   });
@@ -156,11 +162,11 @@ describe('OrderedMap test', () => {
     expect(mp.front()).to.deep.equal([2, 1]);
     mp.eraseElementByKey(2);
     expect(mp.size()).to.equal(0);
-    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).to.to.throw(TypeError);
+    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       mp.setElement(i * 2, i);
     }
-    expect(() => mp.updateKeyByIterator(mp.end(), 1)).to.to.throw(TypeError);
+    expect(() => mp.updateKeyByIterator(mp.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = mp.lowerBound(i * 2);
       expect(mp.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
@@ -212,8 +218,8 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
-      myOrderedMap.setElement(i, i);
       stdMap.set(i, i);
+      expect(myOrderedMap.setElement(i, i)).to.equal(stdMap.size);
     }
     let i = testNum;
     stdMap.forEach((value, key) => {
@@ -246,26 +252,26 @@ describe('OrderedMap test', () => {
     expect(myOrderedMap.back()).to.equal(undefined);
     expect(() => {
       myOrderedMap.begin().pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.lowerBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.upperBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.reverseLowerBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.reverseUpperBound(0).pointer[1] = 1;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       myOrderedMap.find(0).pointer[0] = 2;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedMap.rBegin().pointer;
-    }).to.to.throw(RangeError);
+    }).to.throw(RangeError);
     myOrderedMap.setElement(1, 1);
     expect(myOrderedMap.getElementByKey(0)).to.equal(undefined);
   });

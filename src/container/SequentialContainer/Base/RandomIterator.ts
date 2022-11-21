@@ -1,5 +1,6 @@
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
-import { $checkWithinAccessParams } from '@/utils/checkParams.macro';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   /**
@@ -18,8 +19,6 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
    * @internal
    */
   protected readonly _setElementByPos: (pos: number, element: T) => void;
-  pre: () => this;
-  next: () => this;
   /**
    * @internal
    */
@@ -38,14 +37,14 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node === 0) {
-          throw new RangeError('Random iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node -= 1;
         return this;
       };
       this.next = function () {
         if (this._node === this._size()) {
-          throw new RangeError('Random Iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node += 1;
         return this;
@@ -53,14 +52,14 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     } else {
       this.pre = function () {
         if (this._node === this._size() - 1) {
-          throw new RangeError('Random iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node += 1;
         return this;
       };
       this.next = function () {
         if (this._node === -1) {
-          throw new RangeError('Random iterator access denied!');
+          throwIteratorAccessError();
         }
         this._node -= 1;
         return this;
@@ -75,7 +74,8 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     $checkWithinAccessParams!(this._node, 0, this._size() - 1);
     this._setElementByPos(this._node, newValue);
   }
-  equals(obj: RandomIterator<T>) {
-    return this._node === obj._node;
-  }
+  // @ts-ignore
+  pre(): this;
+  // @ts-ignore
+  next(): this;
 }
