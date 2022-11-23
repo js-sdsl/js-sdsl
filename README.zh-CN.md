@@ -159,7 +159,7 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 ### 单元测试
 
-我们使用 `jest` 库来编写我们的单元测试，并将结果同步到了 [coveralls](https://coveralls.io/github/js-sdsl/js-sdsl) 上，你可以使用 `yarn test:unit` 命令来重建它
+我们使用 [karma](https://karma-runner.github.io/) 和 [mocha](https://mochajs.org/) 框架进行单元测试，并同步到 [coveralls](https://coveralls.io/github/js-sdsl/js-sdsl) 上，你可以使用 `yarn test:unit` 命令来重建它
 
 ### 对于性能的校验
 
@@ -176,7 +176,7 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 或者在本地使用以下命令获取源码进行开发：
 
 ```bash
-$ git clone https://github.com/js-sdsl/js-sdl.git
+$ git clone https://github.com/js-sdsl/js-sdsl.git
 $ cd js-sdsl
 $ npm install
 $ npm run dev   # development mode
