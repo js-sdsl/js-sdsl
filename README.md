@@ -22,8 +22,8 @@
 
 ## ✨ Included data structures
 
-- **Stack** - first in first out stack.
-- **Queue** - first in last out queue.
+- **Stack** - first in last out stack.
+- **Queue** - first in first out queue.
 - **PriorityQueue** - heap-implemented priority queue.
 - **Vector** - protected array, cannot to operate properties like `length` directly.
 - **LinkList** - linked list of non-contiguous memory addresses.
