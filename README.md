@@ -22,8 +22,8 @@
 
 ## ✨ Included data structures
 
-- **Stack** - first in first out stack.
-- **Queue** - first in last out queue.
+- **Stack** - first in last out stack.
+- **Queue** - first in first out queue.
 - **PriorityQueue** - heap-implemented priority queue.
 - **Vector** - protected array, cannot to operate properties like `length` directly.
 - **LinkList** - linked list of non-contiguous memory addresses.
@@ -157,7 +157,7 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 ### Unit test
 
-We use jest library to write unit tests, you can see test coverage on [coveralls](https://coveralls.io/github/js-sdsl/js-sdsl). You can run `yarn test:unit` command to reproduce it.
+We use [karma](https://karma-runner.github.io/) and [mocha](https://mochajs.org/) frame to do unit tests and synchronize to [coveralls](https://coveralls.io/github/js-sdsl/js-sdsl). You can run `yarn test:unit` command to reproduce it.
 
 ### For performance
 
@@ -174,7 +174,7 @@ Use Gitpod, a free online dev environment for GitHub.
 Or clone locally:
 
 ```bash
-$ git clone https://github.com/js-sdsl/js-sdl.git
+$ git clone https://github.com/js-sdsl/js-sdsl.git
 $ cd js-sdsl
 $ npm install
 $ npm run dev   # development mode
