@@ -7,10 +7,10 @@ To get source code you can go to [github](https://github.com/js-sdsl/js-sdsl/tre
 ## Environment
 
 ```bash
-Linux 5.15.0-1022-azure x64
-Node.JS 16.18.0
+Linux 5.15.0-1023-azure x64
+Node.JS 16.18.1
 V8 9.4.146.26-node.22
-Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz × 2
+Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz × 2
 ```
 
 ## Result
@@ -19,105 +19,105 @@ Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz × 2
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| push                    | 1000000                 | 2000000                 | 41                      |
+| push                    | 1000000                 | 2000000                 | 42                      |
 | clear                   | 1                       | 2000000                 | 0                       |
 
 ### Queue
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| push                    | 1000000                 | 2000000                 | 26                      |
+| push                    | 1000000                 | 2000000                 | 25                      |
 | clear                   | 1                       | 2000000                 | 0                       |
 
 ### PriorityQueue
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| constructor             | 1                       | 1000000                 | 22                      |
-| push                    | 1000000                 | 2000000                 | 56                      |
-| pop all                 | 1                       | 2000000                 | 465                     |
+| constructor             | 1                       | 1000000                 | 20                      |
+| push                    | 1000000                 | 2000000                 | 53                      |
+| pop all                 | 1                       | 2000000                 | 470                     |
 
 ### LinkList
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| pushBack                | 1000000                 | 2000000                 | 164                     |
-| popBack                 | 1000000                 | 2000000                 | 23                      |
-| getElementByPos         | 1000                    | 2000000                 | 7                       |
-| setElementByPos         | 1000                    | 2000000                 | 5                       |
-| eraseElementByPos       | 50                      | 2000000                 | 546                     |
-| insert                  | 50                      | 2000050                 | 565                     |
-| eraseElementByValue     | 1                       | 2000050                 | 25                      |
-| reverse                 | 1                       | 1999950                 | 22                      |
-| unique                  | 1                       | 2000050                 | 32                      |
-| sort                    | 1                       | 3000000                 | 3506                    |
+| pushBack                | 1000000                 | 2000000                 | 220                     |
+| popBack                 | 1000000                 | 2000000                 | 19                      |
+| getElementByPos         | 1000                    | 2000000                 | 9                       |
+| setElementByPos         | 1000                    | 2000000                 | 9                       |
+| eraseElementByPos       | 50                      | 2000000                 | 403                     |
+| insert                  | 50                      | 2000050                 | 488                     |
+| eraseElementByValue     | 1                       | 2000050                 | 21                      |
+| reverse                 | 1                       | 1999950                 | 19                      |
+| unique                  | 1                       | 2000050                 | 31                      |
+| sort                    | 1                       | 3000000                 | 3332                    |
 | clear                   | 1                       | 3000000                 | 0                       |
-| pushFront               | 1000000                 | 1000000                 | 28                      |
-| popFront                | 1000000                 | 1000000                 | 18                      |
-| merge                   | 1                       | 1000000                 | 80                      |
+| pushFront               | 1000000                 | 1000000                 | 34                      |
+| popFront                | 1000000                 | 1000000                 | 19                      |
+| merge                   | 1                       | 1000000                 | 79                      |
 
 ### Deque
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| pushBack                | 1000000                 | 2000000                 | 60                      |
-| popBack                 | 1000000                 | 2000000                 | 192                     |
-| getElementByPos         | 1000000                 | 2000000                 | 75                      |
-| setElementByPos         | 1000000                 | 2000000                 | 47                      |
-| eraseElementByPos       | 50                      | 2000000                 | 3535                    |
-| insert                  | 50                      | 2000050                 | 3021                    |
-| eraseElementByValue     | 1                       | 2000050                 | 152                     |
-| reverse                 | 1                       | 1999950                 | 104                     |
-| unique                  | 1                       | 2000050                 | 88                      |
-| sort                    | 1                       | 3000000                 | 2141                    |
+| pushBack                | 1000000                 | 2000000                 | 55                      |
+| popBack                 | 1000000                 | 2000000                 | 170                     |
+| getElementByPos         | 1000000                 | 2000000                 | 73                      |
+| setElementByPos         | 1000000                 | 2000000                 | 48                      |
+| eraseElementByPos       | 50                      | 2000000                 | 2935                    |
+| insert                  | 50                      | 2000050                 | 3278                    |
+| eraseElementByValue     | 1                       | 2000050                 | 147                     |
+| reverse                 | 1                       | 1999950                 | 98                      |
+| unique                  | 1                       | 2000050                 | 94                      |
+| sort                    | 1                       | 3000000                 | 1929                    |
 | clear                   | 1                       | 3000000                 | 0                       |
-| pushFront               | 2000000                 | 2000000                 | 62                      |
+| pushFront               | 2000000                 | 2000000                 | 60                      |
 | popFront                | 1000000                 | 2000000                 | 114                     |
-| shrinkToFit             | 1                       | 1000000                 | 88                      |
+| shrinkToFit             | 1                       | 1000000                 | 84                      |
 
 ### OrderedSet
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| constructor             | 1                       | 1000000                 | 2043                    |
-| insert                  | 1000000                 | 2000000                 | 2952                    |
-| eraseElementByKey       | 1000000                 | 3000000                 | 567                     |
-| eraseElementByPos       | 10                      | 3000000                 | 1597                    |
-| union                   | 1                       | 2999990                 | 2553                    |
-| lowerBound              | 1000000                 | 2999990                 | 1888                    |
-| upperBound              | 1000000                 | 2999990                 | 1947                    |
-| reverseLowerBound       | 1000000                 | 2999990                 | 2017                    |
-| reverseUpperBound       | 1000000                 | 2999990                 | 1912                    |
+| constructor             | 1                       | 1000000                 | 2457                    |
+| insert                  | 1000000                 | 2000000                 | 3148                    |
+| eraseElementByKey       | 1000000                 | 3000000                 | 557                     |
+| eraseElementByPos       | 10                      | 3000000                 | 1595                    |
+| union                   | 1                       | 2999990                 | 2652                    |
+| lowerBound              | 1000000                 | 2999990                 | 1855                    |
+| upperBound              | 1000000                 | 2999990                 | 1892                    |
+| reverseLowerBound       | 1000000                 | 2999990                 | 1926                    |
+| reverseUpperBound       | 1000000                 | 2999990                 | 1879                    |
 
 ### OrderedMap
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| constructor             | 1                       | 1000000                 | 2138                    |
-| setElement              | 1000000                 | 2000000                 | 2774                    |
-| eraseElementByKey       | 1000000                 | 2000000                 | 397                     |
-| eraseElementByPos       | 10                      | 2000000                 | 1569                    |
-| union                   | 1                       | 2999990                 | 2645                    |
-| lowerBound              | 1000000                 | 2999990                 | 1822                    |
-| upperBound              | 1000000                 | 2999990                 | 1838                    |
-| reverseLowerBound       | 1000000                 | 2999990                 | 1881                    |
-| reverseUpperBound       | 1000000                 | 2999990                 | 1867                    |
+| constructor             | 1                       | 1000000                 | 2192                    |
+| setElement              | 1000000                 | 2000000                 | 2972                    |
+| eraseElementByKey       | 1000000                 | 2000000                 | 431                     |
+| eraseElementByPos       | 10                      | 2000000                 | 1356                    |
+| union                   | 1                       | 2999990                 | 2201                    |
+| lowerBound              | 1000000                 | 2999990                 | 1818                    |
+| upperBound              | 1000000                 | 2999990                 | 1824                    |
+| reverseLowerBound       | 1000000                 | 2999990                 | 1833                    |
+| reverseUpperBound       | 1000000                 | 2999990                 | 1801                    |
 
 ### HashSet
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| constructor             | 1                       | 1000000                 | 1762                    |
-| insert                  | 1000000                 | 2000000                 | 2120                    |
-| find                    | 2000000                 | 2000000                 | 1957                    |
-| eraseElementByKey       | 2000000                 | 2000000                 | 2731                    |
+| constructor             | 1                       | 1000000                 | 1815                    |
+| insert                  | 1000000                 | 2000000                 | 2874                    |
+| find                    | 2000000                 | 2000000                 | 1924                    |
+| eraseElementByKey       | 2000000                 | 2000000                 | 2525                    |
 
 ### HashMap
 
 | testFunc                | testNum                 | containerSize           | runTime / ms            |
 |-------------------------|-------------------------|-------------------------|-------------------------|
-| constructor             | 1                       | 1000000                 | 2295                    |
-| setElement              | 1000000                 | 2000000                 | 2171                    |
-| getElementByKey         | 2000000                 | 2000000                 | 1596                    |
-| eraseElementByKey       | 2000000                 | 2000000                 | 2926                    |
+| constructor             | 1                       | 1000000                 | 1699                    |
+| setElement              | 1000000                 | 2000000                 | 2638                    |
+| getElementByKey         | 2000000                 | 2000000                 | 3401                    |
+| eraseElementByKey       | 2000000                 | 2000000                 | 2786                    |
 
