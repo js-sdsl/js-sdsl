@@ -1,5 +1,4 @@
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
@@ -67,11 +66,9 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     }
   }
   get pointer() {
-    $checkWithinAccessParams!(this._node, 0, this._size() - 1);
     return this._getElementByPos(this._node);
   }
   set pointer(newValue: T) {
-    $checkWithinAccessParams!(this._node, 0, this._size() - 1);
     this._setElementByPos(this._node, newValue);
   }
   // @ts-ignore
