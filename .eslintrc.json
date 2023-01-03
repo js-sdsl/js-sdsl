@@ -91,7 +91,8 @@
       "error",
       {
         "allow": [
-          "^UNSAFE_"
+          "^UNSAFE_",
+          "nth_element"
         ],
         "properties": "never",
         "ignoreGlobals": true
