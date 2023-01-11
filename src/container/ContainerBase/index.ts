@@ -8,6 +8,10 @@ export const enum IteratorType {
 
 export abstract class ContainerIterator<T> {
   /**
+   * @description The container pointed to by the iterator.
+   */
+  abstract readonly container: Container<T>;
+  /**
    * @internal
    */
   abstract _node: unknown;

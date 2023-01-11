@@ -1,9 +1,11 @@
 import { TreeNode } from './TreeNode';
 import type { TreeNodeEnableIndex } from './TreeNode';
 import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
+import TreeContainer from '@/container/TreeContainer/Base/index';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
+  abstract readonly container: TreeContainer<K, V>;
   /**
    * @internal
    */
@@ -15,15 +17,14 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   /**
    * @internal
    */
-  constructor(
-    _node: TreeNode<K, V>,
-    _header: TreeNode<K, V>,
+  protected constructor(
+    node: TreeNode<K, V>,
+    header: TreeNode<K, V>,
     iteratorType?: IteratorType
   ) {
     super(iteratorType);
-    this._node = _node;
-    this._header = _header;
-
+    this._node = node;
+    this._header = header;
     if (this.iteratorType === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node === this._header._left) {
