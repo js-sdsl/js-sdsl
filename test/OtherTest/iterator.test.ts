@@ -6,7 +6,9 @@ import {
   OrderedSet,
   OrderedMap,
   Container,
-  ContainerIterator, HashSet, HashMap
+  ContainerIterator,
+  HashSet,
+  HashMap
 } from '@/index';
 
 let arr: number[] = [];
@@ -33,7 +35,9 @@ describe('iterator test', () => {
       let index = 0;
       for (let it = container.begin() as ContainerIterator<unknown>;
         !it.equals(container.end() as ContainerIterator<unknown>);
-        it = it.next()) {
+        it = it.next()
+      ) {
+        expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index++]);
@@ -49,7 +53,9 @@ describe('iterator test', () => {
       let index = arr.length - 1;
       for (let it = container.end().pre() as ContainerIterator<unknown>;
         !it.equals(container.begin() as ContainerIterator<unknown>);
-        it = it.pre()) {
+        it = it.pre()
+      ) {
+        expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index--]);
@@ -65,7 +71,9 @@ describe('iterator test', () => {
       let index = arr.length - 1;
       for (let it = container.rBegin() as ContainerIterator<unknown>;
         !it.equals(container.rEnd() as ContainerIterator<unknown>);
-        it = it.next()) {
+        it = it.next()
+      ) {
+        expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index--]);
@@ -81,7 +89,9 @@ describe('iterator test', () => {
       let index = 0;
       for (let it = container.rEnd().pre() as ContainerIterator<unknown>;
         !it.equals(container.rBegin() as ContainerIterator<unknown>);
-        it = it.pre()) {
+        it = it.pre()
+      ) {
+        expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
           expect((it as ContainerIterator<[number, number]>).pointer[1])
             .to.equal(arr[index++]);
