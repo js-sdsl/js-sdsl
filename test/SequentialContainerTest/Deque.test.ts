@@ -65,6 +65,7 @@ describe('Deque test', () => {
 
   it('Deque empty test', () => {
     myDeque.clear();
+    expect(myDeque.back()).to.equal(undefined);
     for (let i = 0; i < (1 << 15); ++i) {
       myDeque.pushBack(i);
     }

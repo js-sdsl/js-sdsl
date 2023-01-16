@@ -123,9 +123,11 @@ class Deque<T> extends SequentialContainer<T> {
     return new DequeIterator<T>(-1, this, IteratorType.REVERSE);
   }
   front(): T | undefined {
+    if (this._length === 0) return;
     return this._map[this._first][this._curFirst];
   }
   back(): T | undefined {
+    if (this._length === 0) return;
     return this._map[this._last][this._curLast];
   }
   pushBack(element: T) {
@@ -151,7 +153,6 @@ class Deque<T> extends SequentialContainer<T> {
   popBack() {
     if (this._length === 0) return;
     const value = this._map[this._last][this._curLast];
-    delete this._map[this._last][this._curLast];
     if (this._length !== 1) {
       if (this._curLast > 0) {
         this._curLast -= 1;
@@ -198,7 +199,6 @@ class Deque<T> extends SequentialContainer<T> {
   popFront() {
     if (this._length === 0) return;
     const value = this._map[this._first][this._curFirst];
-    delete this._map[this._first][this._curFirst];
     if (this._length !== 1) {
       if (this._curFirst < this._bucketSize - 1) {
         this._curFirst += 1;

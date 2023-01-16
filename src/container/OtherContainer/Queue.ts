@@ -21,20 +21,6 @@ class Queue<T> extends Base {
       self.push(el);
     });
   }
-  private _reAllocate() {
-    const capacity = this._queue.length;
-    if (
-      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
-      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
-    ) {
-      const length = this._length;
-      for (let i = 0; i < length; ++i) {
-        this._queue[i] = this._queue[this._first + i];
-      }
-      this._first = 0;
-      this._queue.length = length;
-    }
-  }
   clear() {
     this._queue = [];
     this._length = this._first = 0;
@@ -45,9 +31,20 @@ class Queue<T> extends Base {
    * @returns The container length after pushing.
    */
   push(element: T) {
-    this._queue.push(element);
-    this._length += 1;
-    return this._length;
+    const capacity = this._queue.length;
+    if (
+      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE &&
+      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA
+    ) {
+      const length = this._length;
+      for (let i = 0; i < length; ++i) {
+        this._queue[i] = this._queue[this._first + i];
+      }
+      this._first = 0;
+      this._queue.length = length;
+    }
+    this._queue[this._first + this._length] = element;
+    return ++this._length;
   }
   /**
    * @description Removes the first element.
@@ -55,10 +52,8 @@ class Queue<T> extends Base {
    */
   pop() {
     if (this._length === 0) return;
-    const el = this._queue[this._first];
-    delete this._queue[this._first++];
+    const el = this._queue[this._first++];
     this._length -= 1;
-    this._reAllocate();
     return el;
   }
   /**
@@ -66,6 +61,7 @@ class Queue<T> extends Base {
    * @returns The first element.
    */
   front(): T | undefined {
+    if (this._length === 0) return;
     return this._queue[this._first];
   }
 }
