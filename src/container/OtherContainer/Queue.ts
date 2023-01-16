@@ -9,11 +9,11 @@ class Queue<T> extends Base {
   /**
    * @internal
    */
-  private _queue: T[] = [];
+  private _first = 0;
   /**
    * @internal
    */
-  private _first = 0;
+  private _queue: T[] = [];
   constructor(container: initContainer<T> = []) {
     super();
     const self = this;
@@ -33,17 +33,17 @@ class Queue<T> extends Base {
   push(element: T) {
     const capacity = this._queue.length;
     if (
-      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE &&
-      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA
+      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
+      (this._first + this._length) >= capacity &&
+      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
     ) {
       const length = this._length;
       for (let i = 0; i < length; ++i) {
         this._queue[i] = this._queue[this._first + i];
       }
       this._first = 0;
-      this._queue.length = length;
-    }
-    this._queue[this._first + this._length] = element;
+      this._queue[this._length] = element;
+    } else this._queue[this._first + this._length] = element;
     return ++this._length;
   }
   /**
