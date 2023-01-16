@@ -2,6 +2,7 @@ import SequentialContainer from './Base';
 import { IteratorType, initContainer } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import $getContainerSize from '@/utils/getContainerSize.macro';
 
 class DequeIterator<T> extends RandomIterator<T> {
   readonly container: Deque<T>;
@@ -49,18 +50,7 @@ class Deque<T> extends SequentialContainer<T> {
   private _map: T[][] = [];
   constructor(container: initContainer<T> = [], _bucketSize = (1 << 12)) {
     super();
-    let _length;
-    if ('size' in container) {
-      if (typeof container.size === 'number') {
-        _length = container.size;
-      } else {
-        _length = container.size();
-      }
-    } else if ('length' in container) {
-      _length = container.length;
-    } else {
-      throw new RangeError('Can\'t get container\'s size!');
-    }
+    const _length = $getContainerSize!(container);
     this._bucketSize = _bucketSize;
     this._bucketNum = Math.max(Math.ceil(_length / this._bucketSize), 1);
     for (let i = 0; i < this._bucketNum; ++i) {

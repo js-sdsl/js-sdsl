@@ -1,19 +1,42 @@
 import { Base, initContainer } from '@/container/ContainerBase';
-import Deque from '@/container/SequentialContainer/Deque';
+
+const enum QUEUE_CONSTANT {
+  MIN_ALLOCATE_SIZE = (1 << 12),
+  ALLOCATE_SIGMA = 0.75
+}
 
 class Queue<T> extends Base {
   /**
    * @internal
    */
-  private _queue: Deque<T>;
+  private _queue: T[] = [];
+  /**
+   * @internal
+   */
+  private _first = 0;
   constructor(container: initContainer<T> = []) {
     super();
-    this._queue = new Deque(container);
-    this._length = this._queue.size();
+    const self = this;
+    container.forEach(function (el) {
+      self.push(el);
+    });
+  }
+  private _reAllocate() {
+    const capacity = this._queue.length;
+    if (
+      this._length / capacity < QUEUE_CONSTANT.ALLOCATE_SIGMA &&
+      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
+    ) {
+      const length = this._length;
+      for (let i = 0; i < length; ++i) {
+        this._queue[i] = this._queue[this._first + i];
+      }
+      this._first = 0;
+    }
   }
   clear() {
-    this._queue.clear();
-    this._length = 0;
+    this._queue = [];
+    this._length = this._first = 0;
   }
   /**
    * @description Inserts element to queue's end.
@@ -21,8 +44,9 @@ class Queue<T> extends Base {
    * @returns The container length after pushing.
    */
   push(element: T) {
-    this._queue.pushBack(element);
+    this._queue.push(element);
     this._length += 1;
+    this._reAllocate();
     return this._length;
   }
   /**
@@ -31,15 +55,18 @@ class Queue<T> extends Base {
    */
   pop() {
     if (this._length === 0) return;
+    const el = this._queue[this._first];
+    delete this._queue[this._first++];
     this._length -= 1;
-    return this._queue.popFront();
+    this._reAllocate();
+    return el;
   }
   /**
    * @description Access the first element.
    * @returns The first element.
    */
-  front() {
-    return this._queue.front();
+  front(): T | undefined {
+    return this._queue[this._first];
   }
 }
 
