@@ -83,13 +83,6 @@ class HashMap<K, V> extends HashContainer<K, V> {
     return this._set(key, value, isObject);
   }
   /**
-   * @description Check key if exist in container.
-   * @param key - The element you want to search.
-   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                   If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns An iterator pointing to the element if found, or super end if not found.
-   */
-  /**
    * @description Get the value of the element of the specified key.
    * @param key - The key want to search.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
@@ -114,6 +107,13 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     return <[K, V]>[node._key, node._value];
   }
+  /**
+   * @description Check key if exist in container.
+   * @param key - The element you want to search.
+   * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
+   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   * @returns An iterator pointing to the element if found, or super end if not found.
+   */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
     return new HashMapIterator<K, V>(node, this._header, this);
