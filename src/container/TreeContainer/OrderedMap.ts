@@ -5,6 +5,16 @@ import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
+  container: OrderedMap<K, V>;
+  constructor(
+    node: TreeNode<K, V>,
+    header: TreeNode<K, V>,
+    container: OrderedMap<K, V>,
+    iteratorType?: IteratorType
+  ) {
+    super(node, header, iteratorType);
+    this.container = container;
+  }
   get pointer() {
     if (this._node === this._header) {
       throwIteratorAccessError();
@@ -25,7 +35,12 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     });
   }
   copy() {
-    return new OrderedMapIterator(this._node, this._header, this.iteratorType);
+    return new OrderedMapIterator<K, V>(
+      this._node,
+      this._header,
+      this.container,
+      this.iteratorType
+    );
   }
   // @ts-ignore
   equals(iter: OrderedMapIterator<K, V>): boolean;
@@ -67,20 +82,21 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     yield * this._iterationFunc(curNode._right);
   }
   begin() {
-    return new OrderedMapIterator(this._header._left || this._header, this._header);
+    return new OrderedMapIterator<K, V>(this._header._left || this._header, this._header, this);
   }
   end() {
-    return new OrderedMapIterator(this._header, this._header);
+    return new OrderedMapIterator<K, V>(this._header, this._header, this);
   }
   rBegin() {
-    return new OrderedMapIterator(
+    return new OrderedMapIterator<K, V>(
       this._header._right || this._header,
       this._header,
+      this,
       IteratorType.REVERSE
     );
   }
   rEnd() {
-    return new OrderedMapIterator(this._header, this._header, IteratorType.REVERSE);
+    return new OrderedMapIterator<K, V>(this._header, this._header, this, IteratorType.REVERSE);
   }
   front() {
     if (this._length === 0) return;
@@ -94,19 +110,19 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
-    return new OrderedMapIterator(resNode, this._header);
+    return new OrderedMapIterator<K, V>(resNode, this._header, this);
   }
   upperBound(key: K) {
     const resNode = this._upperBound(this._root, key);
-    return new OrderedMapIterator(resNode, this._header);
+    return new OrderedMapIterator<K, V>(resNode, this._header, this);
   }
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this._root, key);
-    return new OrderedMapIterator(resNode, this._header);
+    return new OrderedMapIterator<K, V>(resNode, this._header, this);
   }
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this._root, key);
-    return new OrderedMapIterator(resNode, this._header);
+    return new OrderedMapIterator<K, V>(resNode, this._header, this);
   }
   /**
    * @description Insert a key-value pair or set value by the given key.
@@ -125,7 +141,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   find(key: K) {
     const curNode = this._findElementNode(this._root, key);
-    return new OrderedMapIterator(curNode, this._header);
+    return new OrderedMapIterator<K, V>(curNode, this._header, this);
   }
   /**
    * @description Get the value of the element of the specified key.

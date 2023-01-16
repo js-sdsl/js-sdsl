@@ -4,14 +4,13 @@ import { RandomIterator } from '@/container/SequentialContainer/Base/RandomItera
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 
 class DequeIterator<T> extends RandomIterator<T> {
+  readonly container: Deque<T>;
+  constructor(node: number, container: Deque<T>, iteratorType?: IteratorType) {
+    super(node, iteratorType);
+    this.container = container;
+  }
   copy() {
-    return new DequeIterator(
-      this._node,
-      this._size,
-      this._getElementByPos,
-      this._setElementByPos,
-      this.iteratorType
-    );
+    return new DequeIterator<T>(this._node, this.container, this.iteratorType);
   }
   // @ts-ignore
   equals(iter: DequeIterator<T>): boolean;
@@ -74,9 +73,6 @@ class Deque<T> extends SequentialContainer<T> {
     container.forEach(function (element) {
       self.pushBack(element);
     });
-    this.size = this.size.bind(this);
-    this.getElementByPos = this.getElementByPos.bind(this);
-    this.setElementByPos = this.setElementByPos.bind(this);
   }
   /**
    * @description Growth the Deque.
@@ -125,38 +121,16 @@ class Deque<T> extends SequentialContainer<T> {
     this._curFirst = this._curLast = this._bucketSize >> 1;
   }
   begin() {
-    return new DequeIterator<T>(
-      0,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new DequeIterator<T>(0, this);
   }
   end() {
-    return new DequeIterator(
-      this._length,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new DequeIterator<T>(this._length, this);
   }
   rBegin() {
-    return new DequeIterator(
-      this._length - 1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new DequeIterator<T>(this._length - 1, this, IteratorType.REVERSE);
   }
   rEnd() {
-    return new DequeIterator(
-      -1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new DequeIterator<T>(-1, this, IteratorType.REVERSE);
   }
   front(): T | undefined {
     return this._map[this._first][this._curFirst];
@@ -341,12 +315,7 @@ class Deque<T> extends SequentialContainer<T> {
   find(element: T) {
     for (let i = 0; i < this._length; ++i) {
       if (this.getElementByPos(i) === element) {
-        return new DequeIterator(
-          i,
-          this.size,
-          this.getElementByPos,
-          this.setElementByPos
-        );
+        return new DequeIterator<T>(i, this);
       }
     }
     return this.end();

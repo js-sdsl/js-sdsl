@@ -1,10 +1,20 @@
 import { initContainer, IteratorType } from '@/container/ContainerBase';
-import { HashContainer, HashContainerIterator } from '@/container/HashContainer/Base';
+import { HashContainer, HashContainerIterator, HashLinkNode } from '@/container/HashContainer/Base';
 import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
+  readonly container: HashMap<K, V>;
+  constructor(
+    node: HashLinkNode<K, V>,
+    header: HashLinkNode<K, V>,
+    container: HashMap<K, V>,
+    iteratorType?: IteratorType
+  ) {
+    super(node, header, iteratorType);
+    this.container = container;
+  }
   get pointer() {
     if (this._node === this._header) {
       throwIteratorAccessError();
@@ -25,7 +35,7 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
     });
   }
   copy() {
-    return new HashMapIterator(this._node, this._header, this.iteratorType);
+    return new HashMapIterator<K, V>(this._node, this._header, this.container, this.iteratorType);
   }
   // @ts-ignore
   equals(iter: HashMapIterator<K, V>): boolean;
@@ -42,16 +52,16 @@ class HashMap<K, V> extends HashContainer<K, V> {
     });
   }
   begin() {
-    return new HashMapIterator(this._head, this._header);
+    return new HashMapIterator<K, V>(this._head, this._header, this);
   }
   end() {
-    return new HashMapIterator(this._header, this._header);
+    return new HashMapIterator<K, V>(this._header, this._header, this);
   }
   rBegin() {
-    return new HashMapIterator(this._tail, this._header, IteratorType.REVERSE);
+    return new HashMapIterator<K, V>(this._tail, this._header, this, IteratorType.REVERSE);
   }
   rEnd() {
-    return new HashMapIterator(this._header, this._header, IteratorType.REVERSE);
+    return new HashMapIterator<K, V>(this._header, this._header, this, IteratorType.REVERSE);
   }
   front() {
     if (this._length === 0) return;
@@ -106,7 +116,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
   }
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
-    return new HashMapIterator(node, this._header);
+    return new HashMapIterator<K, V>(node, this._header, this);
   }
   forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
     let index = 0;
