@@ -65,6 +65,7 @@ describe('Deque test', () => {
 
   it('Deque empty test', () => {
     myDeque.clear();
+    expect(myDeque.back()).to.equal(undefined);
     for (let i = 0; i < (1 << 15); ++i) {
       myDeque.pushBack(i);
     }
@@ -81,7 +82,7 @@ describe('Deque test', () => {
     expect(new Deque(new Set([2])).size()).to.equal(1);
     expect(new Deque(new Vector([2])).size()).to.equal(1);
     // @ts-ignore
-    expect(() => new Deque({})).to.throw(RangeError);
+    expect(() => new Deque({})).to.throw(TypeError);
     myDeque.cut(-1);
     myDeque.popBack();
     myDeque.popFront();
@@ -101,6 +102,17 @@ describe('Deque test', () => {
     myDeque.eraseElementByPos(1);
     myDeque.insert(0, 3);
     expect(myDeque.front()).to.equal(3);
+
+    const a = {
+      b: [1, 2, 3, 4, 5],
+      forEach(c: (el: number) => void) {
+        this.b.forEach(c);
+      },
+      size() {
+        return this.b.length;
+      }
+    };
+    expect(new Deque(a).length).to.equal(a.size());
 
     const q = new Deque<number>([], (1 << 10));
     for (let i = 0; i < testNum; ++i) q.pushFront(arr[i]);

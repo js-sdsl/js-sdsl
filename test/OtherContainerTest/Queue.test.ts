@@ -9,17 +9,16 @@ for (let i = 0; i < testNum; ++i) {
 
 function judge(myQueue: Queue<number>, myVector: Vector<number>) {
   while (!myQueue.empty()) {
-    if (myQueue.size() !== myVector.size()) return false;
+    expect(myQueue.size()).to.equal(myVector.size());
     const s = myQueue.front();
     const v = myVector.front();
-    if (s !== v) return false;
+    expect(s).to.equal(v);
     const u = myQueue.pop();
     expect(u).to.equal(v);
     myVector.eraseElementByPos(0);
   }
   expect(myQueue.pop()).to.equal(undefined);
   expect(myQueue.front()).to.equal(undefined);
-  return true;
 }
 
 describe('Queue test', () => {
@@ -30,10 +29,30 @@ describe('Queue test', () => {
     expect(myQueue.size()).to.equal(myVector.size());
   });
 
+  it('Queue allocate test', () => {
+    for (let i = 0; i < testNum; ++i) {
+      myQueue.push(i);
+      myVector.pushBack(i);
+    }
+    let index = 0;
+    while (!myQueue.empty()) {
+      myQueue.push(1);
+      myVector.pushBack(1);
+      for (let i = 0; i < 10; ++i) {
+        expect(myQueue.pop()).to.equal((function () {
+          try {
+            return myVector.getElementByPos(index++);
+          } catch (e) {}
+        })());
+      }
+    }
+    expect(myQueue.size()).to.equal(0);
+  });
+
   it('Queue clear function test', () => {
     myQueue.clear();
     myVector.clear();
-    expect(judge(myQueue, myVector)).to.equal(true);
+    judge(myQueue, myVector);
   });
 
   it('Queue other function test', () => {
@@ -41,6 +60,6 @@ describe('Queue test', () => {
       myQueue.push(i);
       myVector.pushBack(i);
     }
-    expect(judge(myQueue, myVector)).to.equal(true);
+    judge(myQueue, myVector);
   });
 });

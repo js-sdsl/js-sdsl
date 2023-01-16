@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
-## [UnReleased] - 2023.01.11
+## [UnReleased] - 2023.01.16
 
 ### Added
 
 - Add public member `container` to `Iterator` which means the container that the iterator pointed to.
+
+### Changed
+
+- Reimplement `Queue`, separate `Queue` from `Deque`.
 
 ## [4.2.0] - 2022.11.20
 
