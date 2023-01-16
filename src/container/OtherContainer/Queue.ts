@@ -1,8 +1,8 @@
 import { Base, initContainer } from '@/container/ContainerBase';
 
 const enum QUEUE_CONSTANT {
-  MIN_ALLOCATE_SIZE = (1 << 12),
-  ALLOCATE_SIGMA = 0.75
+  ALLOCATE_SIGMA = 0.5,
+  MIN_ALLOCATE_SIZE = (1 << 12)
 }
 
 class Queue<T> extends Base {
@@ -24,7 +24,7 @@ class Queue<T> extends Base {
   private _reAllocate() {
     const capacity = this._queue.length;
     if (
-      this._length / capacity < QUEUE_CONSTANT.ALLOCATE_SIGMA &&
+      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
       capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
     ) {
       const length = this._length;
@@ -32,6 +32,7 @@ class Queue<T> extends Base {
         this._queue[i] = this._queue[this._first + i];
       }
       this._first = 0;
+      this._queue.length = length;
     }
   }
   clear() {
@@ -46,7 +47,6 @@ class Queue<T> extends Base {
   push(element: T) {
     this._queue.push(element);
     this._length += 1;
-    this._reAllocate();
     return this._length;
   }
   /**
