@@ -3,9 +3,6 @@ import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
-/**
- * @internal
- */
 export type HashLinkNode<K, V> = {
   _key: K,
   _value: V,

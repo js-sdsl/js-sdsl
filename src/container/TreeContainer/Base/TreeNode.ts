@@ -1,14 +1,8 @@
-/**
- * @internal
- */
 export const enum TreeNodeColor {
   RED = 1,
   BLACK = 0
 }
 
-/**
- * @internal
- */
 export class TreeNode<K, V> {
   _color = TreeNodeColor.RED;
   _key: K | undefined = undefined;
@@ -117,9 +111,6 @@ export class TreeNode<K, V> {
   }
 }
 
-/**
- * @internal
- */
 export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   _subTreeSize = 1;
   /**

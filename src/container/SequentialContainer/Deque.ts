@@ -105,7 +105,7 @@ class Deque<T> extends SequentialContainer<T> {
     return { curNodeBucketIndex, curNodePointerIndex };
   }
   clear() {
-    this._map = [[]];
+    this._map = [new Array(this._bucketSize)];
     this._bucketNum = 1;
     this._first = this._last = this._length = 0;
     this._curFirst = this._curLast = this._bucketSize >> 1;
