@@ -3,10 +3,7 @@ import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
-/**
- * @internal
- */
-type HashLinkNode<K, V> = {
+export type HashLinkNode<K, V> = {
   _key: K,
   _value: V,
   _pre: HashLinkNode<K, V>,
@@ -14,6 +11,7 @@ type HashLinkNode<K, V> = {
 }
 
 export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | [K, V]> {
+  abstract readonly container: HashContainer<K, V>;
   /**
    * @internal
    */
@@ -25,7 +23,7 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
   /**
    * @internal
    */
-  constructor(
+  protected constructor(
     node: HashLinkNode<K, V>,
     header: HashLinkNode<K, V>,
     iteratorType?: IteratorType

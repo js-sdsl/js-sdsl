@@ -1,19 +1,29 @@
 import { Base, initContainer } from '@/container/ContainerBase';
-import Deque from '@/container/SequentialContainer/Deque';
+
+const enum QUEUE_CONSTANT {
+  ALLOCATE_SIGMA = 0.5,
+  MIN_ALLOCATE_SIZE = (1 << 12)
+}
 
 class Queue<T> extends Base {
   /**
    * @internal
    */
-  private _queue: Deque<T>;
+  private _first = 0;
+  /**
+   * @internal
+   */
+  private _queue: T[] = [];
   constructor(container: initContainer<T> = []) {
     super();
-    this._queue = new Deque(container);
-    this._length = this._queue.size();
+    const self = this;
+    container.forEach(function (el) {
+      self.push(el);
+    });
   }
   clear() {
-    this._queue.clear();
-    this._length = 0;
+    this._queue = [];
+    this._length = this._first = 0;
   }
   /**
    * @description Inserts element to queue's end.
@@ -21,9 +31,20 @@ class Queue<T> extends Base {
    * @returns The container length after pushing.
    */
   push(element: T) {
-    this._queue.pushBack(element);
-    this._length += 1;
-    return this._length;
+    const capacity = this._queue.length;
+    if (
+      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
+      (this._first + this._length) >= capacity &&
+      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
+    ) {
+      const length = this._length;
+      for (let i = 0; i < length; ++i) {
+        this._queue[i] = this._queue[this._first + i];
+      }
+      this._first = 0;
+      this._queue[this._length] = element;
+    } else this._queue[this._first + this._length] = element;
+    return ++this._length;
   }
   /**
    * @description Removes the first element.
@@ -31,15 +52,17 @@ class Queue<T> extends Base {
    */
   pop() {
     if (this._length === 0) return;
+    const el = this._queue[this._first++];
     this._length -= 1;
-    return this._queue.popFront();
+    return el;
   }
   /**
    * @description Access the first element.
    * @returns The first element.
    */
-  front() {
-    return this._queue.front();
+  front(): T | undefined {
+    if (this._length === 0) return;
+    return this._queue[this._first];
   }
 }
 

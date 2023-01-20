@@ -2,16 +2,16 @@ import SequentialContainer from './Base';
 import { IteratorType, initContainer } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import $getContainerSize from '@/utils/getContainerSize.macro';
 
 class DequeIterator<T> extends RandomIterator<T> {
+  readonly container: Deque<T>;
+  constructor(node: number, container: Deque<T>, iteratorType?: IteratorType) {
+    super(node, iteratorType);
+    this.container = container;
+  }
   copy() {
-    return new DequeIterator(
-      this._node,
-      this._size,
-      this._getElementByPos,
-      this._setElementByPos,
-      this.iteratorType
-    );
+    return new DequeIterator<T>(this._node, this.container, this.iteratorType);
   }
   // @ts-ignore
   equals(iter: DequeIterator<T>): boolean;
@@ -50,18 +50,7 @@ class Deque<T> extends SequentialContainer<T> {
   private _map: T[][] = [];
   constructor(container: initContainer<T> = [], _bucketSize = (1 << 12)) {
     super();
-    let _length;
-    if ('size' in container) {
-      if (typeof container.size === 'number') {
-        _length = container.size;
-      } else {
-        _length = container.size();
-      }
-    } else if ('length' in container) {
-      _length = container.length;
-    } else {
-      throw new RangeError('Can\'t get container\'s size!');
-    }
+    const _length = $getContainerSize!(container);
     this._bucketSize = _bucketSize;
     this._bucketNum = Math.max(Math.ceil(_length / this._bucketSize), 1);
     for (let i = 0; i < this._bucketNum; ++i) {
@@ -74,9 +63,6 @@ class Deque<T> extends SequentialContainer<T> {
     container.forEach(function (element) {
       self.pushBack(element);
     });
-    this.size = this.size.bind(this);
-    this.getElementByPos = this.getElementByPos.bind(this);
-    this.setElementByPos = this.setElementByPos.bind(this);
   }
   /**
    * @description Growth the Deque.
@@ -119,49 +105,29 @@ class Deque<T> extends SequentialContainer<T> {
     return { curNodeBucketIndex, curNodePointerIndex };
   }
   clear() {
-    this._map = [[]];
+    this._map = [new Array(this._bucketSize)];
     this._bucketNum = 1;
     this._first = this._last = this._length = 0;
     this._curFirst = this._curLast = this._bucketSize >> 1;
   }
   begin() {
-    return new DequeIterator<T>(
-      0,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new DequeIterator<T>(0, this);
   }
   end() {
-    return new DequeIterator(
-      this._length,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new DequeIterator<T>(this._length, this);
   }
   rBegin() {
-    return new DequeIterator(
-      this._length - 1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new DequeIterator<T>(this._length - 1, this, IteratorType.REVERSE);
   }
   rEnd() {
-    return new DequeIterator(
-      -1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new DequeIterator<T>(-1, this, IteratorType.REVERSE);
   }
   front(): T | undefined {
+    if (this._length === 0) return;
     return this._map[this._first][this._curFirst];
   }
   back(): T | undefined {
+    if (this._length === 0) return;
     return this._map[this._last][this._curLast];
   }
   pushBack(element: T) {
@@ -187,7 +153,6 @@ class Deque<T> extends SequentialContainer<T> {
   popBack() {
     if (this._length === 0) return;
     const value = this._map[this._last][this._curLast];
-    delete this._map[this._last][this._curLast];
     if (this._length !== 1) {
       if (this._curLast > 0) {
         this._curLast -= 1;
@@ -234,7 +199,6 @@ class Deque<T> extends SequentialContainer<T> {
   popFront() {
     if (this._length === 0) return;
     const value = this._map[this._first][this._curFirst];
-    delete this._map[this._first][this._curFirst];
     if (this._length !== 1) {
       if (this._curFirst < this._bucketSize - 1) {
         this._curFirst += 1;
@@ -341,12 +305,7 @@ class Deque<T> extends SequentialContainer<T> {
   find(element: T) {
     for (let i = 0; i < this._length; ++i) {
       if (this.getElementByPos(i) === element) {
-        return new DequeIterator(
-          i,
-          this.size,
-          this.getElementByPos,
-          this.setElementByPos
-        );
+        return new DequeIterator<T>(i, this);
       }
     }
     return this.end();

@@ -5,6 +5,16 @@ import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
+  container: OrderedSet<K>;
+  constructor(
+    node: TreeNode<K, undefined>,
+    header: TreeNode<K, undefined>,
+    container: OrderedSet<K>,
+    iteratorType?: IteratorType
+  ) {
+    super(node, header, iteratorType);
+    this.container = container;
+  }
   get pointer() {
     if (this._node === this._header) {
       throwIteratorAccessError();
@@ -12,7 +22,12 @@ class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
     return this._node._key!;
   }
   copy() {
-    return new OrderedSetIterator(this._node, this._header, this.iteratorType);
+    return new OrderedSetIterator<K>(
+      this._node,
+      this._header,
+      this.container,
+      this.iteratorType
+    );
   }
   // @ts-ignore
   equals(iter: OrderedSetIterator<K>): boolean;
@@ -54,23 +69,25 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     yield * this._iterationFunc(curNode._right);
   }
   begin() {
-    return new OrderedSetIterator(
+    return new OrderedSetIterator<K>(
       this._header._left || this._header,
-      this._header
+      this._header,
+      this
     );
   }
   end() {
-    return new OrderedSetIterator(this._header, this._header);
+    return new OrderedSetIterator<K>(this._header, this._header, this);
   }
   rBegin() {
-    return new OrderedSetIterator(
+    return new OrderedSetIterator<K>(
       this._header._right || this._header,
       this._header,
+      this,
       IteratorType.REVERSE
     );
   }
   rEnd() {
-    return new OrderedSetIterator(this._header, this._header, IteratorType.REVERSE);
+    return new OrderedSetIterator<K>(this._header, this._header, this, IteratorType.REVERSE);
   }
   front() {
     return this._header._left ? this._header._left._key : undefined;
@@ -93,24 +110,24 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return this._set(key, undefined, hint);
   }
   find(element: K) {
-    const curNode = this._findElementNode(this._root, element);
-    return new OrderedSetIterator(curNode, this._header);
+    const resNode = this._findElementNode(this._root, element);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
-    return new OrderedSetIterator(resNode, this._header);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   upperBound(key: K) {
     const resNode = this._upperBound(this._root, key);
-    return new OrderedSetIterator(resNode, this._header);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   reverseLowerBound(key: K) {
     const resNode = this._reverseLowerBound(this._root, key);
-    return new OrderedSetIterator(resNode, this._header);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   reverseUpperBound(key: K) {
     const resNode = this._reverseUpperBound(this._root, key);
-    return new OrderedSetIterator(resNode, this._header);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   union(other: OrderedSet<K>) {
     const self = this;

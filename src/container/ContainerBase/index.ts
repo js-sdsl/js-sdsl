@@ -8,6 +8,10 @@ export const enum IteratorType {
 
 export abstract class ContainerIterator<T> {
   /**
+   * @description The container pointed to by the iterator.
+   */
+  abstract readonly container: Container<T>;
+  /**
    * @internal
    */
   abstract _node: unknown;
@@ -224,9 +228,8 @@ export abstract class Container<T> extends Base {
 /**
  * @description The initial data type passed in when initializing the container.
  */
-export type initContainer<T> = (
-  { size: number } |
-  { length: number } |
-  { size(): number }
-  ) &
-  { forEach(callback: (element: T) => void): void; };
+export type initContainer<T> = {
+  size?: number | (() => number);
+  length?: number;
+  forEach: (callback: (el: T) => void) => void;
+}

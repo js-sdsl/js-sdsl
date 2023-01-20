@@ -4,14 +4,13 @@ import { RandomIterator } from '@/container/SequentialContainer/Base/RandomItera
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 
 class VectorIterator<T> extends RandomIterator<T> {
+  container: Vector<T>;
+  constructor(node: number, container: Vector<T>, iteratorType?: IteratorType) {
+    super(node, iteratorType);
+    this.container = container;
+  }
   copy() {
-    return new VectorIterator(
-      this._node,
-      this._size,
-      this._getElementByPos,
-      this._setElementByPos,
-      this.iteratorType
-    );
+    return new VectorIterator<T>(this._node, this.container, this.iteratorType);
   }
   // @ts-ignore
   equals(iter: VectorIterator<T>): boolean;
@@ -41,47 +40,22 @@ class Vector<T> extends SequentialContainer<T> {
         self.pushBack(el);
       });
     }
-    this.size = this.size.bind(this);
-    this.getElementByPos = this.getElementByPos.bind(this);
-    this.setElementByPos = this.setElementByPos.bind(this);
   }
   clear() {
     this._length = 0;
     this._vector.length = 0;
   }
   begin() {
-    return new VectorIterator(
-      0,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new VectorIterator<T>(0, this);
   }
   end() {
-    return new VectorIterator(
-      this._length,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos
-    );
+    return new VectorIterator<T>(this._length, this);
   }
   rBegin() {
-    return new VectorIterator(
-      this._length - 1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new VectorIterator<T>(this._length - 1, this, IteratorType.REVERSE);
   }
   rEnd() {
-    return new VectorIterator(
-      -1,
-      this.size,
-      this.getElementByPos,
-      this.setElementByPos,
-      IteratorType.REVERSE
-    );
+    return new VectorIterator<T>(-1, this, IteratorType.REVERSE);
   }
   front(): T | undefined {
     return this._vector[0];
@@ -138,12 +112,7 @@ class Vector<T> extends SequentialContainer<T> {
   find(element: T) {
     for (let i = 0; i < this._length; ++i) {
       if (this._vector[i] === element) {
-        return new VectorIterator(
-          i,
-          this.size,
-          this.getElementByPos,
-          this.getElementByPos
-        );
+        return new VectorIterator<T>(i, this);
       }
     }
     return this.end();
