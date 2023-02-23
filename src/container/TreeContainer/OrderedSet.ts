@@ -1,7 +1,8 @@
 import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
-import { TreeNode } from './Base/TreeNode';
 import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { TreeNode } from './Base/TreeNode';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
@@ -57,17 +58,6 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
       self.insert(el);
     });
   }
-  /**
-   * @internal
-   */
-  private * _iterationFunc(
-    curNode: TreeNode<K, undefined> | undefined
-  ): Generator<K, void> {
-    if (curNode === undefined) return;
-    yield * this._iterationFunc(curNode._left);
-    yield curNode._key!;
-    yield * this._iterationFunc(curNode._right);
-  }
   begin() {
     return new OrderedSetIterator<K>(
       this._header._left || this._header,
@@ -95,24 +85,6 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   back() {
     return this._header._right ? this._header._right._key : undefined;
   }
-  /**
-   * @description Insert element to set.
-   * @param key - The key want to insert.
-   * @param hint - You can give an iterator hint to improve insertion efficiency.
-   * @return The size of container after setting.
-   * @example
-   * const st = new OrderedSet([2, 4, 5]);
-   * const iter = st.begin();
-   * st.insert(1);
-   * st.insert(3, iter);  // give a hint will be faster.
-   */
-  insert(key: K, hint?: OrderedSetIterator<K>) {
-    return this._set(key, undefined, hint);
-  }
-  find(element: K) {
-    const resNode = this._getTreeNodeByKey(this._root, element);
-    return new OrderedSetIterator<K>(resNode, this._header, this);
-  }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
     return new OrderedSetIterator<K>(resNode, this._header, this);
@@ -129,6 +101,36 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     const resNode = this._reverseUpperBound(this._root, key);
     return new OrderedSetIterator<K>(resNode, this._header, this);
   }
+  forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
+    const length = this._length;
+    const nodeList = this._inOrderTraversal(length - 1);
+    for (let i = 0; i < length; ++i) {
+      callback(nodeList[i]._key as K, i, this);
+    }
+  }
+  /**
+   * @description Insert element to set.
+   * @param key - The key want to insert.
+   * @param hint - You can give an iterator hint to improve insertion efficiency.
+   * @return The size of container after setting.
+   * @example
+   * const st = new OrderedSet([2, 4, 5]);
+   * const iter = st.begin();
+   * st.insert(1);
+   * st.insert(3, iter);  // give a hint will be faster.
+   */
+  insert(key: K, hint?: OrderedSetIterator<K>) {
+    return this._set(key, undefined, hint);
+  }
+  getElementByPos(pos: number) {
+    $checkWithinAccessParams!(pos, 0, this._length - 1);
+    const nodeList = this._inOrderTraversal(pos);
+    return nodeList[pos]._key as K;
+  }
+  find(element: K) {
+    const resNode = this._getTreeNodeByKey(this._root, element);
+    return new OrderedSetIterator<K>(resNode, this._header, this);
+  }
   union(other: OrderedSet<K>) {
     const self = this;
     other.forEach(function (el) {
@@ -137,14 +139,16 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return this._length;
   }
   [Symbol.iterator]() {
-    return this._iterationFunc(this._root);
+    return (function * (this: OrderedSet<K>) {
+      const length = this._length;
+      const nodeList = this._inOrderTraversal(this._length - 1);
+      for (let i = 0; i < length; ++i) {
+        yield nodeList[i]._key as K;
+      }
+    }.bind(this))();
   }
   // @ts-ignore
   eraseElementByIterator(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;
-  // @ts-ignore
-  forEach(callback: (element: K, index: number, tree: OrderedSet<K>) => void): void;
-  // @ts-ignore
-  getElementByPos(pos: number): K;
 }
 
 export default OrderedSet;

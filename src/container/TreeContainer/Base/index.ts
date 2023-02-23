@@ -212,7 +212,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected * _inOrderTraversal(curNode: TreeNode<K, V> | undefined) {
+  protected _inOrderTraversal(pos: number) {
+    pos += 1;
+    const nodeList = [];
+    let curNode = this._root;
     const stack: TreeNode<K, V>[] = [];
     while (stack.length || curNode) {
       if (curNode) {
@@ -220,10 +223,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         curNode = curNode._left;
       } else {
         curNode = stack.pop()!;
-        yield curNode;
+        nodeList.push(curNode);
+        if (nodeList.length === pos) {
+          break;
+        }
         curNode = curNode._right;
       }
     }
+    return nodeList;
   }
   /**
    * @internal
@@ -487,15 +494,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let index = 0;
-    const nodeList = this._inOrderTraversal(this._root);
-    for (const node of nodeList) {
-      if (index === pos) {
-        this._eraseNode(node);
-        break;
-      }
-      index += 1;
-    }
+    const nodeList = this._inOrderTraversal(pos);
+    this._eraseNode(nodeList[pos]);
     return this._length;
   }
   /**
@@ -528,23 +528,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
     this._eraseNode(node);
     return iter;
-  }
-  forEach(callback: (element: K | [K, V], index: number, tree: TreeContainer<K, V>) => void) {
-    let index = 0;
-    for (const element of this) callback(element, index++, this);
-  }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let res;
-    let index = 0;
-    for (const element of this) {
-      if (index === pos) {
-        res = element;
-        break;
-      }
-      index += 1;
-    }
-    return <K | [K, V]>res;
   }
   /**
    * @description Get the height of the tree.

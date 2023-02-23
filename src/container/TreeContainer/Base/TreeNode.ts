@@ -4,7 +4,7 @@ export const enum TreeNodeColor {
 }
 
 export class TreeNode<K, V> {
-  _color;
+  _color: TreeNodeColor;
   _key: K | undefined;
   _value: V | undefined;
   _left: TreeNode<K, V> | undefined = undefined;
