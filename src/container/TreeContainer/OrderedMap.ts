@@ -1,7 +1,7 @@
 import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
-import { initContainer, IteratorType } from '@/container/ContainerBase';
 import { TreeNode } from './Base/TreeNode';
+import { initContainer, IteratorType } from '@/container/ContainerBase';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
