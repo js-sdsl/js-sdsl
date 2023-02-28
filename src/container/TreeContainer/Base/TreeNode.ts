@@ -4,15 +4,20 @@ export const enum TreeNodeColor {
 }
 
 export class TreeNode<K, V> {
-  _color = TreeNodeColor.RED;
-  _key: K | undefined = undefined;
-  _value: V | undefined = undefined;
+  _color: TreeNodeColor;
+  _key: K | undefined;
+  _value: V | undefined;
   _left: TreeNode<K, V> | undefined = undefined;
   _right: TreeNode<K, V> | undefined = undefined;
   _parent: TreeNode<K, V> | undefined = undefined;
-  constructor(key?: K, value?: V) {
+  constructor(
+    key?: K,
+    value?: V,
+    color: TreeNodeColor = TreeNodeColor.RED
+  ) {
     this._key = key;
     this._value = value;
+    this._color = color;
   }
   /**
    * @description Get the pre node.
