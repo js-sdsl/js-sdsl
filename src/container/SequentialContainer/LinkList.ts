@@ -279,7 +279,9 @@ class LinkList<T> extends SequentialContainer<T> {
     return this.end();
   }
   reverse() {
-    if (this._length <= 1) return;
+    if (this._length <= 1) {
+      return this;
+    }
     let pHead = this._head;
     let pTail = this._tail;
     let cnt = 0;
@@ -291,6 +293,7 @@ class LinkList<T> extends SequentialContainer<T> {
       pTail = pTail._pre;
       cnt += 1;
     }
+    return this;
   }
   unique() {
     if (this._length <= 1) {
@@ -362,15 +365,13 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode = curNode._next;
     }
   }
-  [Symbol.iterator]() {
-    return function * (this: LinkList<T>) {
-      if (this._length === 0) return;
-      let curNode = this._head;
-      while (curNode !== this._header) {
-        yield curNode._value;
-        curNode = curNode._next;
-      }
-    }.bind(this)();
+  * [Symbol.iterator]() {
+    if (this._length === 0) return;
+    let curNode = this._head;
+    while (curNode !== this._header) {
+      yield curNode._value;
+      curNode = curNode._next;
+    }
   }
 }
 

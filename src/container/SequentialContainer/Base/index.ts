@@ -46,7 +46,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * const container = new Vector([1, 2, 3]);
    * container.reverse(); // [3, 2, 1]
    */
-  abstract reverse(): void;
+  abstract reverse(): this;
   /**
    * @description Removes the duplication of elements in the container.
    * @returns The size of container after inserting.

@@ -138,14 +138,12 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     });
     return this._length;
   }
-  [Symbol.iterator]() {
-    return (function * (this: OrderedSet<K>) {
-      const length = this._length;
-      const nodeList = this._inOrderTraversal(this._length - 1);
-      for (let i = 0; i < length; ++i) {
-        yield nodeList[i]._key as K;
-      }
-    }.bind(this))();
+  * [Symbol.iterator]() {
+    const length = this._length;
+    const nodeList = this._inOrderTraversal(this._length - 1);
+    for (let i = 0; i < length; ++i) {
+      yield nodeList[i]._key as K;
+    }
   }
   // @ts-ignore
   eraseElementByIterator(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;
