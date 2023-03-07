@@ -75,7 +75,9 @@ describe('Deque test', () => {
     expect(myDeque.front()).to.equal(undefined);
     expect(myDeque.size()).to.equal(0);
     myDeque.shrinkToFit();
-    myDeque.pushBack(1);
+    myDeque.pushFront(1);
+    myDeque.shrinkToFit();
+    expect(myDeque.length).to.equal(1);
     expect(myDeque.find(1).pointer).to.equal(1);
     myDeque.begin().pointer = 2;
     expect(myDeque.front()).to.equal(2);
@@ -115,6 +117,15 @@ describe('Deque test', () => {
     expect(new Deque(a).length).to.equal(a.size());
 
     const q = new Deque<number>([], (1 << 10));
+    const v = new Vector<number>();
+    for (let i = 0; i < (1 << 15); ++i) {
+      const random = Math.random();
+      q.pushBack(random);
+      v.pushBack(random);
+    }
+    q.shrinkToFit();
+    judgeSequentialContainer(q, v);
+    q.clear();
     for (let i = 0; i < testNum; ++i) q.pushFront(arr[i]);
     arr.reverse();
     judgeSequentialContainer(q, new Vector(arr));

@@ -377,7 +377,7 @@ class Deque<T> extends SequentialContainer<T> {
       for (let i = this._first; i < this._bucketNum; ++i) {
         newMap.push(this._map[i]);
       }
-      for (let i = 0; i < this._last; ++i) {
+      for (let i = 0; i <= this._last; ++i) {
         newMap.push(this._map[i]);
       }
     }
