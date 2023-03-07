@@ -316,7 +316,9 @@ class LinkList<T> extends SequentialContainer<T> {
     return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
-    if (this._length <= 1) return;
+    if (this._length <= 1) {
+      return this;
+    }
     const arr: T[] = [];
     this.forEach(function (el) {
       arr.push(el);
@@ -327,6 +329,7 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._value = element;
       curNode = curNode._next;
     });
+    return this;
   }
   /**
    * @description Merges two sorted lists.

@@ -361,6 +361,7 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < this._length; ++i) {
       this.setElementByPos(i, arr[i]);
     }
+    return this;
   }
   /**
    * @description Remove as much useless space as possible.

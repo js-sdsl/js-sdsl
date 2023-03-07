@@ -133,6 +133,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   sort(cmp?: (x: T, y: T) => number) {
     this._vector.sort(cmp);
+    return this;
   }
   forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
