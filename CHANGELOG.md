@@ -10,7 +10,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Optimized inOrder travel function for tree container.
 - Optimized `Symbol.iterator` function.
-- Optimized `TreeContainer` `insert` function.
+- Optimized `TreeContainer` `erase` function.
 - Optimized some details of deque.
 - Change `reverse` and `sort` returned value to `this`.
 
