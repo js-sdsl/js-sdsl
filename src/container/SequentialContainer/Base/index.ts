@@ -42,11 +42,12 @@ abstract class SequentialContainer<T> extends Container<T> {
   abstract insert(pos: number, element: T, num?: number): number;
   /**
    * @description Reverses the container.
+   * @returns The container's self.
    * @example
    * const container = new Vector([1, 2, 3]);
    * container.reverse(); // [3, 2, 1]
    */
-  abstract reverse(): void;
+  abstract reverse(): this;
   /**
    * @description Removes the duplication of elements in the container.
    * @returns The size of container after inserting.
@@ -58,12 +59,13 @@ abstract class SequentialContainer<T> extends Container<T> {
   /**
    * @description Sort the container.
    * @param cmp - Comparison function to sort.
+   * @returns The container's self.
    * @example
    * const container = new Vector([3, 1, 10]);
    * container.sort();  // [1, 10, 3]
    * container.sort((x, y) => x - y); // [1, 3, 10]
    */
-  abstract sort(cmp?: (x: T, y: T) => number): void;
+  abstract sort(cmp?: (x: T, y: T) => number): this;
 }
 
 export default SequentialContainer;

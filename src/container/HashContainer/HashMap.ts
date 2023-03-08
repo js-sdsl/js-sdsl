@@ -126,14 +126,12 @@ class HashMap<K, V> extends HashContainer<K, V> {
       node = node._next;
     }
   }
-  [Symbol.iterator]() {
-    return function * (this: HashMap<K, V>) {
-      let node = this._head;
-      while (node !== this._header) {
-        yield <[K, V]>[node._key, node._value];
-        node = node._next;
-      }
-    }.bind(this)();
+  * [Symbol.iterator]() {
+    let node = this._head;
+    while (node !== this._header) {
+      yield <[K, V]>[node._key, node._value];
+      node = node._next;
+    }
   }
 }
 

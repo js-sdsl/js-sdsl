@@ -164,15 +164,13 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     });
     return this._length;
   }
-  [Symbol.iterator]() {
-    return (function * (this: OrderedMap<K, V>) {
-      const length = this._length;
-      const nodeList = this._inOrderTraversal(this._length - 1);
-      for (let i = 0; i < length; ++i) {
-        const node = nodeList[i];
-        yield <[K, V]>[node._key, node._value];
-      }
-    }.bind(this))();
+  * [Symbol.iterator]() {
+    const length = this._length;
+    const nodeList = this._inOrderTraversal(this._length - 1);
+    for (let i = 0; i < length; ++i) {
+      const node = nodeList[i];
+      yield <[K, V]>[node._key, node._value];
+    }
   }
   // @ts-ignore
   eraseElementByIterator(iter: OrderedMapIterator<K, V>): OrderedMapIterator<K, V>;

@@ -186,8 +186,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       } else {
         swapNode = swapNode._left!;
       }
-      [curNode._key, swapNode._key] = [swapNode._key, curNode._key];
-      [curNode._value, swapNode._value] = [swapNode._value, curNode._value];
+      const key = curNode._key;
+      curNode._key = swapNode._key;
+      swapNode._key = key;
+      const value = curNode._value;
+      curNode._value = swapNode._value;
+      swapNode._value = value;
       curNode = swapNode;
     }
     if (this._header._left === swapNode) {

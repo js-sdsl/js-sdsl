@@ -147,13 +147,12 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
         node._value = <V>value;
         return this._length;
       }
-      newTail = {
+      this._originMap[<string><unknown>key] = newTail = {
         _key: key,
         _value: <V>value,
         _pre: this._tail,
         _next: this._header
       };
-      this._originMap[<string><unknown>key] = newTail;
     }
     if (this._length === 0) {
       this._head = newTail;
