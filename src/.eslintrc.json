@@ -4,13 +4,6 @@
     "plugin:compat/recommended"
   ],
   "plugins": ["compat"],
-  "settings": {
-    // TODO: Find why firefox 31 mocha tests passed.
-    "polyfills": [
-      "Symbol",
-      "Symbol.iterator"
-    ]
-  },
   "rules": {
     "compat/compat": "error"
   }
