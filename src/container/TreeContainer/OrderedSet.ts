@@ -102,11 +102,9 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
-    const length = this._length;
-    const nodeList = this._inOrderTraversal(length - 1);
-    for (let i = 0; i < length; ++i) {
-      callback(nodeList[i]._key as K, i, this);
-    }
+    this._inOrderTraversal(function (node, index, set) {
+      callback(node._key as K, index, set);
+    });
   }
   /**
    * @description Insert element to set.
@@ -124,8 +122,8 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
-    const nodeList = this._inOrderTraversal(pos);
-    return nodeList[pos]._key as K;
+    const node = this._inOrderTraversal(pos);
+    return node._key as K;
   }
   find(element: K) {
     const resNode = this._getTreeNodeByKey(this._root, element);
@@ -140,7 +138,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   * [Symbol.iterator]() {
     const length = this._length;
-    const nodeList = this._inOrderTraversal(this._length - 1);
+    const nodeList = this._inOrderTraversal();
     for (let i = 0; i < length; ++i) {
       yield nodeList[i]._key as K;
     }

@@ -115,12 +115,9 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return new OrderedMapIterator<K, V>(resNode, this._header, this);
   }
   forEach(callback: (element: [K, V], index: number, map: OrderedMap<K, V>) => void) {
-    const length = this._length;
-    const nodeList = this._inOrderTraversal(length - 1);
-    for (let i = 0; i < length; ++i) {
-      const node = nodeList[i];
-      callback(<[K, V]>[node._key, node._value], i, this);
-    }
+    this._inOrderTraversal(function (node, index, map) {
+      callback(<[K, V]>[node._key, node._value], index, map);
+    });
   }
   /**
    * @description Insert a key-value pair or set value by the given key.
@@ -139,8 +136,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   getElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
-    const nodeList = this._inOrderTraversal(pos);
-    const node = nodeList[pos];
+    const node = this._inOrderTraversal(pos);
     return <[K, V]>[node._key, node._value];
   }
   find(key: K) {
@@ -166,7 +162,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   * [Symbol.iterator]() {
     const length = this._length;
-    const nodeList = this._inOrderTraversal(this._length - 1);
+    const nodeList = this._inOrderTraversal();
     for (let i = 0; i < length; ++i) {
       const node = nodeList[i];
       yield <[K, V]>[node._key, node._value];
