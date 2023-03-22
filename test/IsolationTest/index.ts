@@ -1,6 +1,6 @@
+import { expect } from 'chai';
 import { Deque } from 'dist/isolate/deque';
 import { HashMap } from 'dist/isolate/hash-map';
-import { expect } from 'chai';
 import { HashSet } from 'dist/isolate/hash-set';
 import { LinkList } from 'dist/isolate/link-list';
 import { OrderedMap } from 'dist/isolate/ordered-map';

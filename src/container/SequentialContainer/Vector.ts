@@ -119,6 +119,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   reverse() {
     this._vector.reverse();
+    return this;
   }
   unique() {
     let index = 1;
@@ -132,16 +133,15 @@ class Vector<T> extends SequentialContainer<T> {
   }
   sort(cmp?: (x: T, y: T) => number) {
     this._vector.sort(cmp);
+    return this;
   }
   forEach(callback: (element: T, index: number, vector: Vector<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
       callback(this._vector[i], i, this);
     }
   }
-  [Symbol.iterator]() {
-    return function * (this: Vector<T>) {
-      yield * this._vector;
-    }.bind(this)();
+  * [Symbol.iterator]() {
+    yield * this._vector;
   }
 }
 

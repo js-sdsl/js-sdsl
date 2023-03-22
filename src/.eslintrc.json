@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "../.eslintrc.json",
+    "plugin:compat/recommended"
+  ],
+  "plugins": ["compat"],
+  "rules": {
+    "compat/compat": "error",
+    "require-yield": "off"
+  }
+}

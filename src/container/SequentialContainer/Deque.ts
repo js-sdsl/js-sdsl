@@ -3,6 +3,7 @@ import { IteratorType, initContainer } from '@/container/ContainerBase';
 import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import $getContainerSize from '@/utils/getContainerSize.macro';
+import * as Math from '@/utils/math';
 
 class DequeIterator<T> extends RandomIterator<T> {
   readonly container: Deque<T>;
@@ -52,11 +53,11 @@ class Deque<T> extends SequentialContainer<T> {
     super();
     const _length = $getContainerSize!(container);
     this._bucketSize = _bucketSize;
-    this._bucketNum = Math.max(Math.ceil(_length / this._bucketSize), 1);
+    this._bucketNum = Math.ceil(_length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
       this._map.push(new Array(this._bucketSize));
     }
-    const needBucketNum = Math.ceil(_length / this._bucketSize);
+    const needBucketNum = Math.ceil(_length, this._bucketSize);
     this._first = this._last = (this._bucketNum >> 1) - (needBucketNum >> 1);
     this._curFirst = this._curLast = (this._bucketSize - _length % this._bucketSize) >> 1;
     const self = this;
@@ -68,9 +69,9 @@ class Deque<T> extends SequentialContainer<T> {
    * @description Growth the Deque.
    * @internal
    */
-  private _reAllocate() {
+  private _reAllocate(needBucketNum?: number) {
     const newMap = [];
-    const addBucketNum = Math.max(this._bucketNum >> 1, 1);
+    const addBucketNum = needBucketNum || this._bucketNum >> 1 || 1;
     for (let i = 0; i < addBucketNum; ++i) {
       newMap[i] = new Array(this._bucketSize);
     }
@@ -95,13 +96,16 @@ class Deque<T> extends SequentialContainer<T> {
    * @internal
    */
   private _getElementIndex(pos: number) {
-    const offset = this._curFirst + pos + 1;
-    const offsetRemainder = offset % this._bucketSize;
-    let curNodePointerIndex = offsetRemainder - 1;
-    let curNodeBucketIndex = this._first + (offset - offsetRemainder) / this._bucketSize;
-    if (offsetRemainder === 0) curNodeBucketIndex -= 1;
-    curNodeBucketIndex %= this._bucketNum;
-    if (curNodePointerIndex < 0) curNodePointerIndex += this._bucketSize;
+    let curNodeBucketIndex, curNodePointerIndex;
+    const index = this._curFirst + pos;
+    curNodeBucketIndex = this._first + Math.floor(index / this._bucketSize);
+    if (curNodeBucketIndex >= this._bucketNum) {
+      curNodeBucketIndex -= this._bucketNum;
+    }
+    curNodePointerIndex = (index + 1) % this._bucketSize - 1;
+    if (curNodePointerIndex < 0) {
+      curNodePointerIndex = this._bucketSize - 1;
+    }
     return { curNodeBucketIndex, curNodePointerIndex };
   }
   clear() {
@@ -230,7 +234,8 @@ class Deque<T> extends SequentialContainer<T> {
     this._map[curNodeBucketIndex][curNodePointerIndex] = element;
   }
   insert(pos: number, element: T, num = 1) {
-    $checkWithinAccessParams!(pos, 0, this._length);
+    const length = this._length;
+    $checkWithinAccessParams!(pos, 0, length);
     if (pos === 0) {
       while (num--) this.pushFront(element);
     } else if (pos === this._length) {
@@ -272,29 +277,39 @@ class Deque<T> extends SequentialContainer<T> {
     if (pos === 0) this.popFront();
     else if (pos === this._length - 1) this.popBack();
     else {
-      const arr = [];
-      for (let i = pos + 1; i < this._length; ++i) {
-        arr.push(this.getElementByPos(i));
+      const length = this._length - 1;
+      let {
+        curNodeBucketIndex: curBucket,
+        curNodePointerIndex: curPointer
+      } = this._getElementIndex(pos);
+      for (let i = pos; i < length; ++i) {
+        const {
+          curNodeBucketIndex: nextBucket,
+          curNodePointerIndex: nextPointer
+        } = this._getElementIndex(pos + 1);
+        this._map[curBucket][curPointer] = this._map[nextBucket][nextPointer];
+        curBucket = nextBucket;
+        curPointer = nextPointer;
       }
-      this.cut(pos);
       this.popBack();
-      const self = this;
-      arr.forEach(function (el) {
-        self.pushBack(el);
-      });
     }
     return this._length;
   }
   eraseElementByValue(value: T) {
-    if (this._length === 0) return 0;
-    const arr: T[] = [];
-    for (let i = 0; i < this._length; ++i) {
+    const length = this._length;
+    if (length === 0) return 0;
+    let i = 0;
+    let index = 0;
+    while (i < length) {
       const element = this.getElementByPos(i);
-      if (element !== value) arr.push(element);
+      if (element !== value) {
+        this.setElementByPos(index, element!);
+        index += 1;
+      }
+      i += 1;
     }
-    const _length = arr.length;
-    for (let i = 0; i < _length; ++i) this.setElementByPos(i, arr[i]);
-    return this.cut(_length - 1);
+    this.cut(index - 1);
+    return this._length;
   }
   eraseElementByIterator(iter: DequeIterator<T>) {
     const _node = iter._node;
@@ -311,14 +326,15 @@ class Deque<T> extends SequentialContainer<T> {
     return this.end();
   }
   reverse() {
-    let l = 0; let r = this._length - 1;
-    while (l < r) {
-      const tmp = this.getElementByPos(l);
-      this.setElementByPos(l, this.getElementByPos(r));
-      this.setElementByPos(r, tmp);
-      l += 1;
-      r -= 1;
-    }
+    this._map.reverse().forEach(function (bucket) {
+      bucket.reverse();
+    });
+    const { _first, _last, _curFirst, _curLast } = this;
+    this._first = this._bucketNum - _last - 1;
+    this._last = this._bucketNum - _first - 1;
+    this._curFirst = this._bucketSize - _curLast - 1;
+    this._curLast = this._bucketSize - _curFirst - 1;
+    return this;
   }
   unique() {
     if (this._length <= 1) {
@@ -333,7 +349,7 @@ class Deque<T> extends SequentialContainer<T> {
         this.setElementByPos(index++, cur);
       }
     }
-    while (this._length > index) this.popBack();
+    this.cut(index - 1);
     return this._length;
   }
   sort(cmp?: (x: T, y: T) => number) {
@@ -342,36 +358,43 @@ class Deque<T> extends SequentialContainer<T> {
       arr.push(this.getElementByPos(i));
     }
     arr.sort(cmp);
-    for (let i = 0; i < this._length; ++i) this.setElementByPos(i, arr[i]);
+    for (let i = 0; i < this._length; ++i) {
+      this.setElementByPos(i, arr[i]);
+    }
+    return this;
   }
   /**
    * @description Remove as much useless space as possible.
    */
   shrinkToFit() {
     if (this._length === 0) return;
-    const arr: T[] = [];
-    this.forEach(function (el) {
-      arr.push(el);
-    });
-    this._bucketNum = Math.max(Math.ceil(this._length / this._bucketSize), 1);
-    this._length = this._first = this._last = this._curFirst = this._curLast = 0;
-    this._map = [];
-    for (let i = 0; i < this._bucketNum; ++i) {
-      this._map.push(new Array(this._bucketSize));
+    const newMap = [];
+    if (this._first === this._last) return;
+    else if (this._first < this._last) {
+      for (let i = this._first; i <= this._last; ++i) {
+        newMap.push(this._map[i]);
+      }
+    } else {
+      for (let i = this._first; i < this._bucketNum; ++i) {
+        newMap.push(this._map[i]);
+      }
+      for (let i = 0; i <= this._last; ++i) {
+        newMap.push(this._map[i]);
+      }
     }
-    for (let i = 0; i < arr.length; ++i) this.pushBack(arr[i]);
+    this._first = 0;
+    this._last = newMap.length - 1;
+    this._map = newMap;
   }
   forEach(callback: (element: T, index: number, deque: Deque<T>) => void) {
     for (let i = 0; i < this._length; ++i) {
       callback(this.getElementByPos(i), i, this);
     }
   }
-  [Symbol.iterator]() {
-    return function * (this: Deque<T>) {
-      for (let i = 0; i < this._length; ++i) {
-        yield this.getElementByPos(i);
-      }
-    }.bind(this)();
+  * [Symbol.iterator]() {
+    for (let i = 0; i < this._length; ++i) {
+      yield this.getElementByPos(i);
+    }
   }
 }
 

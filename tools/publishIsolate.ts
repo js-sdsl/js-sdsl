@@ -25,7 +25,6 @@ async function main() {
     }
 
     // build
-    // eslint-disable-next-line compat/compat
     await new Promise<void>(resolve => {
       const buildProcess = childProcess.spawn(
         'gulp',
@@ -60,7 +59,6 @@ async function main() {
     }
 
     // publish
-    // eslint-disable-next-line compat/compat
     await new Promise<void>(resolve => {
       const childProcessInstance = childProcess.spawn(
         'yarn',

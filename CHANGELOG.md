@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [4.4.0] - 2023.03.17
+
+### Changed
+
+- Optimized inOrder travel function for tree container.
+- Optimized `Symbol.iterator` function.
+- Optimized `TreeContainer` `erase` function.
+- Optimized some details of deque.
+- Change `reverse` and `sort` returned value to `this`.
+
 ## [4.3.0] - 2023.01.20
 
 ### Added

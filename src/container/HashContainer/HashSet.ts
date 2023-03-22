@@ -92,14 +92,12 @@ class HashSet<K> extends HashContainer<K, undefined> {
       node = node._next;
     }
   }
-  [Symbol.iterator]() {
-    return function * (this: HashSet<K>) {
-      let node = this._head;
-      while (node !== this._header) {
-        yield node._key;
-        node = node._next;
-      }
-    }.bind(this)();
+  * [Symbol.iterator]() {
+    let node = this._head;
+    while (node !== this._header) {
+      yield node._key;
+      node = node._next;
+    }
   }
 }
 
