@@ -213,12 +213,21 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       }
     }
   }
+  protected _inOrderTraversal(): TreeNode<K, V>[];
+  protected _inOrderTraversal(pos: number): TreeNode<K, V>;
+  protected _inOrderTraversal(
+    callback: (node: TreeNode<K, V>, index: number, map: this) => void
+  ): TreeNode<K, V>;
   /**
    * @internal
    */
-  protected _inOrderTraversal(pos: number) {
-    pos += 1;
-    const nodeList = [];
+  protected _inOrderTraversal(
+    param?: number | ((node: TreeNode<K, V>, index: number, map: this) => void)
+  ) {
+    const pos = typeof param === 'number' ? param : undefined;
+    const callback = typeof param === 'function' ? param : undefined;
+    const nodeList = typeof param === 'undefined' ? <TreeNode<K, V>[]>[] : undefined;
+    let index = 0;
     let curNode = this._root;
     const stack: TreeNode<K, V>[] = [];
     while (stack.length || curNode) {
@@ -227,10 +236,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         curNode = curNode._left;
       } else {
         curNode = stack.pop()!;
-        nodeList.push(curNode);
-        if (nodeList.length === pos) {
-          break;
-        }
+        if (index === pos) return curNode;
+        nodeList && nodeList.push(curNode);
+        callback && callback(curNode, index, this);
+        index += 1;
         curNode = curNode._right;
       }
     }
@@ -498,8 +507,8 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   eraseElementByPos(pos: number) {
     $checkWithinAccessParams!(pos, 0, this._length - 1);
-    const nodeList = this._inOrderTraversal(pos);
-    this._eraseNode(nodeList[pos]);
+    const node = this._inOrderTraversal(pos);
+    this._eraseNode(node);
     return this._length;
   }
   /**
