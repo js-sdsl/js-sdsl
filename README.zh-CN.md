@@ -41,42 +41,9 @@
 
 ## 🖥 支持的平台
 
-<table>
-  <tr align="center">
-    <td>
-      <img alt="IE / Edge" src="https://js-sdsl.org/assets/image/platform/edge.png" />
-      <div>IE / Edge</div>
-    </td>
-    <td>
-      <img alt="Firefox" src="https://js-sdsl.org/assets/image/platform/firefox.png" />
-      <div>Firefox</div>
-    </td>
-    <td>
-      <img alt="Chrome" src="https://js-sdsl.org/assets/image/platform/chrome.png" />
-      <div>Chrome</div>
-    </td>
-    <td>
-      <img alt="Safari" src="https://js-sdsl.org/assets/image/platform/safari.png" />
-      <div>Safari</div>
-    </td>
-    <td>
-      <img alt="Opera" src="https://js-sdsl.org/assets/image/platform/opera.png" />
-      <div>Opera</div>
-    </td>
-    <td>
-      <img alt="NodeJs" src="https://js-sdsl.org/assets/image/platform/nodejs.png" />
-      <div>NodeJs</div>
-    </td>
-  </tr>
-  <tr align="center">
-    <td>Edge 12</td>
-    <td>31</td>
-    <td>49</td>
-    <td>10</td>
-    <td>36</td>
-    <td>10</td>
-  </tr>
-</table>
+| ![][Edge-Icon]<br/>IE / Edge | ![][Firefox-Icon]<br/>Firefox | ![][Chrome-Icon]<br/>Chrome | ![][Safari-Icon]<br/>Safari | ![][Opera-Icon]<br/>Opera | ![][NodeJs-Icon]<br/>NodeJs |
+|:----------------------------:|:-----------------------------:|:---------------------------:|:---------------------------:|:-------------------------:|:---------------------------:|
+|           Edge 12            |              36               |             49              |             10              |            36             |             10              |
 
 ## 📦 下载
 
@@ -226,6 +193,13 @@ $ npm run dev   # development mode
 ## 🪪 许可证
 
 [MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
+
+[Edge-Icon]: https://js-sdsl.org/assets/image/platform/edge.png
+[Firefox-Icon]: https://js-sdsl.org/assets/image/platform/firefox.png
+[Chrome-Icon]: https://js-sdsl.org/assets/image/platform/chrome.png
+[Safari-Icon]: https://js-sdsl.org/assets/image/platform/safari.png
+[Opera-Icon]: https://js-sdsl.org/assets/image/platform/opera.png
+[NodeJs-Icon]: https://js-sdsl.org/assets/image/platform/nodejs.png
 
 [stack-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Stack.ts
 [stack-npm-version]: https://img.shields.io/npm/v/@js-sdsl/stack
