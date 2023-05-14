@@ -11,7 +11,7 @@ function testPriorityQueue(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'constructor',
     testNum: 1,
-    containerSize: myPriority.size(),
+    containerSize: myPriority.length,
     runTime: endTime - startTime
   });
 
@@ -21,12 +21,12 @@ function testPriorityQueue(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'push',
     testNum,
-    containerSize: myPriority.size(),
+    containerSize: myPriority.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  const size = myPriority.size();
+  const size = myPriority.length;
   while (!myPriority.empty()) myPriority.pop();
   endTime = Date.now();
   reportList.push({

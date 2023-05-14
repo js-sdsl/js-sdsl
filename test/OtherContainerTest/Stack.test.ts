@@ -9,11 +9,11 @@ for (let i = 0; i < testNum; ++i) {
 
 function judge(myStack: Stack<number>, myVector: Vector<number>) {
   while (!myStack.empty()) {
-    if (myStack.size() !== myVector.size()) return false;
+    if (myStack.length !== myVector.length) return false;
     const s = myStack.top();
     const v = myVector.back();
     if (s !== v) return false;
-    expect(myStack.pop()).to.equal(myVector.popBack());
+    expect(myStack.pop()).to.equal(myVector.pop());
   }
   expect(() => myStack.pop()).to.not.throw();
   expect(myStack.top()).to.equal(undefined);
@@ -25,7 +25,7 @@ describe('Stack test', () => {
   const myVector = new Vector(arr);
 
   it('Stack size test', () => {
-    expect(myStack.size()).to.equal(myVector.size());
+    expect(myStack.length).to.equal(myVector.length);
   });
 
   it('Stack clear function test', () => {
@@ -37,7 +37,7 @@ describe('Stack test', () => {
   it('Stack other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myStack.push(i);
-      myVector.pushBack(i);
+      myVector.push(i);
     }
     expect(judge(myStack, myVector)).to.equal(true);
   });

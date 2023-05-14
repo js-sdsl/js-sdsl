@@ -37,8 +37,8 @@ export abstract class ContainerIterator<T> {
     return this._node === iter._node;
   }
   /**
-   * @description Pointers to element.
-   * @returns The value of the pointer's element.
+   * @description Pointers to item.
+   * @returns The value of the pointer's item.
    * @example
    * const val = container.begin().pointer;
    */
@@ -85,6 +85,8 @@ export abstract class ContainerIterator<T> {
   abstract copy(): ContainerIterator<T>;
 }
 
+export type CallbackFn<T, C, R> = (value: T, index: number, container: C) => R;
+
 export abstract class Base {
   /**
    * @description Container's size.
@@ -104,9 +106,9 @@ export abstract class Base {
    * @returns The size of the container.
    * @example
    * const container = new Vector([1, 2]);
-   * console.log(container.size()); // 2
+   * console.log(container.length); // 2
    */
-  size() {
+  get size() {
     return this._length;
   }
   /**
@@ -129,7 +131,7 @@ export abstract class Base {
 
 export abstract class Container<T> extends Base {
   /**
-   * @returns Iterator pointing to the beginning element.
+   * @returns Iterator pointing to the beginning item.
    * @example
    * const begin = container.begin();
    * const end = container.end();
@@ -149,7 +151,7 @@ export abstract class Container<T> extends Base {
    */
   abstract end(): ContainerIterator<T>;
   /**
-   * @returns Iterator pointing to the end element.
+   * @returns Iterator pointing to the end item.
    * @example
    * const rBegin = container.rBegin();
    * const rEnd = container.rEnd();
@@ -169,43 +171,35 @@ export abstract class Container<T> extends Base {
    */
   abstract rEnd(): ContainerIterator<T>;
   /**
-   * @returns The first element of the container.
+   * @returns The first item of the container.
    */
   abstract front(): T | undefined;
   /**
-   * @returns The last element of the container.
+   * @returns The last item of the container.
    */
   abstract back(): T | undefined;
   /**
-   * @param element - The element you want to find.
-   * @returns An iterator pointing to the element if found, or super end if not found.
+   * @param item - The item you want to find.
+   * @returns An iterator pointing to the item if found, or super end if not found.
    * @example
    * container.find(1).equals(container.end());
    */
-  abstract find(element: T): ContainerIterator<T>;
+  abstract find(item: T): ContainerIterator<T>;
   /**
    * @description Iterate over all elements in the container.
    * @param callback - Callback function like Array.forEach.
    * @example
-   * container.forEach((element, index) => console.log(element, index));
+   * container.forEach((item, index) => console.log(item, index));
    */
-  abstract forEach(callback: (element: T, index: number, container: Container<T>) => void): void;
+  abstract forEach(callback: CallbackFn<T, this, void>): void;
   /**
-   * @description Gets the value of the element at the specified position.
+   * @description Gets the value of the item at the specified position.
    * @example
    * const val = container.getElementByPos(-1); // throw a RangeError
    */
-  abstract getElementByPos(pos: number): T;
+  abstract at(index: number): T;
   /**
-   * @description Removes the element at the specified position.
-   * @param pos - The element's position you want to remove.
-   * @returns The container length after erasing.
-   * @example
-   * container.eraseElementByPos(-1); // throw a RangeError
-   */
-  abstract eraseElementByPos(pos: number): number;
-  /**
-   * @description Removes element by iterator and move `iter` to next.
+   * @description Removes item by iterator and move `iter` to next.
    * @param iter - The iterator you want to erase.
    * @returns The next iterator.
    * @example
@@ -215,21 +209,29 @@ export abstract class Container<T> extends Base {
   abstract eraseElementByIterator(
     iter: ContainerIterator<T>
   ): ContainerIterator<T>;
+  abstract entries(): IterableIterator<[unknown, unknown]>;
+  abstract every(callback: CallbackFn<T, this, unknown>): boolean;
+  abstract filter(callback: CallbackFn<T, this, unknown>): Container<T>;
+  abstract some(callback: CallbackFn<T, this, unknown>): boolean;
+  abstract values(): IterableIterator<unknown>;
   /**
    * @description Using for `for...of` syntax like Array.
    * @example
-   * for (const element of container) {
-   *   console.log(element);
+   * for (const item of container) {
+   *   console.log(item);
    * }
    */
-  abstract [Symbol.iterator](): Generator<T, void>;
+  abstract [Symbol.iterator](): IterableIterator<T>;
+  toArray() {
+    return Array.from(this);
+  }
 }
 
 /**
  * @description The initial data type passed in when initializing the container.
  */
 export type initContainer<T> = {
-  size?: number | (() => number);
+  size?: number;
   length?: number;
-  forEach: (callback: (el: T) => void) => void;
+  forEach: (callback: (el: T) => unknown) => void;
 }

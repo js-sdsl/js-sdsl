@@ -1,10 +1,12 @@
 import type TreeIterator from './TreeIterator';
 import { TreeNode, TreeNodeColor, TreeNodeEnableIndex } from './TreeNode';
-import { Container, IteratorType } from '@/container/ContainerBase';
+import { CallbackFn, Container, IteratorType } from '@/container/ContainerBase';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
+  protected readonly _cmp: CompareFn<K>;
   enableIndex: boolean;
   /**
    * @internal
@@ -17,21 +19,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected readonly _cmp: (x: K, y: K) => number;
-  /**
-   * @internal
-   */
   protected readonly _TreeNodeClass: typeof TreeNode | typeof TreeNodeEnableIndex;
   /**
    * @internal
    */
   protected constructor(
-    cmp: (x: K, y: K) => number =
-    function (x: K, y: K) {
-      if (x < y) return -1;
-      if (x > y) return 1;
-      return 0;
-    },
+    cmp: CompareFn<K> = compareFromS2L,
     enableIndex = false
   ) {
     super();
@@ -214,15 +207,15 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   protected _inOrderTraversal(): TreeNode<K, V>[];
-  protected _inOrderTraversal(pos: number): TreeNode<K, V>;
+  protected _inOrderTraversal(index: number): TreeNode<K, V>;
   protected _inOrderTraversal(
-    callback: (node: TreeNode<K, V>, index: number, map: this) => void
-  ): TreeNode<K, V>;
+    callback: CallbackFn<TreeNode<K, V>, this, unknown>
+  ): boolean;
   /**
    * @internal
    */
   protected _inOrderTraversal(
-    param?: number | ((node: TreeNode<K, V>, index: number, map: this) => void)
+    param?: number | CallbackFn<TreeNode<K, V>, this, unknown>
   ) {
     const pos = typeof param === 'number' ? param : undefined;
     const callback = typeof param === 'function' ? param : undefined;
@@ -238,12 +231,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         curNode = stack.pop()!;
         if (index === pos) return curNode;
         nodeList && nodeList.push(curNode);
-        callback && callback(curNode, index, this);
+        if (callback && callback(curNode, index, this)) return true;
         index += 1;
         curNode = curNode._right;
       }
     }
-    return nodeList;
+    return callback ? false : nodeList;
   }
   /**
    * @internal
@@ -505,18 +498,18 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     node._key = key;
     return true;
   }
-  eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    const node = this._inOrderTraversal(pos);
+  eraseElementByPos(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
+    const node = this._inOrderTraversal(index);
     this._eraseNode(node);
     return this._length;
   }
   /**
-   * @description Remove the element of the specified key.
+   * @description Remove the item of the specified key.
    * @param key - The key you want to remove.
    * @returns Whether erase successfully.
    */
-  eraseElementByKey(key: K) {
+  delete(key: K) {
     if (this._length === 0) return false;
     const curNode = this._getTreeNodeByKey(this._root, key);
     if (curNode === this._header) return false;
@@ -554,9 +547,31 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
     return traversal(this._root);
   }
+  keys(): IterableIterator<K> {
+    const self = this;
+    let node = this._header._left;
+    return {
+      next() {
+        const done = Boolean(node) && node === self._header;
+        const key = done ? undefined : node!._key!;
+        node = node?._next();
+        return {
+          value: key as K,
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  has(key: K) {
+    const curNode = this._getTreeNodeByKey(this._root, key);
+    return Boolean(curNode);
+  }
   /**
    * @param key - The given key you want to compare.
-   * @returns An iterator to the first element less than the given key.
+   * @returns An iterator to the first item less than the given key.
    */
   abstract reverseUpperBound(key: K): TreeIterator<K, V>;
   /**
@@ -567,19 +582,20 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   abstract union(other: TreeContainer<K, V>): number;
   /**
    * @param key - The given key you want to compare.
-   * @returns An iterator to the first element not greater than the given key.
+   * @returns An iterator to the first item not greater than the given key.
    */
   abstract reverseLowerBound(key: K): TreeIterator<K, V>;
   /**
    * @param key - The given key you want to compare.
-   * @returns An iterator to the first element not less than the given key.
+   * @returns An iterator to the first item not less than the given key.
    */
   abstract lowerBound(key: K): TreeIterator<K, V>;
   /**
    * @param key - The given key you want to compare.
-   * @returns An iterator to the first element greater than the given key.
+   * @returns An iterator to the first item greater than the given key.
    */
   abstract upperBound(key: K): TreeIterator<K, V>;
+  abstract filter(callback: CallbackFn<[K, V] | K, this, unknown>): TreeContainer<K, V>;
 }
 
 export default TreeContainer;

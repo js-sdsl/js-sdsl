@@ -1,4 +1,4 @@
-import { Container, ContainerIterator, IteratorType } from '@/container/ContainerBase';
+import { CallbackFn, Container, ContainerIterator, IteratorType } from '@/container/ContainerBase';
 import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
@@ -189,13 +189,13 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     this._head = this._tail = this._header._pre = this._header._next = this._header;
   }
   /**
-   * @description Remove the element of the specified key.
+   * @description Remove the item of the specified key.
    * @param key - The key you want to remove.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns Whether erase successfully.
    */
-  eraseElementByKey(key: K, isObject?: boolean) {
+  delete(key: K, isObject?: boolean) {
     let node;
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
@@ -220,13 +220,32 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     this._eraseNode(node);
     return iter.next();
   }
-  eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
+  eraseElementByPos(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
     let node = this._head;
-    while (pos--) {
+    while (index--) {
       node = node._next;
     }
     this._eraseNode(node);
     return this._length;
   }
+  keys(): IterableIterator<K> {
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const key = done ? undefined : node._key;
+        node = node._next;
+        return {
+          value: key as K,
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  abstract filter(callback: CallbackFn<K | [K, V], this, unknown>): HashContainer<K, V>;
 }

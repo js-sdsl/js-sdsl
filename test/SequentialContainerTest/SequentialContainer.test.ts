@@ -18,46 +18,54 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    expect(container.pushBack(i)).to.equal(myVector.pushBack(i));
+    expect(container.push(i)).to.equal(myVector.push(i));
   }
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    expect(container.popBack()).to.equal(myVector.popBack());
+    expect(container.pop()).to.equal(myVector.pop());
   }
   judgeSequentialContainer(container, myVector);
 
-  const len = container.size();
-  expect(container.size()).to.equal(myVector.length);
+  const len = container.length;
+  expect(container.length).to.equal(myVector.length);
   for (let i = 0; i < len; ++i) {
-    expect(container.getElementByPos(i)).to.equal(myVector.getElementByPos(i));
+    expect(container.at(i)).to.equal(myVector.at(i));
   }
 
   for (let i = 0; i < len; ++i) {
-    myVector.setElementByPos(i, i);
-    container.setElementByPos(i, i);
+    myVector.set(i, i);
+    container.set(i, i);
   }
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    const pos = Math.floor(Math.random() * myVector.size());
-    expect(container.eraseElementByPos(pos)).to.equal(myVector.eraseElementByPos(pos));
+    const pos = Math.floor(Math.random() * myVector.length);
+    expect(container.splice(pos, 1).toArray()).to.deep.equal(myVector.splice(pos, 1).toArray());
   }
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    expect(container.pushBack(i)).to.equal(myVector.pushBack(i));
+    expect(container.push(i)).to.equal(myVector.push(i));
   }
   for (let i = 0; i < testNum; ++i) {
-    const pos = Math.floor(Math.random() * container.size());
+    const pos = Math.floor(Math.random() * container.length);
     const num = 10;
-    expect(container.insert(pos, -2, num)).to.equal(myVector.insert(pos, -2, num));
+    expect(
+      container.splice(pos, 0, ...new Array(num).fill(-2)).toArray()
+    ).to.deep.equal(
+      myVector.splice(pos, 0, ...new Array(num).fill(-2)).toArray()
+    );
   }
   judgeSequentialContainer(container, myVector);
 
-  expect(container.eraseElementByValue(-2)).to.equal(myVector.eraseElementByValue(-2));
-  expect(container.eraseElementByValue(container.back()!))
-    .to.equal(myVector.eraseElementByValue(myVector.back()!));
+  expect(
+    container.filter(item => item !== -2).toArray()
+  ).to.deep.equal(
+    myVector.filter(item => item !== -2).toArray()
+  );
+  expect(container.filter(item => item !== container.back()!).toArray())
+    .to.deep.equal(myVector.filter(item => item !== myVector.back()!).toArray());
 
   judgeSequentialContainer(container, myVector);
 
@@ -66,18 +74,26 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    const pos = Math.floor(Math.random() * container.size());
+    const pos = Math.floor(Math.random() * container.length);
     const num = 10;
-    expect(container.insert(pos, -1, num)).to.equal(myVector.insert(pos, -1, num));
+    expect(
+      container.splice(pos, 0, ...new Array(num).fill(-1)).toArray()
+    ).to.deep.equal(
+      myVector.splice(pos, 0, ...new Array(num).fill(-1)).toArray()
+    );
   }
+  judgeSequentialContainer(container, myVector);
+
   expect(container.unique()).to.equal(myVector.unique());
   judgeSequentialContainer(container, myVector);
 
   for (let i = 0; i < testNum; ++i) {
-    expect(container.pushBack(i)).to.equal(myVector.pushBack(i));
+    expect(container.push(i)).to.equal(myVector.push(i));
   }
+  judgeSequentialContainer(container, myVector);
+
   container.sort((x, y) => x - y);
-  myVector.sort((x: number, y: number) => x - y);
+  myVector.sort((x, y) => x - y);
   judgeSequentialContainer(container, myVector);
 
   container.clear();
@@ -92,15 +108,15 @@ describe('SequentialContainer test', () => {
     expect(myVector.front()).to.equal(0);
     expect(myVector.find(0).pointer).to.equal(0);
     myVector.eraseElementByIterator(myVector.begin());
-    expect(myVector.size()).to.equal(0);
+    expect(myVector.length).to.equal(0);
     expect(myVector.front()).to.equal(undefined);
     expect(myVector.back()).to.equal(undefined);
-    myVector.insert(0, 100);
+    myVector.splice(0, 0, 100);
     expect(() => {
       myVector.find(0).pointer = 1;
     }).to.throw(RangeError);
     myVector.clear();
-    myVector.popBack();
+    myVector.pop();
   });
 
   it('LinkList standard test', () => {

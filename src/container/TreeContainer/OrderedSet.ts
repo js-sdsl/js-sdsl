@@ -1,8 +1,9 @@
 import TreeContainer from './Base';
 import TreeIterator from './Base/TreeIterator';
 import { TreeNode } from './Base/TreeNode';
-import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { CallbackFn, initContainer, IteratorType } from '@/container/ContainerBase';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CompareFn } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
@@ -49,13 +50,13 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    */
   constructor(
     container: initContainer<K> = [],
-    cmp?: (x: K, y: K) => number,
+    cmp?: CompareFn<K>,
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
     const self = this;
     container.forEach(function (el) {
-      self.insert(el);
+      self.add(el);
     });
   }
   begin() {
@@ -101,13 +102,13 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     const resNode = this._reverseUpperBound(this._root, key);
     return new OrderedSetIterator<K>(resNode, this._header, this);
   }
-  forEach(callback: (element: K, index: number, set: OrderedSet<K>) => void) {
+  forEach(callback: CallbackFn<K, this, void>) {
     this._inOrderTraversal(function (node, index, set) {
       callback(node._key as K, index, set);
     });
   }
   /**
-   * @description Insert element to set.
+   * @description Insert item to set.
    * @param key - The key want to insert.
    * @param hint - You can give an iterator hint to improve insertion efficiency.
    * @return The size of container after setting.
@@ -117,22 +118,22 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * st.insert(1);
    * st.insert(3, iter);  // give a hint will be faster.
    */
-  insert(key: K, hint?: OrderedSetIterator<K>) {
+  add(key: K, hint?: OrderedSetIterator<K>) {
     return this._set(key, undefined, hint);
   }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    const node = this._inOrderTraversal(pos);
+  at(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
+    const node = this._inOrderTraversal(index);
     return node._key as K;
   }
-  find(element: K) {
-    const resNode = this._getTreeNodeByKey(this._root, element);
+  find(item: K) {
+    const resNode = this._getTreeNodeByKey(this._root, item);
     return new OrderedSetIterator<K>(resNode, this._header, this);
   }
   union(other: OrderedSet<K>) {
     const self = this;
     other.forEach(function (el) {
-      self.insert(el);
+      self.add(el);
     });
     return this._length;
   }
@@ -142,6 +143,47 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     for (let i = 0; i < length; ++i) {
       yield nodeList[i]._key as K;
     }
+  }
+  entries(): IterableIterator<[K, K]> {
+    const self = this;
+    let node = this._header._left;
+    return {
+      next() {
+        const done = Boolean(node) && node === self._header;
+        const value = done ? undefined : [node!._key, node!._key];
+        node = node?._next();
+        return {
+          value: value as [K, K],
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  every(callback: CallbackFn<K, this, unknown>) {
+    return !this._inOrderTraversal(function (node, index, map) {
+      return !callback(node._key!, index, map);
+    });
+  }
+  filter(callback: CallbackFn<K, this, unknown>) {
+    const items: K[] = [];
+    this._inOrderTraversal(function (node, index, map) {
+      const item = node._key!;
+      const flag = callback(item, index, map);
+      if (flag) items.push(item);
+      return false;
+    });
+    return new OrderedSet(items, this._cmp);
+  }
+  some(callback: CallbackFn<K, this, unknown>) {
+    return this._inOrderTraversal(function (node, index, map) {
+      return callback(node._key!, index, map);
+    });
+  }
+  values() {
+    return this.keys();
   }
   // @ts-ignore
   eraseElementByIterator(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;

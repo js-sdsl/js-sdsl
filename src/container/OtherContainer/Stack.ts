@@ -17,18 +17,18 @@ class Stack<T> extends Base {
     this._stack = [];
   }
   /**
-   * @description Insert element to stack's end.
-   * @description The element you want to push to the back.
+   * @description Insert item to stack's end.
+   * @description The item you want to push to the back.
    * @returns The container length after erasing.
    */
-  push(element: T) {
-    this._stack.push(element);
+  push(item: T) {
+    this._stack.push(item);
     this._length += 1;
     return this._length;
   }
   /**
-   * @description Removes the end element.
-   * @returns The element you popped.
+   * @description Removes the end item.
+   * @returns The item you popped.
    */
   pop() {
     if (this._length === 0) return;
@@ -36,8 +36,8 @@ class Stack<T> extends Base {
     return this._stack.pop();
   }
   /**
-   * @description Accesses the end element.
-   * @returns The last element.
+   * @description Accesses the end item.
+   * @returns The last item.
    */
   top(): T | undefined {
     return this._stack[this._length - 1];

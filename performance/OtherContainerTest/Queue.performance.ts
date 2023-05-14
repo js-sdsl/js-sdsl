@@ -13,12 +13,12 @@ function testQueue(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'push',
     testNum,
-    containerSize: myQueue.size(),
+    containerSize: myQueue.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  const size = myQueue.size();
+  const size = myQueue.length;
   myQueue.clear();
   endTime = Date.now();
   reportList.push({

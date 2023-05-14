@@ -1,4 +1,4 @@
-import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { CallbackFn, initContainer, IteratorType } from '@/container/ContainerBase';
 import { HashContainer, HashContainerIterator, HashLinkNode } from '@/container/HashContainer/Base';
 import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
@@ -48,7 +48,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     super();
     const self = this;
     container.forEach(function (el) {
-      self.setElement(el[0], el[1]);
+      self.set(el[0], el[1]);
     });
   }
   begin() {
@@ -79,18 +79,18 @@ class HashMap<K, V> extends HashContainer<K, V> {
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns The size of container after setting.
    */
-  setElement(key: K, value: V, isObject?: boolean) {
+  set(key: K, value: V, isObject?: boolean) {
     return this._set(key, value, isObject);
   }
   /**
-   * @description Get the value of the element of the specified key.
+   * @description Get the value of the item of the specified key.
    * @param key - The key want to search.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @example
    * const val = container.getElementByKey(1);
    */
-  getElementByKey(key: K, isObject?: boolean) {
+  get(key: K, isObject?: boolean) {
     if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
@@ -99,26 +99,26 @@ class HashMap<K, V> extends HashContainer<K, V> {
     const node = this._originMap[<string><unknown>key];
     return node ? node._value : undefined;
   }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
+  at(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
     let node = this._head;
-    while (pos--) {
+    while (index--) {
       node = node._next;
     }
     return <[K, V]>[node._key, node._value];
   }
   /**
    * @description Check key if exist in container.
-   * @param key - The element you want to search.
+   * @param key - The item you want to search.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns An iterator pointing to the element if found, or super end if not found.
+   * @returns An iterator pointing to the item if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
     return new HashMapIterator<K, V>(node, this._header, this);
   }
-  forEach(callback: (element: [K, V], index: number, hashMap: HashMap<K, V>) => void) {
+  forEach(callback: CallbackFn<[K, V], this, void>) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -132,6 +132,74 @@ class HashMap<K, V> extends HashContainer<K, V> {
       yield <[K, V]>[node._key, node._value];
       node = node._next;
     }
+  }
+  entries(): IterableIterator<[K, V]> {
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const value = done ? undefined : [node._key, node._value];
+        node = node._next;
+        return {
+          value: value as [K, V],
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  every(callback: CallbackFn<[K, V], this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    while (node !== this._header) {
+      const flag = callback(<[K, V]>[node._key, node._value], index++, this);
+      if (!flag) return false;
+      node = node._next;
+    }
+    return true;
+  }
+  filter(callback: CallbackFn<[K, V], this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    const filtered: [K, V][] = [];
+    while (node !== this._header) {
+      const item = <[K, V]>[node._key, node._value];
+      const flag = callback(item, index++, this);
+      if (flag) filtered.push(item);
+      node = node._next;
+    }
+    return new HashMap(filtered);
+  }
+  some(callback: CallbackFn<[K, V], this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    while (node !== this._header) {
+      const flag = callback(<[K, V]>[node._key, node._value], index++, this);
+      if (flag) return true;
+      node = node._next;
+    }
+    return false;
+  }
+  values(): IterableIterator<V> {
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const value = done ? undefined : node._value;
+        node = node._next;
+        return {
+          value: value as V,
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
   }
 }
 

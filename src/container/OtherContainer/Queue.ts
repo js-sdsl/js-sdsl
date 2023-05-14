@@ -26,11 +26,11 @@ class Queue<T> extends Base {
     this._length = this._first = 0;
   }
   /**
-   * @description Inserts element to queue's end.
-   * @param element - The element you want to push to the front.
+   * @description Inserts item to queue's end.
+   * @param item - The item you want to push to the front.
    * @returns The container length after pushing.
    */
-  push(element: T) {
+  push(item: T) {
     const capacity = this._queue.length;
     if (
       (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
@@ -42,13 +42,13 @@ class Queue<T> extends Base {
         this._queue[i] = this._queue[this._first + i];
       }
       this._first = 0;
-      this._queue[this._length] = element;
-    } else this._queue[this._first + this._length] = element;
+      this._queue[this._length] = item;
+    } else this._queue[this._first + this._length] = item;
     return ++this._length;
   }
   /**
-   * @description Removes the first element.
-   * @returns The element you popped.
+   * @description Removes the first item.
+   * @returns The item you popped.
    */
   pop() {
     if (this._length === 0) return;
@@ -57,8 +57,8 @@ class Queue<T> extends Base {
     return el;
   }
   /**
-   * @description Access the first element.
-   * @returns The first element.
+   * @description Access the first item.
+   * @returns The first item.
    */
   front(): T | undefined {
     if (this._length === 0) return;

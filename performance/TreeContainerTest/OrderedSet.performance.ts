@@ -11,29 +11,29 @@ function testOrderedSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'constructor',
     testNum: 1,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) myOrderedSet.add(Math.random() * 1000000);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'insert',
+    testFunc: 'add',
     testNum,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 
-  for (let i = 0; i < testNum; ++i) myOrderedSet.insert(Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) myOrderedSet.add(Math.random() * 1000000);
   const tmpArr: number[] = [];
   myOrderedSet.forEach((element: number) => tmpArr.push(element));
   startTime = Date.now();
-  const size = myOrderedSet.size();
-  for (let i = 0; i < testNum; ++i) myOrderedSet.eraseElementByKey(tmpArr[i]);
+  const size = myOrderedSet.length;
+  for (let i = 0; i < testNum; ++i) myOrderedSet.delete(tmpArr[i]);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByKey',
+    testFunc: 'delete',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
@@ -41,7 +41,7 @@ function testOrderedSet(arr: number[], testNum: number) {
 
   startTime = Date.now();
   for (let i = 0; i < 10; ++i) {
-    myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.size()));
+    myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.length));
   }
   endTime = Date.now();
   reportList.push({
@@ -52,14 +52,14 @@ function testOrderedSet(arr: number[], testNum: number) {
   });
 
   const _otherOrderedSet = new OrderedSet<number>();
-  for (let i = 0; i < testNum; ++i) _otherOrderedSet.insert(Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) _otherOrderedSet.add(Math.random() * 1000000);
   startTime = Date.now();
   myOrderedSet.union(_otherOrderedSet);
   endTime = Date.now();
   reportList.push({
     testFunc: 'union',
     testNum: 1,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 
@@ -74,7 +74,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'lowerBound',
     testNum,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 
@@ -89,7 +89,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'upperBound',
     testNum,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
   num = 0;
@@ -103,7 +103,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'reverseLowerBound',
     testNum,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 
@@ -118,7 +118,7 @@ function testOrderedSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'reverseUpperBound',
     testNum,
-    containerSize: myOrderedSet.size(),
+    containerSize: myOrderedSet.length,
     runTime: endTime - startTime
   });
 

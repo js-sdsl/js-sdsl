@@ -25,6 +25,6 @@ describe('isolation test', () => {
     new HashMap(arr.map((element, index) => [element, index]))
   ];
   it('base test', () => {
-    containerArr.forEach(container => expect(container.size()).equal(arr.length));
+    containerArr.forEach(container => expect(container.length).equal(arr.length));
   });
 });

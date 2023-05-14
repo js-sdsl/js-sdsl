@@ -26,7 +26,7 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
         return this;
       };
       this.next = function () {
-        if (this._node === this.container.size()) {
+        if (this._node === this.container.length) {
           throwIteratorAccessError();
         }
         this._node += 1;
@@ -34,7 +34,7 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
       };
     } else {
       this.pre = function () {
-        if (this._node === this.container.size() - 1) {
+        if (this._node === this.container.length - 1) {
           throwIteratorAccessError();
         }
         this._node += 1;
@@ -50,10 +50,10 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     }
   }
   get pointer() {
-    return this.container.getElementByPos(this._node);
+    return this.container.at(this._node);
   }
   set pointer(newValue: T) {
-    this.container.setElementByPos(this._node, newValue);
+    this.container.set(this._node, newValue);
   }
   // @ts-ignore
   pre(): this;

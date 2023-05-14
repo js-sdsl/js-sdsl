@@ -14,28 +14,28 @@ function testLinkList(arr: number[], testNum: number) {
   let startTime, endTime;
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myLinkList.pushFront(i);
+  for (let i = 0; i < testNum; ++i) myLinkList.unshift(i);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'pushFront',
+    testFunc: 'unshift',
     testNum,
-    containerSize: myLinkList.size(),
+    containerSize: myLinkList.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  const size = myLinkList.size();
-  for (let i = 0; i < testNum; ++i) myLinkList.popFront();
+  const size = myLinkList.length;
+  for (let i = 0; i < testNum; ++i) myLinkList.shift();
   endTime = Date.now();
   reportList.push({
-    testFunc: 'popFront',
+    testFunc: 'shift',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
   });
 
   const _otherLinkList = new LinkList<number>();
-  for (let i = 0; i < testNum; ++i) _otherLinkList.pushBack(Math.random() * 1000000);
+  for (let i = 0; i < testNum; ++i) _otherLinkList.push(Math.random() * 1000000);
   myLinkList.forEach(element => tmpArr.push(element));
   myLinkList.sort((x, y) => x - y);
   _otherLinkList.sort((x, y) => x - y);
@@ -45,7 +45,7 @@ function testLinkList(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'merge',
     testNum: 1,
-    containerSize: myLinkList.size(),
+    containerSize: myLinkList.length,
     runTime: endTime - startTime
   });
 

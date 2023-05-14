@@ -1,6 +1,12 @@
 import SequentialContainer from './Base';
-import { ContainerIterator, initContainer, IteratorType } from '@/container/ContainerBase';
+import {
+  CallbackFn,
+  ContainerIterator,
+  initContainer,
+  IteratorType
+} from '@/container/ContainerBase';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 type LinkNode<T> = {
@@ -108,7 +114,7 @@ class LinkList<T> extends SequentialContainer<T> {
     this._head = this._tail = this._header._pre = this._header._next = this._header;
     const self = this;
     container.forEach(function (el) {
-      self.pushBack(el);
+      self.push(el);
     });
   }
   /**
@@ -129,10 +135,10 @@ class LinkList<T> extends SequentialContainer<T> {
   /**
    * @internal
    */
-  private _insertNode(value: T, pre: LinkNode<T>) {
+  private _insertNode(item: T, pre: LinkNode<T>) {
     const next = pre._next;
     const node = {
-      _value: value,
+      _value: item,
       _pre: pre,
       _next: next
     };
@@ -168,32 +174,13 @@ class LinkList<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._tail._value;
   }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
+  at(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
     let curNode = this._head;
-    while (pos--) {
+    while (index--) {
       curNode = curNode._next;
     }
     return curNode._value;
-  }
-  eraseElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
-    let curNode = this._head;
-    while (pos--) {
-      curNode = curNode._next;
-    }
-    this._eraseNode(curNode);
-    return this._length;
-  }
-  eraseElementByValue(_value: T) {
-    let curNode = this._head;
-    while (curNode !== this._header) {
-      if (curNode._value === _value) {
-        this._eraseNode(curNode);
-      }
-      curNode = curNode._next;
-    }
-    return this._length;
   }
   eraseElementByIterator(iter: LinkListIterator<T>) {
     const node = iter._node;
@@ -204,74 +191,48 @@ class LinkList<T> extends SequentialContainer<T> {
     this._eraseNode(node);
     return iter;
   }
-  pushBack(element: T) {
-    this._insertNode(element, this._tail);
+  push(...items: T[]) {
+    const num = items.length;
+    for (let i = 0; i < num; ++i) {
+      this._insertNode(items[i], this._tail);
+    }
     return this._length;
   }
-  popBack() {
+  pop() {
     if (this._length === 0) return;
-    const value = this._tail._value;
+    const item = this._tail._value;
     this._eraseNode(this._tail);
-    return value;
+    return item;
   }
-  /**
-   * @description Push an element to the front.
-   * @param element - The element you want to push.
-   * @returns The size of queue after pushing.
-   */
-  pushFront(element: T) {
-    this._insertNode(element, this._header);
+  unshift(...items: T[]) {
+    const num = items.length;
+    for (let i = 0; i < num; ++i) {
+      this._insertNode(items[i], this._header);
+    }
     return this._length;
   }
   /**
-   * @description Removes the first element.
-   * @returns The element you popped.
+   * @description Removes the first item.
+   * @returns The item you popped.
    */
-  popFront() {
+  shift() {
     if (this._length === 0) return;
-    const value = this._head._value;
+    const item = this._head._value;
     this._eraseNode(this._head);
-    return value;
+    return item;
   }
-  setElementByPos(pos: number, element: T) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
+  set(index: number, item: T) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
     let curNode = this._head;
-    while (pos--) {
+    while (index--) {
       curNode = curNode._next;
     }
-    curNode._value = element;
+    curNode._value = item;
   }
-  insert(pos: number, element: T, num = 1) {
-    $checkWithinAccessParams!(pos, 0, this._length);
-    if (num <= 0) return this._length;
-    if (pos === 0) {
-      while (num--) this.pushFront(element);
-    } else if (pos === this._length) {
-      while (num--) this.pushBack(element);
-    } else {
-      let curNode = this._head;
-      for (let i = 1; i < pos; ++i) {
-        curNode = curNode._next;
-      }
-      const next = curNode._next;
-      this._length += num;
-      while (num--) {
-        curNode._next = <LinkNode<T>>{
-          _value: element,
-          _pre: curNode
-        };
-        curNode._next._pre = curNode;
-        curNode = curNode._next;
-      }
-      curNode._next = next;
-      next._pre = curNode;
-    }
-    return this._length;
-  }
-  find(element: T) {
+  find(item: T, cmp: CompareFn<T> = compareFromS2L) {
     let curNode = this._head;
     while (curNode !== this._header) {
-      if (curNode._value === element) {
+      if (cmp(curNode._value, item) === 0) {
         return new LinkListIterator<T>(curNode, this._header, this);
       }
       curNode = curNode._next;
@@ -279,13 +240,14 @@ class LinkList<T> extends SequentialContainer<T> {
     return this.end();
   }
   reverse() {
-    if (this._length <= 1) {
+    const length = this._length;
+    if (length <= 1) {
       return this;
     }
     let pHead = this._head;
     let pTail = this._tail;
     let cnt = 0;
-    while ((cnt << 1) < this._length) {
+    while ((cnt << 1) < length) {
       const tmp = pHead._value;
       pHead._value = pTail._value;
       pTail._value = tmp;
@@ -295,7 +257,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return this;
   }
-  unique() {
+  unique(cmp: CompareFn<T> = compareFromS2L) {
     if (this._length <= 1) {
       return this._length;
     }
@@ -304,7 +266,7 @@ class LinkList<T> extends SequentialContainer<T> {
       let tmpNode = curNode;
       while (
         tmpNode._next !== this._header &&
-        tmpNode._value === tmpNode._next._value
+        cmp(tmpNode._value, tmpNode._next._value) === 0
       ) {
         tmpNode = tmpNode._next;
         this._length -= 1;
@@ -313,9 +275,11 @@ class LinkList<T> extends SequentialContainer<T> {
       curNode._next._pre = curNode;
       curNode = curNode._next;
     }
+    this._head = this._header._next;
+    this._tail = this._header._pre;
     return this._length;
   }
-  sort(cmp?: (x: T, y: T) => number) {
+  sort(cmp: CompareFn<T> = compareFromS2L) {
     if (this._length <= 1) {
       return this;
     }
@@ -325,8 +289,8 @@ class LinkList<T> extends SequentialContainer<T> {
     });
     arr.sort(cmp);
     let curNode: LinkNode<T> = this._head;
-    arr.forEach(function (element) {
-      curNode._value = element;
+    arr.forEach(function (item) {
+      curNode._value = item;
       curNode = curNode._next;
     });
     return this;
@@ -344,7 +308,7 @@ class LinkList<T> extends SequentialContainer<T> {
     const self = this;
     if (this._length === 0) {
       list.forEach(function (el) {
-        self.pushBack(el);
+        self.push(el);
       });
     } else {
       let curNode = this._head;
@@ -360,7 +324,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return this._length;
   }
-  forEach(callback: (element: T, index: number, list: LinkList<T>) => void) {
+  forEach(callback: CallbackFn<T, this, void>) {
     let curNode = this._head;
     let index = 0;
     while (curNode !== this._header) {
@@ -375,6 +339,162 @@ class LinkList<T> extends SequentialContainer<T> {
       yield curNode._value;
       curNode = curNode._next;
     }
+  }
+  entries(): IterableIterator<[number, T]> {
+    let index = 0;
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const value = done ? undefined : [index, node._value];
+        index += 1;
+        node = node._next;
+        return {
+          value: value as [number, T],
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  every(callback: CallbackFn<T, this, unknown>) {
+    let index = 0;
+    for (let node = this._head; node !== this._header; node = node._next) {
+      const flag = callback(node._value, index, this);
+      if (!flag) return false;
+      index += 1;
+    }
+    return true;
+  }
+  filter(callback: CallbackFn<T, this, unknown>) {
+    let index = 0;
+    const newLinkList = new LinkList<T>();
+    for (let node = this._head; node !== this._header; node = node._next) {
+      const item = node._value;
+      const flag = callback(item, index, this);
+      if (flag) newLinkList.push(item);
+      index += 1;
+    }
+    return newLinkList;
+  }
+  map<U>(callback: CallbackFn<T, this, U>) {
+    let index = 0;
+    const newLinkList = new LinkList<U>();
+    for (let node = this._head; node !== this._header; node = node._next) {
+      const newItem = callback(node._value, index, this);
+      newLinkList.push(newItem);
+      index += 1;
+    }
+    return newLinkList;
+  }
+  slice(start = 0, end = 0) {
+    return new LinkList(this.toArray().slice(start, end));
+  }
+  some(callback: CallbackFn<T, this, unknown>) {
+    let index = 0;
+    for (let node = this._head; node !== this._header; node = node._next) {
+      const flag = callback(node._value, index, this);
+      if (flag) return true;
+      index += 1;
+    }
+    return false;
+  }
+  splice(start = 0, deleteCount = 0, ...items: T[]) {
+    const length = this._length;
+    if (length <= 0) {
+      this.push(...items);
+      return new LinkList<T>();
+    }
+    if (start < 0) {
+      start += length;
+      if (start < 0) {
+        start = 0;
+      }
+    } else {
+      const maxStart = length - 1;
+      if (start > maxStart) {
+        start = maxStart;
+      }
+    }
+    const maxDeleteCount = length - start;
+    if (deleteCount > maxDeleteCount) {
+      deleteCount = maxDeleteCount;
+    } else if (deleteCount < 0) {
+      deleteCount = 0;
+    }
+    let deleteHead: LinkNode<T>;
+    const formBegin = start < (length >> 1);
+    if (formBegin) {
+      deleteHead = this._head;
+      for (let i = 0; i < start; ++i) {
+        deleteHead = deleteHead._next;
+      }
+    } else {
+      deleteHead = this._tail;
+      const moveNum = length - start - 1;
+      for (let i = 0; i < moveNum; ++i) {
+        deleteHead = deleteHead._pre;
+      }
+    }
+    const deleteRecord = new LinkList<T>();
+    const insertStartNode = deleteHead._pre;
+    let insertEndNode = deleteHead;
+    if (deleteCount > 0) {
+      deleteRecord._head = deleteHead;
+      let deleteTail = deleteHead;
+      for (let i = 1; i < deleteCount; ++i) {
+        deleteTail = deleteTail._next;
+      }
+      deleteRecord._tail = deleteTail;
+      insertEndNode = deleteTail._next;
+      insertStartNode._next = insertEndNode;
+      insertEndNode._pre = insertStartNode;
+      deleteHead._pre = deleteTail._next = deleteRecord._header;
+      deleteRecord._header._next = deleteHead;
+      deleteRecord._header._pre = deleteTail;
+      deleteRecord._length = deleteCount;
+      this._length -= deleteCount;
+    }
+    const insertNum = items.length;
+    let currentNode = insertStartNode;
+    for (let i = 0; i < insertNum; ++i) {
+      currentNode._next = {
+        _pre: currentNode,
+        _next: insertEndNode,
+        _value: items[i]
+      };
+      currentNode = currentNode._next;
+    }
+    insertEndNode._pre = currentNode;
+    if (insertStartNode === this._header) {
+      this._head = insertStartNode._next;
+    }
+    if (insertEndNode === this._header) {
+      this._tail = currentNode;
+    }
+    this._length += insertNum;
+    return deleteRecord;
+  }
+  values(): IterableIterator<T> {
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const value = done ? undefined : node._value;
+        node = node._next;
+        return {
+          value: value as T,
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
   }
 }
 

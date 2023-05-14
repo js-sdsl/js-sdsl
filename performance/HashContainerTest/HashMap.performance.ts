@@ -11,40 +11,40 @@ function testHashMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'constructor',
     testNum: 1,
-    containerSize: myHashMap.size(),
+    containerSize: myHashMap.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
   for (let i = 0; i < testNum; ++i) {
-    myHashMap.setElement(Math.random() * 1000000, i, false);
+    myHashMap.set(Math.random() * 1000000, i, false);
   }
   endTime = Date.now();
   reportList.push({
-    testFunc: 'setElement',
+    testFunc: 'set',
     testNum,
-    containerSize: myHashMap.size(),
+    containerSize: myHashMap.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  myHashMap.forEach(([key]) => myHashMap.getElementByKey(key, false));
+  myHashMap.forEach(([key]) => myHashMap.get(key, false));
   endTime = Date.now();
   reportList.push({
-    testFunc: 'getElementByKey',
-    testNum: myHashMap.size(),
-    containerSize: myHashMap.size(),
+    testFunc: 'get',
+    testNum: myHashMap.length,
+    containerSize: myHashMap.length,
     runTime: endTime - startTime
   });
 
   const stdSet = new Set<number>();
   myHashMap.forEach(element => stdSet.add(element[0]));
-  const size = myHashMap.size();
+  const size = myHashMap.length;
   startTime = Date.now();
-  stdSet.forEach(element => myHashMap.eraseElementByKey(element, false));
+  stdSet.forEach(element => myHashMap.delete(element, false));
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByKey',
+    testFunc: 'delete',
     testNum: stdSet.size,
     containerSize: size,
     runTime: endTime - startTime

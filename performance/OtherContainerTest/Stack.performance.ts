@@ -15,12 +15,12 @@ function testStack(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'push',
     testNum,
-    containerSize: myStack.size(),
+    containerSize: myStack.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  const size = myStack.size();
+  const size = myStack.length;
   myStack.clear();
   endTime = Date.now();
   reportList.push({

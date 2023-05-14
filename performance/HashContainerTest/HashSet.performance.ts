@@ -11,7 +11,7 @@ function testHashSet(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'constructor',
     testNum: 1,
-    containerSize: myHashSet.size(),
+    containerSize: myHashSet.length,
     runTime: endTime - startTime
   });
 
@@ -19,13 +19,13 @@ function testHashSet(arr: number[], testNum: number) {
 
   startTime = Date.now();
   for (let i = 0; i < testNum; ++i) {
-    myHashSet.insert(Math.random() * 1000000, false);
+    myHashSet.add(Math.random() * 1000000, false);
   }
   endTime = Date.now();
   reportList.push({
-    testFunc: 'insert',
+    testFunc: 'add',
     testNum,
-    containerSize: myHashSet.size(),
+    containerSize: myHashSet.length,
     runTime: endTime - startTime
   });
 
@@ -34,18 +34,18 @@ function testHashSet(arr: number[], testNum: number) {
   endTime = Date.now();
   reportList.push({
     testFunc: 'find',
-    testNum: myHashSet.size(),
-    containerSize: myHashSet.size(),
+    testNum: myHashSet.length,
+    containerSize: myHashSet.length,
     runTime: endTime - startTime
   });
 
   myHashSet.forEach(element => stdSet.add(element));
-  const size = myHashSet.size();
+  const size = myHashSet.length;
   startTime = Date.now();
-  stdSet.forEach(element => myHashSet.eraseElementByKey(element, false));
+  stdSet.forEach(element => myHashSet.delete(element, false));
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByKey',
+    testFunc: 'delete',
     testNum: stdSet.size,
     containerSize: size,
     runTime: endTime - startTime

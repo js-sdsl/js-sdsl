@@ -9,21 +9,21 @@ function testDeque(arr: number[], testNum: number) {
   let startTime, endTime;
 
   startTime = Date.now();
-  for (let i = 0; i < testNum * 2; ++i) myDeque.pushFront(i);
+  for (let i = 0; i < testNum * 2; ++i) myDeque.unshift(i);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'pushFront',
+    testFunc: 'unshift',
     testNum: testNum * 2,
-    containerSize: myDeque.size(),
+    containerSize: myDeque.size,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  const size = myDeque.size();
-  for (let i = 0; i < testNum; ++i) myDeque.popFront();
+  const size = myDeque.size;
+  for (let i = 0; i < testNum; ++i) myDeque.shift();
   endTime = Date.now();
   reportList.push({
-    testFunc: 'popFront',
+    testFunc: 'shift',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
@@ -35,7 +35,7 @@ function testDeque(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'shrinkToFit',
     testNum: 1,
-    containerSize: myDeque.size(),
+    containerSize: myDeque.size,
     runTime: endTime - startTime
   });
 

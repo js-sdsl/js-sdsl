@@ -12,10 +12,10 @@ function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
   expect(myQueue.toArray().sort((x, y) => y - x)).to.deep.equal(Array.from(myVector));
   let index = 0;
   while (!myQueue.empty()) {
-    expect(myQueue.size()).to.equal(myVector.size() - index);
+    expect(myQueue.length).to.equal(myVector.length - index);
     const u = myQueue.top() as number;
     expect(myQueue.find(u)).to.equal(true);
-    expect(u).to.equal(myVector.getElementByPos(index++));
+    expect(u).to.equal(myVector.at(index++));
     const v = myQueue.pop();
     expect(v).to.equal(u);
     expect(myQueue.find(-u - 1)).to.equal(false);
@@ -28,9 +28,9 @@ describe('PriorityQueue test', () => {
   it('PriorityQueue empty insert test', () => {
     const myQueue = new PriorityQueue();
     myQueue.pop();
-    expect(myQueue.size()).to.equal(0);
+    expect(myQueue.length).to.equal(0);
     myQueue.push(1);
-    expect(myQueue.size()).to.equal(1);
+    expect(myQueue.length).to.equal(1);
     expect(myQueue.top()).to.equal(1);
   });
 
@@ -38,35 +38,37 @@ describe('PriorityQueue test', () => {
   const myVector = new Vector(arr);
 
   it('PriorityQueue size test', () => {
-    expect(myQueue.size()).to.equal(myVector.size());
+    expect(myQueue.length).to.equal(myVector.length);
   });
 
   it('PriorityQueue other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
-      myVector.pushBack(i);
+      myVector.push(i);
     }
     judge(myQueue, myVector);
   });
 
   it('PriorityQueue remove function test', () => {
     const myQueue = new PriorityQueue<number>();
-    const myVector = new Vector<number>();
+    let myVector = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
-      myVector.pushBack(i);
+      myVector.push(i);
     }
     for (let i = 1; i < testNum; ++i) {
       if (Math.random() > 0.5) {
         expect(myQueue.remove(i)).to.equal(true);
-        myVector.eraseElementByValue(i);
+        myVector = myVector.filter(function (item) {
+          return item !== i;
+        });
       }
       expect(myQueue.remove(-i)).to.equal(false);
     }
     myQueue.push(testNum);
     myQueue.remove(testNum);
     // @ts-ignore
-    const back = myQueue._priorityQueue[myQueue.size() - 1];
+    const back = myQueue._priorityQueue[myQueue.length - 1];
     myQueue.remove(back);
     myQueue.push(back);
     judge(myQueue, myVector);
@@ -111,7 +113,7 @@ describe('PriorityQueue test', () => {
     q.pop();
     expect(q.top()).to.equal(undefined);
     const que = new PriorityQueue(new Vector([1, 2, 3]));
-    expect(que.size()).to.equal(3);
+    expect(que.length).to.equal(3);
     expect(que.top()).to.equal(3);
     que.pop();
     expect(que.top()).to.equal(2);

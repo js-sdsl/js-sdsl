@@ -11,35 +11,35 @@ function testOrderedMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'constructor',
     testNum: 1,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) myMap.setElement(Math.random() * 1000000, i);
+  for (let i = 0; i < testNum; ++i) myMap.set(Math.random() * 1000000, i);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'setElement',
+    testFunc: 'set',
     testNum,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  let size = myMap.size();
-  for (let i = 0; i < testNum; ++i) myMap.eraseElementByKey(i);
+  let size = myMap.length;
+  for (let i = 0; i < testNum; ++i) myMap.delete(i);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByKey',
+    testFunc: 'delete',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  size = myMap.size();
+  size = myMap.length;
   for (let i = 0; i < 10; ++i) {
-    myMap.eraseElementByPos(Math.floor(Math.random() * myMap.size()));
+    myMap.eraseElementByPos(Math.floor(Math.random() * myMap.length));
   }
   endTime = Date.now();
   reportList.push({
@@ -50,14 +50,14 @@ function testOrderedMap(arr: number[], testNum: number) {
   });
 
   const _otherMap = new OrderedMap<number, number>();
-  for (let i = testNum; i < testNum * 2; ++i) _otherMap.setElement(i, Math.random() * 1000000);
+  for (let i = testNum; i < testNum * 2; ++i) _otherMap.set(i, Math.random() * 1000000);
   startTime = Date.now();
   myMap.union(_otherMap);
   endTime = Date.now();
   reportList.push({
     testFunc: 'union',
     testNum: 1,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
@@ -72,7 +72,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'lowerBound',
     testNum,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
@@ -87,7 +87,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'upperBound',
     testNum,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
@@ -102,7 +102,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'reverseLowerBound',
     testNum,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 
@@ -117,7 +117,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   reportList.push({
     testFunc: 'reverseUpperBound',
     testNum,
-    containerSize: myMap.size(),
+    containerSize: myMap.length,
     runTime: endTime - startTime
   });
 

@@ -1,14 +1,12 @@
 import { Base, initContainer } from '@/container/ContainerBase';
+import { CompareFn, compareFromL2S } from '@/utils/compareFn';
 
 class PriorityQueue<T> extends Base {
+  private readonly _cmp: CompareFn<T>;
   /**
    * @internal
    */
   private readonly _priorityQueue: T[];
-  /**
-   * @internal
-   */
-  private readonly _cmp: (x: T, y: T) => number;
   /**
    * @description PriorityQueue's constructor.
    * @param container - Initialize container, must have a forEach function.
@@ -23,12 +21,7 @@ class PriorityQueue<T> extends Base {
    */
   constructor(
     container: initContainer<T> = [],
-    cmp: (x: T, y: T) => number =
-    function (x: T, y: T) {
-      if (x > y) return -1;
-      if (x < y) return 1;
-      return 0;
-    },
+    cmp: CompareFn<T> = compareFromL2S,
     copy = true
   ) {
     super();
@@ -89,8 +82,8 @@ class PriorityQueue<T> extends Base {
     this._priorityQueue.length = 0;
   }
   /**
-   * @description Push element into a container in order.
-   * @param item - The element you want to push.
+   * @description Push item into a container in order.
+   * @param item - The item you want to push.
    * @returns The size of heap after pushing.
    * @example
    * queue.push(1);
@@ -101,8 +94,8 @@ class PriorityQueue<T> extends Base {
     this._length += 1;
   }
   /**
-   * @description Removes the top element.
-   * @returns The element you popped.
+   * @description Removes the top item.
+   * @returns The item you popped.
    * @example
    * queue.pop();
    */
@@ -118,7 +111,7 @@ class PriorityQueue<T> extends Base {
     return value;
   }
   /**
-   * @description Accesses the top element.
+   * @description Accesses the top item.
    * @example
    * const top = queue.top();
    */
@@ -126,9 +119,9 @@ class PriorityQueue<T> extends Base {
     return this._priorityQueue[0];
   }
   /**
-   * @description Check if element is in heap.
+   * @description Check if item is in heap.
    * @param item - The item want to find.
-   * @returns Whether element is in heap.
+   * @returns Whether item is in heap.
    * @example
    * const que = new PriorityQueue([], (x, y) => x.id - y.id);
    * const obj = { id: 1 };

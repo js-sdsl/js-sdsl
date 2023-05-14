@@ -1,4 +1,4 @@
-import { initContainer, IteratorType } from '@/container/ContainerBase';
+import { CallbackFn, initContainer, IteratorType } from '@/container/ContainerBase';
 import { HashContainer, HashContainerIterator, HashLinkNode } from '@/container/HashContainer/Base';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
@@ -34,7 +34,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     super();
     const self = this;
     container.forEach(function (el) {
-      self.insert(el);
+      self.add(el);
     });
   }
   begin() {
@@ -56,35 +56,35 @@ class HashSet<K> extends HashContainer<K, undefined> {
     return this._tail._key;
   }
   /**
-   * @description Insert element to set.
+   * @description Insert item to set.
    * @param key - The key want to insert.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns The size of container after inserting.
    */
-  insert(key: K, isObject?: boolean) {
+  add(key: K, isObject?: boolean) {
     return this._set(key, undefined, isObject);
   }
-  getElementByPos(pos: number) {
-    $checkWithinAccessParams!(pos, 0, this._length - 1);
+  at(index: number) {
+    $checkWithinAccessParams!(index, 0, this._length - 1);
     let node = this._head;
-    while (pos--) {
+    while (index--) {
       node = node._next;
     }
     return node._key;
   }
   /**
    * @description Check key if exist in container.
-   * @param key - The element you want to search.
+   * @param key - The item you want to search.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns An iterator pointing to the element if found, or super end if not found.
+   * @returns An iterator pointing to the item if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
     return new HashSetIterator<K>(node, this._header, this);
   }
-  forEach(callback: (element: K, index: number, container: HashSet<K>) => void) {
+  forEach(callback: CallbackFn<K, this, void>) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -98,6 +98,59 @@ class HashSet<K> extends HashContainer<K, undefined> {
       yield node._key;
       node = node._next;
     }
+  }
+  entries(): IterableIterator<[K, K]> {
+    const self = this;
+    let node = this._head;
+    return {
+      next() {
+        const done = node === self._header;
+        const value = done ? undefined : [node._key, node._key];
+        node = node._next;
+        return {
+          value: value as [K, K],
+          done
+        };
+      },
+      [Symbol.iterator]() {
+        return this;
+      }
+    };
+  }
+  every(callback: CallbackFn<K, this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    while (node !== this._header) {
+      const flag = callback(node._key, index++, this);
+      if (!flag) return false;
+      node = node._next;
+    }
+    return true;
+  }
+  filter(callback: CallbackFn<K, this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    const filtered: K[] = [];
+    while (node !== this._header) {
+      const item = node._key;
+      const flag = callback(item, index++, this);
+      if (flag) filtered.push(item);
+      node = node._next;
+    }
+    return new HashSet(filtered);
+  }
+  some(callback: CallbackFn<K, this, unknown>) {
+    let index = 0;
+    let node = this._head;
+    while (node !== this._header) {
+      const flag = callback(node._key, index++, this);
+      if (flag) return true;
+      node = node._next;
+    }
+    return false;
+  }
+  values() {
+    return this.keys();
   }
 }
 

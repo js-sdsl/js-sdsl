@@ -8,41 +8,41 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   let _testNum = testNum;
 
   startTime = Date.now();
-  for (let i = 0; i < testNum; ++i) container.pushBack(Math.random());
+  for (let i = 0; i < testNum; ++i) container.push(Math.random());
   endTime = Date.now();
   reportList.push({
-    testFunc: 'pushBack',
+    testFunc: 'push',
     testNum,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  let size = container.size();
-  for (let i = 0; i < testNum; ++i) container.popBack();
+  let size = container.length;
+  for (let i = 0; i < testNum; ++i) container.pop();
   endTime = Date.now();
   reportList.push({
-    testFunc: 'popBack',
+    testFunc: 'pop',
     testNum,
     containerSize: size,
     runTime: endTime - startTime
   });
 
   for (let i = 0; i < testNum; ++i) {
-    container.pushBack(i);
+    container.push(i);
   }
   if (container.constructor.name === 'LinkList') {
     _testNum = Math.min(testNum, 1000);
   }
   startTime = Date.now();
   for (let i = 0; i < _testNum; ++i) {
-    container.getElementByPos(i);
+    container.at(i);
   }
   endTime = Date.now();
   reportList.push({
-    testFunc: 'getElementByPos',
+    testFunc: 'at',
     testNum: _testNum,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
@@ -50,23 +50,23 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
     _testNum = Math.min(testNum, 1000);
   }
   startTime = Date.now();
-  for (let i = 0; i < _testNum; ++i) container.setElementByPos(i, i);
+  for (let i = 0; i < _testNum; ++i) container.set(i, i);
   endTime = Date.now();
   reportList.push({
-    testFunc: 'setElementByPos',
+    testFunc: 'set',
     testNum: _testNum,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  size = container.size();
+  size = container.length;
   for (let i = 0; i < 50; ++i) {
-    container.eraseElementByPos(Math.floor(Math.random() * container.size()));
+    container.splice(Math.floor(Math.random() * container.length), 1);
   }
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByPos',
+    testFunc: 'splice-delete',
     testNum: 50,
     containerSize: size,
     runTime: endTime - startTime
@@ -74,22 +74,24 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
 
   startTime = Date.now();
   for (let i = 0; i < 50; ++i) {
-    container.insert(Math.floor(Math.random() * container.size()), -1, 2);
+    container.splice(Math.floor(Math.random() * container.length), 0, -1, -1);
   }
   endTime = Date.now();
   reportList.push({
-    testFunc: 'insert',
+    testFunc: 'splice-add',
     testNum: 50,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  size = container.size();
-  container.eraseElementByValue(-1);
+  size = container.length;
+  container = container.filter(function (item) {
+    return item !== -1;
+  });
   endTime = Date.now();
   reportList.push({
-    testFunc: 'eraseElementByValue',
+    testFunc: 'filter',
     testNum: 1,
     containerSize: size,
     runTime: endTime - startTime
@@ -101,14 +103,14 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   reportList.push({
     testFunc: 'reverse',
     testNum: 1,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
   for (let i = 0; i < 50; ++i) {
-    container.insert(Math.floor(Math.random() * container.size()), -1, 2);
+    container.splice(Math.floor(Math.random() * container.length), 0, -1, -1);
   }
-  size = container.size();
+  size = container.length;
   startTime = Date.now();
   container.unique();
   endTime = Date.now();
@@ -120,7 +122,7 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   });
 
   for (let i = 0; i < testNum; ++i) {
-    container.pushBack(Math.random() * testNum);
+    container.push(Math.random() * testNum);
   }
   startTime = Date.now();
   container.sort((x, y) => x - y);
@@ -128,12 +130,12 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   reportList.push({
     testFunc: 'sort',
     testNum: 1,
-    containerSize: container.size(),
+    containerSize: container.length,
     runTime: endTime - startTime
   });
 
   startTime = Date.now();
-  size = container.size();
+  size = container.length;
   container.clear();
   endTime = Date.now();
   reportList.push({

@@ -5,8 +5,13 @@ export function judgeSequentialContainer(
   container: SequentialContainer<number>,
   myVector: SequentialContainer<number>
 ) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
+  expect(container.length).to.equal(myVector.length);
+  myVector.forEach((element, index) => {
+    try {
+      expect(element).to.equal(container.at(index));
+    } catch (e) {
+      console.error('Error index:', index);
+      throw e;
+    }
   });
 }
