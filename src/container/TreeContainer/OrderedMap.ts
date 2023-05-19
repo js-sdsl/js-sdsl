@@ -174,7 +174,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     let node = this._header._left;
     return {
       next() {
-        const done = Boolean(node) && node === self._header;
+        const done = !node || node === self._header;
         const value = done ? undefined : [node!._key, node!._value];
         node = node?._next();
         return {
@@ -212,7 +212,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     let node = this._header._left;
     return {
       next() {
-        const done = Boolean(node) && node === self._header;
+        const done = !node || node === self._header;
         const value = done ? undefined : node!._value;
         node = node?._next();
         return {

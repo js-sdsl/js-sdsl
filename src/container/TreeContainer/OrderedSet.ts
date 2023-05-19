@@ -149,7 +149,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     let node = this._header._left;
     return {
       next() {
-        const done = Boolean(node) && node === self._header;
+        const done = !node || node === self._header;
         const value = done ? undefined : [node!._key, node!._key];
         node = node?._next();
         return {

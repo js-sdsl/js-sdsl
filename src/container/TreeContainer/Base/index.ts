@@ -552,7 +552,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     let node = this._header._left;
     return {
       next() {
-        const done = Boolean(node) && node === self._header;
+        const done = !node || node === self._header;
         const key = done ? undefined : node!._key!;
         node = node?._next();
         return {
