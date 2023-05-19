@@ -5,11 +5,11 @@ export const enum TreeNodeColor {
 
 export class TreeNode<K, V> {
   _color: TreeNodeColor;
-  _key: K | undefined;
-  _value: V | undefined;
-  _left: TreeNode<K, V> | undefined = undefined;
-  _right: TreeNode<K, V> | undefined = undefined;
-  _parent: TreeNode<K, V> | undefined = undefined;
+  _key?: K;
+  _value?: V;
+  _left?: TreeNode<K, V>;
+  _right?: TreeNode<K, V>;
+  _parent?: TreeNode<K, V>;
   constructor(
     key?: K,
     value?: V,

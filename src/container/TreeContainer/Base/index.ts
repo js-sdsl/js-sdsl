@@ -15,7 +15,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected _root: TreeNode<K, V> | undefined = undefined;
+  protected _root?: TreeNode<K, V>;
   /**
    * @internal
    */
@@ -541,7 +541,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    */
   getHeight() {
     if (this._length === 0) return 0;
-    function traversal(curNode: TreeNode<K, V> | undefined): number {
+    function traversal(curNode?: TreeNode<K, V>): number {
       if (!curNode) return 0;
       return Math.max(traversal(curNode._left), traversal(curNode._right)) + 1;
     }
