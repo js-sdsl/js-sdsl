@@ -20,7 +20,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
 
   expect(container.length).to.equal(copyArr.length);
   expect(container.front()).to.equal(copyArr[0]);
-  expect(container.back()).to.equal(copyArr.at(-1));
+  expect(container.back()).to.equal(copyArr[copyArr.length - 1]);
 
   judgeSequentialContainer(container, copyArr);
 
