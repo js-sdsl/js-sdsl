@@ -39,6 +39,7 @@ abstract class SequentialContainer<T> extends Container<T> {
   abstract unique(cmp?: CompareFn<T>): number;
   abstract map<U>(callback: CallbackFn<T, this, U>, cmp?: CompareFn<U>): SequentialContainer<U>;
   abstract slice(start?: number, end?: number): SequentialContainer<T>;
+  abstract splice(start: number, deleteCount?: number): SequentialContainer<T>;
   abstract splice(start: number, deleteCount?: number, ...items: T[]): SequentialContainer<T>;
   abstract entries(): IterableIterator<[number, T]>;
   abstract values(): IterableIterator<T>;

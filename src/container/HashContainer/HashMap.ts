@@ -139,11 +139,17 @@ class HashMap<K, V> extends HashContainer<K, V> {
     return {
       next() {
         const done = node === self._header;
-        const value = done ? undefined : [node._key, node._value];
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [K, V]
+          };
+        }
+        const value = <[K, V]>[node._key, node._value];
         node = node._next;
         return {
-          value: value as [K, V],
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
@@ -189,10 +195,16 @@ class HashMap<K, V> extends HashContainer<K, V> {
     return {
       next() {
         const done = node === self._header;
-        const value = done ? undefined : node._value;
+        if (done) {
+          return {
+            value: undefined as unknown as V,
+            done
+          };
+        }
+        const value = node._value;
         node = node._next;
         return {
-          value: value as V,
+          value,
           done
         };
       },

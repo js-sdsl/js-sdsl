@@ -105,11 +105,17 @@ class HashSet<K> extends HashContainer<K, undefined> {
     return {
       next() {
         const done = node === self._header;
-        const value = done ? undefined : [node._key, node._key];
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [K, K]
+          };
+        }
+        const value = <[K, K]>[node._key, node._key];
         node = node._next;
         return {
-          value: value as [K, K],
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {

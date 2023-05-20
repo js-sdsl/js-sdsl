@@ -95,6 +95,7 @@ class Vector<T> extends SequentialContainer<T> {
   find(item: T, cmp: CompareFn<T> = compareFromS2L) {
     const length = this.length;
     for (let i = 0; i < length; ++i) {
+      // istanbul ignore else
       if (cmp(this._vector[i], item) === 0) {
         return new VectorIterator<T>(i, this);
       }
@@ -120,8 +121,9 @@ class Vector<T> extends SequentialContainer<T> {
     this._vector.sort(cmp);
     return this;
   }
-  splice(start = 0, deleteCount = 0, ...items: T[]) {
-    const deleteItems = this._vector.splice(start, deleteCount, ...items);
+  splice(...args: unknown[]) {
+    // @ts-ignore
+    const deleteItems = this._vector.splice(...args);
     this._length = this._vector.length;
     return new Vector(deleteItems);
   }
@@ -146,7 +148,7 @@ class Vector<T> extends SequentialContainer<T> {
     }
     return newVector;
   }
-  map<U>(callback: CallbackFn<T, this, U>, cmp?: CompareFn<U>) {
+  map<U>(callback: CallbackFn<T, this, U>) {
     const length = this._length;
     const newVector = new Vector<U>();
     for (let i = 0; i < length; ++i) {

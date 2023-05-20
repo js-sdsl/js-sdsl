@@ -170,6 +170,7 @@ class Deque<T> extends SequentialContainer<T> {
   pop() {
     if (this._length === 0) return;
     const item = this._map[this._last][this._curLast];
+    // istanbul ignore else
     if (this._length !== 1) {
       if (this._curLast > 0) {
         this._curLast -= 1;
@@ -221,6 +222,7 @@ class Deque<T> extends SequentialContainer<T> {
   shift() {
     if (this._length === 0) return;
     const item = this._map[this._first][this._curFirst];
+    // istanbul ignore else
     if (this._length !== 1) {
       if (this._curFirst < this._bucketSize - 1) {
         this._curFirst += 1;
@@ -367,11 +369,18 @@ class Deque<T> extends SequentialContainer<T> {
     const self = this;
     return {
       next() {
-        const item: T = self.at(index);
+        const done = index >= self._length;
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [number, T]
+          };
+        }
+        const value = <[number, T]>[index, self.at(index)];
         index += 1;
         return {
-          value: <[number, T]>[index, item],
-          done: index === self._length
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
@@ -412,9 +421,14 @@ class Deque<T> extends SequentialContainer<T> {
     const sliceDeque = new Deque<T>([], this._bucketSize);
     if (start >= length) {
       return sliceDeque;
-    } else if (start < 0) start = 0;
+    } else if (start < 0) {
+      start += length;
+      if (start < 0) {
+        start = 0;
+      }
+    }
     if (end < 0) end += length;
-    else if (end >= length) end = length;
+    else if (end > length) end = length;
     for (let i = start; i < end; ++i) {
       sliceDeque.push(this.at(i));
     }
@@ -428,9 +442,9 @@ class Deque<T> extends SequentialContainer<T> {
     }
     return false;
   }
-  splice(start = 0, deleteCount = 0, ...items: T[]) {
+  splice(start: number, deleteCount?: number, ...items: T[]) {
     const length = this._length;
-    if (length <= 0) {
+    if (typeof start !== 'number' || length <= 0) {
       this.push(...items);
       return new Deque<T>([], this._bucketSize);
     }
@@ -445,8 +459,9 @@ class Deque<T> extends SequentialContainer<T> {
         start = maxStart;
       }
     }
+
     const maxDeleteCount = length - start;
-    if (deleteCount > maxDeleteCount) {
+    if (typeof deleteCount !== 'number' || deleteCount > maxDeleteCount) {
       deleteCount = maxDeleteCount;
     } else if (deleteCount < 0) {
       deleteCount = 0;
@@ -480,7 +495,12 @@ class Deque<T> extends SequentialContainer<T> {
         }
         self.push(...items);
         if (deleteCount) {
-          const endIndex = endDeleteIndex > _bucketSize ? _bucketSize : endDeleteIndex;
+          let endIndex;
+          if (endDeleteIndex <= realIndex) {
+            endIndex = _bucketSize - (realIndex - endDeleteIndex) - 1;
+          } else {
+            endIndex = _bucketSize;
+          }
           for (let i = startIndex; i < endIndex; ++i) {
             deleteDeque.push(arr[i]);
           }
@@ -549,10 +569,16 @@ class Deque<T> extends SequentialContainer<T> {
     return {
       next() {
         const done = index === self._length;
-        const value = done ? undefined : self.at(index);
+        if (done) {
+          return {
+            value: undefined as unknown as T,
+            done
+          };
+        }
+        const value = self.at(index);
         index += 1;
         return {
-          value: value as T,
+          value,
           done
         };
       },

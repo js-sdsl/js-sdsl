@@ -175,11 +175,17 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return {
       next() {
         const done = !node || node === self._header;
-        const value = done ? undefined : [node!._key, node!._value];
-        node = node?._next();
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [K, V]
+          };
+        }
+        const value = <[K, V]>[node!._key, node!._value];
+        node = node!._next();
         return {
-          value: value as [K, V],
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
@@ -213,10 +219,16 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     return {
       next() {
         const done = !node || node === self._header;
-        const value = done ? undefined : node!._value;
-        node = node?._next();
+        if (done) {
+          return {
+            value: undefined as unknown as V,
+            done
+          };
+        }
+        const value = node!._value as V;
+        node = node!._next();
         return {
-          value: value as V,
+          value,
           done
         };
       },

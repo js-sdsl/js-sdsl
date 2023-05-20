@@ -347,12 +347,18 @@ class LinkList<T> extends SequentialContainer<T> {
     return {
       next() {
         const done = node === self._header;
-        const value = done ? undefined : [index, node._value];
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [number, T]
+          };
+        }
+        const value = <[number, T]>[index, node._value];
         index += 1;
         node = node._next;
         return {
-          value: value as [number, T],
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
@@ -390,14 +396,19 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return newLinkList;
   }
-  slice(start = 0, end = 0) {
+  slice(start = 0, end = this._length) {
     const length = this._length;
     const sliceList = new LinkList<T>();
     if (start >= length) {
       return sliceList;
-    } else if (start < 0) start = 0;
+    } else if (start < 0) {
+      start += length;
+      if (start < 0) {
+        start = 0;
+      }
+    }
     if (end < 0) end += length;
-    else if (end >= length) end = length;
+    else if (end > length) end = length;
     let index = 0;
     let curNode = this._head!;
     while (index < start) {
@@ -420,9 +431,9 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return false;
   }
-  splice(start = 0, deleteCount = 0, ...items: T[]) {
+  splice(start: number, deleteCount?: number, ...items: T[]) {
     const length = this._length;
-    if (length <= 0) {
+    if (typeof start !== 'number' || length <= 0) {
       this.push(...items);
       return new LinkList<T>();
     }
@@ -438,7 +449,7 @@ class LinkList<T> extends SequentialContainer<T> {
       }
     }
     const maxDeleteCount = length - start;
-    if (deleteCount > maxDeleteCount) {
+    if (typeof deleteCount !== 'number' || deleteCount > maxDeleteCount) {
       deleteCount = maxDeleteCount;
     } else if (deleteCount < 0) {
       deleteCount = 0;
@@ -502,10 +513,16 @@ class LinkList<T> extends SequentialContainer<T> {
     return {
       next() {
         const done = node === self._header;
-        const value = done ? undefined : node._value;
+        if (done) {
+          return {
+            value: undefined as unknown as T,
+            done
+          };
+        }
+        const value = node._value;
         node = node._next;
         return {
-          value: value as T,
+          value,
           done
         };
       },

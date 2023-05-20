@@ -5,7 +5,7 @@
   ],
   "plugins": ["compat"],
   "rules": {
-    "compat/compat": "error",
-    "require-yield": "off"
+    "no-console": "error",
+    "compat/compat": "error"
   }
 }

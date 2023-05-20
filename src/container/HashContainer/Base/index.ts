@@ -235,11 +235,17 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     return {
       next() {
         const done = node === self._header;
-        const key = done ? undefined : node._key;
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as K
+          };
+        }
+        const value = node._key;
         node = node._next;
         return {
-          value: key as K,
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {

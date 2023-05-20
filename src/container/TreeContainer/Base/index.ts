@@ -553,11 +553,17 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     return {
       next() {
         const done = !node || node === self._header;
-        const key = done ? undefined : node!._key!;
-        node = node?._next();
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as K
+          };
+        }
+        const value = node!._key!;
+        node = node!._next();
         return {
-          value: key as K,
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
@@ -567,7 +573,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   }
   has(key: K) {
     const curNode = this._getTreeNodeByKey(this._root, key);
-    return Boolean(curNode);
+    return curNode !== this._header;
   }
   /**
    * @param key - The given key you want to compare.

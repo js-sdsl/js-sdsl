@@ -150,11 +150,17 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     return {
       next() {
         const done = !node || node === self._header;
-        const value = done ? undefined : [node!._key, node!._key];
-        node = node?._next();
+        if (done) {
+          return {
+            done,
+            value: undefined as unknown as [K, K]
+          };
+        }
+        const value = <[K, K]>[node!._key, node!._key];
+        node = node!._next();
         return {
-          value: value as [K, K],
-          done
+          done,
+          value
         };
       },
       [Symbol.iterator]() {
