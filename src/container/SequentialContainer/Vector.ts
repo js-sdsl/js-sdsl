@@ -24,64 +24,6 @@ class VectorIterator<T> extends RandomIterator<T> {
 export type { VectorIterator };
 
 class Vector<T> extends SequentialContainer<T> {
-  splice(start = 0, deleteCount = 0, ...items: T[]) {
-    const deleteItems = this._vector.splice(start, deleteCount, ...items);
-    this._length = this._vector.length;
-    return new Vector(deleteItems);
-  }
-  entries() {
-    return this._vector.entries();
-  }
-  every(callback: CallbackFn<T, this, unknown>) {
-    const length = this._length;
-    for (let i = 0; i < length; ++i) {
-      const flag = callback(this._vector[i], i, this);
-      if (!flag) return false;
-    }
-    return true;
-  }
-  filter(callback: CallbackFn<T, this, unknown>) {
-    const length = this._length;
-    const newVector = new Vector<T>();
-    for (let i = 0; i < length; ++i) {
-      const item = this._vector[i];
-      const flag = callback(item, i, this);
-      if (flag) newVector.push(item);
-    }
-    return newVector;
-  }
-  map<U>(callback: CallbackFn<T, this, U>, cmp?: CompareFn<U>) {
-    const length = this._length;
-    const newVector = new Vector<U>();
-    for (let i = 0; i < length; ++i) {
-      const newValue = callback(this._vector[i], i, this);
-      newVector.push(newValue);
-    }
-    return newVector;
-  }
-  some(callback: CallbackFn<T, this, unknown>) {
-    const length = this._length;
-    for (let i = 0; i < length; ++i) {
-      const flag = callback(this._vector[i], i, this);
-      if (flag) return true;
-    }
-    return false;
-  }
-  slice(start = 0, end = this._length) {
-    const length = this._length;
-    const newVector = new Vector<T>();
-    if (start >= length) return newVector;
-    else if (start < 0) start = 0;
-    if (end < 0) end += length;
-    else if (end >= length) end = length;
-    for (let i = start; i < end; ++i) {
-      newVector.push(this._vector[i]);
-    }
-    return newVector;
-  }
-  values() {
-    return this._vector.values();
-  }
   /**
    * @internal
    */
@@ -177,6 +119,55 @@ class Vector<T> extends SequentialContainer<T> {
   sort(cmp: CompareFn<T> = compareFromS2L) {
     this._vector.sort(cmp);
     return this;
+  }
+  splice(start = 0, deleteCount = 0, ...items: T[]) {
+    const deleteItems = this._vector.splice(start, deleteCount, ...items);
+    this._length = this._vector.length;
+    return new Vector(deleteItems);
+  }
+  entries() {
+    return this._vector.entries();
+  }
+  every(callback: CallbackFn<T, this, unknown>) {
+    const length = this._length;
+    for (let i = 0; i < length; ++i) {
+      const flag = callback(this._vector[i], i, this);
+      if (!flag) return false;
+    }
+    return true;
+  }
+  filter(callback: CallbackFn<T, this, unknown>) {
+    const length = this._length;
+    const newVector = new Vector<T>();
+    for (let i = 0; i < length; ++i) {
+      const item = this._vector[i];
+      const flag = callback(item, i, this);
+      if (flag) newVector.push(item);
+    }
+    return newVector;
+  }
+  map<U>(callback: CallbackFn<T, this, U>, cmp?: CompareFn<U>) {
+    const length = this._length;
+    const newVector = new Vector<U>();
+    for (let i = 0; i < length; ++i) {
+      const newValue = callback(this._vector[i], i, this);
+      newVector.push(newValue);
+    }
+    return newVector;
+  }
+  some(callback: CallbackFn<T, this, unknown>) {
+    const length = this._length;
+    for (let i = 0; i < length; ++i) {
+      const flag = callback(this._vector[i], i, this);
+      if (flag) return true;
+    }
+    return false;
+  }
+  slice(start = 0, end = this._length) {
+    return new Vector(this._vector.slice(start, end));
+  }
+  values() {
+    return this._vector.values();
   }
   forEach(callback: CallbackFn<T, this, void>) {
     const length = this.length;

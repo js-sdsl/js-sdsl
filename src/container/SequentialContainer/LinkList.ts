@@ -391,7 +391,25 @@ class LinkList<T> extends SequentialContainer<T> {
     return newLinkList;
   }
   slice(start = 0, end = 0) {
-    return new LinkList(this.toArray().slice(start, end));
+    const length = this._length;
+    const sliceList = new LinkList<T>();
+    if (start >= length) {
+      return sliceList;
+    } else if (start < 0) start = 0;
+    if (end < 0) end += length;
+    else if (end >= length) end = length;
+    let index = 0;
+    let curNode = this._head!;
+    while (index < start) {
+      curNode = curNode._next!;
+      index += 1;
+    }
+    while (index < end) {
+      sliceList.push(curNode._value);
+      curNode = curNode._next!;
+      index += 1;
+    }
+    return sliceList;
   }
   some(callback: CallbackFn<T, this, unknown>) {
     let index = 0;

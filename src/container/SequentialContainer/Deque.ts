@@ -395,7 +395,7 @@ class Deque<T> extends SequentialContainer<T> {
       const flag = callback(item, i, this);
       if (flag) filtered.push(item);
     }
-    return new Deque(filtered);
+    return new Deque(filtered, this._bucketSize);
   }
   map<U>(callback: CallbackFn<T, this, U>) {
     const mapped = [];
@@ -405,20 +405,20 @@ class Deque<T> extends SequentialContainer<T> {
       const newItem = callback(item, i, this);
       mapped.push(newItem);
     }
-    return new Deque(mapped);
+    return new Deque(mapped, this._bucketSize);
   }
   slice(start = 0, end = this._length) {
-    const sliceArr: T[] = [];
     const length = this._length;
+    const sliceDeque = new Deque<T>([], this._bucketSize);
     if (start >= length) {
-      return new Deque<T>();
+      return sliceDeque;
     } else if (start < 0) start = 0;
     if (end < 0) end += length;
     else if (end >= length) end = length;
     for (let i = start; i < end; ++i) {
-      sliceArr.push(this.at(i));
+      sliceDeque.push(this.at(i));
     }
-    return new Deque(sliceArr);
+    return new Deque(sliceDeque, this._bucketSize);
   }
   some(callback: CallbackFn<T, this, unknown>): boolean {
     const length = this._length;
@@ -432,7 +432,7 @@ class Deque<T> extends SequentialContainer<T> {
     const length = this._length;
     if (length <= 0) {
       this.push(...items);
-      return new Deque<T>();
+      return new Deque<T>([], this._bucketSize);
     }
     if (start < 0) {
       start += length;
@@ -451,97 +451,97 @@ class Deque<T> extends SequentialContainer<T> {
     } else if (deleteCount < 0) {
       deleteCount = 0;
     }
-    let index = 0;
-    const flatDeque: T[] = [];
-    const deleteDeque: T[] = [];
 
-    const bucketSize = this._bucketSize;
+    const self = this;
+    let index = 0;
     const endDeleteIndex = start + deleteCount;
+    const deleteDeque = new Deque<T>([], this._bucketSize);
+    const { _map, _bucketNum, _bucketSize, _first, _last, _curFirst, _curLast } = this;
+
+    this.clear();
 
     function handleForBeginOrEnd(index: number, item: T) {
       if (index === start) {
-        flatDeque.push(...items);
+        self.push(...items);
       }
       if (deleteCount && index >= start && index < endDeleteIndex) {
         deleteDeque.push(item);
       } else {
-        flatDeque.push(item);
+        self.push(item);
       }
     }
 
     function handleForMiddle(index: number, arr: T[]) {
-      const realIndex = index + bucketSize;
+      const realIndex = index + _bucketSize;
       if (index < start && realIndex >= start) {
-        const startIndex = bucketSize - (realIndex - start) - 1;
+        const startIndex = _bucketSize - (realIndex - start) - 1;
         for (let i = 0; i < startIndex; ++i) {
-          flatDeque.push(arr[i]);
+          self.push(arr[i]);
         }
-        flatDeque.push(...items);
+        self.push(...items);
         if (deleteCount) {
-          const endIndex = endDeleteIndex > bucketSize ? bucketSize : endDeleteIndex;
+          const endIndex = endDeleteIndex > _bucketSize ? _bucketSize : endDeleteIndex;
           for (let i = startIndex; i < endIndex; ++i) {
             deleteDeque.push(arr[i]);
           }
-          for (let i = endIndex; i < bucketSize; ++i) {
-            flatDeque.push(arr[i]);
+          for (let i = endIndex; i < _bucketSize; ++i) {
+            self.push(arr[i]);
           }
         } else {
-          for (let i = startIndex; i < bucketSize; ++i) {
-            flatDeque.push(arr[i]);
+          for (let i = startIndex; i < _bucketSize; ++i) {
+            self.push(arr[i]);
           }
         }
       } else if (index >= start && realIndex < endDeleteIndex) {
         deleteDeque.push(...arr);
       } else if (index < endDeleteIndex && realIndex >= endDeleteIndex) {
-        const endIndex = bucketSize - (realIndex - endDeleteIndex) - 1;
+        const endIndex = _bucketSize - (realIndex - endDeleteIndex) - 1;
         for (let i = 0; i < endIndex; ++i) {
           deleteDeque.push(arr[i]);
         }
-        for (let i = endIndex; i < bucketSize; ++i) {
-          flatDeque.push(arr[i]);
+        for (let i = endIndex; i < _bucketSize; ++i) {
+          self.push(arr[i]);
         }
       } else {
-        flatDeque.push(...arr);
+        self.push(...arr);
       }
       return realIndex;
     }
 
-    if (this._first === this._last && this._curFirst <= this._curLast) {
-      for (let i = this._curFirst; i <= this._curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, this._map[this._first][i]);
+    if (_first === _last && _curFirst <= _curLast) {
+      for (let i = _curFirst; i <= _curLast; ++i, ++index) {
+        handleForBeginOrEnd(index, _map[_first][i]);
       }
-    } else if (this._first < this._last) {
-      for (let i = this._curFirst; i < this._bucketSize; ++i, ++index) {
-        handleForBeginOrEnd(index, this._map[this._first][i]);
+    } else if (_first < _last) {
+      for (let i = _curFirst; i < _bucketSize; ++i, ++index) {
+        handleForBeginOrEnd(index, _map[_first][i]);
       }
       index -= 1;
-      for (let i = this._first + 1; i < this._last; ++i) {
-        index = handleForMiddle(index, this._map[i]);
+      for (let i = _first + 1; i < _last; ++i) {
+        index = handleForMiddle(index, _map[i]);
       }
       index += 1;
-      for (let i = 0; i <= this._curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, this._map[this._last][i]);
+      for (let i = 0; i <= _curLast; ++i, ++index) {
+        handleForBeginOrEnd(index, _map[_last][i]);
       }
     } else {
-      for (let i = this._curFirst; i < this._bucketSize; ++i, ++index) {
-        handleForBeginOrEnd(index, this._map[this._first][i]);
+      for (let i = _curFirst; i < _bucketSize; ++i, ++index) {
+        handleForBeginOrEnd(index, _map[_first][i]);
       }
       index -= 1;
-      for (let i = this._first + 1; i < this._bucketNum; ++i) {
-        index = handleForMiddle(index, this._map[i]);
+      for (let i = _first + 1; i < _bucketNum; ++i) {
+        index = handleForMiddle(index, _map[i]);
       }
-      for (let i = 0; i < this._last; ++i) {
-        index = handleForMiddle(index, this._map[i]);
+      for (let i = 0; i < _last; ++i) {
+        index = handleForMiddle(index, _map[i]);
       }
       index += 1;
-      for (let i = 0; i <= this._curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, this._map[this._last][i]);
+      for (let i = 0; i <= _curLast; ++i, ++index) {
+        handleForBeginOrEnd(index, _map[_last][i]);
       }
     }
-    this._map = [];
-    this._first = this._last = this._curFirst = this._curLast = this._bucketNum = this._length = 0;
-    this._init(flatDeque, bucketSize);
-    return new Deque<T>(deleteDeque);
+
+    return deleteDeque;
   }
   values(): IterableIterator<T> {
     let index = 0;
