@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { judgeSequentialContainer } from '../utils/judge';
-import { Vector, LinkList } from '@/index';
+import { LinkList } from '@/index';
 
 const arr: number[] = [];
 const testNum = 10000;
@@ -18,14 +18,14 @@ describe('LinkList test', () => {
     }
     myLinkList.begin().pointer = 100;
     tmpArr[0] = 100;
-    judgeSequentialContainer(myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer(myLinkList, tmpArr);
   });
 
   it('LinkList popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(myLinkList.shift()).to.equal(tmpArr.shift());
     }
-    judgeSequentialContainer(myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer(myLinkList, tmpArr);
   });
 
   it('LinkList merge function test', () => {
@@ -38,7 +38,7 @@ describe('LinkList test', () => {
     otherLinkList.sort((x, y) => x - y);
     tmpArr.sort((x, y) => x - y);
     expect(myLinkList.merge(otherLinkList)).to.equal(tmpArr.length);
-    judgeSequentialContainer(myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer(myLinkList, tmpArr);
   });
 
   it('LinkList find function test', () => {
@@ -60,7 +60,7 @@ describe('LinkList test', () => {
       tmpArr.pop();
       tmpArr.pop();
     }
-    judgeSequentialContainer(myLinkList, new Vector(tmpArr));
+    judgeSequentialContainer(myLinkList, tmpArr);
   });
 
   it('LinkList run time error test', () => {

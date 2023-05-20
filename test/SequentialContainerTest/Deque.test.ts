@@ -16,19 +16,19 @@ describe('Deque test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(myDeque.unshift(i)).to.equal(tmpArr.unshift(i));
     }
-    judgeSequentialContainer(myDeque, new Vector(tmpArr));
+    judgeSequentialContainer(myDeque, tmpArr);
   });
 
   it('Deque popFront function test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(myDeque.shift()).to.equal(tmpArr.shift());
     }
-    judgeSequentialContainer(myDeque, new Vector(tmpArr));
+    judgeSequentialContainer(myDeque, tmpArr);
   });
 
   it('Deque shrinkToFit function test', () => {
     myDeque.shrinkToFit();
-    judgeSequentialContainer(myDeque, new Vector(tmpArr));
+    judgeSequentialContainer(myDeque, tmpArr);
   });
 
   it('Deque find function test', () => {
@@ -52,7 +52,7 @@ describe('Deque test', () => {
       myDeque.eraseElementByIterator(myDeque.begin());
       tmpArr.shift();
     }
-    judgeSequentialContainer(myDeque, new Vector(tmpArr));
+    judgeSequentialContainer(myDeque, tmpArr);
     let index = 0;
     for (const element of myDeque) {
       expect(element).to.equal(tmpArr[index++]);
@@ -116,7 +116,7 @@ describe('Deque test', () => {
     expect(new Deque(a).length).to.equal(a.length);
 
     const q = new Deque<number>([], (1 << 10));
-    const v = new Vector<number>();
+    const v = [];
     for (let i = 0; i < (1 << 15); ++i) {
       const random = Math.random();
       q.push(random);
@@ -127,6 +127,6 @@ describe('Deque test', () => {
     q.clear();
     for (let i = 0; i < testNum; ++i) q.unshift(arr[i]);
     arr.reverse();
-    judgeSequentialContainer(q, new Vector(arr));
+    judgeSequentialContainer(q, arr);
   });
 });
