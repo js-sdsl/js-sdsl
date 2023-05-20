@@ -37,7 +37,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   const len = container.length;
   expect(container.length).to.equal(copyArr.length);
   for (let i = 0; i < len; ++i) {
-    expect(container.at(i)).to.equal(copyArr.at(i));
+    expect(container.at(i)).to.equal(copyArr[i]);
   }
 
   for (let i = 0; i < len; ++i) {
