@@ -206,7 +206,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   unshift(...items: T[]) {
     const num = items.length;
-    for (let i = 0; i < num; ++i) {
+    for (let i = num - 1; i >= 0; --i) {
       this._insertNode(items[i], this._header);
     }
     return this._length;

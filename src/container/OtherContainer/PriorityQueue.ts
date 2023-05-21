@@ -104,7 +104,7 @@ class PriorityQueue<T> extends Base {
     const value = this._priorityQueue[0];
     const last = this._priorityQueue.pop()!;
     this._length -= 1;
-    if (this._length) {
+    if (this._length > 0) {
       this._priorityQueue[0] = last;
       this._pushDown(0, this._length >> 1);
     }

@@ -69,7 +69,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._curFirst = this._curLast = (this._bucketSize - _length % this._bucketSize) >> 1;
     const self = this;
     container.forEach(function (item) {
-      self.push(item);
+      self._push(item);
     });
   }
   /**
@@ -142,7 +142,7 @@ class Deque<T> extends SequentialContainer<T> {
     return this._map[this._last][this._curLast];
   }
   _push(item: T) {
-    if (this._length) {
+    if (this._length > 0) {
       if (this._curLast < this._bucketSize - 1) {
         this._curLast += 1;
       } else if (this._last < this._bucketNum - 1) {
@@ -190,7 +190,7 @@ class Deque<T> extends SequentialContainer<T> {
    * @param item - The item you want to push.
    */
   _unshift(item: T) {
-    if (this._length) {
+    if (this._length > 0) {
       if (this._curFirst > 0) {
         this._curFirst -= 1;
       } else if (this._first > 0) {
@@ -210,7 +210,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   unshift(...items: T[]) {
     const num = items.length;
-    for (let i = 0; i < num; ++i) {
+    for (let i = num - 1; i >= 0; --i) {
       this._unshift(items[i]);
     }
     return this._length;
@@ -397,24 +397,24 @@ class Deque<T> extends SequentialContainer<T> {
     return true;
   }
   filter(callback: CallbackFn<T, this, unknown>) {
-    const filtered: T[] = [];
+    const filtered = new Deque<T>([], this._bucketSize);
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const item = this.at(i);
       const flag = callback(item, i, this);
-      if (flag) filtered.push(item);
+      if (flag) filtered._push(item);
     }
-    return new Deque(filtered, this._bucketSize);
+    return filtered;
   }
   map<U>(callback: CallbackFn<T, this, U>) {
-    const mapped = [];
+    const mapped = new Deque<U>([], this._bucketSize);
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const item = this.at(i);
       const newItem = callback(item, i, this);
-      mapped.push(newItem);
+      mapped._push(newItem);
     }
-    return new Deque(mapped, this._bucketSize);
+    return mapped;
   }
   slice(start = 0, end = this._length) {
     const length = this._length;
@@ -430,9 +430,9 @@ class Deque<T> extends SequentialContainer<T> {
     if (end < 0) end += length;
     else if (end > length) end = length;
     for (let i = start; i < end; ++i) {
-      sliceDeque.push(this.at(i));
+      sliceDeque._push(this.at(i));
     }
-    return new Deque(sliceDeque, this._bucketSize);
+    return sliceDeque;
   }
   some(callback: CallbackFn<T, this, unknown>): boolean {
     const length = this._length;
@@ -459,108 +459,51 @@ class Deque<T> extends SequentialContainer<T> {
         start = maxStart;
       }
     }
-
     const maxDeleteCount = length - start;
     if (typeof deleteCount !== 'number' || deleteCount > maxDeleteCount) {
       deleteCount = maxDeleteCount;
     } else if (deleteCount < 0) {
       deleteCount = 0;
     }
-
-    const self = this;
-    let index = 0;
-    const endDeleteIndex = start + deleteCount;
     const deleteDeque = new Deque<T>([], this._bucketSize);
-    const { _map, _bucketNum, _bucketSize, _first, _last, _curFirst, _curLast } = this;
-
-    this.clear();
-
-    function handleForBeginOrEnd(index: number, item: T) {
-      if (index === start) {
-        self.push(...items);
-      }
-      if (deleteCount && index >= start && index < endDeleteIndex) {
-        deleteDeque.push(item);
-      } else {
-        self.push(item);
-      }
+    if (start === 0) {
+      while (deleteCount--) deleteDeque._push(this.shift()!);
+      this.unshift(...items);
+      return deleteDeque;
     }
-
-    function handleForMiddle(index: number, arr: T[]) {
-      const realIndex = index + _bucketSize;
-      if (index < start && realIndex >= start) {
-        const startIndex = _bucketSize - (realIndex - start) - 1;
-        for (let i = 0; i < startIndex; ++i) {
-          self.push(arr[i]);
-        }
-        self.push(...items);
-        if (deleteCount) {
-          let endIndex;
-          if (endDeleteIndex <= realIndex) {
-            endIndex = _bucketSize - (realIndex - endDeleteIndex) - 1;
-          } else {
-            endIndex = _bucketSize;
-          }
-          for (let i = startIndex; i < endIndex; ++i) {
-            deleteDeque.push(arr[i]);
-          }
-          for (let i = endIndex; i < _bucketSize; ++i) {
-            self.push(arr[i]);
-          }
-        } else {
-          for (let i = startIndex; i < _bucketSize; ++i) {
-            self.push(arr[i]);
-          }
-        }
-      } else if (index >= start && realIndex < endDeleteIndex) {
-        deleteDeque.push(...arr);
-      } else if (index < endDeleteIndex && realIndex >= endDeleteIndex) {
-        const endIndex = _bucketSize - (realIndex - endDeleteIndex) - 1;
-        for (let i = 0; i < endIndex; ++i) {
-          deleteDeque.push(arr[i]);
-        }
-        for (let i = endIndex; i < _bucketSize; ++i) {
-          self.push(arr[i]);
-        }
-      } else {
-        self.push(...arr);
-      }
-      return realIndex;
+    const end = start + deleteCount;
+    // record delete items
+    for (let i = start; i < end; ++i) {
+      deleteDeque._push(this.at(i));
     }
-
-    if (_first === _last && _curFirst <= _curLast) {
-      for (let i = _curFirst; i <= _curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, _map[_first][i]);
+    const addCount = items.length;
+    const delta = addCount - deleteCount;
+    // addCount greater than deleteCount, move back
+    if (delta > 0) {
+      for (let i = length - delta; i < length; ++i) {
+        this._push(this.at(i));
       }
-    } else if (_first < _last) {
-      for (let i = _curFirst; i < _bucketSize; ++i, ++index) {
-        handleForBeginOrEnd(index, _map[_first][i]);
+      for (let i = length - delta - 1; i >= end; --i) {
+        this.set(i + delta, this.at(i));
       }
-      index -= 1;
-      for (let i = _first + 1; i < _last; ++i) {
-        index = handleForMiddle(index, _map[i]);
+    } /* else, move front */ else if (delta < 0) {
+      const endIndex = length + delta - 1;
+      for (let i = end + delta; i <= endIndex; ++i) {
+        this.set(i, this.at(i - delta));
       }
-      index += 1;
-      for (let i = 0; i <= _curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, _map[_last][i]);
-      }
-    } else {
-      for (let i = _curFirst; i < _bucketSize; ++i, ++index) {
-        handleForBeginOrEnd(index, _map[_first][i]);
-      }
-      index -= 1;
-      for (let i = _first + 1; i < _bucketNum; ++i) {
-        index = handleForMiddle(index, _map[i]);
-      }
-      for (let i = 0; i < _last; ++i) {
-        index = handleForMiddle(index, _map[i]);
-      }
-      index += 1;
-      for (let i = 0; i <= _curLast; ++i, ++index) {
-        handleForBeginOrEnd(index, _map[_last][i]);
-      }
+      // change length after delete
+      this._length += delta;
+      // the length will always greater than 0 because the start must greater than 0 in this branch
+      const {
+        curNodeBucketIndex,
+        curNodePointerIndex
+      } = this._getElementIndex(this._length - 1);
+      this._last = curNodeBucketIndex;
+      this._curLast = curNodePointerIndex;
     }
-
+    for (let i = 0; i < addCount; ++i) {
+      this.set(start + i, items[i]);
+    }
     return deleteDeque;
   }
   values(): IterableIterator<T> {

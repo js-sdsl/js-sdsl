@@ -50,7 +50,7 @@ class Queue<T> extends Base {
    * @description Removes the first item.
    * @returns The item you popped.
    */
-  pop() {
+  unshift() {
     if (this._length === 0) return;
     const el = this._queue[this._first++];
     this._length -= 1;

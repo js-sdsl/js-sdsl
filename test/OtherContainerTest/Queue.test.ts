@@ -13,11 +13,11 @@ function judge(myQueue: Queue<number>, myVector: Vector<number>) {
     const s = myQueue.front();
     const v = myVector.front();
     expect(s).to.equal(v);
-    const u = myQueue.pop();
+    const u = myQueue.unshift();
     expect(u).to.equal(v);
     myVector.splice(0, 1);
   }
-  expect(myQueue.pop()).to.equal(undefined);
+  expect(myQueue.unshift()).to.equal(undefined);
   expect(myQueue.front()).to.equal(undefined);
 }
 
@@ -39,7 +39,7 @@ describe('Queue test', () => {
       myQueue.push(1);
       myVector.push(1);
       for (let i = 0; i < 10; ++i) {
-        expect(myQueue.pop()).to.equal((function () {
+        expect(myQueue.unshift()).to.equal((function () {
           try {
             return myVector.at(index++);
           } catch (e) {}
