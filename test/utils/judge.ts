@@ -8,7 +8,7 @@ export function judgeSequentialContainer(
   expect(container.length).to.equal(arr.length);
   arr.forEach((element, index) => {
     try {
-      expect(element).to.equal(container.at(index));
+      expect(container.at(index)).to.equal(element);
     } catch (e) {
       console.error('Error index:', index);
       throw e;

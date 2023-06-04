@@ -6,6 +6,11 @@ import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import $getContainerSize from '@/utils/getContainerSize.macro';
 import * as Math from '@/utils/math';
 
+type Position = {
+  x: number;
+  y: number
+}
+
 class DequeIterator<T> extends RandomIterator<T> {
   readonly container: Deque<T>;
   constructor(node: number, container: Deque<T>, iteratorType?: IteratorType) {
@@ -25,19 +30,17 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @internal
    */
-  private _first = 0;
+  private _first: Position = {
+    x: 0,
+    y: 0
+  };
   /**
    * @internal
    */
-  private _curFirst = 0;
-  /**
-   * @internal
-   */
-  private _last = 0;
-  /**
-   * @internal
-   */
-  private _curLast = 0;
+  private _last: Position = {
+    x: 0,
+    y: 0
+  };
   /**
    * @internal
    */
@@ -50,6 +53,11 @@ class Deque<T> extends SequentialContainer<T> {
    * @internal
    */
   private _map: T[][] = [];
+  /**
+   * @description Please clear the cache when `first|bucketSize|bucketNum` changed.
+   * @internal
+   */
+  private _positionCache: Record<number, Position | undefined> = {};
   constructor(
     container: initContainer<T> = [],
     bucketSize = (1 << 12)
@@ -65,12 +73,13 @@ class Deque<T> extends SequentialContainer<T> {
       this._map.push(new Array(this._bucketSize));
     }
     const needBucketNum = Math.ceil(_length, this._bucketSize);
-    this._first = this._last = (this._bucketNum >> 1) - (needBucketNum >> 1);
-    this._curFirst = this._curLast = (this._bucketSize - _length % this._bucketSize) >> 1;
+    this._first.x = this._last.x = (this._bucketNum >> 1) - (needBucketNum >> 1);
+    this._first.y = this._last.y = (this._bucketSize - _length % this._bucketSize) >> 1;
     const self = this;
     container.forEach(function (item) {
       self._push(item);
     });
+    this._positionCache = {};
   }
   /**
    * @description Growth the Deque.
@@ -82,44 +91,94 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < addBucketNum; ++i) {
       newMap[i] = new Array(this._bucketSize);
     }
-    for (let i = this._first; i < this._bucketNum; ++i) {
+    for (let i = this._first.x; i < this._bucketNum; ++i) {
       newMap[newMap.length] = this._map[i];
     }
-    for (let i = 0; i < this._last; ++i) {
+    for (let i = 0; i < this._last.x; ++i) {
       newMap[newMap.length] = this._map[i];
     }
-    newMap[newMap.length] = [...this._map[this._last]];
-    this._first = addBucketNum;
-    this._last = newMap.length - 1;
+    newMap[newMap.length] = [...this._map[this._last.x]];
+    this._first.x = addBucketNum;
+    this._last.x = newMap.length - 1;
     for (let i = 0; i < addBucketNum; ++i) {
       newMap[newMap.length] = new Array(this._bucketSize);
     }
     this._map = newMap;
+    this._positionCache = {};
     this._bucketNum = newMap.length;
   }
+  private _getPrevPosition(position: Position): Position {
+    let { x, y } = position;
+    if (y > 0) {
+      y -= 1;
+    } else if (x > 0) {
+      x -= 1;
+      y = this._bucketSize - 1;
+    } else {
+      x = this._bucketNum - 1;
+      y = this._bucketSize - 1;
+    }
+    return { x, y };
+  }
+  private _getNextPosition(position: Position): Position {
+    let { x, y } = position;
+    if (y < this._bucketSize - 1) {
+      y += 1;
+    } else if (x < this._bucketNum - 1) {
+      x += 1;
+      y = 0;
+    } else {
+      x = 0;
+      y = 0;
+    }
+    return { x, y };
+  }
   /**
-   * @description Get the bucket position of the item and the pointer position by index.
+   * @description Get the map position of the item.
    * @param index - The item's index.
    * @internal
    */
-  private _getElementIndex(index: number) {
-    let curNodeBucketIndex, curNodePointerIndex;
-    const realIndex = this._curFirst + index;
-    curNodeBucketIndex = this._first + Math.floor(realIndex / this._bucketSize);
-    if (curNodeBucketIndex >= this._bucketNum) {
-      curNodeBucketIndex -= this._bucketNum;
+  _calcPosition(index: number) {
+    const cache = this._positionCache[index];
+    let x, y;
+    const realIndex = this._first.y + index + 1;
+    x = this._first.x + Math.floor(realIndex / this._bucketSize) - 1;
+    if (x < 0) x = this._bucketNum - 1;
+    else x %= this._bucketNum;
+    y = realIndex % this._bucketSize - 1;
+    if (y < 0) {
+      y = this._bucketSize - 1;
     }
-    curNodePointerIndex = (realIndex + 1) % this._bucketSize - 1;
-    if (curNodePointerIndex < 0) {
-      curNodePointerIndex = this._bucketSize - 1;
+    if (cache) {
+      return cache;
+    } else if (this._positionCache[index - 1]) {
+      this._positionCache[index] = this._getNextPosition(this._positionCache[index - 1]!);
+    } else if (this._positionCache[index + 1]) {
+      this._positionCache[index] = this._getPrevPosition(this._positionCache[index + 1]!);
+    } else {
+      // let x, y;
+      // const realIndex = this._first.y + index;
+      // x = this._first.x + Math.floor(realIndex / this._bucketSize);
+      // if (x >= this._bucketNum) {
+      //   x -= this._bucketNum;
+      // }
+      // y = (realIndex + 1) % this._bucketSize - 1;
+      // if (y < 0) {
+      //   y = this._bucketSize - 1;
+      // }
+      this._positionCache[index] = { x, y };
     }
-    return { curNodeBucketIndex, curNodePointerIndex };
+    if (this._positionCache[index]!.x !== x || this._positionCache[index]!.y !== y) {
+      console.error(1);
+    }
+    return this._positionCache[index]!;
   }
   clear() {
     this._map = [new Array(this._bucketSize)];
     this._bucketNum = 1;
-    this._first = this._last = this._length = 0;
-    this._curFirst = this._curLast = this._bucketSize >> 1;
+    this._first.x = this._last.x = this._length = 0;
+    this._first.y = this._last.y = this._bucketSize >> 1;
+    this._positionCache = {};
   }
   begin() {
     return new DequeIterator<T>(0, this);
@@ -135,30 +194,22 @@ class Deque<T> extends SequentialContainer<T> {
   }
   front(): T | undefined {
     if (this._length === 0) return;
-    return this._map[this._first][this._curFirst];
+    return this._map[this._first.x][this._first.y];
   }
   back(): T | undefined {
     if (this._length === 0) return;
-    return this._map[this._last][this._curLast];
+    return this._map[this._last.x][this._last.y];
   }
   _push(item: T) {
     if (this._length > 0) {
-      if (this._curLast < this._bucketSize - 1) {
-        this._curLast += 1;
-      } else if (this._last < this._bucketNum - 1) {
-        this._last += 1;
-        this._curLast = 0;
-      } else {
-        this._last = 0;
-        this._curLast = 0;
-      }
+      this._last = this._getNextPosition(this._last);
       if (
-        this._last === this._first &&
-        this._curLast === this._curFirst
+        this._last.x === this._first.x &&
+        this._last.y === this._first.y
       ) this._reAllocate();
     }
     this._length += 1;
-    this._map[this._last][this._curLast] = item;
+    this._map[this._last.x][this._last.y] = item;
   }
   push(...items: T[]) {
     const num = items.length;
@@ -169,18 +220,10 @@ class Deque<T> extends SequentialContainer<T> {
   }
   pop() {
     if (this._length === 0) return;
-    const item = this._map[this._last][this._curLast];
+    const item = this._map[this._last.x][this._last.y];
     // istanbul ignore else
     if (this._length !== 1) {
-      if (this._curLast > 0) {
-        this._curLast -= 1;
-      } else if (this._last > 0) {
-        this._last -= 1;
-        this._curLast = this._bucketSize - 1;
-      } else {
-        this._last = this._bucketNum - 1;
-        this._curLast = this._bucketSize - 1;
-      }
+      this._last = this._getPrevPosition(this._last);
     }
     this._length -= 1;
     return item;
@@ -191,22 +234,15 @@ class Deque<T> extends SequentialContainer<T> {
    */
   _unshift(item: T) {
     if (this._length > 0) {
-      if (this._curFirst > 0) {
-        this._curFirst -= 1;
-      } else if (this._first > 0) {
-        this._first -= 1;
-        this._curFirst = this._bucketSize - 1;
-      } else {
-        this._first = this._bucketNum - 1;
-        this._curFirst = this._bucketSize - 1;
-      }
+      this._first = this._getPrevPosition(this._first);
       if (
-        this._first === this._last &&
-        this._curFirst === this._curLast
+        this._first.x === this._last.x &&
+        this._first.y === this._last.y
       ) this._reAllocate();
     }
     this._length += 1;
-    this._map[this._first][this._curFirst] = item;
+    this._positionCache = {};
+    this._map[this._first.x][this._first.y] = item;
   }
   unshift(...items: T[]) {
     const num = items.length;
@@ -221,37 +257,24 @@ class Deque<T> extends SequentialContainer<T> {
    */
   shift() {
     if (this._length === 0) return;
-    const item = this._map[this._first][this._curFirst];
+    const item = this._map[this._first.x][this._first.y];
     // istanbul ignore else
     if (this._length !== 1) {
-      if (this._curFirst < this._bucketSize - 1) {
-        this._curFirst += 1;
-      } else if (this._first < this._bucketNum - 1) {
-        this._first += 1;
-        this._curFirst = 0;
-      } else {
-        this._first = 0;
-        this._curFirst = 0;
-      }
+      this._first = this._getNextPosition(this._first);
     }
     this._length -= 1;
+    this._positionCache = {};
     return item;
   }
   at(index: number) {
     $checkWithinAccessParams!(index, 0, this._length - 1);
-    const {
-      curNodeBucketIndex,
-      curNodePointerIndex
-    } = this._getElementIndex(index);
-    return this._map[curNodeBucketIndex][curNodePointerIndex]!;
+    const { x, y } = this._calcPosition(index);
+    return this._map[x][y]!;
   }
   set(index: number, item: T) {
     $checkWithinAccessParams!(index, 0, this._length - 1);
-    const {
-      curNodeBucketIndex,
-      curNodePointerIndex
-    } = this._getElementIndex(index);
-    this._map[curNodeBucketIndex][curNodePointerIndex] = item;
+    const { x, y } = this._calcPosition(index);
+    this._map[x][y] = item;
   }
   /**
    * @description Remove all elements after the specified position (excluding the specified position).
@@ -265,12 +288,7 @@ class Deque<T> extends SequentialContainer<T> {
       this.clear();
       return 0;
     }
-    const {
-      curNodeBucketIndex,
-      curNodePointerIndex
-    } = this._getElementIndex(index);
-    this._last = curNodeBucketIndex;
-    this._curLast = curNodePointerIndex;
+    this._last = this._calcPosition(index);
     this._length = index + 1;
     return this._length;
   }
@@ -293,11 +311,12 @@ class Deque<T> extends SequentialContainer<T> {
     this._map.reverse().forEach(function (bucket) {
       bucket.reverse();
     });
-    const { _first, _last, _curFirst, _curLast } = this;
-    this._first = this._bucketNum - _last - 1;
-    this._last = this._bucketNum - _first - 1;
-    this._curFirst = this._bucketSize - _curLast - 1;
-    this._curLast = this._bucketSize - _curFirst - 1;
+    const { _first: { x: firstX, y: firstY }, _last: { x: lastX, y: lastY } } = this;
+    this._first.x = this._bucketNum - lastX - 1;
+    this._last.x = this._bucketNum - firstX - 1;
+    this._first.y = this._bucketSize - lastY - 1;
+    this._last.y = this._bucketSize - firstY - 1;
+    this._positionCache = {};
     return this;
   }
   unique(cmp: CompareFn<T> = compareFromS2L) {
@@ -335,22 +354,23 @@ class Deque<T> extends SequentialContainer<T> {
   shrinkToFit() {
     if (this._length === 0) return;
     const newMap = [];
-    if (this._first === this._last) return;
-    else if (this._first < this._last) {
-      for (let i = this._first; i <= this._last; ++i) {
+    if (this._first.x === this._last.x) return;
+    else if (this._first.x < this._last.x) {
+      for (let i = this._first.x; i <= this._last.x; ++i) {
         newMap.push(this._map[i]);
       }
     } else {
-      for (let i = this._first; i < this._bucketNum; ++i) {
+      for (let i = this._first.x; i < this._bucketNum; ++i) {
         newMap.push(this._map[i]);
       }
-      for (let i = 0; i <= this._last; ++i) {
+      for (let i = 0; i <= this._last.x; ++i) {
         newMap.push(this._map[i]);
       }
     }
-    this._first = 0;
-    this._last = newMap.length - 1;
+    this._first.x = 0;
+    this._last.x = newMap.length - 1;
     this._map = newMap;
+    this._positionCache = {};
   }
   forEach(callback: CallbackFn<T, this, void>) {
     const length = this._length;
@@ -472,17 +492,21 @@ class Deque<T> extends SequentialContainer<T> {
       return deleteDeque;
     }
     const end = start + deleteCount;
+    const addCount = items.length;
+    const delta = addCount - deleteCount;
+    const a = this.toArray().slice(length - delta * 2, length);
     // record delete items
     for (let i = start; i < end; ++i) {
       deleteDeque._push(this.at(i));
     }
-    const addCount = items.length;
-    const delta = addCount - deleteCount;
+    const b = this.toArray().slice(length - delta * 2, length);
     // addCount greater than deleteCount, move back
     if (delta > 0) {
       for (let i = length - delta; i < length; ++i) {
         this._push(this.at(i));
       }
+      const c = this.toArray().slice(length - delta * 2, length);
+      // console.log(a, b);
       for (let i = length - delta - 1; i >= end; --i) {
         this.set(i + delta, this.at(i));
       }
@@ -494,16 +518,12 @@ class Deque<T> extends SequentialContainer<T> {
       // change length after delete
       this._length += delta;
       // the length will always greater than 0 because the start must greater than 0 in this branch
-      const {
-        curNodeBucketIndex,
-        curNodePointerIndex
-      } = this._getElementIndex(this._length - 1);
-      this._last = curNodeBucketIndex;
-      this._curLast = curNodePointerIndex;
+      this._last = this._calcPosition(this._length - 1);
     }
     for (let i = 0; i < addCount; ++i) {
       this.set(start + i, items[i]);
     }
+    // console.log(a);
     return deleteDeque;
   }
   values(): IterableIterator<T> {
