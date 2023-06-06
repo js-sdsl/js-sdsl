@@ -140,15 +140,6 @@ class Deque<T> extends SequentialContainer<T> {
    */
   _calcPosition(index: number) {
     const cache = this._positionCache[index];
-    let x, y;
-    const realIndex = this._first.y + index + 1;
-    x = this._first.x + Math.floor(realIndex / this._bucketSize) - 1;
-    if (x < 0) x = this._bucketNum - 1;
-    else x %= this._bucketNum;
-    y = realIndex % this._bucketSize - 1;
-    if (y < 0) {
-      y = this._bucketSize - 1;
-    }
     if (cache) {
       return cache;
     } else if (this._positionCache[index - 1]) {
@@ -156,20 +147,16 @@ class Deque<T> extends SequentialContainer<T> {
     } else if (this._positionCache[index + 1]) {
       this._positionCache[index] = this._getPrevPosition(this._positionCache[index + 1]!);
     } else {
-      // let x, y;
-      // const realIndex = this._first.y + index;
-      // x = this._first.x + Math.floor(realIndex / this._bucketSize);
-      // if (x >= this._bucketNum) {
-      //   x -= this._bucketNum;
-      // }
-      // y = (realIndex + 1) % this._bucketSize - 1;
-      // if (y < 0) {
-      //   y = this._bucketSize - 1;
-      // }
+      let x, y;
+      const realIndex = this._first.y + index + 1;
+      x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
+      if (x < 0) x = this._bucketNum - 1;
+      else x %= this._bucketNum;
+      y = realIndex % this._bucketSize - 1;
+      if (y < 0) {
+        y = this._bucketSize - 1;
+      }
       this._positionCache[index] = { x, y };
-    }
-    if (this._positionCache[index]!.x !== x || this._positionCache[index]!.y !== y) {
-      console.error(1);
     }
     return this._positionCache[index]!;
   }
@@ -494,19 +481,15 @@ class Deque<T> extends SequentialContainer<T> {
     const end = start + deleteCount;
     const addCount = items.length;
     const delta = addCount - deleteCount;
-    const a = this.toArray().slice(length - delta * 2, length);
     // record delete items
     for (let i = start; i < end; ++i) {
       deleteDeque._push(this.at(i));
     }
-    const b = this.toArray().slice(length - delta * 2, length);
     // addCount greater than deleteCount, move back
     if (delta > 0) {
       for (let i = length - delta; i < length; ++i) {
         this._push(this.at(i));
       }
-      const c = this.toArray().slice(length - delta * 2, length);
-      // console.log(a, b);
       for (let i = length - delta - 1; i >= end; --i) {
         this.set(i + delta, this.at(i));
       }
@@ -523,7 +506,6 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = 0; i < addCount; ++i) {
       this.set(start + i, items[i]);
     }
-    // console.log(a);
     return deleteDeque;
   }
   values(): IterableIterator<T> {

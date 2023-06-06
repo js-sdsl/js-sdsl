@@ -10,8 +10,8 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 const containerArr = [
-  // new Vector(arr),
-  // new LinkList(arr),
+  new Vector(arr),
+  new LinkList(arr),
   new Deque(arr)
 ];
 
@@ -88,16 +88,11 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   for (let i = 0; i < testNum; ++i) {
     const pos = Math.floor(Math.random() * container.length);
     const num = 10;
-    // const a = container.toArray();
-    // container.splice(pos, 0, ...new Array(num).fill(-1)).toArray();
-    // const b = container.toArray();
-    // expect(a.length).to.equal(b.length - 10);
     expect(
       container.splice(pos, 0, ...new Array(num).fill(-1)).toArray()
     ).to.deep.equal(
       copyArr.splice(pos, 0, ...new Array(num).fill(-1))
     );
-    judgeSequentialContainer(container, copyArr);
   }
   judgeSequentialContainer(container, copyArr);
 
