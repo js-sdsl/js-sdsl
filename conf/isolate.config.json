@@ -32,12 +32,12 @@
     },
     {
       "name": "ordered-set",
-      "version": "4.4.1",
+      "version": "4.4.0",
       "sourceRoot": "src/container/TreeContainer/OrderedSet.ts"
     },
     {
       "name": "ordered-map",
-      "version": "4.4.1",
+      "version": "4.4.0",
       "sourceRoot": "src/container/TreeContainer/OrderedMap.ts"
     },
     {
