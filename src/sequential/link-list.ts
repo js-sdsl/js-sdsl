@@ -1,13 +1,13 @@
-import SequentialContainer from './Base';
+import SequentialContainer from './base';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
+import { throwIteratorAccessError } from '@/utils/throwError';
 import {
   CallbackFn,
   ContainerIterator,
   initContainer,
   IteratorType
-} from '@/container/ContainerBase';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
-import { CompareFn, compareFromS2L } from '@/utils/compareFn';
-import { throwIteratorAccessError } from '@/utils/throwError';
+} from 'src/base';
 
 type LinkNode<T> = {
   _value: T;

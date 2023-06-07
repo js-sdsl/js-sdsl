@@ -1,12 +1,12 @@
-import SequentialContainer from './Base';
+import SequentialContainer from './base';
+import { RandomIterator } from '@/sequential/base/random-iterator';
+import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import {
   CallbackFn,
   initContainer,
   IteratorType
-} from '@/container/ContainerBase';
-import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
-import { CompareFn, compareFromS2L } from '@/utils/compareFn';
+} from 'src/base';
 
 class VectorIterator<T> extends RandomIterator<T> {
   container: Vector<T>;

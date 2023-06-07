@@ -1,5 +1,5 @@
-import { CallbackFn, Container, ContainerIterator } from '@/container/ContainerBase';
 import { CompareFn } from '@/utils/compareFn';
+import { CallbackFn, Container, ContainerIterator } from 'src/base';
 
 abstract class SequentialContainer<T> extends Container<T> {
   /**

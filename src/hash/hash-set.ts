@@ -1,7 +1,7 @@
-import { CallbackFn, initContainer, IteratorType } from '@/container/ContainerBase';
-import { HashContainer, HashContainerIterator, HashLinkNode } from '@/container/HashContainer/Base';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
+import { CallbackFn, initContainer, IteratorType } from 'src/base';
+import { HashContainer, HashContainerIterator, HashLinkNode } from 'src/hash/base';
 
 class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
   readonly container: HashSet<K>;

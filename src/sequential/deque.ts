@@ -1,10 +1,10 @@
-import SequentialContainer from './Base';
-import { IteratorType, initContainer, CallbackFn } from '@/container/ContainerBase';
-import { RandomIterator } from '@/container/SequentialContainer/Base/RandomIterator';
+import SequentialContainer from './base';
+import { RandomIterator } from '@/sequential/base/random-iterator';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
-import $getContainerSize from '@/utils/getContainerSize.macro';
+import $getSize from '@/utils/getSize.macro';
 import * as Math from '@/utils/math';
+import { IteratorType, initContainer, CallbackFn } from 'src/base';
 
 type Position = {
   x: number;
@@ -66,7 +66,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._init(container, bucketSize);
   }
   private _init(container: initContainer<T>, bucketSize: number) {
-    const _length = $getContainerSize!(container);
+    const _length = $getSize!(container);
     this._bucketSize = bucketSize;
     this._bucketNum = Math.ceil(_length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
@@ -150,8 +150,7 @@ class Deque<T> extends SequentialContainer<T> {
       let x, y;
       const realIndex = this._first.y + index + 1;
       x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
-      if (x < 0) x = this._bucketNum - 1;
-      else x %= this._bucketNum;
+      x %= this._bucketNum;
       y = realIndex % this._bucketSize - 1;
       if (y < 0) {
         y = this._bucketSize - 1;
@@ -190,7 +189,11 @@ class Deque<T> extends SequentialContainer<T> {
   _push(item: T) {
     if (this._length > 0) {
       this._last = this._getNextPosition(this._last);
-      if (
+      if (this._last.x === 0 && this._last.y === 0) {
+        this._map.push(new Array(this._bucketSize));
+        this._last = { x: this._bucketNum, y: 0 };
+        this._bucketNum += 1;
+      } else if (
         this._last.x === this._first.x &&
         this._last.y === this._first.y
       ) this._reAllocate();
@@ -338,7 +341,7 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @description Remove as much useless space as possible.
    */
-  shrinkToFit() {
+  shrink() {
     if (this._length === 0) return;
     const newMap = [];
     if (this._first.x === this._last.x) return;
@@ -356,6 +359,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     this._first.x = 0;
     this._last.x = newMap.length - 1;
+    this._bucketNum = newMap.length;
     this._map = newMap;
     this._positionCache = {};
   }

@@ -1,7 +1,7 @@
-import { CallbackFn, Container, ContainerIterator, IteratorType } from '@/container/ContainerBase';
 import checkObject from '@/utils/checkObject';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
+import { CallbackFn, Container, ContainerIterator, IteratorType } from 'src/base';
 
 export type HashLinkNode<K, V> = {
   _key: K,

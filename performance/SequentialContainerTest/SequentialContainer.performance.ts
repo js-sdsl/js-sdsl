@@ -1,5 +1,5 @@
 import type { testReportFormat } from '../index';
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
+import SequentialContainer from '@/sequential/base/index';
 
 function testSequentialContainer(container: SequentialContainer<number>, testNum: number) {
   let startTime, endTime;

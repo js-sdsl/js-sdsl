@@ -1,6 +1,6 @@
-import { ContainerIterator, IteratorType } from '@/container/ContainerBase';
-import SequentialContainer from '@/container/SequentialContainer/Base/index';
+import SequentialContainer from '@/sequential/base/index';
 import { throwIteratorAccessError } from '@/utils/throwError';
+import { ContainerIterator, IteratorType } from 'src/base';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   abstract readonly container: SequentialContainer<T>;

@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/container/ContainerBase';
+import { Base, initContainer } from 'src/base';
 
 const enum QUEUE_CONSTANT {
   ALLOCATE_SIGMA = 0.5,

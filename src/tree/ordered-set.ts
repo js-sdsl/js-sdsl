@@ -1,10 +1,10 @@
-import TreeContainer from './Base';
-import TreeIterator from './Base/TreeIterator';
-import { TreeNode } from './Base/TreeNode';
-import { CallbackFn, initContainer, IteratorType } from '@/container/ContainerBase';
+import TreeContainer from './base';
+import TreeIterator from '@/tree/base/tree-iterator';
+import { TreeNode } from '@/tree/base/tree-node';
 import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { CompareFn } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
+import { CallbackFn, initContainer, IteratorType } from 'src/base';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   container: OrderedSet<K>;

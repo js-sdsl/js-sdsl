@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/container/ContainerBase';
+import { Base, initContainer } from 'src/base';
 
 class Stack<T> extends Base {
   /**

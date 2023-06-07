@@ -27,7 +27,7 @@ describe('Deque test', () => {
   });
 
   it('Deque shrinkToFit function test', () => {
-    myDeque.shrinkToFit();
+    myDeque.shrink();
     judgeSequentialContainer(myDeque, tmpArr);
   });
 
@@ -63,6 +63,30 @@ describe('Deque test', () => {
     expect(() => myDeque.at(myDeque.length)).to.throw(RangeError);
   });
 
+  it('Deque unshift function test', () => {
+    const arr0 = new Array((1 << 11) + 2).fill(1);
+    const arr1 = new Array((1 << 11) - 2).fill(2);
+    const q = new Deque<number>();
+    q.unshift(...arr0);
+    q.push(...arr1);
+    q.push(3);
+    expect(q.toArray()).to.deep.equal([...arr0, ...arr1, 3]);
+  });
+
+  it('Deque at function test', () => {
+    const bucketSize = 1 << 12;
+    const q = new Deque<number>([], bucketSize);
+    q.push(1);
+    expect(q.at(q.length - 1)).to.equal(1);
+    const restSize = (bucketSize >> 1) + bucketSize - 2;
+    q.push(...new Array(restSize).fill(1));
+    q.push(2);
+    expect(q.at(q.length - 1)).to.equal(2);
+    q.push(...new Array(bucketSize).fill(1));
+    q.push(3);
+    expect(q.at(q.length - 1)).to.equal(3);
+  });
+
   it('Deque empty test', () => {
     myDeque.clear();
     expect(myDeque.back()).to.equal(undefined);
@@ -74,9 +98,9 @@ describe('Deque test', () => {
     }
     expect(myDeque.front()).to.equal(undefined);
     expect(myDeque.length).to.equal(0);
-    myDeque.shrinkToFit();
+    myDeque.shrink();
     myDeque.unshift(1);
-    myDeque.shrinkToFit();
+    myDeque.shrink();
     expect(myDeque.length).to.equal(1);
     expect(myDeque.find(1).pointer).to.equal(1);
     myDeque.begin().pointer = 2;
@@ -122,7 +146,7 @@ describe('Deque test', () => {
       q.push(random);
       v.push(random);
     }
-    q.shrinkToFit();
+    q.shrink();
     judgeSequentialContainer(q, v);
     q.clear();
     for (let i = 0; i < testNum; ++i) q.unshift(arr[i]);
