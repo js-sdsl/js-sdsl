@@ -275,4 +275,20 @@ describe('OrderedSet test', () => {
     expect(myOrderedSet.size()).to.equal(0);
     expect(() => myOrderedSet.eraseElementByIterator(myOrderedSet.begin())).to.throw(RangeError);
   });
+
+  it('OrderedSet iterator test', function () {
+    const st = new OrderedSet([1, 2, 3]);
+    for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
+      expect(it.pointer).to.equal(index);
+      index += 1;
+    }
+  });
+
+  it('OrderedSet reverse iterator test', function () {
+    const st = new OrderedSet([2, 3]);
+    for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
+      expect(it.pointer).to.equal(index);
+      index -= 1;
+    }
+  });
 });
