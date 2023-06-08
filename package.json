@@ -33,7 +33,7 @@
     "test:safari": "karma start --browsers SafariNative",
     "test:chrome": "karma start --browsers ChromeHeadless",
     "test:firefox": "karma start --browsers Firefox",
-    "test:isolate": "yarn build:isolate && ts-mocha --paths 'test/IsolationTest/*.ts'",
+    "test:isolate": "yarn build:isolate && ts-mocha --paths 'test/isolation-test/*.ts'",
     "lint": "eslint --fix --color --cache --max-warnings=0 .",
     "generate": "typedoc src/index.ts --includeVersion --sort required-first --sort instance-first --sort source-order",
     "generate:dev": "yarn generate --watch",
