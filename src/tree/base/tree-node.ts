@@ -25,10 +25,8 @@ export class TreeNode<K, V> {
    */
   _pre() {
     let preNode: TreeNode<K, V> = this;
-    if (
-      preNode._color === TreeNodeColor.RED &&
-      preNode._parent!._parent === preNode
-    ) {
+    const isRootOrHeader = preNode._parent!._parent === preNode;
+    if (isRootOrHeader && preNode._color === TreeNodeColor.RED) {
       preNode = preNode._right!;
     } else if (preNode._left) {
       preNode = preNode._left;
@@ -36,6 +34,10 @@ export class TreeNode<K, V> {
         preNode = preNode._right;
       }
     } else {
+      // Must be root and left is null
+      if (isRootOrHeader) {
+        return preNode._parent!;
+      }
       let pre = preNode._parent!;
       while (pre._left === preNode) {
         preNode = pre;
