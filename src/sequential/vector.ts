@@ -1,7 +1,7 @@
 import SequentialContainer from './base';
 import {
   CallbackFn,
-  initContainer,
+  Entries,
   IteratorType
 } from '@/base';
 import { RandomIterator } from '@/sequential/base/random-iterator';
@@ -28,19 +28,19 @@ class Vector<T> extends SequentialContainer<T> {
    */
   private readonly _vector: T[];
   /**
-   * @param container - Initialize container, must have a forEach function.
+   * @param entries - Initialize container, must have a forEach function.
    * @param copy - When the container is an array, you can choose to directly operate on the original object of
    *               the array or perform a shallow copy. The default is shallow copy.
    */
-  constructor(container: initContainer<T> = [], copy = true) {
+  constructor(entries: Entries<T> = [], copy = true) {
     super();
-    if (Array.isArray(container)) {
-      this._vector = copy ? [...container] : container;
-      this._length = container.length;
+    if (Array.isArray(entries)) {
+      this._vector = copy ? [...entries] : entries;
+      this._length = entries.length;
     } else {
       this._vector = [];
       const self = this;
-      container.forEach(function (el) {
+      entries.forEach(function (el) {
         self.push(el);
       });
     }

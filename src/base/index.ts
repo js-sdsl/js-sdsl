@@ -239,7 +239,7 @@ export abstract class Container<T> extends Base {
 /**
  * @description The initial data type passed in when initializing the container.
  */
-export type initContainer<T> = {
+export type Entries<T> = {
   size?: number;
   length?: number;
   forEach: (callback: (el: T) => unknown) => void;

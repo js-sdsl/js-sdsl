@@ -1,5 +1,5 @@
 import SequentialContainer from './base';
-import { IteratorType, initContainer, CallbackFn } from '@/base';
+import { IteratorType, Entries, CallbackFn } from '@/base';
 import { RandomIterator } from '@/sequential/base/random-iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import $getSize from '@/utils/getSize.macro';
@@ -58,14 +58,14 @@ class Deque<T> extends SequentialContainer<T> {
    */
   private _positionCache: Record<number, Position | undefined> = {};
   constructor(
-    container: initContainer<T> = [],
+    entries: Entries<T> = [],
     bucketSize = (1 << 12)
   ) {
     super();
-    this._init(container, bucketSize);
+    this._init(entries, bucketSize);
   }
-  private _init(container: initContainer<T>, bucketSize: number) {
-    const _length = $getSize!(container);
+  private _init(entries: Entries<T>, bucketSize: number) {
+    const _length = $getSize!(entries);
     this._bucketSize = bucketSize;
     this._bucketNum = Math.ceil(_length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
@@ -75,7 +75,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._first.x = this._last.x = (this._bucketNum >> 1) - (needBucketNum >> 1);
     this._first.y = this._last.y = (this._bucketSize - _length % this._bucketSize) >> 1;
     const self = this;
-    container.forEach(function (item) {
+    entries.forEach(function (item) {
       self._push(item);
     });
     this._positionCache = {};

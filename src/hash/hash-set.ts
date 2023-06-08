@@ -1,4 +1,4 @@
-import { CallbackFn, initContainer, IteratorType } from '@/base';
+import { CallbackFn, Entries, IteratorType } from '@/base';
 import { HashContainer, HashContainerIterator, HashLinkNode } from '@/hash/base';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
@@ -29,10 +29,10 @@ class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
 export type { HashSetIterator };
 
 class HashSet<K> extends HashContainer<K, undefined> {
-  constructor(container: initContainer<K> = []) {
+  constructor(entries: Entries<K> = []) {
     super();
     const self = this;
-    container.forEach(function (el) {
+    entries.forEach(function (el) {
       self.add(el);
     });
   }

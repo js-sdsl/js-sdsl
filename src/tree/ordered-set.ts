@@ -1,5 +1,5 @@
 import TreeContainer from './base';
-import { CallbackFn, initContainer, IteratorType } from '@/base';
+import { CallbackFn, Entries, IteratorType } from '@/base';
 import TreeIterator from '@/tree/base/tree-iterator';
 import { TreeNode } from '@/tree/base/tree-node';
 import { CompareFn } from '@/utils/compareFn';
@@ -38,7 +38,7 @@ export type { OrderedSetIterator };
 
 class OrderedSet<K> extends TreeContainer<K, undefined> {
   /**
-   * @param container - The initialization container.
+   * @param entries - The initialization container.
    * @param cmp - The compare function.
    * @param enableIndex - Whether to enable iterator indexing function.
    * @example
@@ -48,13 +48,13 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * new OrderedSet([0, 1, 2], (x, y) => x - y, true);
    */
   constructor(
-    container: initContainer<K> = [],
+    entries: Entries<K> = [],
     cmp?: CompareFn<K>,
     enableIndex?: boolean
   ) {
     super(cmp, enableIndex);
     const self = this;
-    container.forEach(function (el) {
+    entries.forEach(function (el) {
       self.add(el);
     });
   }

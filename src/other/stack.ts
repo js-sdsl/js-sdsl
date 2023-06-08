@@ -1,14 +1,14 @@
-import { Base, initContainer } from '@/base';
+import { Base, Entries } from '@/base';
 
 class Stack<T> extends Base {
   /**
    * @internal
    */
   private _stack: T[] = [];
-  constructor(container: initContainer<T> = []) {
+  constructor(entries: Entries<T> = []) {
     super();
     const self = this;
-    container.forEach(function (el) {
+    entries.forEach(function (el) {
       self.push(el);
     });
   }

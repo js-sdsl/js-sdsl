@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/base';
+import { Base, Entries } from '@/base';
 import { CompareFn, compareFromL2S } from '@/utils/compareFn';
 
 class PriorityQueue<T> extends Base {
@@ -20,18 +20,18 @@ class PriorityQueue<T> extends Base {
    * new PriorityQueue([1, 2, 3], (x, y) => x - y, false);
    */
   constructor(
-    container: initContainer<T> = [],
+    entries: Entries<T> = [],
     cmp: CompareFn<T> = compareFromL2S,
     copy = true
   ) {
     super();
     this._cmp = cmp;
-    if (Array.isArray(container)) {
-      this._priorityQueue = copy ? [...container] : container;
+    if (Array.isArray(entries)) {
+      this._priorityQueue = copy ? [...entries] : entries;
     } else {
       this._priorityQueue = [];
       const self = this;
-      container.forEach(function (el) {
+      entries.forEach(function (el) {
         self._priorityQueue.push(el);
       });
     }

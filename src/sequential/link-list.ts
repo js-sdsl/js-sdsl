@@ -2,7 +2,7 @@ import SequentialContainer from './base';
 import {
   CallbackFn,
   ContainerIterator,
-  initContainer,
+  Entries,
   IteratorType
 } from '@/base';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
@@ -107,12 +107,12 @@ class LinkList<T> extends SequentialContainer<T> {
    * @internal
    */
   private readonly _header: LinkNode<T>;
-  constructor(container: initContainer<T> = []) {
+  constructor(entries: Entries<T> = []) {
     super();
     this._header = <LinkNode<T>>{};
     this._head = this._tail = this._header._pre = this._header._next = this._header;
     const self = this;
-    container.forEach(function (el) {
+    entries.forEach(function (el) {
       self.push(el);
     });
   }

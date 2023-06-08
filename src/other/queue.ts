@@ -1,4 +1,4 @@
-import { Base, initContainer } from '@/base';
+import { Base, Entries } from '@/base';
 
 const enum QUEUE_CONSTANT {
   ALLOCATE_SIGMA = 0.5,
@@ -14,10 +14,10 @@ class Queue<T> extends Base {
    * @internal
    */
   private _queue: T[] = [];
-  constructor(container: initContainer<T> = []) {
+  constructor(entries: Entries<T> = []) {
     super();
     const self = this;
-    container.forEach(function (el) {
+    entries.forEach(function (el) {
       self.push(el);
     });
   }
