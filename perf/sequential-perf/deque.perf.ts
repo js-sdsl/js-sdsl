@@ -1,4 +1,4 @@
-import testSequentialContainer from './SequentialContainer.performance';
+import testSequentialContainer from './coomon.perf';
 import { Deque } from '@/index';
 
 function testDeque(arr: number[], testNum: number) {
@@ -30,7 +30,7 @@ function testDeque(arr: number[], testNum: number) {
   });
 
   startTime = Date.now();
-  myDeque.shrinkToFit();
+  myDeque.shrink();
   endTime = Date.now();
   reportList.push({
     testFunc: 'shrinkToFit',

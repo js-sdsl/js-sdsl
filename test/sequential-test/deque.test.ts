@@ -38,18 +38,15 @@ describe('Deque test', () => {
     }
     expect(myDeque.find(tmpArr[tmpArr.length - 1]).pointer).to.equal(tmpArr[tmpArr.length - 1]);
     expect(myDeque.find(tmpArr[tmpArr.length / 2]).pointer).to.equal(tmpArr[tmpArr.length / 2]);
-    expect(() => {
-      const a = myDeque.find(-1).pointer;
-      return a;
-    }).to.throw(RangeError);
+    expect(myDeque.find(-1).pointer).to.equal(undefined);
     myDeque.push(-1);
     expect(myDeque.find(-1).pointer).to.equal(-1);
     myDeque.pop();
   });
 
-  it('Deque eraseElementByIterator function test', () => {
+  it('Deque erase function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      myDeque.eraseElementByIterator(myDeque.begin());
+      myDeque.erase(myDeque.begin());
       tmpArr.shift();
     }
     judgeSequentialContainer(myDeque, tmpArr);
@@ -60,7 +57,7 @@ describe('Deque test', () => {
   });
 
   it('Deque run time error test', () => {
-    expect(() => myDeque.at(myDeque.length)).to.throw(RangeError);
+    expect(myDeque.at(myDeque.length)).to.equal(undefined);
   });
 
   it('Deque unshift function test', () => {

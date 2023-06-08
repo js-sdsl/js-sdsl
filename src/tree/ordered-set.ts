@@ -1,10 +1,9 @@
 import TreeContainer from './base';
+import { CallbackFn, initContainer, IteratorType } from '@/base';
 import TreeIterator from '@/tree/base/tree-iterator';
 import { TreeNode } from '@/tree/base/tree-node';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { CompareFn } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { CallbackFn, initContainer, IteratorType } from 'src/base';
 
 class OrderedSetIterator<K> extends TreeIterator<K, undefined> {
   container: OrderedSet<K>;
@@ -121,8 +120,10 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   add(key: K, hint?: OrderedSetIterator<K>) {
     return this._set(key, undefined, hint);
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     const node = this._inOrderTraversal(index);
     return node._key as K;
   }
@@ -191,8 +192,9 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   values() {
     return this.keys();
   }
+  erase(index: number): number;
   // @ts-ignore
-  eraseElementByIterator(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;
+  erase(iter: OrderedSetIterator<K>): OrderedSetIterator<K>;
 }
 
 export default OrderedSet;

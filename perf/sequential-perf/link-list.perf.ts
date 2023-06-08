@@ -1,4 +1,4 @@
-import testSequentialContainer from './SequentialContainer.performance';
+import testSequentialContainer from './coomon.perf';
 import { LinkList } from '@/index';
 
 function testLinkList(arr: number[], testNum: number) {

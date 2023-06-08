@@ -155,10 +155,10 @@ describe('iterator test', () => {
     }
   });
 
-  it('eraseElementByIterator test', () => {
+  it('erase test', () => {
     for (const container of containerArr) {
-      expect(() => container.eraseElementByIterator(container.end())).to.throw(RangeError);
-      expect(() => container.eraseElementByIterator(container.rEnd())).to.throw(RangeError);
+      expect(() => container.erase(container.end())).to.throw(RangeError);
+      expect(() => container.erase(container.rEnd())).to.throw(RangeError);
     }
   });
 });

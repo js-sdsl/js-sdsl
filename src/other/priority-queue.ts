@@ -1,5 +1,5 @@
+import { Base, initContainer } from '@/base';
 import { CompareFn, compareFromL2S } from '@/utils/compareFn';
-import { Base, initContainer } from 'src/base';
 
 class PriorityQueue<T> extends Base {
   private readonly _cmp: CompareFn<T>;

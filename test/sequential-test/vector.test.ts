@@ -12,9 +12,6 @@ describe('Vector test', () => {
     const vector = new Vector([1], false);
     vector.begin().pointer = 0;
     expect(vector.find(0).pointer).to.equal(0);
-    vector.eraseElementByIterator(vector.begin());
-    expect(() => {
-      vector.find(0).pointer = 1;
-    }).to.throw(RangeError);
+    vector.erase(vector.begin());
   });
 });

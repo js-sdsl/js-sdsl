@@ -193,22 +193,31 @@ export abstract class Container<T> extends Base {
    */
   abstract forEach(callback: CallbackFn<T, this, void>): void;
   /**
+   * @internal
+   */
+  protected abstract _at(index: number): T;
+  /**
    * @description Gets the value of the item at the specified position.
    * @example
    * const val = container.getElementByPos(-1); // throw a RangeError
    */
-  abstract at(index: number): T;
+  at(index: number) {
+    if (index >= this._length) return undefined;
+    if (index < 0) index += this._length;
+    if (index < 0) {
+      return undefined;
+    }
+    return this._at(index);
+  }
   /**
    * @description Removes item by iterator and move `iter` to next.
    * @param iter - The iterator you want to erase.
    * @returns The next iterator.
    * @example
-   * container.eraseElementByIterator(container.begin());
-   * container.eraseElementByIterator(container.end()); // throw a RangeError
+   * container.erase(container.begin());
+   * container.erase(container.end()); // throw a RangeError
    */
-  abstract eraseElementByIterator(
-    iter: ContainerIterator<T>
-  ): ContainerIterator<T>;
+  abstract erase(iter: ContainerIterator<T>): ContainerIterator<T>;
   abstract entries(): IterableIterator<[unknown, unknown]>;
   abstract every(callback: CallbackFn<T, this, unknown>): boolean;
   abstract filter(callback: CallbackFn<T, this, unknown>): Container<T>;

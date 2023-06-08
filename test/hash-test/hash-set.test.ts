@@ -79,30 +79,19 @@ function hashSetTest(generateRandom: () => unknown) {
     judgeHashSet(myHashSet, stdSet);
   });
 
-  it('HashSet eraseElementByIterator test', () => {
+  it('HashSet erase test', () => {
     stdSet.delete(myHashSet.begin().pointer);
-    myHashSet.eraseElementByIterator(myHashSet.begin());
+    myHashSet.erase(myHashSet.begin());
     const el = myHashSet.rBegin().pointer;
     stdSet.delete(el);
-    const iter = myHashSet.eraseElementByIterator(myHashSet.rBegin());
+    const iter = myHashSet.erase(myHashSet.rBegin());
     expect(iter.equals(myHashSet.rBegin())).to.equal(true);
     expect(myHashSet.length).to.equal(stdSet.size);
     const eraseQueue = [1, 10, 100, 1000];
     for (const index of eraseQueue) {
       const el = myHashSet.at(index);
-      myHashSet.eraseElementByIterator(myHashSet.find(el));
+      myHashSet.erase(myHashSet.find(el));
       stdSet.delete(el);
-    }
-    judgeHashSet(myHashSet, stdSet);
-  });
-
-  it('HashSet eraseElementByPos test', () => {
-    const eraseQueue = [1, 10, 100, 1000];
-    for (const index of eraseQueue) {
-      const el = myHashSet.at(index);
-      const size = myHashSet.eraseElementByPos(index);
-      stdSet.delete(el);
-      expect(size).equal(stdSet.size);
     }
     judgeHashSet(myHashSet, stdSet);
   });

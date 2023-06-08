@@ -31,7 +31,7 @@ describe('OrderedSet test', () => {
   it('OrderedSet delete function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.length);
-      const eraseValue = myVector.at(pos);
+      const eraseValue = myVector.at(pos)!;
       myVector.splice(pos, 1);
       expect(myOrderedSet.delete(eraseValue)).to.equal(true);
       expect(myOrderedSet.delete(-Math.random())).to.equal(false);
@@ -53,7 +53,7 @@ describe('OrderedSet test', () => {
   it('OrderedSet eraseElementByPos function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.length);
-      myOrderedSet.eraseElementByPos(pos);
+      myOrderedSet.erase(pos);
       myVector.splice(pos, 1);
     }
     judgeSet(myOrderedSet, myVector);
@@ -69,14 +69,14 @@ describe('OrderedSet test', () => {
 
   it('OrderedSet binary search function test', () => {
     for (let i = 0; i < myVector.length; ++i) {
-      expect(myOrderedSet.lowerBound(myVector.at(i)).pointer)
+      expect(myOrderedSet.lowerBound(myVector.at(i)!).pointer)
         .to.equal(myVector.at(i));
       if (i !== myVector.length - 1) {
-        expect(myOrderedSet.upperBound(myVector.at(i)).pointer)
+        expect(myOrderedSet.upperBound(myVector.at(i)!).pointer)
           .to.equal(myVector.at(i + 1));
       }
       if (i !== 0) {
-        const mid = (myVector.at(i) + myVector.at(i - 1)) / 2;
+        const mid = (myVector.at(i)! + myVector.at(i - 1)!) / 2;
         expect(myOrderedSet.lowerBound(mid).pointer)
           .to.equal(myVector.at(i));
         expect(myOrderedSet.upperBound(mid).pointer)
@@ -87,14 +87,14 @@ describe('OrderedSet test', () => {
 
   it('OrderedSet reverse binary search function test', () => {
     for (let i = 0; i < myVector.length; ++i) {
-      expect(myOrderedSet.reverseLowerBound(myVector.at(i)).pointer)
+      expect(myOrderedSet.reverseLowerBound(myVector.at(i)!).pointer)
         .to.equal(myVector.at(i));
       if (i !== 0) {
-        expect(myOrderedSet.reverseUpperBound(myVector.at(i)).pointer)
+        expect(myOrderedSet.reverseUpperBound(myVector.at(i)!).pointer)
           .to.equal(myVector.at(i - 1));
       }
       if (i !== 0) {
-        const mid = (myVector.at(i) + myVector.at(i - 1)) / 2;
+        const mid = (myVector.at(i)! + myVector.at(i - 1)!) / 2;
         expect(myOrderedSet.reverseLowerBound(mid).pointer)
           .to.equal(myVector.at(i - 1));
         expect(myOrderedSet.reverseUpperBound(mid).pointer)
@@ -105,33 +105,33 @@ describe('OrderedSet test', () => {
 
   it('OrderedSet front & back function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      myOrderedSet.eraseElementByPos(0);
+      myOrderedSet.erase(0);
       myVector.splice(0, 1);
       expect(myOrderedSet.front()).to.equal(myVector.front());
-      myOrderedSet.eraseElementByPos(myOrderedSet.length - 1);
+      myOrderedSet.erase(myOrderedSet.length - 1);
       myVector.splice(myVector.length - 1, 1);
       expect(myOrderedSet.back()).to.equal(myVector.back());
     }
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet eraseElementByIterator function test', () => {
+  it('OrderedSet erase function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      let iter = myOrderedSet.eraseElementByIterator(myOrderedSet.begin());
+      let iter = myOrderedSet.erase(myOrderedSet.begin());
       expect(iter.equals(myOrderedSet.begin())).to.equal(true);
       myVector.splice(0, 1);
-      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin().next());
+      iter = myOrderedSet.erase(myOrderedSet.rBegin().next());
       expect(iter.equals(myOrderedSet.rBegin().next())).to.equal(true);
-      iter = myOrderedSet.eraseElementByIterator(myOrderedSet.rBegin());
+      iter = myOrderedSet.erase(myOrderedSet.rBegin());
       expect(iter.equals(myOrderedSet.rBegin())).to.equal(true);
       myVector.pop();
       myVector.pop();
     }
     const eraseQueue = [1, 10, 1000];
     for (const index of eraseQueue) {
-      const el = myVector.at(index);
+      const el = myVector.at(index)!;
       myVector.splice(index, 1);
-      myOrderedSet.eraseElementByIterator(myOrderedSet.find(el));
+      myOrderedSet.erase(myOrderedSet.find(el));
     }
     judgeSet(myOrderedSet, myVector);
   });
@@ -173,7 +173,7 @@ describe('OrderedSet test', () => {
     }
     v.sort((x, y) => x - y);
     for (let i = 0; i < testNum; ++i) {
-      expect(st.lowerBound(v.at(i)).index).to.equal(i);
+      expect(st.lowerBound(v.at(i)!).index).to.equal(i);
     }
     expect(st.end().index).to.equal(st.length - 1);
 
@@ -274,6 +274,6 @@ describe('OrderedSet test', () => {
     expect(myOrderedSet.front()).to.equal(1);
     myOrderedSet.delete(1);
     expect(myOrderedSet.length).to.equal(0);
-    expect(() => myOrderedSet.eraseElementByIterator(myOrderedSet.begin())).to.throw(RangeError);
+    expect(() => myOrderedSet.erase(myOrderedSet.begin())).to.throw(RangeError);
   });
 });

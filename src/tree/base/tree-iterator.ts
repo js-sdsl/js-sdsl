@@ -1,8 +1,8 @@
 import { TreeNode } from './tree-node';
 import type { TreeNodeEnableIndex } from './tree-node';
+import { ContainerIterator, IteratorType } from '@/base';
 import TreeContainer from '@/tree/base/index';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { ContainerIterator, IteratorType } from 'src/base';
 
 abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   abstract readonly container: TreeContainer<K, V>;

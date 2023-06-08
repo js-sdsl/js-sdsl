@@ -1,6 +1,6 @@
+import { ContainerIterator, IteratorType } from '@/base';
 import SequentialContainer from '@/sequential/base/index';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { ContainerIterator, IteratorType } from 'src/base';
 
 export abstract class RandomIterator<T> extends ContainerIterator<T> {
   abstract readonly container: SequentialContainer<T>;
@@ -50,7 +50,7 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
     }
   }
   get pointer() {
-    return this.container.at(this._node);
+    return this.container.at(this._node) as T;
   }
   set pointer(newValue: T) {
     this.container.set(this._node, newValue);

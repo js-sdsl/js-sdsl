@@ -1,7 +1,6 @@
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
+import { CallbackFn, initContainer, IteratorType } from '@/base';
+import { HashContainer, HashContainerIterator, HashLinkNode } from '@/hash/base';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { CallbackFn, initContainer, IteratorType } from 'src/base';
-import { HashContainer, HashContainerIterator, HashLinkNode } from 'src/hash/base';
 
 class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
   readonly container: HashSet<K>;
@@ -65,8 +64,10 @@ class HashSet<K> extends HashContainer<K, undefined> {
   add(key: K, isObject?: boolean) {
     return this._set(key, undefined, isObject);
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     let node = this._head;
     while (index--) {
       node = node._next;

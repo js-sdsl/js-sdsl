@@ -49,14 +49,14 @@ describe('LinkList test', () => {
     expect(myLinkList.find(-1).equals(myLinkList.end())).to.equal(true);
   });
 
-  it('LinkList eraseElementByIterator function test', () => {
+  it('LinkList erase function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
-      myLinkList.eraseElementByIterator(myLinkList.begin().next());
-      myLinkList.eraseElementByIterator(myLinkList.begin());
+      myLinkList.erase(myLinkList.begin().next());
+      myLinkList.erase(myLinkList.begin());
       tmpArr.shift();
       tmpArr.shift();
-      myLinkList.eraseElementByIterator(myLinkList.rBegin().next());
-      myLinkList.eraseElementByIterator(myLinkList.rBegin());
+      myLinkList.erase(myLinkList.rBegin().next());
+      myLinkList.erase(myLinkList.rBegin());
       tmpArr.pop();
       tmpArr.pop();
     }
@@ -64,7 +64,7 @@ describe('LinkList test', () => {
   });
 
   it('LinkList run time error test', () => {
-    expect(() => myLinkList.at(myLinkList.length)).to.throw(RangeError);
+    expect(myLinkList.at(myLinkList.length)).to.equal(undefined);
   });
 
   it('LinkList pushFront function test', () => {
@@ -91,7 +91,7 @@ describe('LinkList test', () => {
       myLinkList.rEnd().pointer;
     }).to.throw(RangeError);
     expect(() => {
-      myLinkList.eraseElementByIterator(myLinkList.begin());
+      myLinkList.erase(myLinkList.begin());
     }).to.throw(RangeError);
     expect(() => {
       myLinkList.begin().pointer = 0;

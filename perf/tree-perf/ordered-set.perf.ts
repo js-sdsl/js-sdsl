@@ -41,7 +41,7 @@ function testOrderedSet(arr: number[], testNum: number) {
 
   startTime = Date.now();
   for (let i = 0; i < 10; ++i) {
-    myOrderedSet.eraseElementByPos(Math.floor(Math.random() * myOrderedSet.length));
+    myOrderedSet.erase(Math.floor(Math.random() * myOrderedSet.length));
   }
   endTime = Date.now();
   reportList.push({

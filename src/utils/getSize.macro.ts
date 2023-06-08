@@ -1,4 +1,4 @@
-import { initContainer } from 'src/base';
+import { initContainer } from '@/base';
 
 /**
  * @param container The init container.

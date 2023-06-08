@@ -1,12 +1,11 @@
 import SequentialContainer from './base';
-import { RandomIterator } from '@/sequential/base/random-iterator';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
-import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import {
   CallbackFn,
   initContainer,
   IteratorType
-} from 'src/base';
+} from '@/base';
+import { RandomIterator } from '@/sequential/base/random-iterator';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 
 class VectorIterator<T> extends RandomIterator<T> {
   container: Vector<T>;
@@ -68,11 +67,13 @@ class Vector<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._vector[this._length - 1];
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     return this._vector[index];
   }
-  eraseElementByIterator(iter: VectorIterator<T>) {
+  erase(iter: VectorIterator<T>) {
     const _node = iter._node;
     iter = iter.next();
     this.splice(_node, 1);
@@ -88,8 +89,7 @@ class Vector<T> extends SequentialContainer<T> {
     this._length -= 1;
     return this._vector.pop();
   }
-  set(index: number, item: T) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  protected _set(index: number, item: T) {
     this._vector[index] = item;
   }
   find(item: T, cmp: CompareFn<T> = compareFromS2L) {

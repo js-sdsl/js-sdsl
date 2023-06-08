@@ -1,8 +1,7 @@
+import { CallbackFn, initContainer, IteratorType } from '@/base';
+import { HashContainer, HashContainerIterator, HashLinkNode } from '@/hash/base';
 import checkObject from '@/utils/checkObject';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { CallbackFn, initContainer, IteratorType } from 'src/base';
-import { HashContainer, HashContainerIterator, HashLinkNode } from 'src/hash/base';
 
 class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
   readonly container: HashMap<K, V>;
@@ -99,8 +98,10 @@ class HashMap<K, V> extends HashContainer<K, V> {
     const node = this._originMap[<string><unknown>key];
     return node ? node._value : undefined;
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     let node = this._head;
     while (index--) {
       node = node._next;

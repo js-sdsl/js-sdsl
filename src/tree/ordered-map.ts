@@ -1,10 +1,9 @@
 import TreeContainer from './base';
+import { CallbackFn, initContainer, IteratorType } from '@/base';
 import TreeIterator from '@/tree/base/tree-iterator';
 import { TreeNode } from '@/tree/base/tree-node';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { CompareFn } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { CallbackFn, initContainer, IteratorType } from 'src/base';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   container: OrderedMap<K, V>;
@@ -135,8 +134,10 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   set(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
     return this._set(key, value, hint);
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     const node = this._inOrderTraversal(index);
     return <[K, V]>[node._key, node._value];
   }
@@ -237,8 +238,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       }
     };
   }
+  erase(index: number): number;
   // @ts-ignore
-  eraseElementByIterator(iter: OrderedMapIterator<K, V>): OrderedMapIterator<K, V>;
+  erase(iter: OrderedMapIterator<K, V>): OrderedMapIterator<K, V>;
+  // @ts-ignore
+  at(index: number): [K, V] | undefined;
 }
 
 export default OrderedMap;

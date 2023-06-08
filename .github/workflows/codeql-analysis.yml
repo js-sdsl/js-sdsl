@@ -16,7 +16,7 @@ on:
     paths:
       - src/**/*.ts
       - test/**/*.ts
-      - performance/**/*.ts
+      - perf/**/*.ts
       - tools/*.ts
       - gulpfile.ts
       - karma.conf.ts

@@ -72,8 +72,8 @@ describe('OrderedMap test', () => {
   it('OrderedMap eraseElementByPos function test', () => {
     for (let i = 0; i < 10; ++i) {
       const pos = Math.floor(Math.random() * myOrderedMap.length);
-      const pair = myOrderedMap.at(pos);
-      myOrderedMap.eraseElementByPos(pos);
+      const pair = myOrderedMap.at(pos)!;
+      myOrderedMap.erase(pos);
       if (pair) stdMap.delete(pair[0]);
     }
     judgeMap(myOrderedMap, stdMap);
@@ -94,14 +94,14 @@ describe('OrderedMap test', () => {
     const myVector = new Vector(myOrderedMap);
     myVector.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < myVector.length; ++i) {
-      let vElement = myVector.at(i);
+      let vElement = myVector.at(i)!;
       let myElement = myOrderedMap.lowerBound(vElement[0]).pointer;
       expect(myElement[0]).to.equal(vElement[0]);
       expect(myElement[1]).to.equal(vElement[1]);
       if (i !== myVector.length - 1) {
-        vElement = myVector.at(i);
+        vElement = myVector.at(i)!;
         myElement = myOrderedMap.upperBound(vElement[0]).pointer;
-        vElement = myVector.at(i + 1);
+        vElement = myVector.at(i + 1)!;
         expect(myElement[0]).to.equal(vElement[0]);
         expect(myElement[1]).to.equal(vElement[1]);
       }
@@ -112,32 +112,32 @@ describe('OrderedMap test', () => {
     const myVector = new Vector(myOrderedMap);
     myVector.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < myVector.length; ++i) {
-      let vElement = myVector.at(i);
+      let vElement = myVector.at(i)!;
       let myElement = myOrderedMap.reverseLowerBound(vElement[0]).pointer;
       expect(myElement[0]).to.equal(vElement[0]);
       expect(myElement[1]).to.equal(vElement[1]);
       if (i !== 0) {
-        vElement = myVector.at(i);
+        vElement = myVector.at(i)!;
         myElement = myOrderedMap.reverseUpperBound(vElement[0]).pointer;
-        vElement = myVector.at(i - 1);
+        vElement = myVector.at(i - 1)!;
         expect(myElement[0]).to.equal(vElement[0]);
         expect(myElement[1]).to.equal(vElement[1]);
       }
     }
   });
 
-  it('OrderedMap eraseElementByIterator function test', () => {
+  it('OrderedMap erase function test', () => {
     const v = new Vector<[number, number]>(myOrderedMap);
     v.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < testNum / 10; ++i) {
       const begin = myOrderedMap.begin();
       stdMap.delete(begin.pointer[0]);
-      let iter = myOrderedMap.eraseElementByIterator(begin);
+      let iter = myOrderedMap.erase(begin);
       expect(iter.equals(myOrderedMap.begin())).to.equal(true);
-      expect(begin.pointer[0]).to.equal(v.at(i + 1)[0]);
+      expect(begin.pointer[0]).to.equal(v.at(i + 1)![0]);
       const rBegin = myOrderedMap.rBegin();
       stdMap.delete(rBegin.pointer[0]);
-      iter = myOrderedMap.eraseElementByIterator(rBegin);
+      iter = myOrderedMap.erase(rBegin);
       expect(iter.equals(myOrderedMap.rBegin())).to.equal(true);
       v.pop();
       expect((iter.pointer)[0]).to.equal(v.back()![0]);
@@ -195,7 +195,7 @@ describe('OrderedMap test', () => {
     }
     v.sort((x, y) => x - y);
     for (let i = 0; i < testNum; ++i) {
-      expect(mp.lowerBound(v.at(i)).index).to.equal(i);
+      expect(mp.lowerBound(v.at(i)!).index).to.equal(i);
     }
     expect(mp.end().index).to.equal(mp.length - 1);
 

@@ -1,13 +1,12 @@
 import SequentialContainer from './base';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
-import { CompareFn, compareFromS2L } from '@/utils/compareFn';
-import { throwIteratorAccessError } from '@/utils/throwError';
 import {
   CallbackFn,
   ContainerIterator,
   initContainer,
   IteratorType
-} from 'src/base';
+} from '@/base';
+import { CompareFn, compareFromS2L } from '@/utils/compareFn';
+import { throwIteratorAccessError } from '@/utils/throwError';
 
 type LinkNode<T> = {
   _value: T;
@@ -174,15 +173,17 @@ class LinkList<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._tail._value;
   }
-  at(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     let curNode = this._head;
     while (index--) {
       curNode = curNode._next;
     }
     return curNode._value;
   }
-  eraseElementByIterator(iter: LinkListIterator<T>) {
+  erase(iter: LinkListIterator<T>) {
     const node = iter._node;
     if (node === this._header) {
       throwIteratorAccessError();
@@ -221,8 +222,7 @@ class LinkList<T> extends SequentialContainer<T> {
     this._eraseNode(this._head);
     return item;
   }
-  set(index: number, item: T) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
+  protected _set(index: number, item: T) {
     let curNode = this._head;
     while (index--) {
       curNode = curNode._next;

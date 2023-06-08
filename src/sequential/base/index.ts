@@ -1,5 +1,5 @@
+import { CallbackFn, Container, ContainerIterator } from '@/base';
 import { CompareFn } from '@/utils/compareFn';
-import { CallbackFn, Container, ContainerIterator } from 'src/base';
 
 abstract class SequentialContainer<T> extends Container<T> {
   /**
@@ -13,6 +13,7 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @returns The item you popped.
    */
   abstract pop(): T | undefined;
+  protected abstract _set(index: number, item: T): void;
   /**
    * @description Sets item by position.
    * @param index - The position you want to change.
@@ -20,7 +21,13 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @example
    * container.set(-1, 1); // throw a RangeError
    */
-  abstract set(index: number, item: T): void;
+  set(index: number, item: T) {
+    if (index < 0 || index >= this._length) {
+      return false;
+    }
+    this._set(index, item);
+    return true;
+  }
   /**
    * @description Reverses the container.
    * @returns The container's self.

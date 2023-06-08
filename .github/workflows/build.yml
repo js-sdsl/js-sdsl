@@ -61,12 +61,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run performance test
-        run: yarn test:performance
+        run: yarn test:perf
       - name: Save performance test result
         uses: actions/upload-artifact@v3
         with:
           name: performance.md
-          path: dist/performance
+          path: dist/perf
   deploy:
     needs: [unit-test, browser-test, isolation-test, performance-test]
     runs-on: ubuntu-latest

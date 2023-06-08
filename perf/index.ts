@@ -1,14 +1,14 @@
 import { writeFileSync } from 'fs';
 import path from 'path';
-import testHashMap from './HashContainerTest/HashMap.performance';
-import testHashSet from './HashContainerTest/HashSet.performance';
-import testPriorityQueue from './OtherContainerTest/PriorityQueue.performance';
-import testQueue from './OtherContainerTest/Queue.performance';
-import testStack from './OtherContainerTest/Stack.performance';
-import testDeque from './SequentialContainerTest/Deque.performance';
-import testLinkList from './SequentialContainerTest/LinkList.performance';
-import testOrderedMap from './TreeContainerTest/OrderedMap.performance';
-import testOrderedSet from './TreeContainerTest/OrderedSet.performance';
+import testHashMap from './hash-perf/hash-map.perf';
+import testHashSet from './hash-perf/hash-set.perf';
+import testPriorityQueue from './other-perf/priority-queue.perf';
+import testQueue from './other-perf/queue.perf';
+import testStack from './other-perf/stack.perf';
+import testDeque from './sequential-perf/deque.perf';
+import testLinkList from './sequential-perf/link-list.perf';
+import testOrderedMap from './tree-perf/ordered-map.perf';
+import testOrderedSet from './tree-perf/ordered-set.perf';
 import getEnv from './utils/env';
 
 export type testReportFormat = {

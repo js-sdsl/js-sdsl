@@ -39,7 +39,7 @@ function testOrderedMap(arr: number[], testNum: number) {
   startTime = Date.now();
   size = myMap.length;
   for (let i = 0; i < 10; ++i) {
-    myMap.eraseElementByPos(Math.floor(Math.random() * myMap.length));
+    myMap.erase(Math.floor(Math.random() * myMap.length));
   }
   endTime = Date.now();
   reportList.push({

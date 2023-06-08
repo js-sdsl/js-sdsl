@@ -56,7 +56,7 @@ $ yarn test
 # run unit tests
 $ yarn test:unit
 # run performance tests
-$ yarn test:performance
+$ yarn test:perf
 # build all dist files
 $ yarn build
 # build specific mode including es module, commonJS and universal module definition
@@ -68,7 +68,7 @@ There are some other scripts available in the `scripts` section of the `package.
 ## Project Structure
 
 - **`test`**: contains all unit tests.
-- **`performance`**: contains all performance tests.
+- **`perf`**: contains all performance tests.
 - **`src`**: contains the source code.
 
 All our source files are written in typescript, please make sure your submissions have strict type deduction and follow eslint specifications.

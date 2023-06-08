@@ -1,7 +1,6 @@
+import { CallbackFn, Container, ContainerIterator, IteratorType } from '@/base';
 import checkObject from '@/utils/checkObject';
-import $checkWithinAccessParams from '@/utils/checkParams.macro';
 import { throwIteratorAccessError } from '@/utils/throwError';
-import { CallbackFn, Container, ContainerIterator, IteratorType } from 'src/base';
 
 export type HashLinkNode<K, V> = {
   _key: K,
@@ -212,22 +211,13 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     this._eraseNode(node);
     return true;
   }
-  eraseElementByIterator(iter: HashContainerIterator<K, V>) {
+  erase(iter: HashContainerIterator<K, V>) {
     const node = iter._node;
     if (node === this._header) {
       throwIteratorAccessError();
     }
     this._eraseNode(node);
     return iter.next();
-  }
-  eraseElementByPos(index: number) {
-    $checkWithinAccessParams!(index, 0, this._length - 1);
-    let node = this._head;
-    while (index--) {
-      node = node._next;
-    }
-    this._eraseNode(node);
-    return this._length;
   }
   keys(): IterableIterator<K> {
     const self = this;
