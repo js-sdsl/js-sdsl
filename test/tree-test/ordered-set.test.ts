@@ -164,7 +164,9 @@ describe('OrderedSet test', () => {
   });
 
   it('OrderedSet iterator index function test', () => {
-    const st = new OrderedSet<number>(undefined, undefined, true);
+    const st = new OrderedSet<number>([], {
+      enableIndex: true
+    });
     const v = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * 10000000;

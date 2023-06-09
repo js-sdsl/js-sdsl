@@ -81,7 +81,7 @@ describe('PriorityQueue test', () => {
       arr.push({ num: i });
     }
     const cmp = (x: obj, y: obj) => x.num - y.num;
-    const myQueue = new PriorityQueue<obj>(arr, cmp);
+    const myQueue = new PriorityQueue<obj>(arr, { cmp });
     for (let i = 0; i < testNum; ++i) {
       arr[i].num = -i;
       expect(myQueue.updateItem(arr[i])).to.equal(true);
@@ -104,7 +104,9 @@ describe('PriorityQueue test', () => {
   });
 
   it('init test', () => {
-    const q = new PriorityQueue([1, 2, 3], undefined, false);
+    const q = new PriorityQueue([1, 2, 3], {
+      copy: false
+    });
     expect(q.top()).to.equal(3);
     q.pop();
     expect(q.top()).to.equal(2);

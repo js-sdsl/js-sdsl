@@ -19,12 +19,12 @@ class PriorityQueue<T> extends Base {
    * new PriorityQueue([1, 2, 3], (x, y) => x - y);
    * new PriorityQueue([1, 2, 3], (x, y) => x - y, false);
    */
-  constructor(
-    entries: Entries<T> = [],
-    cmp: CompareFn<T> = compareFromL2S,
-    copy = true
-  ) {
+  constructor(entries: Entries<T> = [], options: {
+      cmp?: CompareFn<T>
+      copy?: boolean
+  } = {}) {
     super();
+    const { cmp = compareFromL2S, copy = true } = options;
     this._cmp = cmp;
     if (Array.isArray(entries)) {
       this._priorityQueue = copy ? [...entries] : entries;

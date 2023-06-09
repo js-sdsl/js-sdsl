@@ -17,15 +17,16 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
   /**
    * @internal
    */
-  protected constructor(
+  protected constructor(props: {
     node: TreeNode<K, V>,
     header: TreeNode<K, V>,
-    iteratorType?: IteratorType
-  ) {
-    super(iteratorType);
+    type?: IteratorType
+  }) {
+    super(props);
+    const { node, header } = props;
     this._node = node;
     this._header = header;
-    if (this.iteratorType === IteratorType.NORMAL) {
+    if (this.type === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node === this._header._left) {
           throwIteratorAccessError();

@@ -11,13 +11,13 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
   /**
    * @internal
    */
-  protected constructor(
-    index: number,
-    iteratorType?: IteratorType
-  ) {
-    super(iteratorType);
-    this._node = index;
-    if (this.iteratorType === IteratorType.NORMAL) {
+  protected constructor(props: {
+    node: number,
+    type?: IteratorType
+  }) {
+    super(props);
+    this._node = props.node;
+    if (this.type === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node === 0) {
           throwIteratorAccessError();

@@ -22,15 +22,16 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
   /**
    * @internal
    */
-  protected constructor(
-    node: HashLinkNode<K, V>,
-    header: HashLinkNode<K, V>,
-    iteratorType?: IteratorType
-  ) {
-    super(iteratorType);
+  protected constructor(props: {
+      node: HashLinkNode<K, V>,
+      header: HashLinkNode<K, V>,
+      type?: IteratorType
+  }) {
+    super(props);
+    const { node, header } = props;
     this._node = node;
     this._header = header;
-    if (this.iteratorType === IteratorType.NORMAL) {
+    if (this.type === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node._pre === this._header) {
           throwIteratorAccessError();

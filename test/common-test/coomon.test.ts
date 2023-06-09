@@ -21,8 +21,10 @@ const containerArr = [
   new Vector(arr),
   new LinkList(arr),
   new Deque(arr),
-  new OrderedSet(arr, function (a, b) {
-    return a[0] - b[0];
+  new OrderedSet(arr, {
+    cmp(a, b) {
+      return a[0] - b[0];
+    }
   }),
   new OrderedMap(arr),
   new HashSet(arr),

@@ -18,14 +18,17 @@ export abstract class ContainerIterator<T> {
   /**
    * @description Iterator's type.
    * @example
-   * console.log(container.end().iteratorType === IteratorType.NORMAL);  // true
+   * console.log(container.end().type === IteratorType.NORMAL);  // true
    */
-  readonly iteratorType: IteratorType;
+  readonly type: IteratorType;
   /**
    * @internal
    */
-  protected constructor(iteratorType = IteratorType.NORMAL) {
-    this.iteratorType = iteratorType;
+  protected constructor(props: {
+    type?: IteratorType
+  } = {}) {
+    const { type = IteratorType.NORMAL } = props;
+    this.type = type;
   }
   /**
    * @param iter - The other iterator you want to compare.

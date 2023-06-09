@@ -4,14 +4,14 @@ import { throwIteratorAccessError } from '@/utils/throwError';
 
 class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
   readonly container: HashSet<K>;
-  constructor(
-    node: HashLinkNode<K, undefined>,
-    header: HashLinkNode<K, undefined>,
-    container: HashSet<K>,
-    iteratorType?: IteratorType
-  ) {
-    super(node, header, iteratorType);
-    this.container = container;
+  constructor(props: {
+      node: HashLinkNode<K, undefined>,
+      header: HashLinkNode<K, undefined>,
+      container: HashSet<K>,
+      type?: IteratorType
+  }) {
+    super(props);
+    this.container = props.container;
   }
   get pointer() {
     if (this._node === this._header) {
@@ -20,7 +20,12 @@ class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
     return this._node._key;
   }
   copy() {
-    return new HashSetIterator<K>(this._node, this._header, this.container, this.iteratorType);
+    return new HashSetIterator<K>({
+      node: this._node,
+      header: this._header,
+      container: this.container,
+      type: this.type
+    });
   }
   // @ts-ignore
   equals(iter: HashSetIterator<K>): boolean;
@@ -37,16 +42,34 @@ class HashSet<K> extends HashContainer<K, undefined> {
     });
   }
   begin() {
-    return new HashSetIterator<K>(this._head, this._header, this);
+    return new HashSetIterator<K>({
+      node: this._head,
+      header: this._header,
+      container: this
+    });
   }
   end() {
-    return new HashSetIterator<K>(this._header, this._header, this);
+    return new HashSetIterator<K>({
+      node: this._header,
+      header: this._header,
+      container: this
+    });
   }
   rBegin() {
-    return new HashSetIterator<K>(this._tail, this._header, this, IteratorType.REVERSE);
+    return new HashSetIterator<K>({
+      node: this._tail,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   rEnd() {
-    return new HashSetIterator<K>(this._header, this._header, this, IteratorType.REVERSE);
+    return new HashSetIterator<K>({
+      node: this._header,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   front(): K | undefined {
     return this._head._key;
@@ -83,7 +106,11 @@ class HashSet<K> extends HashContainer<K, undefined> {
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
-    return new HashSetIterator<K>(node, this._header, this);
+    return new HashSetIterator<K>({
+      node,
+      header: this._header,
+      container: this
+    });
   }
   forEach(callback: CallbackFn<K, this, void>) {
     let index = 0;

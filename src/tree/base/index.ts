@@ -22,11 +22,12 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected constructor(
-    cmp: CompareFn<K> = compareFromS2L,
-    enableIndex = false
-  ) {
+  protected constructor(options: {
+    cmp?: CompareFn<K>,
+    enableIndex?: boolean,
+  } = {}) {
     super();
+    const { cmp = compareFromS2L, enableIndex = false } = options;
     this._cmp = cmp;
     this.enableIndex = enableIndex;
     this._TreeNodeClass = enableIndex ? TreeNodeEnableIndex : TreeNode;
@@ -342,7 +343,11 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected _set(key: K, value?: V, hint?: TreeIterator<K, V>) {
     if (this._root === undefined) {
       this._length += 1;
-      this._root = new this._TreeNodeClass(key, value, TreeNodeColor.BLACK);
+      this._root = new this._TreeNodeClass({
+        key,
+        value,
+        color: TreeNodeColor.BLACK
+      });
       this._root._parent = this._header;
       this._header._parent = this._header._left = this._header._right = this._root;
       return this._length;
@@ -354,7 +359,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       minNode._value = value;
       return this._length;
     } else if (compareToMin > 0) {
-      minNode._left = new this._TreeNodeClass(key, value);
+      minNode._left = new this._TreeNodeClass({
+        key,
+        value
+      });
       minNode._left._parent = minNode;
       curNode = minNode._left;
       this._header._left = curNode;
@@ -365,7 +373,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         maxNode._value = value;
         return this._length;
       } else if (compareToMax < 0) {
-        maxNode._right = new this._TreeNodeClass(key, value);
+        maxNode._right = new this._TreeNodeClass({
+          key,
+          value
+        });
         maxNode._right._parent = maxNode;
         curNode = maxNode._right;
         this._header._right = curNode;
@@ -384,7 +395,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
                 preNode._value = value;
                 return this._length;
               } else if (preCmpRes < 0) {
-                curNode = new this._TreeNodeClass(key, value);
+                curNode = new this._TreeNodeClass({
+                  key,
+                  value
+                });
                 if (preNode._right === undefined) {
                   preNode._right = curNode;
                   curNode._parent = preNode;
@@ -402,7 +416,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
             const cmpResult = this._cmp(curNode._key!, key);
             if (cmpResult > 0) {
               if (curNode._left === undefined) {
-                curNode._left = new this._TreeNodeClass(key, value);
+                curNode._left = new this._TreeNodeClass({
+                  key,
+                  value
+                });
                 curNode._left._parent = curNode;
                 curNode = curNode._left;
                 break;
@@ -410,7 +427,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               curNode = curNode._left;
             } else if (cmpResult < 0) {
               if (curNode._right === undefined) {
-                curNode._right = new this._TreeNodeClass(key, value);
+                curNode._right = new this._TreeNodeClass({
+                  key,
+                  value
+                });
                 curNode._right._parent = curNode;
                 curNode = curNode._right;
                 break;
@@ -525,7 +545,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       throwIteratorAccessError();
     }
     const hasNoRight = node._right === undefined;
-    const isNormal = param.iteratorType === IteratorType.NORMAL;
+    const isNormal = param.type === IteratorType.NORMAL;
     // For the normal iterator, the `next` node will be swapped to `this` node when has right.
     if (isNormal) {
       // So we should move it to next when it's right is null.

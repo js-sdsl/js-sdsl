@@ -9,12 +9,20 @@ import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 
 class VectorIterator<T> extends RandomIterator<T> {
   container: Vector<T>;
-  constructor(node: number, container: Vector<T>, iteratorType?: IteratorType) {
-    super(node, iteratorType);
-    this.container = container;
+  constructor(props: {
+    node: number,
+    container: Vector<T>,
+    type?: IteratorType
+  }) {
+    super(props);
+    this.container = props.container;
   }
   copy() {
-    return new VectorIterator<T>(this._node, this.container, this.iteratorType);
+    return new VectorIterator<T>({
+      node: this._node,
+      container: this.container,
+      type: this.type
+    });
   }
   // @ts-ignore
   equals(iter: VectorIterator<T>): boolean;
@@ -32,9 +40,12 @@ class Vector<T> extends SequentialContainer<T> {
    * @param copy - When the container is an array, you can choose to directly operate on the original object of
    *               the array or perform a shallow copy. The default is shallow copy.
    */
-  constructor(entries: Entries<T> = [], copy = true) {
+  constructor(entries: Entries<T> = [], options: {
+    copy?: boolean
+  } = {}) {
     super();
     if (Array.isArray(entries)) {
+      const { copy = true } = options;
       this._vector = copy ? [...entries] : entries;
       this._length = entries.length;
     } else {
@@ -50,16 +61,30 @@ class Vector<T> extends SequentialContainer<T> {
     this._vector.length = 0;
   }
   begin() {
-    return new VectorIterator<T>(0, this);
+    return new VectorIterator<T>({
+      node: 0,
+      container: this
+    });
   }
   end() {
-    return new VectorIterator<T>(this._length, this);
+    return new VectorIterator<T>({
+      node: this._length,
+      container: this
+    });
   }
   rBegin() {
-    return new VectorIterator<T>(this._length - 1, this, IteratorType.REVERSE);
+    return new VectorIterator<T>({
+      node: this._length - 1,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   rEnd() {
-    return new VectorIterator<T>(-1, this, IteratorType.REVERSE);
+    return new VectorIterator<T>({
+      node: -1,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   front(): T | undefined {
     return this._vector[0];
@@ -97,7 +122,10 @@ class Vector<T> extends SequentialContainer<T> {
     for (let i = 0; i < length; ++i) {
       // istanbul ignore else
       if (cmp(this._vector[i], item) === 0) {
-        return new VectorIterator<T>(i, this);
+        return new VectorIterator<T>({
+          node: i,
+          container: this
+        });
       }
     }
     return this.end();

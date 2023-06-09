@@ -12,12 +12,20 @@ type Position = {
 
 class DequeIterator<T> extends RandomIterator<T> {
   readonly container: Deque<T>;
-  constructor(node: number, container: Deque<T>, iteratorType?: IteratorType) {
-    super(node, iteratorType);
-    this.container = container;
+  constructor(props: {
+    node: number,
+    container: Deque<T>,
+    type?: IteratorType
+  }) {
+    super(props);
+    this.container = props.container;
   }
   copy() {
-    return new DequeIterator<T>(this._node, this.container, this.iteratorType);
+    return new DequeIterator<T>({
+      node: this._node,
+      container: this.container,
+      type: this.type
+    });
   }
   // @ts-ignore
   equals(iter: DequeIterator<T>): boolean;
@@ -57,15 +65,17 @@ class Deque<T> extends SequentialContainer<T> {
    * @internal
    */
   private _positionCache: Record<number, Position | undefined> = {};
-  constructor(
-    entries: Entries<T> = [],
-    bucketSize = (1 << 12)
-  ) {
+  constructor(entries: Entries<T> = [], options: {
+      bucketSize?: number
+  } = {}) {
     super();
-    this._init(entries, bucketSize);
+    this._init(entries, options);
   }
-  private _init(entries: Entries<T>, bucketSize: number) {
+  private _init(entries: Entries<T>, options: {
+    bucketSize?: number
+  } = {}) {
     const _length = $getSize!(entries);
+    const { bucketSize = 1 << 12 } = options;
     this._bucketSize = bucketSize;
     this._bucketNum = Math.ceil(_length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
@@ -166,16 +176,30 @@ class Deque<T> extends SequentialContainer<T> {
     this._positionCache = {};
   }
   begin() {
-    return new DequeIterator<T>(0, this);
+    return new DequeIterator<T>({
+      node: 0,
+      container: this
+    });
   }
   end() {
-    return new DequeIterator<T>(this._length, this);
+    return new DequeIterator<T>({
+      node: this._length,
+      container: this
+    });
   }
   rBegin() {
-    return new DequeIterator<T>(this._length - 1, this, IteratorType.REVERSE);
+    return new DequeIterator<T>({
+      node: this._length - 1,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   rEnd() {
-    return new DequeIterator<T>(-1, this, IteratorType.REVERSE);
+    return new DequeIterator<T>({
+      node: -1,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   front(): T | undefined {
     if (this._length === 0) return;
@@ -294,7 +318,10 @@ class Deque<T> extends SequentialContainer<T> {
   find(item: T, cmp: CompareFn<T> = compareFromS2L) {
     for (let i = 0; i < this._length; ++i) {
       if (cmp(this._at(i), item) === 0) {
-        return new DequeIterator<T>(i, this);
+        return new DequeIterator<T>({
+          node: i,
+          container: this
+        });
       }
     }
     return this.end();
@@ -410,7 +437,9 @@ class Deque<T> extends SequentialContainer<T> {
     return true;
   }
   filter(callback: CallbackFn<T, this, unknown>) {
-    const filtered = new Deque<T>([], this._bucketSize);
+    const filtered = new Deque<T>([], {
+      bucketSize: this._bucketSize
+    });
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const item = this._at(i);
@@ -420,7 +449,9 @@ class Deque<T> extends SequentialContainer<T> {
     return filtered;
   }
   map<U>(callback: CallbackFn<T, this, U>) {
-    const mapped = new Deque<U>([], this._bucketSize);
+    const mapped = new Deque<U>([], {
+      bucketSize: this._bucketSize
+    });
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const item = this._at(i);
@@ -431,7 +462,9 @@ class Deque<T> extends SequentialContainer<T> {
   }
   slice(start = 0, end = this._length) {
     const length = this._length;
-    const sliceDeque = new Deque<T>([], this._bucketSize);
+    const sliceDeque = new Deque<T>([], {
+      bucketSize: this._bucketSize
+    });
     if (start >= length) {
       return sliceDeque;
     } else if (start < 0) {
@@ -459,7 +492,9 @@ class Deque<T> extends SequentialContainer<T> {
     const length = this._length;
     if (typeof start !== 'number' || length <= 0) {
       this.push(...items);
-      return new Deque<T>([], this._bucketSize);
+      return new Deque<T>([], {
+        bucketSize: this._bucketSize
+      });
     }
     if (start < 0) {
       start += length;
@@ -478,7 +513,9 @@ class Deque<T> extends SequentialContainer<T> {
     } else if (deleteCount < 0) {
       deleteCount = 0;
     }
-    const deleteDeque = new Deque<T>([], this._bucketSize);
+    const deleteDeque = new Deque<T>([], {
+      bucketSize: this._bucketSize
+    });
     if (start === 0) {
       while (deleteCount--) deleteDeque._push(this.shift()!);
       this.unshift(...items);

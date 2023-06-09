@@ -186,7 +186,9 @@ describe('OrderedMap test', () => {
   });
 
   it('OrderedMap iterator index function test', () => {
-    const mp = new OrderedMap<number, number>(undefined, undefined, true);
+    const mp = new OrderedMap<number, number>([], {
+      enableIndex: true
+    });
     const v = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * 10000000;

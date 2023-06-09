@@ -10,11 +10,12 @@ export class TreeNode<K, V> {
   _left?: TreeNode<K, V>;
   _right?: TreeNode<K, V>;
   _parent?: TreeNode<K, V>;
-  constructor(
+  constructor(props: {
     key?: K,
     value?: V,
-    color: TreeNodeColor = TreeNodeColor.RED
-  ) {
+    color?: TreeNodeColor,
+  } = {}) {
+    const { key, value, color = TreeNodeColor.RED } = props;
     this._key = key;
     this._value = value;
     this._color = color;

@@ -6,7 +6,10 @@ function testPriorityQueue(arr: number[], testNum: number) {
   const reportList: testReportFormat = [];
 
   startTime = Date.now();
-  const myPriority = new PriorityQueue(arr, (x: number, y: number) => y - x, false);
+  const myPriority = new PriorityQueue(arr, {
+    cmp: (x: number, y: number) => y - x,
+    copy: false
+  });
   endTime = Date.now();
   reportList.push({
     testFunc: 'constructor',

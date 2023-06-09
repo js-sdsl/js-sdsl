@@ -5,14 +5,14 @@ import { throwIteratorAccessError } from '@/utils/throwError';
 
 class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
   readonly container: HashMap<K, V>;
-  constructor(
+  constructor(props: {
     node: HashLinkNode<K, V>,
     header: HashLinkNode<K, V>,
     container: HashMap<K, V>,
-    iteratorType?: IteratorType
-  ) {
-    super(node, header, iteratorType);
-    this.container = container;
+    type?: IteratorType
+  }) {
+    super(props);
+    this.container = props.container;
   }
   get pointer() {
     if (this._node === this._header) {
@@ -34,7 +34,12 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
     });
   }
   copy() {
-    return new HashMapIterator<K, V>(this._node, this._header, this.container, this.iteratorType);
+    return new HashMapIterator<K, V>({
+      node: this._node,
+      header: this._header,
+      container: this.container,
+      type: this.type
+    });
   }
   // @ts-ignore
   equals(iter: HashMapIterator<K, V>): boolean;
@@ -51,16 +56,37 @@ class HashMap<K, V> extends HashContainer<K, V> {
     });
   }
   begin() {
-    return new HashMapIterator<K, V>(this._head, this._header, this);
+    /**
+     * this._head, this._header, this
+     */
+    return new HashMapIterator<K, V>({
+      node: this._head,
+      header: this._header,
+      container: this
+    });
   }
   end() {
-    return new HashMapIterator<K, V>(this._header, this._header, this);
+    return new HashMapIterator<K, V>({
+      node: this._header,
+      header: this._header,
+      container: this
+    });
   }
   rBegin() {
-    return new HashMapIterator<K, V>(this._tail, this._header, this, IteratorType.REVERSE);
+    return new HashMapIterator<K, V>({
+      node: this._tail,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   rEnd() {
-    return new HashMapIterator<K, V>(this._header, this._header, this, IteratorType.REVERSE);
+    return new HashMapIterator<K, V>({
+      node: this._header,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   front() {
     if (this._length === 0) return;
@@ -117,7 +143,11 @@ class HashMap<K, V> extends HashContainer<K, V> {
    */
   find(key: K, isObject?: boolean) {
     const node = this._findElementNode(key, isObject);
-    return new HashMapIterator<K, V>(node, this._header, this);
+    return new HashMapIterator<K, V>({
+      node,
+      header: this._header,
+      container: this
+    });
   }
   forEach(callback: CallbackFn<[K, V], this, void>) {
     let index = 0;

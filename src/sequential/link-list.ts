@@ -27,17 +27,18 @@ class LinkListIterator<T> extends ContainerIterator<T> {
   /**
    * @internal
    */
-  constructor(
-    _node: LinkNode<T>,
-    _header: LinkNode<T>,
+  constructor(props: {
+    node: LinkNode<T>,
+    header: LinkNode<T>,
     container: LinkList<T>,
-    iteratorType?: IteratorType
-  ) {
-    super(iteratorType);
-    this._node = _node;
-    this._header = _header;
+    type?: IteratorType
+  }) {
+    super(props);
+    const { node, header, container } = props;
+    this._node = node;
+    this._header = header;
     this.container = container;
-    if (this.iteratorType === IteratorType.NORMAL) {
+    if (this.type === IteratorType.NORMAL) {
       this.pre = function () {
         if (this._node._pre === this._header) {
           throwIteratorAccessError();
@@ -82,7 +83,12 @@ class LinkListIterator<T> extends ContainerIterator<T> {
     this._node._value = newValue;
   }
   copy() {
-    return new LinkListIterator<T>(this._node, this._header, this.container, this.iteratorType);
+    return new LinkListIterator<T>({
+      node: this._node,
+      header: this._header,
+      container: this.container,
+      type: this.type
+    });
   }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
@@ -156,16 +162,34 @@ class LinkList<T> extends SequentialContainer<T> {
     this._head = this._tail = this._header._pre = this._header._next = this._header;
   }
   begin() {
-    return new LinkListIterator<T>(this._head, this._header, this);
+    return new LinkListIterator<T>({
+      node: this._head,
+      header: this._header,
+      container: this
+    });
   }
   end() {
-    return new LinkListIterator<T>(this._header, this._header, this);
+    return new LinkListIterator<T>({
+      node: this._header,
+      header: this._header,
+      container: this
+    });
   }
   rBegin() {
-    return new LinkListIterator<T>(this._tail, this._header, this, IteratorType.REVERSE);
+    return new LinkListIterator<T>({
+      node: this._tail,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   rEnd() {
-    return new LinkListIterator<T>(this._header, this._header, this, IteratorType.REVERSE);
+    return new LinkListIterator<T>({
+      node: this._header,
+      header: this._header,
+      container: this,
+      type: IteratorType.REVERSE
+    });
   }
   front(): T | undefined {
     return this._head._value;
@@ -233,7 +257,11 @@ class LinkList<T> extends SequentialContainer<T> {
     let curNode = this._head;
     while (curNode !== this._header) {
       if (cmp(curNode._value, item) === 0) {
-        return new LinkListIterator<T>(curNode, this._header, this);
+        return new LinkListIterator<T>({
+          node: curNode,
+          header: this._header,
+          container: this
+        });
       }
       curNode = curNode._next;
     }

@@ -72,7 +72,7 @@ describe('Deque test', () => {
 
   it('Deque at function test', () => {
     const bucketSize = 1 << 12;
-    const q = new Deque<number>([], bucketSize);
+    const q = new Deque<number>([], { bucketSize });
     q.push(1);
     expect(q.at(q.length - 1)).to.equal(1);
     const restSize = (bucketSize >> 1) + bucketSize - 2;
@@ -136,7 +136,7 @@ describe('Deque test', () => {
     };
     expect(new Deque(a).length).to.equal(a.length);
 
-    const q = new Deque<number>([], (1 << 10));
+    const q = new Deque<number>([], { bucketSize: 1 << 10 });
     const v = [];
     for (let i = 0; i < (1 << 15); ++i) {
       const random = Math.random();

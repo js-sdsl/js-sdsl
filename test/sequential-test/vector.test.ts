@@ -9,7 +9,7 @@ for (let i = 0; i < testNum; ++i) {
 
 describe('Vector test', () => {
   it('Vector test', () => {
-    const vector = new Vector([1], false);
+    const vector = new Vector([1], { copy: false });
     vector.begin().pointer = 0;
     expect(vector.find(0).pointer).to.equal(0);
     vector.erase(vector.begin());
