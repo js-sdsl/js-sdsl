@@ -483,9 +483,9 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @example
    * const st = new orderedSet([1, 2, 5]);
    * const iter = st.find(2);
-   * st.updateKeyByIterator(iter, 3); // then st will become [1, 3, 5]
+   * st.update(iter, 3); // then st will become [1, 3, 5]
    */
-  updateKeyByIterator(iter: TreeIterator<K, V>, key: K): boolean {
+  update(iter: TreeIterator<K, V>, key: K): boolean {
     const node = iter._node;
     if (node === this._header) {
       throwIteratorAccessError();

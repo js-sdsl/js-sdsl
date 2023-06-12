@@ -155,30 +155,30 @@ describe('OrderedMap test', () => {
     }).to.throw(TypeError);
   });
 
-  it('OrderedMap updateKeyByIterator function test', () => {
+  it('OrderedMap update function test', () => {
     const mp = new OrderedMap();
     mp.set(1, 1);
-    expect(mp.updateKeyByIterator(mp.begin(), 2)).to.equal(true);
+    expect(mp.update(mp.begin(), 2)).to.equal(true);
     expect(mp.front()).to.deep.equal([2, 1]);
     mp.delete(2);
     expect(mp.length).to.equal(0);
-    expect(() => mp.updateKeyByIterator(mp.begin(), 1)).to.throw(RangeError);
+    expect(() => mp.update(mp.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       mp.set(i * 2, i);
     }
-    expect(() => mp.updateKeyByIterator(mp.end(), 1)).to.throw(RangeError);
+    expect(() => mp.update(mp.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = mp.lowerBound(i * 2);
-      expect(mp.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
+      expect(mp.update(iter, i * 2 + 1)).to.equal(true);
       expect(iter.pointer[0]).to.equal(i * 2 + 1);
       expect(iter.pointer[1]).to.equal(i);
       if (i !== testNum - 1) {
-        expect(mp.updateKeyByIterator(iter, testNum * 3)).to.equal(false);
+        expect(mp.update(iter, testNum * 3)).to.equal(false);
         expect(iter.pointer[0]).to.equal(i * 2 + 1);
         expect(iter.pointer[1]).to.equal(i);
       }
       if (i !== 0) {
-        expect(mp.updateKeyByIterator(iter, -1)).to.equal(false);
+        expect(mp.update(iter, -1)).to.equal(false);
         expect(iter.pointer[0]).to.equal(i * 2 + 1);
         expect(iter.pointer[1]).to.equal(i);
       }

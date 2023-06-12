@@ -136,28 +136,28 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet updateKeyByIterator function test', () => {
+  it('OrderedSet update function test', () => {
     const st = new OrderedSet();
     st.add(1);
-    expect(st.updateKeyByIterator(st.begin(), 2)).to.equal(true);
+    expect(st.update(st.begin(), 2)).to.equal(true);
     expect(st.front()).to.equal(2);
     st.delete(2);
     expect(st.length).to.equal(0);
-    expect(() => st.updateKeyByIterator(st.begin(), 1)).to.throw(RangeError);
+    expect(() => st.update(st.begin(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       st.add(i * 2);
     }
-    expect(() => st.updateKeyByIterator(st.end(), 1)).to.throw(RangeError);
+    expect(() => st.update(st.end(), 1)).to.throw(RangeError);
     for (let i = 0; i < testNum; ++i) {
       const iter = st.lowerBound(i * 2);
-      expect(st.updateKeyByIterator(iter, i * 2 + 1)).to.equal(true);
+      expect(st.update(iter, i * 2 + 1)).to.equal(true);
       expect(iter.pointer).to.equal(i * 2 + 1);
       if (i !== testNum - 1) {
-        expect(st.updateKeyByIterator(iter, testNum * 3)).to.equal(false);
+        expect(st.update(iter, testNum * 3)).to.equal(false);
         expect(iter.pointer).to.equal(i * 2 + 1);
       }
       if (i !== 0) {
-        expect(st.updateKeyByIterator(iter, -1)).to.equal(false);
+        expect(st.update(iter, -1)).to.equal(false);
         expect(iter.pointer).to.equal(i * 2 + 1);
       }
     }
