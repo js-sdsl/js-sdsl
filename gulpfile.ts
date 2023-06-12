@@ -31,7 +31,6 @@ gulp.task(
     'dist/esm',
     {
       overrideSettings: {
-        target: 'ES5',
         module: 'ES2015',
         declaration: true
       }
