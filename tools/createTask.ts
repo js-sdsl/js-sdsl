@@ -43,7 +43,7 @@ export type IsolateBuildConfig = {
   builds: {
     name: string;
     version: string;
-    sourceRoot: string;
+    type: string;
   }[],
   sharedFiles: string | string[]
 };

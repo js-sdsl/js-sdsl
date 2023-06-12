@@ -1,10 +1,7 @@
 import SequentialContainer from './base';
-import {
-  CallbackFn,
-  Entries,
-  IteratorType
-} from '@/base';
-import { RandomIterator } from '@/sequential/base/random-iterator';
+import { Entries } from '@/base';
+import { ITERATOR_TYPE } from '@/base/iterator';
+import { RandomIterator } from '@/sequential/random-iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 
 class VectorIterator<T> extends RandomIterator<T> {
@@ -12,7 +9,7 @@ class VectorIterator<T> extends RandomIterator<T> {
   constructor(props: {
     node: number,
     container: Vector<T>,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this.container = props.container;
@@ -76,14 +73,14 @@ class Vector<T> extends SequentialContainer<T> {
     return new VectorIterator<T>({
       node: this._length - 1,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
     return new VectorIterator<T>({
       node: -1,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front(): T | undefined {
@@ -158,7 +155,7 @@ class Vector<T> extends SequentialContainer<T> {
   entries() {
     return this._vector.entries();
   }
-  every(callback: CallbackFn<T, this, unknown>) {
+  every(callback: (value: T, index: number, container: this) => unknown) {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const flag = callback(this._vector[i], i, this);
@@ -166,7 +163,7 @@ class Vector<T> extends SequentialContainer<T> {
     }
     return true;
   }
-  filter(callback: CallbackFn<T, this, unknown>) {
+  filter(callback: (value: T, index: number, container: this) => unknown) {
     const length = this._length;
     const newVector = new Vector<T>();
     for (let i = 0; i < length; ++i) {
@@ -176,7 +173,7 @@ class Vector<T> extends SequentialContainer<T> {
     }
     return newVector;
   }
-  map<U>(callback: CallbackFn<T, this, U>) {
+  map<U>(callback: (value: T, index: number, container: this) => U) {
     const length = this._length;
     const newVector = new Vector<U>();
     for (let i = 0; i < length; ++i) {
@@ -185,7 +182,7 @@ class Vector<T> extends SequentialContainer<T> {
     }
     return newVector;
   }
-  some(callback: CallbackFn<T, this, unknown>) {
+  some(callback: (value: T, index: number, container: this) => unknown) {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const flag = callback(this._vector[i], i, this);
@@ -199,7 +196,7 @@ class Vector<T> extends SequentialContainer<T> {
   values() {
     return this._vector.values();
   }
-  forEach(callback: CallbackFn<T, this, void>) {
+  forEach(callback: (value: T, index: number, container: this) => void) {
     const length = this.length;
     for (let i = 0; i < length; ++i) {
       callback(this._vector[i], i, this);

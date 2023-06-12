@@ -1,10 +1,6 @@
 import SequentialContainer from './base';
-import {
-  CallbackFn,
-  ContainerIterator,
-  Entries,
-  IteratorType
-} from '@/base';
+import { Entries } from '@/base';
+import { Iterator, ITERATOR_TYPE } from '@/base/iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
@@ -14,7 +10,7 @@ type LinkNode<T> = {
   _next: LinkNode<T>;
 }
 
-class LinkListIterator<T> extends ContainerIterator<T> {
+class LinkListIterator<T> extends Iterator<T> {
   readonly container: LinkList<T>;
   /**
    * @internal
@@ -31,14 +27,14 @@ class LinkListIterator<T> extends ContainerIterator<T> {
     node: LinkNode<T>,
     header: LinkNode<T>,
     container: LinkList<T>,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     const { node, header, container } = props;
     this._node = node;
     this._header = header;
     this.container = container;
-    if (this.type === IteratorType.NORMAL) {
+    if (this.type === ITERATOR_TYPE.NORMAL) {
       this.pre = function () {
         if (this._node._pre === this._header) {
           throwIteratorAccessError();
@@ -180,7 +176,7 @@ class LinkList<T> extends SequentialContainer<T> {
       node: this._tail,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
@@ -188,7 +184,7 @@ class LinkList<T> extends SequentialContainer<T> {
       node: this._header,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front(): T | undefined {
@@ -352,7 +348,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return this._length;
   }
-  forEach(callback: CallbackFn<T, this, void>) {
+  forEach(callback: (value: T, index: number, container: this) => void) {
     let curNode = this._head;
     let index = 0;
     while (curNode !== this._header) {
@@ -394,7 +390,7 @@ class LinkList<T> extends SequentialContainer<T> {
       }
     };
   }
-  every(callback: CallbackFn<T, this, unknown>) {
+  every(callback: (value: T, index: number, container: this) => unknown) {
     let index = 0;
     for (let node = this._head; node !== this._header; node = node._next) {
       const flag = callback(node._value, index, this);
@@ -403,7 +399,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return true;
   }
-  filter(callback: CallbackFn<T, this, unknown>) {
+  filter(callback: (value: T, index: number, container: this) => unknown) {
     let index = 0;
     const newLinkList = new LinkList<T>();
     for (let node = this._head; node !== this._header; node = node._next) {
@@ -414,7 +410,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return newLinkList;
   }
-  map<U>(callback: CallbackFn<T, this, U>) {
+  map<U>(callback: (value: T, index: number, container: this) => U) {
     let index = 0;
     const newLinkList = new LinkList<U>();
     for (let node = this._head; node !== this._header; node = node._next) {
@@ -450,7 +446,7 @@ class LinkList<T> extends SequentialContainer<T> {
     }
     return sliceList;
   }
-  some(callback: CallbackFn<T, this, unknown>) {
+  some(callback: (value: T, index: number, container: this) => unknown) {
     let index = 0;
     for (let node = this._head; node !== this._header; node = node._next) {
       const flag = callback(node._value, index, this);

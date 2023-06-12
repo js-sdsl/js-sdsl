@@ -1,5 +1,7 @@
-import { CallbackFn, Entries, IteratorType } from '@/base';
-import { HashContainer, HashContainerIterator, HashLinkNode } from '@/hash/base';
+import { Entries } from '@/base';
+import { ITERATOR_TYPE } from '@/base/iterator';
+import { HashContainer, HashLinkNode } from '@/hash/base';
+import { HashContainerIterator } from '@/hash/hash-iterator';
 import checkObject from '@/utils/checkObject';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
@@ -9,7 +11,7 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
     node: HashLinkNode<K, V>,
     header: HashLinkNode<K, V>,
     container: HashMap<K, V>,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this.container = props.container;
@@ -77,7 +79,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
       node: this._tail,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
@@ -85,7 +87,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
       node: this._header,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front() {
@@ -149,7 +151,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
       container: this
     });
   }
-  forEach(callback: CallbackFn<[K, V], this, void>) {
+  forEach(callback: (value: [K, V], index: number, container: this) => void) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -188,7 +190,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
       }
     };
   }
-  every(callback: CallbackFn<[K, V], this, unknown>) {
+  every(callback: (value: [K, V], index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -198,7 +200,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     return true;
   }
-  filter(callback: CallbackFn<[K, V], this, unknown>) {
+  filter(callback: (value: [K, V], index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     const filtered: [K, V][] = [];
@@ -210,7 +212,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     }
     return new HashMap(filtered);
   }
-  some(callback: CallbackFn<[K, V], this, unknown>) {
+  some(callback: (value: [K, V], index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {

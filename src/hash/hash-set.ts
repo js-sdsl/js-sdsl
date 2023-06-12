@@ -1,14 +1,16 @@
-import { CallbackFn, Entries, IteratorType } from '@/base';
-import { HashContainer, HashContainerIterator, HashLinkNode } from '@/hash/base';
+import { Entries } from '@/base';
+import { ITERATOR_TYPE } from '@/base/iterator';
+import { HashContainer, HashLinkNode } from '@/hash/base';
+import { HashContainerIterator } from '@/hash/hash-iterator';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class HashSetIterator<K> extends HashContainerIterator<K, undefined> {
   readonly container: HashSet<K>;
   constructor(props: {
-      node: HashLinkNode<K, undefined>,
-      header: HashLinkNode<K, undefined>,
-      container: HashSet<K>,
-      type?: IteratorType
+    node: HashLinkNode<K, undefined>,
+    header: HashLinkNode<K, undefined>,
+    container: HashSet<K>,
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this.container = props.container;
@@ -60,7 +62,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
       node: this._tail,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
@@ -68,7 +70,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
       node: this._header,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front(): K | undefined {
@@ -112,7 +114,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
       container: this
     });
   }
-  forEach(callback: CallbackFn<K, this, void>) {
+  forEach(callback: (value: K, index: number, container: this) => void) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -151,7 +153,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
       }
     };
   }
-  every(callback: CallbackFn<K, this, unknown>) {
+  every(callback: (value: K, index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {
@@ -161,7 +163,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     }
     return true;
   }
-  filter(callback: CallbackFn<K, this, unknown>) {
+  filter(callback: (value: K, index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     const filtered: K[] = [];
@@ -173,7 +175,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
     }
     return new HashSet(filtered);
   }
-  some(callback: CallbackFn<K, this, unknown>) {
+  some(callback: (value: K, index: number, container: this) => unknown) {
     let index = 0;
     let node = this._head;
     while (node !== this._header) {

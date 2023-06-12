@@ -20,8 +20,8 @@ class PriorityQueue<T> extends Base {
    * new PriorityQueue([1, 2, 3], (x, y) => x - y, false);
    */
   constructor(entries: Entries<T> = [], options: {
-      cmp?: CompareFn<T>
-      copy?: boolean
+    cmp?: CompareFn<T>
+    copy?: boolean
   } = {}) {
     super();
     const { cmp = compareFromL2S, copy = true } = options;

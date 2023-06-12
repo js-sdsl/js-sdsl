@@ -3,52 +3,52 @@
     {
       "name": "stack",
       "version": "4.4.0",
-      "sourceRoot": "src/other/stack.ts"
+      "type": "other"
     },
     {
       "name": "queue",
       "version": "4.4.0",
-      "sourceRoot": "src/other/queue.ts"
+      "type": "other"
     },
     {
       "name": "priority-queue",
       "version": "4.4.0",
-      "sourceRoot": "src/other/priority-queue.ts"
+      "type": "other"
     },
     {
       "name": "vector",
       "version": "4.4.0",
-      "sourceRoot": "src/sequential/vector.ts"
+      "type": "sequential"
     },
     {
       "name": "link-list",
       "version": "4.4.0",
-      "sourceRoot": "src/sequential/link-list.ts"
+      "type": "sequential"
     },
     {
       "name": "deque",
       "version": "4.4.0",
-      "sourceRoot": "src/sequential/deque.ts"
+      "type": "sequential"
     },
     {
       "name": "ordered-set",
       "version": "4.4.1",
-      "sourceRoot": "src/tree/ordered-set.ts"
+      "type": "tree"
     },
     {
       "name": "ordered-map",
       "version": "4.4.1",
-      "sourceRoot": "src/tree/ordered-map.ts"
+      "type": "tree"
     },
     {
       "name": "hash-set",
       "version": "4.4.0",
-      "sourceRoot": "src/hash/hash-set.ts"
+      "type": "hash"
     },
     {
       "name": "hash-map",
       "version": "4.4.0",
-      "sourceRoot": "src/hash/hash-map.ts"
+      "type": "hash"
     }
   ],
   "sharedFiles": [

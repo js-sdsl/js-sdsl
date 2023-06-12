@@ -1,4 +1,5 @@
-import { CallbackFn, Container, ContainerIterator, IteratorType } from '@/base';
+import { Container } from '@/base';
+import { HashContainerIterator } from '@/hash/hash-iterator';
 import checkObject from '@/utils/checkObject';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
@@ -7,66 +8,6 @@ export type HashLinkNode<K, V> = {
   _value: V,
   _pre: HashLinkNode<K, V>,
   _next: HashLinkNode<K, V>
-}
-
-export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | [K, V]> {
-  abstract readonly container: HashContainer<K, V>;
-  /**
-   * @internal
-   */
-  _node: HashLinkNode<K, V>;
-  /**
-   * @internal
-   */
-  protected readonly _header: HashLinkNode<K, V>;
-  /**
-   * @internal
-   */
-  protected constructor(props: {
-      node: HashLinkNode<K, V>,
-      header: HashLinkNode<K, V>,
-      type?: IteratorType
-  }) {
-    super(props);
-    const { node, header } = props;
-    this._node = node;
-    this._header = header;
-    if (this.type === IteratorType.NORMAL) {
-      this.pre = function () {
-        if (this._node._pre === this._header) {
-          throwIteratorAccessError();
-        }
-        this._node = this._node._pre;
-        return this;
-      };
-      this.next = function () {
-        if (this._node === this._header) {
-          throwIteratorAccessError();
-        }
-        this._node = this._node._next;
-        return this;
-      };
-    } else {
-      this.pre = function () {
-        if (this._node._next === this._header) {
-          throwIteratorAccessError();
-        }
-        this._node = this._node._next;
-        return this;
-      };
-      this.next = function () {
-        if (this._node === this._header) {
-          throwIteratorAccessError();
-        }
-        this._node = this._node._pre;
-        return this;
-      };
-    }
-  }
-  // @ts-ignore
-  pre(): this;
-  // @ts-ignore
-  next(): this;
 }
 
 export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
@@ -244,5 +185,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       }
     };
   }
-  abstract filter(callback: CallbackFn<K | [K, V], this, unknown>): HashContainer<K, V>;
+  abstract filter(
+    callback: (value: K | [K, V], index: number, container: this) => unknown
+  ): HashContainer<K, V>;
 }

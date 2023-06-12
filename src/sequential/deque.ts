@@ -1,6 +1,7 @@
 import SequentialContainer from './base';
-import { IteratorType, Entries, CallbackFn } from '@/base';
-import { RandomIterator } from '@/sequential/base/random-iterator';
+import { Entries } from '@/base';
+import { ITERATOR_TYPE } from '@/base/iterator';
+import { RandomIterator } from '@/sequential/random-iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import $getSize from '@/utils/getSize.macro';
 import * as Math from '@/utils/math';
@@ -15,7 +16,7 @@ class DequeIterator<T> extends RandomIterator<T> {
   constructor(props: {
     node: number,
     container: Deque<T>,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this.container = props.container;
@@ -191,14 +192,14 @@ class Deque<T> extends SequentialContainer<T> {
     return new DequeIterator<T>({
       node: this._length - 1,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
     return new DequeIterator<T>({
       node: -1,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front(): T | undefined {
@@ -392,7 +393,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._map = newMap;
     this._positionCache = {};
   }
-  forEach(callback: CallbackFn<T, this, void>) {
+  forEach(callback: (value: T, index: number, container: this) => void) {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       callback(this._at(i), i, this);
@@ -428,7 +429,7 @@ class Deque<T> extends SequentialContainer<T> {
       }
     };
   }
-  every(callback: CallbackFn<T, this, unknown>): boolean {
+  every(callback: (value: T, index: number, container: this) => unknown): boolean {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const flag = callback(this._at(i), i, this);
@@ -436,7 +437,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     return true;
   }
-  filter(callback: CallbackFn<T, this, unknown>) {
+  filter(callback: (value: T, index: number, container: this) => unknown) {
     const filtered = new Deque<T>([], {
       bucketSize: this._bucketSize
     });
@@ -448,7 +449,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     return filtered;
   }
-  map<U>(callback: CallbackFn<T, this, U>) {
+  map<U>(callback: (value: T, index: number, container: this) => U) {
     const mapped = new Deque<U>([], {
       bucketSize: this._bucketSize
     });
@@ -480,7 +481,7 @@ class Deque<T> extends SequentialContainer<T> {
     }
     return sliceDeque;
   }
-  some(callback: CallbackFn<T, this, unknown>): boolean {
+  some(callback: (value: T, index: number, container: this) => unknown): boolean {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
       const flag = callback(this._at(i), i, this);

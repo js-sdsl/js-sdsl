@@ -1,17 +1,18 @@
 import TreeContainer from './base';
-import { CallbackFn, Entries, IteratorType } from '@/base';
-import TreeIterator from '@/tree/base/tree-iterator';
-import { TreeNode } from '@/tree/base/tree-node';
+import { Entries } from '@/base';
+import { ITERATOR_TYPE } from '@/base/iterator';
+import TreeIterator from '@/tree/tree-iterator';
+import { TreeNodeEnableIndex } from '@/tree/tree-node';
 import { CompareFn } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
   container: OrderedMap<K, V>;
   constructor(props: {
-    node: TreeNode<K, V>,
-    header: TreeNode<K, V>,
+    node: TreeNodeEnableIndex<K, V>,
+    header: TreeNodeEnableIndex<K, V>,
     container: OrderedMap<K, V>,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this.container = props.container;
@@ -89,7 +90,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       node: this._header._right || this._header,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   rEnd() {
@@ -97,7 +98,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       node: this._header,
       header: this._header,
       container: this,
-      type: IteratorType.REVERSE
+      type: ITERATOR_TYPE.REVERSE
     });
   }
   front() {
@@ -142,7 +143,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       container: this
     });
   }
-  forEach(callback: CallbackFn<[K, V], this, void>) {
+  forEach(callback: (value: [K, V], index: number, container: this) => void) {
     this._inOrderTraversal(function (node, index, map) {
       callback(<[K, V]>[node._key, node._value], index, map);
     });
@@ -226,12 +227,12 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       }
     };
   }
-  every(callback: CallbackFn<[K, V], this, unknown>) {
+  every(callback: (value: [K, V], index: number, container: this) => unknown) {
     return !this._inOrderTraversal(function (node, index, map) {
       return !callback([node._key!, node._value!], index, map);
     });
   }
-  filter(callback: CallbackFn<[K, V], this, unknown>) {
+  filter(callback: (value: [K, V], index: number, container: this) => unknown) {
     const items: [K, V][] = [];
     this._inOrderTraversal(function (node, index, map) {
       const item = <[K, V]>[node._key, node._value];
@@ -244,7 +245,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
       enableIndex: this.enableIndex
     });
   }
-  some(callback: CallbackFn<[K, V], this, unknown>) {
+  some(callback: (value: [K, V], index: number, container: this) => unknown) {
     return this._inOrderTraversal(function (node, index, map) {
       return callback([node._key!, node._value!], index, map);
     });

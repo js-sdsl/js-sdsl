@@ -1,4 +1,5 @@
-import { CallbackFn, Container, ContainerIterator } from '@/base';
+import { Container } from '@/base';
+import { Iterator } from '@/base/iterator';
 import { CompareFn } from '@/utils/compareFn';
 
 abstract class SequentialContainer<T> extends Container<T> {
@@ -44,7 +45,9 @@ abstract class SequentialContainer<T> extends Container<T> {
    * container.unique(); // [1, 3, 2, 5, 2]
    */
   abstract unique(cmp?: CompareFn<T>): number;
-  abstract map<U>(callback: CallbackFn<T, this, U>, cmp?: CompareFn<U>): SequentialContainer<U>;
+  abstract map<U>(
+    callback: (value: T, index: number, container: this) => U
+  ): SequentialContainer<U>;
   abstract slice(start?: number, end?: number): SequentialContainer<T>;
   abstract splice(start: number, deleteCount?: number): SequentialContainer<T>;
   abstract splice(start: number, deleteCount?: number, ...items: T[]): SequentialContainer<T>;
@@ -60,8 +63,10 @@ abstract class SequentialContainer<T> extends Container<T> {
    * container.sort((x, y) => x - y); // [1, 3, 10]
    */
   abstract sort(cmp?: CompareFn<T>): this;
-  abstract filter(callback: CallbackFn<T, this, unknown>): SequentialContainer<T>;
-  abstract find(item: T, cmp?: CompareFn<T>): ContainerIterator<T>;
+  abstract filter(
+    callback: (value: T, index: number, container: this) => unknown
+  ): SequentialContainer<T>;
+  abstract find(item: T, cmp?: CompareFn<T>): Iterator<T>;
 }
 
 export default SequentialContainer;

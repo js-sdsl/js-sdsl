@@ -1,10 +1,10 @@
-export const enum TreeNodeColor {
+export const enum TREE_NODE_COLOR {
   RED = 1,
   BLACK = 0
 }
 
 export class TreeNode<K, V> {
-  _color: TreeNodeColor;
+  _color: TREE_NODE_COLOR;
   _key?: K;
   _value?: V;
   _left?: TreeNode<K, V>;
@@ -13,9 +13,9 @@ export class TreeNode<K, V> {
   constructor(props: {
     key?: K,
     value?: V,
-    color?: TreeNodeColor,
+    color?: TREE_NODE_COLOR,
   } = {}) {
-    const { key, value, color = TreeNodeColor.RED } = props;
+    const { key, value, color = TREE_NODE_COLOR.RED } = props;
     this._key = key;
     this._value = value;
     this._color = color;
@@ -27,7 +27,7 @@ export class TreeNode<K, V> {
   _pre() {
     let preNode: TreeNode<K, V> = this;
     const isRootOrHeader = preNode._parent!._parent === preNode;
-    if (isRootOrHeader && preNode._color === TreeNodeColor.RED) {
+    if (isRootOrHeader && preNode._color === TREE_NODE_COLOR.RED) {
       preNode = preNode._right!;
     } else if (preNode._left) {
       preNode = preNode._left;
@@ -121,6 +121,9 @@ export class TreeNode<K, V> {
 
 export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   _subTreeSize = 1;
+  declare _left?: TreeNodeEnableIndex<K, V>;
+  declare _right?: TreeNodeEnableIndex<K, V>;
+  declare _parent?: TreeNodeEnableIndex<K, V>;
   /**
    * @description Rotate left and do recount.
    * @returns TreeNode about moved to original position after rotation.
@@ -144,10 +147,14 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
   _recount() {
     this._subTreeSize = 1;
     if (this._left) {
-      this._subTreeSize += (this._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
+      this._subTreeSize += this._left._subTreeSize;
     }
     if (this._right) {
-      this._subTreeSize += (this._right as TreeNodeEnableIndex<K, V>)._subTreeSize;
+      this._subTreeSize += this._right._subTreeSize;
     }
   }
+  // @ts-ignore
+  _pre(): TreeNodeEnableIndex<K, V>;
+  // @ts-ignore
+  _next(): TreeNodeEnableIndex<K, V>;
 }

@@ -1,8 +1,8 @@
-import { ContainerIterator, IteratorType } from '@/base';
-import SequentialContainer from '@/sequential/base/index';
+import { Iterator, ITERATOR_TYPE } from '@/base/iterator';
+import SequentialContainer from '@/sequential/base';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
-export abstract class RandomIterator<T> extends ContainerIterator<T> {
+export abstract class RandomIterator<T> extends Iterator<T> {
   abstract readonly container: SequentialContainer<T>;
   /**
    * @internal
@@ -13,11 +13,11 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
    */
   protected constructor(props: {
     node: number,
-    type?: IteratorType
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     this._node = props.node;
-    if (this.type === IteratorType.NORMAL) {
+    if (this.type === ITERATOR_TYPE.NORMAL) {
       this.pre = function () {
         if (this._node === 0) {
           throwIteratorAccessError();

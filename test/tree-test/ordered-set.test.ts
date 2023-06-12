@@ -200,7 +200,7 @@ describe('OrderedSet test', () => {
   it('OrderedSet insert by hint function test', () => {
     const st = new OrderedSet<number>();
     const v = new Vector<number>();
-    expect(st.begin().index).to.equal(0);
+    expect(() => st.begin().index).to.throw(TypeError);
     for (let i = 0; i < testNum; ++i) {
       st.add(i * 3);
       v.push(i * 3);

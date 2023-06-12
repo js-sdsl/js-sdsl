@@ -1,32 +1,31 @@
-import { TreeNode } from './tree-node';
 import type { TreeNodeEnableIndex } from './tree-node';
-import { ContainerIterator, IteratorType } from '@/base';
-import TreeContainer from '@/tree/base/index';
+import { Iterator, ITERATOR_TYPE } from '@/base/iterator';
+import TreeContainer from '@/tree/base';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
-abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
+abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
   abstract readonly container: TreeContainer<K, V>;
   /**
    * @internal
    */
-  _node: TreeNode<K, V>;
+  _node: TreeNodeEnableIndex<K, V>;
   /**
    * @internal
    */
-  protected _header: TreeNode<K, V>;
+  protected _header: TreeNodeEnableIndex<K, V>;
   /**
    * @internal
    */
   protected constructor(props: {
-    node: TreeNode<K, V>,
-    header: TreeNode<K, V>,
-    type?: IteratorType
+    node: TreeNodeEnableIndex<K, V>,
+    header: TreeNodeEnableIndex<K, V>,
+    type?: ITERATOR_TYPE
   }) {
     super(props);
     const { node, header } = props;
     this._node = node;
     this._header = header;
-    if (this.type === IteratorType.NORMAL) {
+    if (this.type === ITERATOR_TYPE.NORMAL) {
       this.pre = function () {
         if (this._node === this._header._left) {
           throwIteratorAccessError();
@@ -70,27 +69,30 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
    * console.log(st.begin().next().index);  // 1
    */
   get index() {
-    let _node = this._node as TreeNodeEnableIndex<K, V>;
-    const root = this._header._parent as TreeNodeEnableIndex<K, V>;
-    if (_node === this._header) {
+    let node = this._node;
+    if (node._subTreeSize === undefined) {
+      throw new TypeError('Please set `enableIndex` to `true` in the constructor!');
+    }
+    const root = this._header._parent;
+    if (node === this._header) {
       if (root) {
         return root._subTreeSize - 1;
       }
       return 0;
     }
     let index = 0;
-    if (_node._left) {
-      index += (_node._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
+    if (node._left) {
+      index += node._left._subTreeSize;
     }
-    while (_node !== root) {
-      const _parent = _node._parent as TreeNodeEnableIndex<K, V>;
-      if (_node === _parent._right) {
+    while (node !== root) {
+      const _parent = node._parent!;
+      if (node === _parent._right) {
         index += 1;
         if (_parent._left) {
-          index += (_parent._left as TreeNodeEnableIndex<K, V>)._subTreeSize;
+          index += _parent._left._subTreeSize;
         }
       }
-      _node = _parent;
+      node = _parent;
     }
     return index;
   }

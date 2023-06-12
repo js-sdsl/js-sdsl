@@ -37,7 +37,6 @@ module.exports = function (config: Config) {
     // @ts-ignore
     karmaTypescriptConfig: {
       compilerOptions: {
-        target: 'ES5',
         module: 'commonjs'
       },
       tsconfig: 'tsconfig.json'
