@@ -65,7 +65,7 @@ class Deque<T> extends SequentialContainer<T> {
    * @description Please clear the cache when `first|bucketSize|bucketNum` changed.
    * @internal
    */
-  private _positionCache: Record<number, Position | undefined> = {};
+  // private _positionCache: Record<number, Position | undefined> = {};
   constructor(entries: Entries<T> = [], options: {
       bucketSize?: number
   } = {}) {
@@ -89,7 +89,7 @@ class Deque<T> extends SequentialContainer<T> {
     entries.forEach(function (item) {
       self._push(item);
     });
-    this._positionCache = {};
+    // this._positionCache = {};
   }
   /**
    * @description Growth the Deque.
@@ -114,7 +114,7 @@ class Deque<T> extends SequentialContainer<T> {
       newMap[newMap.length] = new Array(this._bucketSize);
     }
     this._map = newMap;
-    this._positionCache = {};
+    // this._positionCache = {};
     this._bucketNum = newMap.length;
   }
   private _getPrevPosition(position: Position): Position {
@@ -149,32 +149,41 @@ class Deque<T> extends SequentialContainer<T> {
    * @internal
    */
   _calcPosition(index: number) {
-    const cache = this._positionCache[index];
-    if (cache) {
-      return cache;
-    } else if (this._positionCache[index - 1]) {
-      this._positionCache[index] = this._getNextPosition(this._positionCache[index - 1]!);
-    } else if (this._positionCache[index + 1]) {
-      this._positionCache[index] = this._getPrevPosition(this._positionCache[index + 1]!);
-    } else {
-      let x, y;
-      const realIndex = this._first.y + index + 1;
-      x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
-      x %= this._bucketNum;
-      y = realIndex % this._bucketSize - 1;
-      if (y < 0) {
-        y = this._bucketSize - 1;
-      }
-      this._positionCache[index] = { x, y };
+    let x, y;
+    const realIndex = this._first.y + index + 1;
+    x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
+    x %= this._bucketNum;
+    y = realIndex % this._bucketSize - 1;
+    if (y < 0) {
+      y = this._bucketSize - 1;
     }
-    return this._positionCache[index]!;
+    return { x, y };
+    // const cache = this._positionCache[index];
+    // if (cache) {
+    //   return cache;
+    // } else if (this._positionCache[index - 1]) {
+    //   this._positionCache[index] = this._getNextPosition(this._positionCache[index - 1]!);
+    // } else if (this._positionCache[index + 1]) {
+    //   this._positionCache[index] = this._getPrevPosition(this._positionCache[index + 1]!);
+    // } else {
+    //   let x, y;
+    //   const realIndex = this._first.y + index + 1;
+    //   x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
+    //   x %= this._bucketNum;
+    //   y = realIndex % this._bucketSize - 1;
+    //   if (y < 0) {
+    //     y = this._bucketSize - 1;
+    //   }
+    //   this._positionCache[index] = { x, y };
+    // }
+    // return this._positionCache[index]!;
   }
   clear() {
     this._map = [new Array(this._bucketSize)];
     this._bucketNum = 1;
     this._first.x = this._last.x = this._length = 0;
     this._first.y = this._last.y = this._bucketSize >> 1;
-    this._positionCache = {};
+    // this._positionCache = {};
   }
   begin() {
     return new DequeIterator<T>({
@@ -255,7 +264,7 @@ class Deque<T> extends SequentialContainer<T> {
       ) this._reAllocate();
     }
     this._length += 1;
-    this._positionCache = {};
+    // this._positionCache = {};
     this._map[this._first.x][this._first.y] = item;
   }
   unshift(...items: T[]) {
@@ -277,7 +286,7 @@ class Deque<T> extends SequentialContainer<T> {
       this._first = this._getNextPosition(this._first);
     }
     this._length -= 1;
-    this._positionCache = {};
+    // this._positionCache = {};
     return item;
   }
   unsafe_at(index: number) {
@@ -333,7 +342,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._last.x = this._bucketNum - firstX - 1;
     this._first.y = this._bucketSize - lastY - 1;
     this._last.y = this._bucketSize - firstY - 1;
-    this._positionCache = {};
+    // this._positionCache = {};
     return this;
   }
   unique(cmp: CompareFn<T> = compareFromS2L) {
@@ -388,7 +397,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._last.x = newMap.length - 1;
     this._bucketNum = newMap.length;
     this._map = newMap;
-    this._positionCache = {};
+    // this._positionCache = {};
   }
   forEach(callback: (value: T, index: number, container: this) => void) {
     const length = this._length;
