@@ -8,11 +8,13 @@ abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
   /**
    * @internal
    */
-  _node: TreeNodeEnableIndex<K, V>;
+  declare _node: TreeNodeEnableIndex<K, V>;
   /**
    * @internal
    */
   protected _header: TreeNodeEnableIndex<K, V>;
+  prev: () => this;
+  next: () => this;
   /**
    * @internal
    */
@@ -22,18 +24,16 @@ abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
     type?: ITERATOR_TYPE
   }) {
     super(props);
-    const { node, header } = props;
-    this._node = node;
+    const { header } = props;
     this._header = header;
     if (this.type === ITERATOR_TYPE.NORMAL) {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node === this._header._left) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre();
+        this._node = this._node._prev();
         return this;
       };
-
       this.next = function () {
         if (this._node === this._header) {
           throwIteratorAccessError();
@@ -42,19 +42,18 @@ abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
         return this;
       };
     } else {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node === this._header._right) {
           throwIteratorAccessError();
         }
         this._node = this._node._next();
         return this;
       };
-
       this.next = function () {
         if (this._node === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre();
+        this._node = this._node._prev();
         return this;
       };
     }
@@ -96,10 +95,6 @@ abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
     }
     return index;
   }
-  // @ts-ignore
-  pre(): this;
-  // @ts-ignore
-  next(): this;
 }
 
 export default TreeIterator;

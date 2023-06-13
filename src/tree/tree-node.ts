@@ -21,32 +21,32 @@ export class TreeNode<K, V> {
     this._color = color;
   }
   /**
-   * @description Get the pre node.
-   * @returns TreeNode about the pre node.
+   * @description Get the prev node.
+   * @returns TreeNode about the prev node.
    */
-  _pre() {
-    let preNode: TreeNode<K, V> = this;
-    const isRootOrHeader = preNode._parent!._parent === preNode;
-    if (isRootOrHeader && preNode._color === TREE_NODE_COLOR.RED) {
-      preNode = preNode._right!;
-    } else if (preNode._left) {
-      preNode = preNode._left;
-      while (preNode._right) {
-        preNode = preNode._right;
+  _prev() {
+    let prevNode: TreeNode<K, V> = this;
+    const isRootOrHeader = prevNode._parent!._parent === prevNode;
+    if (isRootOrHeader && prevNode._color === TREE_NODE_COLOR.RED) {
+      prevNode = prevNode._right!;
+    } else if (prevNode._left) {
+      prevNode = prevNode._left;
+      while (prevNode._right) {
+        prevNode = prevNode._right;
       }
     } else {
       // Must be root and left is null
       if (isRootOrHeader) {
-        return preNode._parent!;
+        return prevNode._parent!;
       }
-      let pre = preNode._parent!;
-      while (pre._left === preNode) {
-        preNode = pre;
-        pre = preNode._parent!;
+      let prev = prevNode._parent!;
+      while (prev._left === prevNode) {
+        prevNode = prev;
+        prev = prevNode._parent!;
       }
-      preNode = pre;
+      prevNode = prev;
     }
-    return preNode;
+    return prevNode;
   }
   /**
    * @description Get the next node.
@@ -61,13 +61,13 @@ export class TreeNode<K, V> {
       }
       return nextNode;
     } else {
-      let pre = nextNode._parent!;
-      while (pre._right === nextNode) {
-        nextNode = pre;
-        pre = nextNode._parent!;
+      let prev = nextNode._parent!;
+      while (prev._right === nextNode) {
+        nextNode = prev;
+        prev = nextNode._parent!;
       }
-      if (nextNode._right !== pre) {
-        return pre;
+      if (nextNode._right !== prev) {
+        return prev;
       } else return nextNode;
     }
   }
@@ -154,7 +154,7 @@ export class TreeNodeEnableIndex<K, V> extends TreeNode<K, V> {
     }
   }
   // @ts-ignore
-  _pre(): TreeNodeEnableIndex<K, V>;
+  _prev(): TreeNodeEnableIndex<K, V>;
   // @ts-ignore
   _next(): TreeNodeEnableIndex<K, V>;
 }

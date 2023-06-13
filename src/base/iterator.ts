@@ -16,7 +16,7 @@ export abstract class Iterator<T> {
   /**
    * @internal
    */
-  abstract _node: unknown;
+  _node: unknown;
   /**
    * @description Iterator's type.
    * @example
@@ -27,9 +27,11 @@ export abstract class Iterator<T> {
    * @internal
    */
   protected constructor(props: {
+    node: unknown,
     type?: ITERATOR_TYPE
-  } = {}) {
-    const { type = ITERATOR_TYPE.NORMAL } = props;
+  }) {
+    const { node, type = ITERATOR_TYPE.NORMAL } = props;
+    this._node = node;
     this.type = type;
   }
   /**
@@ -56,16 +58,16 @@ export abstract class Iterator<T> {
    */
   abstract set pointer(newValue: T);
   /**
-   * @description Move `this` iterator to pre.
+   * @description Move `this` iterator to prev.
    * @returns The iterator's self.
    * @example
    * const iter = container.find(1);  // container = [0, 1]
-   * const pre = iter.pre();
-   * console.log(pre === iter);  // true
-   * console.log(pre.equals(iter));  // true
-   * console.log(pre.pointer, iter.pointer); // 0, 0
+   * const prev = iter.prev();
+   * console.log(prev === iter);  // true
+   * console.log(prev.equals(iter));  // true
+   * console.log(prev.pointer, iter.pointer); // 0, 0
    */
-  abstract pre(): this;
+  abstract prev(): this;
   /**
    * @description Move `this` iterator to next.
    * @returns The iterator's self.

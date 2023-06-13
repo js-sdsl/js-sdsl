@@ -89,10 +89,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
   add(key: K, isObject?: boolean) {
     return this._set(key, undefined, isObject);
   }
-  /**
-   * @internal
-   */
-  protected _at(index: number) {
+  unsafe_at(index: number) {
     let node = this._head;
     while (index--) {
       node = node._next;

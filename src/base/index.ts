@@ -105,22 +105,23 @@ export abstract class Container<T> extends Base {
    * container.forEach((item, index) => console.log(item, index));
    */
   abstract forEach(callback: (value: T, index: number, container: this) => void): void;
-  /**
-   * @internal
-   */
-  protected abstract _at(index: number): T;
+  abstract unsafe_at(index: number): T;
   /**
    * @description Gets the value of the item at the specified position.
    * @example
    * const val = container.getElementByPos(-1); // throw a RangeError
    */
   at(index: number) {
-    if (index >= this._length) return undefined;
-    if (index < 0) index += this._length;
-    if (index < 0) {
+    const length = this._length;
+    if (index >= length) {
       return undefined;
+    } else if (index < 0) {
+      index += length;
+      if (index < 0) {
+        return undefined;
+      }
     }
-    return this._at(index);
+    return this.unsafe_at(index);
   }
   /**
    * @description Removes item by iterator and move `iter` to next.

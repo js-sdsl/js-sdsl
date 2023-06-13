@@ -6,7 +6,7 @@ import { throwIteratorAccessError } from '@/utils/throwError';
 
 type LinkNode<T> = {
   _value: T;
-  _pre: LinkNode<T>;
+  _prev: LinkNode<T>;
   _next: LinkNode<T>;
 }
 
@@ -20,6 +20,8 @@ class LinkListIterator<T> extends Iterator<T> {
    * @internal
    */
   private readonly _header: LinkNode<T>;
+  prev: () => this;
+  next: () => this;
   /**
    * @internal
    */
@@ -35,11 +37,11 @@ class LinkListIterator<T> extends Iterator<T> {
     this._header = header;
     this.container = container;
     if (this.type === ITERATOR_TYPE.NORMAL) {
-      this.pre = function () {
-        if (this._node._pre === this._header) {
+      this.prev = function () {
+        if (this._node._prev === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre;
+        this._node = this._node._prev;
         return this;
       };
       this.next = function () {
@@ -50,7 +52,7 @@ class LinkListIterator<T> extends Iterator<T> {
         return this;
       };
     } else {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node._next === this._header) {
           throwIteratorAccessError();
         }
@@ -61,7 +63,7 @@ class LinkListIterator<T> extends Iterator<T> {
         if (this._node === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre;
+        this._node = this._node._prev;
         return this;
       };
     }
@@ -88,10 +90,6 @@ class LinkListIterator<T> extends Iterator<T> {
   }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
-  // @ts-ignore
-  pre(): this;
-  // @ts-ignore
-  next(): this;
 }
 
 export type { LinkListIterator };
@@ -112,7 +110,7 @@ class LinkList<T> extends SequentialContainer<T> {
   constructor(entries: Entries<T> = []) {
     super();
     this._header = <LinkNode<T>>{};
-    this._head = this._tail = this._header._pre = this._header._next = this._header;
+    this._head = this._tail = this._header._prev = this._header._next = this._header;
     const self = this;
     entries.forEach(function (el) {
       self.push(el);
@@ -122,30 +120,30 @@ class LinkList<T> extends SequentialContainer<T> {
    * @internal
    */
   private _eraseNode(node: LinkNode<T>) {
-    const { _pre, _next } = node;
-    _pre._next = _next;
-    _next._pre = _pre;
+    const { _prev, _next } = node;
+    _prev._next = _next;
+    _next._prev = _prev;
     if (node === this._head) {
       this._head = _next;
     }
     if (node === this._tail) {
-      this._tail = _pre;
+      this._tail = _prev;
     }
     this._length -= 1;
   }
   /**
    * @internal
    */
-  private _insertNode(item: T, pre: LinkNode<T>) {
-    const next = pre._next;
+  private _insertNode(item: T, prev: LinkNode<T>) {
+    const next = prev._next;
     const node = {
       _value: item,
-      _pre: pre,
+      _prev: prev,
       _next: next
     };
-    pre._next = node;
-    next._pre = node;
-    if (pre === this._header) {
+    prev._next = node;
+    next._prev = node;
+    if (prev === this._header) {
       this._head = node;
     }
     if (next === this._header) {
@@ -155,7 +153,7 @@ class LinkList<T> extends SequentialContainer<T> {
   }
   clear() {
     this._length = 0;
-    this._head = this._tail = this._header._pre = this._header._next = this._header;
+    this._head = this._tail = this._header._prev = this._header._next = this._header;
   }
   begin() {
     return new LinkListIterator<T>({
@@ -193,10 +191,7 @@ class LinkList<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._tail._value;
   }
-  /**
-   * @internal
-   */
-  protected _at(index: number) {
+  unsafe_at(index: number) {
     let curNode = this._head;
     while (index--) {
       curNode = curNode._next;
@@ -276,7 +271,7 @@ class LinkList<T> extends SequentialContainer<T> {
       pHead._value = pTail._value;
       pTail._value = tmp;
       pHead = pHead._next;
-      pTail = pTail._pre;
+      pTail = pTail._prev;
       cnt += 1;
     }
     return this;
@@ -296,11 +291,11 @@ class LinkList<T> extends SequentialContainer<T> {
         this._length -= 1;
       }
       curNode._next = tmpNode._next;
-      curNode._next._pre = curNode;
+      curNode._next._prev = curNode;
       curNode = curNode._next;
     }
     this._head = this._header._next;
-    this._tail = this._header._pre;
+    this._tail = this._header._prev;
     return this._length;
   }
   sort(cmp: CompareFn<T> = compareFromS2L) {
@@ -343,7 +338,7 @@ class LinkList<T> extends SequentialContainer<T> {
         ) {
           curNode = curNode._next;
         }
-        self._insertNode(el, curNode._pre);
+        self._insertNode(el, curNode._prev);
       });
     }
     return this._length;
@@ -489,11 +484,11 @@ class LinkList<T> extends SequentialContainer<T> {
       deleteHead = this._tail;
       const moveNum = length - start - 1;
       for (let i = 0; i < moveNum; ++i) {
-        deleteHead = deleteHead._pre;
+        deleteHead = deleteHead._prev;
       }
     }
     const deleteRecord = new LinkList<T>();
-    const insertStartNode = deleteHead._pre;
+    const insertStartNode = deleteHead._prev;
     let insertEndNode = deleteHead;
     if (deleteCount > 0) {
       deleteRecord._head = deleteHead;
@@ -504,10 +499,10 @@ class LinkList<T> extends SequentialContainer<T> {
       deleteRecord._tail = deleteTail;
       insertEndNode = deleteTail._next;
       insertStartNode._next = insertEndNode;
-      insertEndNode._pre = insertStartNode;
-      deleteHead._pre = deleteTail._next = deleteRecord._header;
+      insertEndNode._prev = insertStartNode;
+      deleteHead._prev = deleteTail._next = deleteRecord._header;
       deleteRecord._header._next = deleteHead;
-      deleteRecord._header._pre = deleteTail;
+      deleteRecord._header._prev = deleteTail;
       deleteRecord._length = deleteCount;
       this._length -= deleteCount;
     }
@@ -515,13 +510,13 @@ class LinkList<T> extends SequentialContainer<T> {
     let currentNode = insertStartNode;
     for (let i = 0; i < insertNum; ++i) {
       currentNode._next = {
-        _pre: currentNode,
+        _prev: currentNode,
         _next: insertEndNode,
         _value: items[i]
       };
       currentNode = currentNode._next;
     }
-    insertEndNode._pre = currentNode;
+    insertEndNode._prev = currentNode;
     if (insertStartNode === this._header) {
       this._head = insertStartNode._next;
     }

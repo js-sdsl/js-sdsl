@@ -280,10 +280,7 @@ class Deque<T> extends SequentialContainer<T> {
     this._positionCache = {};
     return item;
   }
-  /**
-   * @internal
-   */
-  protected _at(index: number) {
+  unsafe_at(index: number) {
     const { x, y } = this._calcPosition(index);
     return this._map[x][y]!;
   }
@@ -318,7 +315,7 @@ class Deque<T> extends SequentialContainer<T> {
   }
   find(item: T, cmp: CompareFn<T> = compareFromS2L) {
     for (let i = 0; i < this._length; ++i) {
-      if (cmp(this._at(i), item) === 0) {
+      if (cmp(this.unsafe_at(i), item) === 0) {
         return new DequeIterator<T>({
           node: i,
           container: this
@@ -345,11 +342,11 @@ class Deque<T> extends SequentialContainer<T> {
       return length;
     }
     let index = 1;
-    let pre = this._at(0);
+    let prev = this.unsafe_at(0);
     for (let i = 1; i < length; ++i) {
-      const cur = this._at(i);
-      if (cmp(cur, pre) !== 0) {
-        pre = cur;
+      const cur = this.unsafe_at(i);
+      if (cmp(cur, prev) !== 0) {
+        prev = cur;
         this._set(index++, cur);
       }
     }
@@ -360,7 +357,7 @@ class Deque<T> extends SequentialContainer<T> {
     const arr: T[] = [];
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      arr.push(this._at(i));
+      arr.push(this.unsafe_at(i));
     }
     arr.sort(cmp);
     for (let i = 0; i < length; ++i) {
@@ -396,13 +393,13 @@ class Deque<T> extends SequentialContainer<T> {
   forEach(callback: (value: T, index: number, container: this) => void) {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      callback(this._at(i), i, this);
+      callback(this.unsafe_at(i), i, this);
     }
   }
   * [Symbol.iterator]() {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      yield this._at(i);
+      yield this.unsafe_at(i);
     }
   }
   entries(): IterableIterator<[number, T]> {
@@ -417,7 +414,7 @@ class Deque<T> extends SequentialContainer<T> {
             value: undefined as unknown as [number, T]
           };
         }
-        const value = <[number, T]>[index, self._at(index)];
+        const value = <[number, T]>[index, self.unsafe_at(index)];
         index += 1;
         return {
           done,
@@ -432,7 +429,7 @@ class Deque<T> extends SequentialContainer<T> {
   every(callback: (value: T, index: number, container: this) => unknown): boolean {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      const flag = callback(this._at(i), i, this);
+      const flag = callback(this.unsafe_at(i), i, this);
       if (!flag) return false;
     }
     return true;
@@ -443,7 +440,7 @@ class Deque<T> extends SequentialContainer<T> {
     });
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      const item = this._at(i);
+      const item = this.unsafe_at(i);
       const flag = callback(item, i, this);
       if (flag) filtered._push(item);
     }
@@ -455,7 +452,7 @@ class Deque<T> extends SequentialContainer<T> {
     });
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      const item = this._at(i);
+      const item = this.unsafe_at(i);
       const newItem = callback(item, i, this);
       mapped._push(newItem);
     }
@@ -477,14 +474,14 @@ class Deque<T> extends SequentialContainer<T> {
     if (end < 0) end += length;
     else if (end > length) end = length;
     for (let i = start; i < end; ++i) {
-      sliceDeque._push(this._at(i));
+      sliceDeque._push(this.unsafe_at(i));
     }
     return sliceDeque;
   }
   some(callback: (value: T, index: number, container: this) => unknown): boolean {
     const length = this._length;
     for (let i = 0; i < length; ++i) {
-      const flag = callback(this._at(i), i, this);
+      const flag = callback(this.unsafe_at(i), i, this);
       if (flag) return true;
     }
     return false;
@@ -527,20 +524,20 @@ class Deque<T> extends SequentialContainer<T> {
     const delta = addCount - deleteCount;
     // record delete items
     for (let i = start; i < end; ++i) {
-      deleteDeque._push(this._at(i));
+      deleteDeque._push(this.unsafe_at(i));
     }
     // addCount greater than deleteCount, move back
     if (delta > 0) {
       for (let i = length - delta; i < length; ++i) {
-        this._push(this._at(i));
+        this._push(this.unsafe_at(i));
       }
       for (let i = length - delta - 1; i >= end; --i) {
-        this._set(i + delta, this._at(i));
+        this._set(i + delta, this.unsafe_at(i));
       }
     } /* else, move front */ else if (delta < 0) {
       const endIndex = length + delta - 1;
       for (let i = end + delta; i <= endIndex; ++i) {
-        this._set(i, this._at(i - delta));
+        this._set(i, this.unsafe_at(i - delta));
       }
       // change length after delete
       this._length += delta;
@@ -564,7 +561,7 @@ class Deque<T> extends SequentialContainer<T> {
             done
           };
         }
-        const value = self._at(index);
+        const value = self.unsafe_at(index);
         index += 1;
         return {
           value,

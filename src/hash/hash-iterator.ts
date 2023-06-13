@@ -7,11 +7,13 @@ export abstract class HashContainerIterator<K, V> extends Iterator<K | [K, V]> {
   /**
    * @internal
    */
-  _node: HashLinkNode<K, V>;
+  declare _node: HashLinkNode<K, V>;
   /**
    * @internal
    */
   protected readonly _header: HashLinkNode<K, V>;
+  prev: () => this;
+  next: () => this;
   /**
    * @internal
    */
@@ -21,15 +23,14 @@ export abstract class HashContainerIterator<K, V> extends Iterator<K | [K, V]> {
     type?: ITERATOR_TYPE
   }) {
     super(props);
-    const { node, header } = props;
-    this._node = node;
+    const { header } = props;
     this._header = header;
     if (this.type === ITERATOR_TYPE.NORMAL) {
-      this.pre = function () {
-        if (this._node._pre === this._header) {
+      this.prev = function () {
+        if (this._node._prev === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre;
+        this._node = this._node._prev;
         return this;
       };
       this.next = function () {
@@ -40,7 +41,7 @@ export abstract class HashContainerIterator<K, V> extends Iterator<K | [K, V]> {
         return this;
       };
     } else {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node._next === this._header) {
           throwIteratorAccessError();
         }
@@ -51,13 +52,9 @@ export abstract class HashContainerIterator<K, V> extends Iterator<K | [K, V]> {
         if (this._node === this._header) {
           throwIteratorAccessError();
         }
-        this._node = this._node._pre;
+        this._node = this._node._prev;
         return this;
       };
     }
   }
-  // @ts-ignore
-  pre(): this;
-  // @ts-ignore
-  next(): this;
 }

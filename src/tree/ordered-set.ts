@@ -145,10 +145,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   add(key: K, hint?: OrderedSetIterator<K>) {
     return this._set(key, undefined, hint);
   }
-  /**
-   * @internal
-   */
-  protected _at(index: number) {
+  unsafe_at(index: number) {
     const node = this._inOrderTraversal(index);
     return node._key as K;
   }

@@ -89,10 +89,7 @@ class Vector<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._vector[this._length - 1];
   }
-  /**
-   * @internal
-   */
-  protected _at(index: number) {
+  unsafe_at(index: number) {
     return this._vector[index];
   }
   erase(iter: VectorIterator<T>) {
@@ -146,8 +143,7 @@ class Vector<T> extends SequentialContainer<T> {
     this._vector.sort(cmp);
     return this;
   }
-  splice(...args: unknown[]) {
-    // @ts-ignore
+  splice(...args: [start: number, deleteCount?: number | undefined]) {
     const deleteItems = this._vector.splice(...args);
     this._length = this._vector.length;
     return new Vector(deleteItems);

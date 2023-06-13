@@ -6,7 +6,7 @@ import { throwIteratorAccessError } from '@/utils/throwError';
 export type HashLinkNode<K, V> = {
   _key: K,
   _value: V,
-  _pre: HashLinkNode<K, V>,
+  _prev: HashLinkNode<K, V>,
   _next: HashLinkNode<K, V>
 }
 
@@ -42,20 +42,20 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     super();
     Object.setPrototypeOf(this._originMap, null);
     this._header = <HashLinkNode<K, V>>{};
-    this._header._pre = this._header._next = this._head = this._tail = this._header;
+    this._header._prev = this._header._next = this._head = this._tail = this._header;
   }
   /**
    * @internal
    */
   protected _eraseNode(node: HashLinkNode<K, V>) {
-    const { _pre, _next } = node;
-    _pre._next = _next;
-    _next._pre = _pre;
+    const { _prev, _next } = node;
+    _prev._next = _next;
+    _next._prev = _prev;
     if (node === this._head) {
       this._head = _next;
     }
     if (node === this._tail) {
-      this._tail = _pre;
+      this._tail = _prev;
     }
     this._length -= 1;
   }
@@ -78,7 +78,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       newTail = {
         _key: key,
         _value: <V>value,
-        _pre: this._tail,
+        _prev: this._tail,
         _next: this._header
       };
       this._objMap.push(newTail);
@@ -91,7 +91,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       this._originMap[<string><unknown>key] = newTail = {
         _key: key,
         _value: <V>value,
-        _pre: this._tail,
+        _prev: this._tail,
         _next: this._header
       };
     }
@@ -102,7 +102,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
       this._tail._next = newTail;
     }
     this._tail = newTail;
-    this._header._pre = newTail;
+    this._header._prev = newTail;
     return ++this._length;
   }
   /**
@@ -127,7 +127,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     this._originMap = {};
     Object.setPrototypeOf(this._originMap, null);
     this._length = 0;
-    this._head = this._tail = this._header._pre = this._header._next = this._header;
+    this._head = this._tail = this._header._prev = this._header._next = this._header;
   }
   /**
    * @description Remove the item of the specified key.

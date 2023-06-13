@@ -48,12 +48,12 @@ describe('iterator test', () => {
     }
   });
 
-  it('normal iterator pre function test', () => {
+  it('normal iterator prev function test', () => {
     for (const container of containerArr) {
       let index = arr.length - 1;
-      for (let it = container.end().pre() as Iterator<unknown>;
+      for (let it = container.end().prev() as Iterator<unknown>;
         !it.equals(container.begin() as Iterator<unknown>);
-        it = it.pre()
+        it = it.prev()
       ) {
         expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
@@ -84,12 +84,12 @@ describe('iterator test', () => {
     }
   });
 
-  it('reverse iterator pre function test', () => {
+  it('reverse iterator prev function test', () => {
     for (const container of containerArr) {
       let index = 0;
-      for (let it = container.rEnd().pre() as Iterator<unknown>;
+      for (let it = container.rEnd().prev() as Iterator<unknown>;
         !it.equals(container.rBegin() as Iterator<unknown>);
-        it = it.pre()
+        it = it.prev()
       ) {
         expect(it.container).to.equal(container);
         if (container instanceof OrderedMap || container instanceof HashMap) {
@@ -107,16 +107,16 @@ describe('iterator test', () => {
       expect(() => container.end().next()).to.throw(RangeError);
     });
 
-    it('normal iterator pre run time error test', () => {
-      expect(() => container.begin().pre()).to.throw(RangeError);
+    it('normal iterator prev run time error test', () => {
+      expect(() => container.begin().prev()).to.throw(RangeError);
     });
 
     it('reverse iterator next run time error test', () => {
       expect(() => container.rEnd().next()).to.throw(RangeError);
     });
 
-    it('reverse iterator pre run time error test', () => {
-      expect(() => container.rBegin().pre()).to.throw(RangeError);
+    it('reverse iterator prev run time error test', () => {
+      expect(() => container.rBegin().prev()).to.throw(RangeError);
     });
   }
 
@@ -132,9 +132,9 @@ describe('iterator test', () => {
     for (const container of containerArr) {
       const iter = container.end() as Iterator<unknown>;
       const copy = iter.copy() as Iterator<unknown>;
-      iter.pre();
+      iter.prev();
       expect(iter.equals(copy)).to.equal(false);
-      copy.pre();
+      copy.prev();
       expect(iter.equals(copy)).to.equal(true);
     }
     for (const container of containerArr) {
@@ -148,9 +148,9 @@ describe('iterator test', () => {
     for (const container of containerArr) {
       const iter = container.rEnd() as Iterator<unknown>;
       const copy = iter.copy() as Iterator<unknown>;
-      iter.pre();
+      iter.prev();
       expect(iter.equals(copy)).to.equal(false);
-      copy.pre();
+      copy.prev();
       expect(iter.equals(copy)).to.equal(true);
     }
   });

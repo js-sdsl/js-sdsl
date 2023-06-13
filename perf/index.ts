@@ -21,15 +21,15 @@ export type testReportFormat = {
 type testFunc = (arr: number[], testNum: number) => testReportFormat;
 
 const testFuncMap: Record<string, testFunc> = {
-  Stack: testStack,
-  Queue: testQueue,
-  PriorityQueue: testPriorityQueue,
-  LinkList: testLinkList,
-  Deque: testDeque,
-  OrderedSet: testOrderedSet,
-  OrderedMap: testOrderedMap,
-  HashSet: testHashSet,
-  HashMap: testHashMap
+  stack: testStack,
+  queue: testQueue,
+  'priority-queue': testPriorityQueue,
+  'link-list': testLinkList,
+  deque: testDeque,
+  'ordered-set': testOrderedSet,
+  'ordered-map': testOrderedMap,
+  'hash-set': testHashSet,
+  'hash-map': testHashMap
 };
 
 const testNum = 1000000;

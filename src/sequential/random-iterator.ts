@@ -7,7 +7,9 @@ export abstract class RandomIterator<T> extends Iterator<T> {
   /**
    * @internal
    */
-  _node: number;
+  declare _node: number;
+  prev: () => this;
+  next: () => this;
   /**
    * @internal
    */
@@ -16,9 +18,8 @@ export abstract class RandomIterator<T> extends Iterator<T> {
     type?: ITERATOR_TYPE
   }) {
     super(props);
-    this._node = props.node;
     if (this.type === ITERATOR_TYPE.NORMAL) {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node === 0) {
           throwIteratorAccessError();
         }
@@ -33,7 +34,7 @@ export abstract class RandomIterator<T> extends Iterator<T> {
         return this;
       };
     } else {
-      this.pre = function () {
+      this.prev = function () {
         if (this._node === this.container.length - 1) {
           throwIteratorAccessError();
         }
@@ -55,8 +56,4 @@ export abstract class RandomIterator<T> extends Iterator<T> {
   set pointer(newValue: T) {
     this.container.set(this._node, newValue);
   }
-  // @ts-ignore
-  pre(): this;
-  // @ts-ignore
-  next(): this;
 }

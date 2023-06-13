@@ -392,19 +392,19 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               iterNode._value = value;
               return this._length;
             } else /* istanbul ignore else */ if (iterCmpRes > 0) {
-              const preNode = iterNode._pre();
-              const preCmpRes = this._cmp(preNode._key!, key);
+              const prevNode = iterNode._prev();
+              const preCmpRes = this._cmp(prevNode._key!, key);
               if (preCmpRes === 0) {
-                preNode._value = value;
+                prevNode._value = value;
                 return this._length;
               } else if (preCmpRes < 0) {
                 curNode = new this._TreeNodeClass({
                   key,
                   value
                 });
-                if (preNode._right === undefined) {
-                  preNode._right = curNode;
-                  curNode._parent = preNode;
+                if (prevNode._right === undefined) {
+                  prevNode._right = curNode;
+                  curNode._parent = prevNode;
                 } else {
                   iterNode._left = curNode;
                   curNode._parent = iterNode;
@@ -505,7 +505,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       }
       return false;
     }
-    const preKey = node._pre()._key!;
+    const preKey = node._prev()._key!;
     if (node === this._header._right) {
       if (this._cmp(preKey, key) < 0) {
         node._key = key;
@@ -532,7 +532,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     this._eraseNode(curNode);
     return true;
   }
-  erase(index: number): number;
+  erase(param: number): number;
   erase(param: TreeIterator<K, V>): TreeIterator<K, V>;
   erase(param: TreeIterator<K, V> | number) {
     if (typeof param === 'number') {
