@@ -126,7 +126,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
     const node = this._originMap[<string><unknown>key];
     return node ? node._value : undefined;
   }
-  unsafe_at(index: number) {
+  protected _at(index: number) {
     let node = this._head;
     while (index--) {
       node = node._next;

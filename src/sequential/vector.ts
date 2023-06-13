@@ -89,7 +89,7 @@ class Vector<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._vector[this._length - 1];
   }
-  unsafe_at(index: number) {
+  protected _at(index: number) {
     return this._vector[index];
   }
   erase(iter: VectorIterator<T>) {

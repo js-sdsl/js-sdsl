@@ -34,19 +34,6 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   if (container.constructor.name === 'LinkList') {
     _testNum = Math.min(testNum, 1000);
   }
-
-  startTime = Date.now();
-  for (let i = 0; i < _testNum; ++i) {
-    container.unsafe_at(i);
-  }
-  endTime = Date.now();
-  reportList.push({
-    testFunc: 'unsafe_at',
-    testNum: _testNum,
-    containerSize: container.length,
-    runTime: endTime - startTime
-  });
-
   startTime = Date.now();
   for (let i = 0; i < _testNum; ++i) {
     container.at(i);

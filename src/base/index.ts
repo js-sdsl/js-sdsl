@@ -105,7 +105,7 @@ export abstract class Container<T> extends Base {
    * container.forEach((item, index) => console.log(item, index));
    */
   abstract forEach(callback: (value: T, index: number, container: this) => void): void;
-  abstract unsafe_at(index: number): T;
+  protected abstract _at(index: number): T;
   /**
    * @description Gets the value of the item at the specified position.
    * @example
@@ -121,7 +121,7 @@ export abstract class Container<T> extends Base {
         return undefined;
       }
     }
-    return this.unsafe_at(index);
+    return this._at(index);
   }
   /**
    * @description Removes item by iterator and move `iter` to next.

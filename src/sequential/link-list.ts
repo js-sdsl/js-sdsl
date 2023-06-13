@@ -191,7 +191,7 @@ class LinkList<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._tail._value;
   }
-  unsafe_at(index: number) {
+  _at(index: number) {
     let curNode = this._head;
     while (index--) {
       curNode = curNode._next;

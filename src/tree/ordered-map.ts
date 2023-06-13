@@ -163,7 +163,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   set(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
     return this._set(key, value, hint);
   }
-  unsafe_at(index: number) {
+  _at(index: number) {
     const node = this._inOrderTraversal(index);
     return <[K, V]>[node._key, node._value];
   }
