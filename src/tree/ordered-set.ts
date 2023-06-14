@@ -143,7 +143,8 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
    * st.insert(3, iter);  // give a hint will be faster.
    */
   add(key: K, hint?: OrderedSetIterator<K>) {
-    return this._set(key, undefined, hint);
+    this._set(key, undefined, hint);
+    return this;
   }
   _at(index: number) {
     const node = this._inOrderTraversal(index);

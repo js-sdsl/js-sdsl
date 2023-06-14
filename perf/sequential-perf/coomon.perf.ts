@@ -31,7 +31,7 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
   for (let i = 0; i < testNum; ++i) {
     container.push(i);
   }
-  if (container.constructor.name === 'LinkList') {
+  if (container.constructor.name === 'link-list') {
     _testNum = Math.min(testNum, 1000);
   }
   startTime = Date.now();
@@ -46,7 +46,7 @@ function testSequentialContainer(container: SequentialContainer<number>, testNum
     runTime: endTime - startTime
   });
 
-  if (container.constructor.name === 'LinkList') {
+  if (container.constructor.name === 'link-list') {
     _testNum = Math.min(testNum, 1000);
   }
   startTime = Date.now();

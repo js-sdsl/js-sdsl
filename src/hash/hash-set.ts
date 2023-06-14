@@ -87,7 +87,8 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @returns The size of container after inserting.
    */
   add(key: K, isObject?: boolean) {
-    return this._set(key, undefined, isObject);
+    this._set(key, undefined, isObject);
+    return this;
   }
   protected _at(index: number) {
     let node = this._head;
@@ -104,7 +105,7 @@ class HashSet<K> extends HashContainer<K, undefined> {
    * @returns An iterator pointing to the item if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key, isObject);
+    const node = this._getHashLinkNodeByKey(key, isObject);
     return new HashSetIterator<K>({
       node,
       header: this._header,

@@ -28,7 +28,7 @@ const containerArr = [
 ];
 
 describe('symbol iterator test', () => {
-  it('HashSet symbol iterator test', () => {
+  it('hash-set symbol iterator test', () => {
     const myHashSet = new HashSet(arr);
     const st = new Set(arr);
     for (const element of myHashSet) {
@@ -38,7 +38,7 @@ describe('symbol iterator test', () => {
     expect(st.size).to.equal(0);
   });
 
-  it('HashSet symbol iterator test', () => {
+  it('hash-set symbol iterator test', () => {
     const myHashMap = new HashMap(arr.map((element, index) => [index, element]));
     const mp = new Map(arr.map((element, index) => [index, element]));
     for (const element of myHashMap) {

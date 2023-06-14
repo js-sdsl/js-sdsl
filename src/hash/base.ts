@@ -62,8 +62,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected _set(key: K, value?: V, isObject?: boolean) {
-    if (isObject === undefined) isObject = checkObject(key);
+  protected _set(key: K, value?: V, isObject = checkObject(key)) {
     let newTail;
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
@@ -103,13 +102,12 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
     this._tail = newTail;
     this._header._prev = newTail;
-    return ++this._length;
+    this._length += 1;
   }
   /**
    * @internal
    */
-  protected _findElementNode(key: K, isObject?: boolean) {
-    if (isObject === undefined) isObject = checkObject(key);
+  protected _getHashLinkNodeByKey(key: K, isObject = checkObject(key)) {
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index === undefined) return this._header;
@@ -136,9 +134,8 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    *                   If a `undefined` value is passed in, the type will be automatically judged.
    * @returns Whether erase successfully.
    */
-  delete(key: K, isObject?: boolean) {
+  delete(key: K, isObject = checkObject(key)) {
     let node;
-    if (isObject === undefined) isObject = checkObject(key);
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       if (index === undefined) return false;

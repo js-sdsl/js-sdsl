@@ -8,11 +8,11 @@ for (let i = 0; i < testNum; ++i) {
   arr.push(Math.floor(Math.random() * testNum));
 }
 
-describe('LinkList test', () => {
+describe('link-list test', () => {
   const myLinkList = new LinkList(arr);
   const tmpArr = [...arr];
 
-  it('LinkList pushFront function test', () => {
+  it('link-list unshift function test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(myLinkList.unshift(i)).to.equal(tmpArr.unshift(i));
     }
@@ -21,14 +21,14 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, tmpArr);
   });
 
-  it('LinkList popFront function test', () => {
+  it('link-list shift function test', () => {
     for (let i = 0; i < testNum; ++i) {
       expect(myLinkList.shift()).to.equal(tmpArr.shift());
     }
     judgeSequentialContainer(myLinkList, tmpArr);
   });
 
-  it('LinkList merge function test', () => {
+  it('link-list merge function test', () => {
     for (let i = 0; i < testNum; ++i) {
       tmpArr.push(i);
     }
@@ -41,7 +41,7 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, tmpArr);
   });
 
-  it('LinkList find function test', () => {
+  it('link-list find function test', () => {
     myLinkList.forEach((element, index) => {
       if (index >= 1000) return;
       expect(myLinkList.find(element).pointer).to.equal(element);
@@ -49,7 +49,7 @@ describe('LinkList test', () => {
     expect(myLinkList.find(-1).equals(myLinkList.end())).to.equal(true);
   });
 
-  it('LinkList erase function test', () => {
+  it('link-list erase function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       myLinkList.erase(myLinkList.begin().next());
       myLinkList.erase(myLinkList.begin());
@@ -63,11 +63,11 @@ describe('LinkList test', () => {
     judgeSequentialContainer(myLinkList, tmpArr);
   });
 
-  it('LinkList run time error test', () => {
+  it('link-list run time error test', () => {
     expect(myLinkList.at(myLinkList.length)).to.equal(undefined);
   });
 
-  it('LinkList pushFront function test', () => {
+  it('link-list common test', () => {
     let myLinkList = new LinkList();
     // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars, no-empty
     for (const _ of myLinkList) {}

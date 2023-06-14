@@ -42,7 +42,7 @@ function hashSetTest(generateRandom: () => unknown) {
   const myHashSet = new HashSet<unknown>(arr);
   judgeHashSet(myHashSet, stdSet);
 
-  it('HashSet forEach test', () => {
+  it('hash-set forEach test', () => {
     let i = 0;
     myHashSet.forEach((el, index, hashSet) => {
       expect(hashSet).to.equal(myHashSet);
@@ -52,7 +52,7 @@ function hashSetTest(generateRandom: () => unknown) {
     expect(i).to.equal(stdSet.size);
   });
 
-  it('HashSet find test', () => {
+  it('hash-set find test', () => {
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
       const iter = myHashSet.find(random, isObject);
@@ -64,7 +64,7 @@ function hashSetTest(generateRandom: () => unknown) {
     }
   });
 
-  it('HashSet delete test', () => {
+  it('hash-set delete test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
         expect(myHashSet.delete(item, isObject)).to.equal(stdSet.delete(item));
@@ -79,7 +79,7 @@ function hashSetTest(generateRandom: () => unknown) {
     judgeHashSet(myHashSet, stdSet);
   });
 
-  it('HashSet erase test', () => {
+  it('hash-set erase test', () => {
     stdSet.delete(myHashSet.begin().pointer);
     myHashSet.erase(myHashSet.begin());
     const el = myHashSet.rBegin().pointer;
@@ -96,7 +96,7 @@ function hashSetTest(generateRandom: () => unknown) {
     judgeHashSet(myHashSet, stdSet);
   });
 
-  it('HashSet clear test', () => {
+  it('hash-set clear test', () => {
     myHashSet.clear();
     stdSet.clear();
     expect(myHashSet.front()).to.equal(undefined);
@@ -116,30 +116,30 @@ function hashSetTest(generateRandom: () => unknown) {
   });
 }
 
-describe('HashSet test', () => {
-  describe('HashSet Number test', () => {
+describe('hash-set test', () => {
+  describe('hash-set Number test', () => {
     hashSetTest(generateRandomNumber);
   });
 
-  describe('HashSet String test', () => {
+  describe('hash-set String test', () => {
     hashSetTest(generateRandomString);
   });
 
-  describe('HashSet Symbol test', () => {
+  describe('hash-set Symbol test', () => {
     hashSetTest(generateRandomSymbol);
   });
 
   if (typeof BigInt === 'function') {
-    describe('HashSet BigInt test', () => {
+    describe('hash-set BigInt test', () => {
       hashSetTest(generateRandomBigInt);
     });
   }
 
-  describe('HashSet Object test', () => {
+  describe('hash-set Object test', () => {
     hashSetTest(generateRandomObject);
   });
 
-  describe('HashSet Function test', () => {
+  describe('hash-set Function test', () => {
     hashSetTest(generateRandomFunction);
   });
 });

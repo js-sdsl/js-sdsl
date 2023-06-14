@@ -107,7 +107,8 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @returns The size of container after setting.
    */
   set(key: K, value: V, isObject?: boolean) {
-    return this._set(key, value, isObject);
+    this._set(key, value, isObject);
+    return this;
   }
   /**
    * @description Get the value of the item of the specified key.
@@ -117,8 +118,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @example
    * const val = container.getElementByKey(1);
    */
-  get(key: K, isObject?: boolean) {
-    if (isObject === undefined) isObject = checkObject(key);
+  get(key: K, isObject = checkObject(key)) {
     if (isObject) {
       const index = (<Record<symbol, number>><unknown>key)[this.HASH_TAG];
       return index !== undefined ? this._objMap[index]._value : undefined;
@@ -141,7 +141,7 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @returns An iterator pointing to the item if found, or super end if not found.
    */
   find(key: K, isObject?: boolean) {
-    const node = this._findElementNode(key, isObject);
+    const node = this._getHashLinkNodeByKey(key, isObject);
     return new HashMapIterator<K, V>({
       node,
       header: this._header,

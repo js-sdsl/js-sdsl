@@ -16,19 +16,19 @@ function judgeSet(myOrderedSet: OrderedSet<number>, myVector: Vector<number>) {
   });
 }
 
-describe('OrderedSet test', () => {
+describe('ordered-set test', () => {
   const myOrderedSet = new OrderedSet(arr);
   const myVector = new Vector(new Set(arr));
 
-  it('OrderedSet add function test', () => {
+  it('ordered-set add function test', () => {
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * testNum * 10;
-      expect(myOrderedSet.add(random)).to.equal(myVector.push(random));
+      expect(myOrderedSet.add(random).size).to.equal(myVector.push(random));
     }
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet delete function test', () => {
+  it('ordered-set delete function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.length);
       const eraseValue = myVector.at(pos)!;
@@ -39,7 +39,7 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet union function test', () => {
+  it('ordered-set union function test', () => {
     const otherOrderedSet = new OrderedSet<number>();
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * testNum * 10;
@@ -50,7 +50,7 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet eraseElementByPos function test', () => {
+  it('ordered-set splice function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       const pos = Math.floor(Math.random() * myVector.length);
       myOrderedSet.erase(pos);
@@ -59,7 +59,7 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet find function test', () => {
+  it('ordered-set find function test', () => {
     myVector.forEach((element: number) => {
       expect(myOrderedSet.find(element).pointer).to.equal(element);
     });
@@ -67,7 +67,7 @@ describe('OrderedSet test', () => {
 
   myVector.sort((x: number, y: number) => x - y);
 
-  it('OrderedSet binary search function test', () => {
+  it('ordered-set binary search function test', () => {
     for (let i = 0; i < myVector.length; ++i) {
       expect(myOrderedSet.lowerBound(myVector.at(i)!).pointer)
         .to.equal(myVector.at(i));
@@ -85,7 +85,7 @@ describe('OrderedSet test', () => {
     }
   });
 
-  it('OrderedSet reverse binary search function test', () => {
+  it('ordered-set reverse binary search function test', () => {
     for (let i = 0; i < myVector.length; ++i) {
       expect(myOrderedSet.reverseLowerBound(myVector.at(i)!).pointer)
         .to.equal(myVector.at(i));
@@ -103,7 +103,7 @@ describe('OrderedSet test', () => {
     }
   });
 
-  it('OrderedSet front & back function test', () => {
+  it('ordered-set front & back function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       myOrderedSet.erase(0);
       myVector.splice(0, 1);
@@ -115,7 +115,7 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet erase function test', () => {
+  it('ordered-set erase function test', () => {
     for (let i = 0; i < testNum / 10; ++i) {
       let iter = myOrderedSet.erase(myOrderedSet.begin());
       expect(iter.equals(myOrderedSet.begin())).to.equal(true);
@@ -136,7 +136,7 @@ describe('OrderedSet test', () => {
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet update function test', () => {
+  it('ordered-set update function test', () => {
     const st = new OrderedSet();
     st.add(1);
     expect(st.update(st.begin(), 2)).to.equal(true);
@@ -163,7 +163,7 @@ describe('OrderedSet test', () => {
     }
   });
 
-  it('OrderedSet iterator index function test', () => {
+  it('ordered-set iterator index function test', () => {
     const st = new OrderedSet<number>([], {
       enableIndex: true
     });
@@ -197,7 +197,7 @@ describe('OrderedSet test', () => {
     });
   });
 
-  it('OrderedSet insert by hint function test', () => {
+  it('ordered-set insert by hint function test', () => {
     const st = new OrderedSet<number>();
     const v = new Vector<number>();
     expect(() => st.begin().index).to.throw(TypeError);
@@ -222,13 +222,13 @@ describe('OrderedSet test', () => {
     judgeSet(st, v);
   });
 
-  it('OrderedSet clear function test', () => {
+  it('ordered-set clear function test', () => {
     myOrderedSet.clear();
     myVector.clear();
     judgeSet(myOrderedSet, myVector);
   });
 
-  it('OrderedSet empty test', () => {
+  it('ordered-set common test', () => {
     expect(() => {
       // eslint-disable-next-line no-unused-expressions
       myOrderedSet.begin().pointer;
@@ -279,7 +279,7 @@ describe('OrderedSet test', () => {
     expect(() => myOrderedSet.erase(myOrderedSet.begin())).to.throw(RangeError);
   });
 
-  it('OrderedSet iterator test', function () {
+  it('ordered-set iterator test', function () {
     const st = new OrderedSet([1, 2, 3]);
     for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
       expect(it.pointer).to.equal(index);
@@ -287,7 +287,7 @@ describe('OrderedSet test', () => {
     }
   });
 
-  it('OrderedSet reverse iterator test', function () {
+  it('ordered-set reverse iterator test', function () {
     const st = new OrderedSet([2, 3]);
     for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
       expect(it.pointer).to.equal(index);

@@ -12,7 +12,7 @@ const treeContainerArr: TreeContainer<number, number | undefined>[] = [
   new OrderedMap(arr.map((item, index) => [item, index]))
 ];
 
-describe('TreeContainer common test', () => {
+describe('tree common test', () => {
   it('has function test', () => {
     for (const container of treeContainerArr) {
       for (const item of arr) {

@@ -26,7 +26,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected constructor(options: {
     cmp?: CompareFn<K>,
     enableIndex?: boolean,
-  } = {}) {
+  }) {
     super();
     const { cmp = compareFromS2L, enableIndex = false } = options;
     this._cmp = cmp;
@@ -332,10 +332,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
           return;
         }
       }
+      // According to the characteristics of the red-black tree
+      // when a node is added, it will rotate up at most three times
+      // so `recount` will be run at most nine times
+      // that's acceptable
       if (this.enableIndex) {
-        (<TreeNodeEnableIndex<K, V>>parentNode)._recount();
-        (<TreeNodeEnableIndex<K, V>>grandParent)._recount();
-        (<TreeNodeEnableIndex<K, V>>curNode)._recount();
+        parentNode._recount();
+        grandParent._recount();
+        curNode._recount();
       }
       return;
     }
@@ -343,7 +347,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected _set(key: K, value?: V, hint?: TreeIterator<K, V>) {
+  protected _set(key: K, value: V, hint?: TreeIterator<K, V>) {
     if (this._root === undefined) {
       this._length += 1;
       this._root = new this._TreeNodeClass({
@@ -456,7 +460,6 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     }
     this._insertNodeSelfBalance(curNode);
     this._length += 1;
-    return this._length;
   }
   /**
    * @internal

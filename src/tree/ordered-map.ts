@@ -21,17 +21,17 @@ class OrderedMapIterator<K, V> extends TreeIterator<K, V> {
     if (this._node === this._header) {
       throwIteratorAccessError();
     }
-    const self = this;
+    const node = this._node;
     return new Proxy(<[K, V]><unknown>[], {
       get(_, props: '0' | '1') {
-        if (props === '0') return self._node._key;
-        else if (props === '1') return self._node._value;
+        if (props === '0') return node._key;
+        else if (props === '1') return node._value;
       },
       set(_, props: '1', newValue: V) {
         if (props !== '1') {
           throw new TypeError('props must be 1');
         }
-        self._node._value = newValue;
+        node._value = newValue;
         return true;
       }
     });
@@ -161,7 +161,8 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
    * mp.setElement(3, 0, iter);  // give a hint will be faster.
    */
   set(key: K, value: V, hint?: OrderedMapIterator<K, V>) {
-    return this._set(key, value, hint);
+    this._set(key, value, hint);
+    return this;
   }
   _at(index: number) {
     const node = this._inOrderTraversal(index);

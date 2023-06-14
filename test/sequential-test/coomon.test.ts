@@ -40,6 +40,9 @@ function testSequentialContainer(container: SequentialContainer<number>) {
     expect(container.at(i)).to.equal(copyArr[i]);
   }
 
+  expect(container.set(-1, 1)).to.equal(false);
+  expect(container.set(container.length, 1)).to.equal(false);
+
   for (let i = 0; i < len; ++i) {
     copyArr[i] = i;
     container.set(i, i);
@@ -153,7 +156,7 @@ function testSequentialContainer(container: SequentialContainer<number>) {
   judgeSequentialContainer(container, copyArr);
 }
 
-describe('SequentialContainer common test', () => {
+describe('sequential common test', () => {
   it('common test', () => {
     for (const container of containerArr) {
       testSequentialContainer(container);

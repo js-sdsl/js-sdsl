@@ -53,7 +53,7 @@ function hashMapTest(generateRandom: () => unknown) {
     ));
   judgeHashMap(myHashMap, stdMap);
 
-  it('HashMap forEach test', () => {
+  it('hash-map forEach test', () => {
     let i = 0;
     myHashMap.forEach((el, index, hashMap) => {
       expect(hashMap).to.equal(myHashMap);
@@ -63,7 +63,7 @@ function hashMapTest(generateRandom: () => unknown) {
     expect(i).to.equal(stdMap.size);
   });
 
-  it('HashMap find test', () => {
+  it('hash-map find test', () => {
     for (let i = 0; i < testNum; ++i) {
       const random = generateRandom();
       const iter = myHashMap.find(random, isObject);
@@ -76,7 +76,7 @@ function hashMapTest(generateRandom: () => unknown) {
     }
   });
 
-  it('HashMap delete test', () => {
+  it('hash-map delete test', () => {
     for (const item of arr) {
       if (Math.random() > 0.6) {
         expect(myHashMap.delete(item, isObject)).to.equal(stdMap.delete(item));
@@ -91,16 +91,15 @@ function hashMapTest(generateRandom: () => unknown) {
     judgeHashMap(myHashMap, stdMap);
   });
 
-  it('HashMap set test', () => {
+  it('hash-map set test', () => {
     for (let i = 0; i < testNum; ++i) {
       stdMap.set(arr[i], i - 1);
-      const size = myHashMap.set(arr[i], i - 1, isObject);
-      expect(size).to.equal(stdMap.size);
+      expect(myHashMap.set(arr[i], i - 1, isObject).size).to.equal(stdMap.size);
     }
     judgeHashMap(myHashMap, stdMap);
   });
 
-  it('HashMap set iterator value test', () => {
+  it('hash-map set iterator value test', () => {
     stdMap.forEach((value, key) => {
       const random = Math.random();
       myHashMap.find(key).pointer[1] = random;
@@ -116,7 +115,7 @@ function hashMapTest(generateRandom: () => unknown) {
     expect(() => myHashMap.find(myHashMap.front()![0]).pointer[3] = 5).to.throw(TypeError);
   });
 
-  it('HashMap clear test', () => {
+  it('hash-map clear test', () => {
     myHashMap.clear();
     stdMap.clear();
     expect(myHashMap.front()).to.equal(undefined);
@@ -136,32 +135,32 @@ function hashMapTest(generateRandom: () => unknown) {
   });
 }
 
-describe('HashMap test', () => {
+describe('hash-map test', () => {
   expect(checkObject(null)).to.equal(false);
 
-  describe('HashMap Number test', () => {
+  describe('hash-map Number test', () => {
     hashMapTest(generateRandomNumber);
   });
 
-  describe('HashMap String test', () => {
+  describe('hash-map String test', () => {
     hashMapTest(generateRandomString);
   });
 
-  describe('HashMap Symbol test', () => {
+  describe('hash-map Symbol test', () => {
     hashMapTest(generateRandomSymbol);
   });
 
   if (typeof BigInt === 'function') {
-    describe('HashMap BigInt test', () => {
+    describe('hash-map BigInt test', () => {
       hashMapTest(generateRandomBigInt);
     });
   }
 
-  describe('HashMap Object test', () => {
+  describe('hash-map Object test', () => {
     hashMapTest(generateRandomObject);
   });
 
-  describe('HashMap Function test', () => {
+  describe('hash-map Function test', () => {
     hashMapTest(generateRandomFunction);
   });
 });

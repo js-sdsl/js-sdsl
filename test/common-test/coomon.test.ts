@@ -144,4 +144,16 @@ describe('common test', () => {
       expect(container.toArray()).to.deep.equal(arr);
     }
   });
+
+  it('at function test', () => {
+    for (const container of containerArr) {
+      const length = arr.length;
+      for (let i = 0; i < length; ++i) {
+        expect(container.at(i)).to.deep.equal(arr[i]);
+      }
+      expect(container.at(-length)).to.deep.equal(arr[0]);
+      expect(container.at(-length - 1)).to.equal(undefined);
+      expect(container.at(-1)).to.deep.equal(arr[length - 1]);
+    }
+  });
 });

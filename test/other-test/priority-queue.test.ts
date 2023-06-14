@@ -24,8 +24,8 @@ function judge(myQueue: PriorityQueue<number>, myVector: Vector<number>) {
   return true;
 }
 
-describe('PriorityQueue test', () => {
-  it('PriorityQueue empty insert test', () => {
+describe('priority-queue test', () => {
+  it('priority-queue empty insert test', () => {
     const myQueue = new PriorityQueue();
     myQueue.pop();
     expect(myQueue.length).to.equal(0);
@@ -37,11 +37,11 @@ describe('PriorityQueue test', () => {
   const myQueue = new PriorityQueue(arr);
   const myVector = new Vector(arr);
 
-  it('PriorityQueue size test', () => {
+  it('priority-queue size test', () => {
     expect(myQueue.length).to.equal(myVector.length);
   });
 
-  it('PriorityQueue other function test', () => {
+  it('priority-queue other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
       myVector.push(i);
@@ -49,7 +49,7 @@ describe('PriorityQueue test', () => {
     judge(myQueue, myVector);
   });
 
-  it('PriorityQueue remove function test', () => {
+  it('priority-queue remove function test', () => {
     const myQueue = new PriorityQueue<number>();
     let myVector = new Vector<number>();
     for (let i = 0; i < testNum; ++i) {
@@ -74,7 +74,7 @@ describe('PriorityQueue test', () => {
     judge(myQueue, myVector);
   });
 
-  it('PriorityQueue updateItem function test', () => {
+  it('priority-queue updateItem function test', () => {
     type obj = { num: number };
     const arr: obj[] = [];
     for (let i = 0; i < testNum; ++i) {
@@ -97,7 +97,7 @@ describe('PriorityQueue test', () => {
     }
   });
 
-  it('PriorityQueue clear function test', () => {
+  it('priority-queue clear function test', () => {
     myQueue.clear();
     myVector.clear();
     judge(myQueue, myVector);

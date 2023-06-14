@@ -20,21 +20,21 @@ function judge(myStack: Stack<number>, myVector: Vector<number>) {
   return true;
 }
 
-describe('Stack test', () => {
+describe('stack test', () => {
   const myStack = new Stack(arr);
   const myVector = new Vector(arr);
 
-  it('Stack size test', () => {
+  it('stack size test', () => {
     expect(myStack.length).to.equal(myVector.length);
   });
 
-  it('Stack clear function test', () => {
+  it('stack clear function test', () => {
     myStack.clear();
     myVector.clear();
     expect(judge(myStack, myVector)).to.equal(true);
   });
 
-  it('Stack other function test', () => {
+  it('stack other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myStack.push(i);
       myVector.push(i);

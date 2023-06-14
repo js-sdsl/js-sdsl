@@ -28,11 +28,11 @@ function judgeMap(myOrderedMap: OrderedMap<number, number>, stdMap: Map<number, 
   });
 }
 
-describe('OrderedMap test', () => {
+describe('ordered-map test', () => {
   const myOrderedMap = new OrderedMap(arr.map((element, index) => [element, index]));
   const stdMap = new Map(arr.map((element, index) => [element, index]));
 
-  it('OrderedMap delete function test', () => {
+  it('ordered-map delete function test', () => {
     const eraseArr: number[] = [];
     stdMap.forEach((value, key) => {
       if (Math.random() > 0.5) {
@@ -45,15 +45,15 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
-  it('OrderedMap set function test', () => {
+  it('ordered-map set function test', () => {
     for (let i = 0; i < testNum; ++i) {
       stdMap.set(i, i);
-      expect(myOrderedMap.set(i, i)).to.equal(stdMap.size);
+      expect(myOrderedMap.set(i, i).size).to.equal(stdMap.size);
     }
     judgeMap(myOrderedMap, stdMap);
   });
 
-  it('OrderedMap find function test', () => {
+  it('ordered-map find function test', () => {
     const myOrderedMap = new OrderedMap<number, number>();
     expect(myOrderedMap.find(0).equals(myOrderedMap.end())).to.equal(true);
     expect(myOrderedMap.find(1).equals(myOrderedMap.end())).to.equal(true);
@@ -69,7 +69,7 @@ describe('OrderedMap test', () => {
     expect(myOrderedMap.find(2).equals(myOrderedMap.begin())).to.equal(true);
   });
 
-  it('OrderedMap eraseElementByPos function test', () => {
+  it('ordered-map delete function test', () => {
     for (let i = 0; i < 10; ++i) {
       const pos = Math.floor(Math.random() * myOrderedMap.length);
       const pair = myOrderedMap.at(pos)!;
@@ -79,7 +79,7 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
-  it('OrderedMap union function test', () => {
+  it('ordered-map union function test', () => {
     const otherMap = new OrderedMap<number, number>();
     for (let i = 0; i < testNum; ++i) {
       const random = Math.random() * 1000000;
@@ -90,7 +90,7 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
-  it('OrderedMap binary search function test', () => {
+  it('ordered-map binary search function test', () => {
     const myVector = new Vector(myOrderedMap);
     myVector.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < myVector.length; ++i) {
@@ -108,7 +108,7 @@ describe('OrderedMap test', () => {
     }
   });
 
-  it('OrderedMap reverse binary search function test', () => {
+  it('ordered-map reverse binary search function test', () => {
     const myVector = new Vector(myOrderedMap);
     myVector.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < myVector.length; ++i) {
@@ -126,7 +126,7 @@ describe('OrderedMap test', () => {
     }
   });
 
-  it('OrderedMap erase function test', () => {
+  it('ordered-map erase function test', () => {
     const v = new Vector<[number, number]>(myOrderedMap);
     v.sort((x, y) => x[0] - y[0]);
     for (let i = 0; i < testNum / 10; ++i) {
@@ -145,7 +145,7 @@ describe('OrderedMap test', () => {
     judgeMap(myOrderedMap, stdMap);
   });
 
-  it('OrderedMap iterator error test', () => {
+  it('ordered-map iterator error test', () => {
     myOrderedMap.begin().pointer[1] = 2;
     // @ts-ignore
     expect(myOrderedMap.begin().pointer[3]).to.equal(undefined);
@@ -155,7 +155,7 @@ describe('OrderedMap test', () => {
     }).to.throw(TypeError);
   });
 
-  it('OrderedMap update function test', () => {
+  it('ordered-map update function test', () => {
     const mp = new OrderedMap();
     mp.set(1, 1);
     expect(mp.update(mp.begin(), 2)).to.equal(true);
@@ -185,7 +185,7 @@ describe('OrderedMap test', () => {
     }
   });
 
-  it('OrderedMap iterator index function test', () => {
+  it('ordered-map iterator index function test', () => {
     const mp = new OrderedMap<number, number>([], {
       enableIndex: true
     });
@@ -214,14 +214,14 @@ describe('OrderedMap test', () => {
     expect(mp.end().index).to.equal(mp.length - 1);
   });
 
-  it('OrderedMap clear function test', () => {
+  it('ordered-map clear function test', () => {
     myOrderedMap.clear();
     stdMap.clear();
     judgeMap(myOrderedMap, stdMap);
 
     for (let i = 0; i < testNum; ++i) {
       stdMap.set(i, i);
-      expect(myOrderedMap.set(i, i)).to.equal(stdMap.size);
+      expect(myOrderedMap.set(i, i).size).to.equal(stdMap.size);
     }
     let i = testNum;
     stdMap.forEach((value, key) => {
@@ -248,7 +248,7 @@ describe('OrderedMap test', () => {
     stdMap.clear();
   });
 
-  it('OrderedMap empty test', () => {
+  it('ordered-map common test', () => {
     const myOrderedMap = new OrderedMap();
     expect(myOrderedMap.front()).to.equal(undefined);
     expect(myOrderedMap.back()).to.equal(undefined);

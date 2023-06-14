@@ -3,7 +3,6 @@ import { Entries } from '@/base';
 import { ITERATOR_TYPE } from '@/base/iterator';
 import { RandomIterator } from '@/sequential/random-iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
-import $getSize from '@/utils/getSize.macro';
 import * as Math from '@/utils/math';
 
 type Position = {
@@ -69,17 +68,20 @@ class Deque<T> extends SequentialContainer<T> {
   }
   private _init(entries: Entries<T>, options: {
     bucketSize?: number
-  } = {}) {
-    const _length = $getSize!(entries);
+  }) {
+    const length = entries.length ?? entries.size;
+    if (typeof length !== 'number') {
+      throw new TypeError('Can\'t get entries\' size');
+    }
     const { bucketSize = 1 << 12 } = options;
     this._bucketSize = bucketSize;
-    this._bucketNum = Math.ceil(_length, this._bucketSize) || 1;
+    this._bucketNum = Math.ceil(length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
       this._map.push(new Array(this._bucketSize));
     }
-    const needBucketNum = Math.ceil(_length, this._bucketSize);
+    const needBucketNum = Math.ceil(length, this._bucketSize);
     this._first.x = this._last.x = (this._bucketNum >> 1) - (needBucketNum >> 1);
-    this._first.y = this._last.y = (this._bucketSize - _length % this._bucketSize) >> 1;
+    this._first.y = this._last.y = (this._bucketSize - length % this._bucketSize) >> 1;
     const self = this;
     entries.forEach(function (item) {
       self._push(item);

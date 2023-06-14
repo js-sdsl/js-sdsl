@@ -21,15 +21,15 @@ function judge(myQueue: Queue<number>, myVector: Vector<number>) {
   expect(myQueue.front()).to.equal(undefined);
 }
 
-describe('Queue test', () => {
+describe('queue test', () => {
   const myQueue = new Queue(arr);
   const myVector = new Vector(arr);
 
-  it('Queue size test', () => {
+  it('queue size test', () => {
     expect(myQueue.length).to.equal(myVector.length);
   });
 
-  it('Queue allocate test', () => {
+  it('queue allocate test', () => {
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
       myVector.push(i);
@@ -49,13 +49,13 @@ describe('Queue test', () => {
     expect(myQueue.length).to.equal(0);
   });
 
-  it('Queue clear function test', () => {
+  it('queue clear function test', () => {
     myQueue.clear();
     myVector.clear();
     judge(myQueue, myVector);
   });
 
-  it('Queue other function test', () => {
+  it('queue other function test', () => {
     for (let i = 0; i < testNum; ++i) {
       myQueue.push(i);
       myVector.push(i);
