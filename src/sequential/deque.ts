@@ -100,7 +100,8 @@ class Deque<T> extends SequentialContainer<T> {
     for (let i = this._first.x; i < this._bucketNum; ++i) {
       newMap[newMap.length] = this._map[i];
     }
-    for (let i = 0; i < this._last.x; ++i) {
+    const lastX = this._last.x;
+    for (let i = 0; i < lastX; ++i) {
       newMap[newMap.length] = this._map[i];
     }
     newMap[newMap.length] = [...this._map[this._last.x]];
@@ -197,13 +198,14 @@ class Deque<T> extends SequentialContainer<T> {
   _push(item: T) {
     if (this._length > 0) {
       this._last = this._getNextPosition(this._last);
-      if (this._last.x === 0 && this._last.y === 0) {
+      const { x, y } = this._last;
+      if (x === 0 && y === 0) {
         this._map.push(new Array(this._bucketSize));
         this._last = { x: this._bucketNum, y: 0 };
         this._bucketNum += 1;
       } else if (
-        this._last.x === this._first.x &&
-        this._last.y === this._first.y
+        x === this._first.x &&
+        y === this._first.y
       ) this._reAllocate();
     }
     this._length += 1;
@@ -233,9 +235,10 @@ class Deque<T> extends SequentialContainer<T> {
   _unshift(item: T) {
     if (this._length > 0) {
       this._first = this._getPrevPosition(this._first);
+      const { x, y } = this._first;
       if (
-        this._first.x === this._last.x &&
-        this._first.y === this._last.y
+        x === this._last.x &&
+        y === this._last.y
       ) this._reAllocate();
     }
     this._length += 1;
@@ -287,7 +290,7 @@ class Deque<T> extends SequentialContainer<T> {
     return this._length;
   }
   erase(iter: DequeIterator<T>) {
-    const _node = iter._node;
+    const { _node } = iter;
     if (_node < 0 || _node >= this._length) {
       throw new RangeError('Invalid deque iterator!');
     }

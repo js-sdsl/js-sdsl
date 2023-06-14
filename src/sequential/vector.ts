@@ -93,7 +93,7 @@ class Vector<T> extends SequentialContainer<T> {
     return this._vector[index];
   }
   erase(iter: VectorIterator<T>) {
-    const _node = iter._node;
+    const { _node } = iter;
     iter = iter.next();
     this.splice(_node, 1);
     return iter;
@@ -112,7 +112,7 @@ class Vector<T> extends SequentialContainer<T> {
     this._vector[index] = item;
   }
   find(item: T, cmp: CompareFn<T> = compareFromS2L) {
-    const length = this.length;
+    const { length } = this;
     for (let i = 0; i < length; ++i) {
       // istanbul ignore else
       if (cmp(this._vector[i], item) === 0) {
@@ -130,7 +130,7 @@ class Vector<T> extends SequentialContainer<T> {
   }
   unique(cmp: CompareFn<T> = compareFromS2L) {
     let index = 1;
-    const length = this.length;
+    const { length } = this;
     for (let i = 1; i < length; ++i) {
       if (cmp(this._vector[i], this._vector[i - 1]) !== 0) {
         this._vector[index++] = this._vector[i];
@@ -193,7 +193,7 @@ class Vector<T> extends SequentialContainer<T> {
     return this._vector.values();
   }
   forEach(callback: (value: T, index: number, container: this) => void) {
-    const length = this.length;
+    const { length } = this;
     for (let i = 0; i < length; ++i) {
       callback(this._vector[i], i, this);
     }

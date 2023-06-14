@@ -6,6 +6,10 @@
   "plugins": ["compat"],
   "rules": {
     "no-console": "error",
-    "compat/compat": "error"
+    "compat/compat": "error",
+    "prefer-destructuring": ["error", {
+      "object": true,
+      "array": false
+    }]
   }
 }

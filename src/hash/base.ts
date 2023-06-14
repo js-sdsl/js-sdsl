@@ -117,7 +117,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
     }
   }
   clear() {
-    const HASH_TAG = this.HASH_TAG;
+    const { HASH_TAG } = this;
     this._objMap.forEach(function (el) {
       delete (<Record<symbol, number>><unknown>el._key)[HASH_TAG];
     });
