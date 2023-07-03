@@ -1,5 +1,10 @@
 import type TreeIterator from './tree-iterator';
-import { TREE_NODE_COLOR, TreeNode, TreeNodeEnableIndex } from './tree-node';
+import {
+  TREE_NODE_COLOR,
+  TreeNodeEnableIndex,
+  createTreeNode,
+  createTreeNodeEnableIndex
+} from './tree-node';
 import { Container } from '@/base';
 import { ITERATOR_TYPE } from '@/base/iterator';
 import { CompareFn, compareFromS2L } from '@/utils/compareFn';
@@ -19,7 +24,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
-  protected readonly _TreeNodeClass: typeof TreeNodeEnableIndex;
+  protected readonly _createNode: typeof createTreeNodeEnableIndex;
   /**
    * @internal
    */
@@ -31,10 +36,10 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     const { cmp = compareFromS2L, enableIndex = false } = options;
     this._cmp = cmp;
     this.enableIndex = enableIndex;
-    this._TreeNodeClass = enableIndex
-      ? TreeNodeEnableIndex
-      : (TreeNode as typeof TreeNodeEnableIndex);
-    this._header = new this._TreeNodeClass();
+    this._createNode = enableIndex
+      ? createTreeNodeEnableIndex
+      : (createTreeNode as typeof createTreeNodeEnableIndex);
+    this._header = this._createNode();
     this._header._left = this._header._right = this._header;
   }
   /**
@@ -351,7 +356,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected _set(key: K, value: V, hint?: TreeIterator<K, V>) {
     if (this._root === undefined) {
       this._length += 1;
-      this._root = new this._TreeNodeClass({
+      this._root = this._createNode({
         key,
         value,
         color: TREE_NODE_COLOR.BLACK
@@ -367,7 +372,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       minNode._value = value;
       return this._length;
     } else if (compareToMin > 0) {
-      minNode._left = new this._TreeNodeClass({
+      minNode._left = this._createNode({
         key,
         value
       });
@@ -381,7 +386,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
         maxNode._value = value;
         return this._length;
       } else if (compareToMax < 0) {
-        maxNode._right = new this._TreeNodeClass({
+        maxNode._right = this._createNode({
           key,
           value
         });
@@ -403,7 +408,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
                 prevNode._value = value;
                 return this._length;
               } else if (preCmpRes < 0) {
-                curNode = new this._TreeNodeClass({
+                curNode = this._createNode({
                   key,
                   value
                 });
@@ -424,7 +429,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
             const cmpResult = this._cmp(curNode._key!, key);
             if (cmpResult > 0) {
               if (curNode._left === undefined) {
-                curNode._left = new this._TreeNodeClass({
+                curNode._left = this._createNode({
                   key,
                   value
                 });
@@ -435,7 +440,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
               curNode = curNode._left;
             } else if (cmpResult < 0) {
               if (curNode._right === undefined) {
-                curNode._right = new this._TreeNodeClass({
+                curNode._right = this._createNode({
                   key,
                   value
                 });
