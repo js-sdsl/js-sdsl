@@ -7,7 +7,7 @@ import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   protected readonly _cmp: CompareFn<K>;
-  enableIndex: boolean;
+  readonly enableIndex: boolean;
   /**
    * @internal
    */
@@ -35,6 +35,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
       ? TreeNodeEnableIndex
       : (TreeNode as typeof TreeNodeEnableIndex);
     this._header = new this._TreeNodeClass();
+    this._header._left = this._header._right = this._header;
   }
   /**
    * @internal
@@ -479,7 +480,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     this._length = 0;
     this._root = undefined;
     this._header._parent = undefined;
-    this._header._left = this._header._right = undefined;
+    this._header._left = this._header._right = this._header;
   }
   /**
    * @description Update node's key by iterator.
@@ -581,7 +582,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     let node = this._header._left;
     return {
       next() {
-        const done = !node || node === self._header;
+        const done = node === self._header;
         if (done) {
           return {
             done,

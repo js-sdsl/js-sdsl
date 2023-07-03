@@ -60,7 +60,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   begin() {
     return new OrderedSetIterator<K>({
-      node: this._header._left || this._header,
+      node: this._header._left!,
       header: this._header,
       container: this
     });
@@ -74,7 +74,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
   }
   rBegin() {
     return new OrderedSetIterator<K>({
-      node: this._header._right || this._header,
+      node: this._header._right!,
       header: this._header,
       container: this,
       type: ITERATOR_TYPE.REVERSE
@@ -89,10 +89,10 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     });
   }
   front() {
-    return this._header._left ? this._header._left._key : undefined;
+    return this._header._left!._key;
   }
   back() {
-    return this._header._right ? this._header._right._key : undefined;
+    return this._header._right!._key;
   }
   lowerBound(key: K) {
     const resNode = this._lowerBound(this._root, key);
@@ -177,7 +177,7 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     let node = this._header._left;
     return {
       next() {
-        const done = !node || node === self._header;
+        const done = node === self._header;
         if (done) {
           return {
             done,

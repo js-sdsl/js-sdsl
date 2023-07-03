@@ -73,7 +73,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   begin() {
     return new OrderedMapIterator<K, V>({
-      node: this._header._left || this._header,
+      node: this._header._left!,
       header: this._header,
       container: this
     });
@@ -87,7 +87,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
   }
   rBegin() {
     return new OrderedMapIterator<K, V>({
-      node: this._header._right || this._header,
+      node: this._header._right!,
       header: this._header,
       container: this,
       type: ITERATOR_TYPE.REVERSE
@@ -102,12 +102,12 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     });
   }
   front() {
-    if (this._length === 0) return;
+    if (this._length === 0) return undefined;
     const minNode = this._header._left!;
     return <[K, V]>[minNode._key, minNode._value];
   }
   back() {
-    if (this._length === 0) return;
+    if (this._length === 0) return undefined;
     const maxNode = this._header._right!;
     return <[K, V]>[maxNode._key, maxNode._value];
   }
@@ -253,7 +253,7 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     let node = this._header._left;
     return {
       next() {
-        const done = !node || node === self._header;
+        const done = node === self._header;
         if (done) {
           return {
             value: undefined as unknown as V,

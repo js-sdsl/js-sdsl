@@ -280,18 +280,70 @@ describe('ordered-set test', () => {
   });
 
   it('ordered-set iterator test', function () {
-    const st = new OrderedSet([1, 2, 3]);
-    for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
-      expect(it.pointer).to.equal(index);
-      index += 1;
-    }
+    (function () {
+      const st = new OrderedSet([]);
+      for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index += 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([1]);
+      for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index += 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([1, 2]);
+      for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index += 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([1, 2, 3]);
+      for (let it = st.begin(), index = 1; !it.equals(st.end()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index += 1;
+      }
+    })();
   });
 
   it('ordered-set reverse iterator test', function () {
-    const st = new OrderedSet([2, 3]);
-    for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
-      expect(it.pointer).to.equal(index);
-      index -= 1;
-    }
+    (function () {
+      const st = new OrderedSet([]);
+      for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index -= 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([3]);
+      for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index -= 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([2, 3]);
+      for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index -= 1;
+      }
+    })();
+
+    (function () {
+      const st = new OrderedSet([1, 2, 3]);
+      for (let it = st.rBegin(), index = 3; !it.equals(st.rEnd()); it.next()) {
+        expect(it.pointer).to.equal(index);
+        index -= 1;
+      }
+    })();
   });
 });
