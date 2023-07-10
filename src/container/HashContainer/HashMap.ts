@@ -20,7 +20,7 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
       throwIteratorAccessError();
     }
     const self = this;
-    return new Proxy(<[K, V]><unknown>[self._node._key, self._node._value], {
+    return new Proxy(<[K, V]><unknown>[], {
       get(target, prop: '0' | '1') {
         if (prop === '0') return self._node._key;
         else if (prop === '1') return self._node._value;
