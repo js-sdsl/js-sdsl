@@ -114,6 +114,19 @@ function hashMapTest(generateRandom: () => unknown) {
     // @ts-ignore
     // eslint-disable-next-line no-return-assign
     expect(() => myHashMap.find(myHashMap.front()![0]).pointer[3] = 5).to.throw(TypeError);
+
+    expect(() => {
+      for (let it = myHashMap.begin(); !it.equals(myHashMap.end()); it.next()) {
+        const pointer = it.pointer;
+        const [key, value] = pointer;
+        expect(key).to.equal(pointer[0]);
+        expect(value).to.equal(pointer[1]);
+        pointer[1] = 2;
+        const [_key, _value] = pointer;
+        expect(_key).to.equal(pointer[0]);
+        expect(_value).to.equal(2);
+      }
+    }).to.not.throw(Error);
   });
 
   it('HashMap clear test', () => {
