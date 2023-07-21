@@ -63,6 +63,9 @@ export abstract class HashContainerIterator<K, V> extends ContainerIterator<K | 
       };
     }
   }
+  isAccessible() {
+    return this._node !== this._header;
+  }
   // @ts-ignore
   pre(): this;
   // @ts-ignore

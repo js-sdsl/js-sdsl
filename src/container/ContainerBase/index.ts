@@ -83,6 +83,7 @@ export abstract class ContainerIterator<T> {
    * console.log(next.pointer, iter.pointer); // 2, 1
    */
   abstract copy(): ContainerIterator<T>;
+  abstract isAccessible(): boolean;
 }
 
 export abstract class Base {
