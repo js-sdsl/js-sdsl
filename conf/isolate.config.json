@@ -17,37 +17,37 @@
     },
     {
       "name": "vector",
-      "version": "4.4.0",
+      "version": "4.4.2",
       "sourceRoot": "src/container/SequentialContainer/Vector.ts"
     },
     {
       "name": "link-list",
-      "version": "4.4.0",
+      "version": "4.4.2",
       "sourceRoot": "src/container/SequentialContainer/LinkList.ts"
     },
     {
       "name": "deque",
-      "version": "4.4.0",
+      "version": "4.4.2",
       "sourceRoot": "src/container/SequentialContainer/Deque.ts"
     },
     {
       "name": "ordered-set",
-      "version": "4.4.1",
+      "version": "4.4.2",
       "sourceRoot": "src/container/TreeContainer/OrderedSet.ts"
     },
     {
       "name": "ordered-map",
-      "version": "4.4.1",
+      "version": "4.4.2",
       "sourceRoot": "src/container/TreeContainer/OrderedMap.ts"
     },
     {
       "name": "hash-set",
-      "version": "4.4.0",
+      "version": "4.4.2",
       "sourceRoot": "src/container/HashContainer/HashSet.ts"
     },
     {
       "name": "hash-map",
-      "version": "4.4.0",
+      "version": "4.4.2",
       "sourceRoot": "src/container/HashContainer/HashMap.ts"
     }
   ],

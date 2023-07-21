@@ -55,6 +55,9 @@ export abstract class RandomIterator<T> extends ContainerIterator<T> {
   set pointer(newValue: T) {
     this.container.setElementByPos(this._node, newValue);
   }
+  isAccessible() {
+    return this._node !== this.container.size();
+  }
   // @ts-ignore
   pre(): this;
   // @ts-ignore

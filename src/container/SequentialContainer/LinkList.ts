@@ -79,6 +79,9 @@ class LinkListIterator<T> extends ContainerIterator<T> {
   copy() {
     return new LinkListIterator<T>(this._node, this._header, this.container, this.iteratorType);
   }
+  isAccessible() {
+    return this._node !== this._header;
+  }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
   // @ts-ignore

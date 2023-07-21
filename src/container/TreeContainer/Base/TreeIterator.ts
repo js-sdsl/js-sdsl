@@ -93,6 +93,9 @@ abstract class TreeIterator<K, V> extends ContainerIterator<K | [K, V]> {
     }
     return index;
   }
+  isAccessible() {
+    return this._node !== this._header;
+  }
   // @ts-ignore
   pre(): this;
   // @ts-ignore
