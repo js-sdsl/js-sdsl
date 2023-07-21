@@ -214,6 +214,21 @@ describe('ordered-map test', () => {
     expect(mp.end().index).to.equal(mp.length - 1);
   });
 
+  it('OrderedMap iterator iterator test', () => {
+    expect(() => {
+      for (let it = myOrderedMap.begin(); !it.equals(myOrderedMap.end()); it.next()) {
+        const pointer = it.pointer;
+        const [key, value] = pointer;
+        expect(key).to.equal(pointer[0]);
+        expect(value).to.equal(pointer[1]);
+        pointer[1] = 2;
+        const [_key, _value] = pointer;
+        expect(_key).to.equal(pointer[0]);
+        expect(_value).to.equal(2);
+      }
+    }).to.not.throw(Error);
+  });
+
   it('ordered-map clear function test', () => {
     myOrderedMap.clear();
     stdMap.clear();

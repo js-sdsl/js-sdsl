@@ -22,12 +22,15 @@ class HashMapIterator<K, V> extends HashContainerIterator<K, V> {
     }
     const self = this;
     return new Proxy(<[K, V]><unknown>[], {
-      get(_, props: '0' | '1') {
-        if (props === '0') return self._node._key;
-        else if (props === '1') return self._node._value;
+      get(target, prop: '0' | '1') {
+        if (prop === '0') return self._node._key;
+        else if (prop === '1') return self._node._value;
+        target[0] = self._node._key;
+        target[1] = self._node._value;
+        return target[prop];
       },
-      set(_, props: '1', newValue: V) {
-        if (props !== '1') {
+      set(target, prop: '1', newValue: V) {
+        if (prop !== '1') {
           throw new TypeError('props must be 1');
         }
         self._node._value = newValue;

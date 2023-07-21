@@ -56,4 +56,7 @@ export abstract class RandomIterator<T> extends Iterator<T> {
   set pointer(newValue: T) {
     this.container.set(this._node, newValue);
   }
+  isAccessible() {
+    return this._node !== this.container.length;
+  }
 }

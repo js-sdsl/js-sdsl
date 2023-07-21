@@ -95,6 +95,9 @@ abstract class TreeIterator<K, V> extends Iterator<K | [K, V]> {
     }
     return index;
   }
+  isAccessible() {
+    return this._node !== this._header;
+  }
 }
 
 export default TreeIterator;

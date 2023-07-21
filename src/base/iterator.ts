@@ -90,4 +90,8 @@ export abstract class Iterator<T> {
    * console.log(next.pointer, iter.pointer); // 2, 1
    */
   abstract copy(): Iterator<T>;
+  /**
+   * @description Checks if the iterator is accessible.
+   */
+  abstract isAccessible(): boolean;
 }

@@ -161,4 +161,13 @@ describe('iterator test', () => {
       expect(() => container.erase(container.rEnd())).to.throw(RangeError);
     }
   });
+
+  it('isAccessible test', () => {
+    for (const container of containerArr) {
+      expect(container.begin().isAccessible()).to.equal(true);
+      expect(container.begin().next().isAccessible()).to.equal(true);
+      expect(container.end().isAccessible()).to.equal(false);
+      expect(container.end().prev().isAccessible()).to.equal(true);
+    }
+  });
 });

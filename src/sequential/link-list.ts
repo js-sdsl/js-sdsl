@@ -88,6 +88,9 @@ class LinkListIterator<T> extends Iterator<T> {
       type: this.type
     });
   }
+  isAccessible() {
+    return this._node !== this._header;
+  }
   // @ts-ignore
   equals(iter: LinkListIterator<T>): boolean;
 }

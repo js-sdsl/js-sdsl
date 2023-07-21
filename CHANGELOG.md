@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and this project adheres to Semantic Versioning.
 
+## [4.4.2] - 2023.07.21
+
+### Fixed
+
+- The pointer of Adapter container's iterator cannot as array to be deconstructed.
+
+### Added
+
+- Add `isAccessible` function to iterators for iterable containers.
+
 ## [4.4.1] - 2023.06.05
 
 ### Fixed
