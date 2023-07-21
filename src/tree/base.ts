@@ -11,8 +11,11 @@ import { CompareFn, compareFromS2L } from '@/utils/compareFn';
 import { throwIteratorAccessError } from '@/utils/throwError';
 
 abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
-  protected readonly _cmp: CompareFn<K>;
   readonly enableIndex: boolean;
+  /**
+   * @internal
+   */
+  protected readonly _cmp: CompareFn<K>;
   /**
    * @internal
    */

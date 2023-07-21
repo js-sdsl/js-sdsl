@@ -8,6 +8,7 @@ export { default as OrderedSet } from '@/tree/ordered-set';
 export { default as OrderedMap } from '@/tree/ordered-map';
 export { default as HashSet } from '@/hash/hash-set';
 export { default as HashMap } from '@/hash/hash-map';
+export * from '@/utils/compareFn';
 export type { VectorIterator } from '@/sequential/vector';
 export type { LinkListIterator } from '@/sequential/link-list';
 export type { DequeIterator } from '@/sequential/deque';

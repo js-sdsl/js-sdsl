@@ -131,7 +131,7 @@ export abstract class HashContainer<K, V> extends Container<K | [K, V]> {
    * @description Remove the item of the specified key.
    * @param key - The key you want to remove.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
-   *                   If a `undefined` value is passed in, the type will be automatically judged.
+   *                   If an `undefined` value is passed in, the type will be automatically judged.
    * @returns Whether erase successfully.
    */
   delete(key: K, isObject = checkObject(key)) {

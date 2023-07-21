@@ -53,19 +53,20 @@ export type { OrderedMapIterator };
 class OrderedMap<K, V> extends TreeContainer<K, V> {
   /**
    * @param entries - The initialization container.
-   * @param cmp - The compare function.
-   * @param enableIndex - Whether to enable iterator indexing function.
+   * @param options - Options.
+   * @param options.cmp - The compare function.
+   * @param options.enableIndex - Whether to enable iterator indexing function.
    * @example
    * new OrderedMap();
    * new OrderedMap([[0, 1], [2, 1]]);
    * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y);
    * new OrderedMap([[0, 1], [2, 1]], (x, y) => x - y, true);
    */
-  constructor(entries: Entries<[K, V]> = [], props: {
+  constructor(entries: Entries<[K, V]> = [], options: {
     cmp?: CompareFn<K>,
     enableIndex?: boolean
   } = {}) {
-    super(props);
+    super(options);
     const self = this;
     entries.forEach(function (el) {
       self.set(el[0], el[1]);

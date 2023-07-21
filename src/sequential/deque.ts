@@ -51,21 +51,24 @@ class Deque<T> extends SequentialContainer<T> {
   /**
    * @internal
    */
-  private _bucketNum = 0;
+  private _bucketNum!: number;
   /**
    * @internal
    */
-  private _bucketSize: number = (1 << 12);
+  private _bucketSize!: number;
   /**
    * @internal
    */
   private _map: T[][] = [];
   constructor(entries: Entries<T> = [], options: {
-      bucketSize?: number
+    bucketSize?: number
   } = {}) {
     super();
     this._init(entries, options);
   }
+  /**
+   * @internal
+   */
   private _init(entries: Entries<T>, options: {
     bucketSize?: number
   }) {
@@ -73,8 +76,7 @@ class Deque<T> extends SequentialContainer<T> {
     if (typeof length !== 'number') {
       throw new TypeError('Can\'t get entries\' size');
     }
-    const { bucketSize = 1 << 12 } = options;
-    this._bucketSize = bucketSize;
+    this._bucketSize = options.bucketSize || (1 << 12);
     this._bucketNum = Math.ceil(length, this._bucketSize) || 1;
     for (let i = 0; i < this._bucketNum; ++i) {
       this._map.push(new Array(this._bucketSize));
@@ -113,6 +115,9 @@ class Deque<T> extends SequentialContainer<T> {
     this._map = newMap;
     this._bucketNum = newMap.length;
   }
+  /**
+   * @internal
+   */
   private _getPrevPosition(position: Position): Position {
     let { x, y } = position;
     if (y > 0) {
@@ -126,6 +131,9 @@ class Deque<T> extends SequentialContainer<T> {
     }
     return { x, y };
   }
+  /**
+   * @internal
+   */
   private _getNextPosition(position: Position): Position {
     let { x, y } = position;
     if (y < this._bucketSize - 1) {
@@ -140,11 +148,9 @@ class Deque<T> extends SequentialContainer<T> {
     return { x, y };
   }
   /**
-   * @description Get the map position of the item.
-   * @param index - The item's index.
    * @internal
    */
-  _calcPosition(index: number) {
+  private _calcPosition(index: number) {
     let x, y;
     const realIndex = this._first.y + index + 1;
     x = this._first.x + Math.ceil(realIndex, this._bucketSize) - 1;
@@ -195,7 +201,10 @@ class Deque<T> extends SequentialContainer<T> {
     if (this._length === 0) return;
     return this._map[this._last.x][this._last.y];
   }
-  _push(item: T) {
+  /**
+   * @internal
+   */
+  private _push(item: T) {
     if (this._length > 0) {
       this._last = this._getNextPosition(this._last);
       const { x, y } = this._last;
@@ -229,10 +238,9 @@ class Deque<T> extends SequentialContainer<T> {
     return item;
   }
   /**
-   * @description Push the item to the front.
-   * @param item - The item you want to push.
+   * @internal
    */
-  _unshift(item: T) {
+  private _unshift(item: T) {
     if (this._length > 0) {
       this._first = this._getPrevPosition(this._first);
       const { x, y } = this._first;
@@ -244,6 +252,10 @@ class Deque<T> extends SequentialContainer<T> {
     this._length += 1;
     this._map[this._first.x][this._first.y] = item;
   }
+  /**
+   * @description Push the item to the front.
+   * @param items - The items you want to push.
+   */
   unshift(...items: T[]) {
     const num = items.length;
     for (let i = num - 1; i >= 0; --i) {
@@ -252,7 +264,7 @@ class Deque<T> extends SequentialContainer<T> {
     return this._length;
   }
   /**
-   * @description Remove the _first item.
+   * @description Remove the first item.
    * @returns The item you popped.
    */
   shift() {
@@ -265,10 +277,16 @@ class Deque<T> extends SequentialContainer<T> {
     this._length -= 1;
     return item;
   }
+  /**
+   * @internal
+   */
   protected _at(index: number) {
     const { x, y } = this._calcPosition(index);
-    return this._map[x][y]!;
+    return this._map[x][y];
   }
+  /**
+   * @internal
+   */
   protected _set(index: number, item: T) {
     const { x, y } = this._calcPosition(index);
     this._map[x][y] = item;

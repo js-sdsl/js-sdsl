@@ -40,19 +40,20 @@ export type { OrderedSetIterator };
 class OrderedSet<K> extends TreeContainer<K, undefined> {
   /**
    * @param entries - The initialization container.
-   * @param cmp - The compare function.
-   * @param enableIndex - Whether to enable iterator indexing function.
+   * @param options - Options.
+   * @param options.cmp - The compare function.
+   * @param options.enableIndex - Whether to enable iterator indexing function.
    * @example
    * new OrderedSet();
    * new OrderedSet([0, 1, 2]);
    * new OrderedSet([0, 1, 2], (x, y) => x - y);
    * new OrderedSet([0, 1, 2], (x, y) => x - y, true);
    */
-  constructor(entries: Entries<K> = [], props: {
+  constructor(entries: Entries<K> = [], options: {
     cmp?: CompareFn<K>,
     enableIndex?: boolean
   } = {}) {
-    super(props);
+    super(options);
     const self = this;
     entries.forEach(function (el) {
       self.add(el);

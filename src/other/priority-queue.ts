@@ -9,10 +9,11 @@ class PriorityQueue<T> extends Base {
   private readonly _priorityQueue: T[];
   /**
    * @description PriorityQueue's constructor.
-   * @param container - Initialize container, must have a forEach function.
-   * @param cmp - Compare function.
-   * @param copy - When the container is an array, you can choose to directly operate on the original object of
-   *               the array or perform a shallow copy. The default is shallow copy.
+   * @param entries - Initialize container, must have a forEach function.
+   * @param options - Options.
+   * @param options.cmp - Compare function.
+   * @param options.copy - When the container is an array, you can choose to directly operate on the original object of
+   *                       the array or perform a shallow copy. The default is shallow copy.
    * @example
    * new PriorityQueue();
    * new PriorityQueue([1, 2, 3]);
@@ -20,8 +21,8 @@ class PriorityQueue<T> extends Base {
    * new PriorityQueue([1, 2, 3], (x, y) => x - y, false);
    */
   constructor(entries: Entries<T> = [], options: {
-    cmp?: CompareFn<T>
-    copy?: boolean
+    cmp?: CompareFn<T>;
+    copy?: boolean;
   } = {}) {
     super();
     const { cmp = compareFromL2S, copy = true } = options;
@@ -29,15 +30,15 @@ class PriorityQueue<T> extends Base {
     if (Array.isArray(entries)) {
       this._priorityQueue = copy ? [...entries] : entries;
     } else {
-      this._priorityQueue = [];
-      const self = this;
+      const priorityQueue: T[] = [];
       entries.forEach(function (el) {
-        self._priorityQueue.push(el);
+        priorityQueue.push(el);
       });
+      this._priorityQueue = priorityQueue;
     }
-    this._length = this._priorityQueue.length;
-    const halfLength = this._length >> 1;
-    for (let parent = (this._length - 1) >> 1; parent >= 0; --parent) {
+    const length = this._length = this._priorityQueue.length;
+    const halfLength = length >> 1;
+    for (let parent = (length - 1) >> 1; parent >= 0; --parent) {
       this._pushDown(parent, halfLength);
     }
   }

@@ -105,6 +105,9 @@ export abstract class Container<T> extends Base {
    * container.forEach((item, index) => console.log(item, index));
    */
   abstract forEach(callback: (value: T, index: number, container: this) => void): void;
+  /**
+   * @internal
+   */
   protected abstract _at(index: number): T;
   /**
    * @description Gets the value of the item at the specified position.

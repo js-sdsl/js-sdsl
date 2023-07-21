@@ -4,8 +4,8 @@ import { CompareFn } from '@/utils/compareFn';
 
 abstract class SequentialContainer<T> extends Container<T> {
   /**
-   * @description Push the item to the back.
-   * @param items - The elements you want to push.
+   * @description Push items to the back.
+   * @param items - The items you want to push.
    * @returns The size of container after pushing.
    */
   abstract push(...items: T[]): number;
@@ -14,6 +14,9 @@ abstract class SequentialContainer<T> extends Container<T> {
    * @returns The item you popped.
    */
   abstract pop(): T | undefined;
+  /**
+   * @internal
+   */
   protected abstract _set(index: number, item: T): void;
   /**
    * @description Sets item by position.

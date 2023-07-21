@@ -58,9 +58,6 @@ class HashMap<K, V> extends HashContainer<K, V> {
     });
   }
   begin() {
-    /**
-     * this._head, this._header, this
-     */
     return new HashMapIterator<K, V>({
       node: this._head,
       header: this._header,
@@ -104,14 +101,14 @@ class HashMap<K, V> extends HashContainer<K, V> {
    * @param value - The value want to set.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
-   * @returns The size of container after setting.
+   * @returns The container itself.
    */
   set(key: K, value: V, isObject?: boolean) {
     this._set(key, value, isObject);
     return this;
   }
   /**
-   * @description Get the value of the item of the specified key.
+   * @description Get the value of the item by the specified key.
    * @param key - The key want to search.
    * @param isObject - Tell us if the type of inserted key is `object` to improve efficiency.<br/>
    *                   If a `undefined` value is passed in, the type will be automatically judged.
