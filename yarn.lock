@@ -7599,10 +7599,10 @@ ts-node@^10.8.1, ts-node@^10.9.1:
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
 
-ts-transform-paths@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/ts-transform-paths/-/ts-transform-paths-2.0.3.tgz#8d9cc0e7b503e36c9fe44b5019c2cd59950c43de"
-  integrity sha512-eMUcIe/CCLUl90j9xqyj0RXC0t7h2E/ETbGBG3E8xFLyIMD9kTixUfZM78K1sHu0OBTFZTo6J7aUOafB8Mx+Dg==
+ts-transform-paths@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ts-transform-paths/-/ts-transform-paths-3.0.0.tgz#302c98fd43ef3be9b2396ac91adde1e7b07f61d7"
+  integrity sha512-6zaET4Gz6/65Zia2jzQkh2v4WJA1NK3IvxXP0GlFkfWL9rwnInIMzQbjDunJb+m22L9S9I4XZVgW6xC+fZ2n6g==
 
 tsconfig-paths@^3.14.1, tsconfig-paths@^3.5.0:
   version "3.14.2"
