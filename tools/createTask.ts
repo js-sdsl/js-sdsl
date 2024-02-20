@@ -43,7 +43,7 @@ export type IsolateBuildConfig = {
   builds: {
     name: string;
     version: string;
-    sourceRoot: string;
+    type: string;
   }[],
   sharedFiles: string | string[]
 };
@@ -82,7 +82,6 @@ export function createIsolateTasksFromConfig(config: IsolateBuildConfig) {
       {
         format: 'esm',
         overrideSettings: {
-          target: 'ES5',
           module: 'ES2015',
           declaration: true
         }

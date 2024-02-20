@@ -3,52 +3,52 @@
     {
       "name": "stack",
       "version": "4.4.0",
-      "sourceRoot": "src/container/OtherContainer/Stack.ts"
+      "type": "other"
     },
     {
       "name": "queue",
       "version": "4.4.0",
-      "sourceRoot": "src/container/OtherContainer/Queue.ts"
+      "type": "other"
     },
     {
       "name": "priority-queue",
       "version": "4.4.0",
-      "sourceRoot": "src/container/OtherContainer/PriorityQueue.ts"
+      "type": "other"
     },
     {
       "name": "vector",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/SequentialContainer/Vector.ts"
+      "version": "4.4.0",
+      "type": "sequential"
     },
     {
       "name": "link-list",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/SequentialContainer/LinkList.ts"
+      "version": "4.4.0",
+      "type": "sequential"
     },
     {
       "name": "deque",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/SequentialContainer/Deque.ts"
+      "version": "4.4.0",
+      "type": "sequential"
     },
     {
       "name": "ordered-set",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/TreeContainer/OrderedSet.ts"
+      "version": "4.4.1",
+      "type": "tree"
     },
     {
       "name": "ordered-map",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/TreeContainer/OrderedMap.ts"
+      "version": "4.4.1",
+      "type": "tree"
     },
     {
       "name": "hash-set",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/HashContainer/HashSet.ts"
+      "version": "4.4.0",
+      "type": "hash"
     },
     {
       "name": "hash-map",
-      "version": "4.4.2",
-      "sourceRoot": "src/container/HashContainer/HashMap.ts"
+      "version": "4.4.0",
+      "type": "hash"
     }
   ],
   "sharedFiles": [

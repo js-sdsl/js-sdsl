@@ -231,7 +231,7 @@ class TsUtils {
   }
   static hasModifier(node: ts.Node, modifier: ts.SyntaxKind): boolean {
     return node.modifiers !== undefined &&
-      node.modifiers.some((mod: ts.Modifier) => mod.kind === modifier);
+      node.modifiers.some(mod => mod.kind === modifier);
   }
   static getNodeJSDocComment(node: ts.Node): string {
     const start = node.getStart();
