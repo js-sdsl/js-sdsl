@@ -1,0 +1,262 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>js-sdsl - v4.4.2</title><meta name="description" content="Documentation for js-sdsl - v4.4.2"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">js-sdsl - v4.4.2</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>js-sdsl - v4.4.2</h2></div>
+<div class="tsd-panel tsd-typography"><p align="center">
+  <a href="https://js-sdsl.org/" target="_blank" rel="noopener noreferrer">
+    <img src="https://js-sdsl.org/assets/image/logo/logo-removebg.png" alt="js-sdsl logo" width="120" />
+  </a>
+</p>
+
+<h3><p align="center">A javascript standard data structure library which benchmark against C++ STL</p></h3>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/js-sdsl"><img src="https://img.shields.io/npm/v/js-sdsl.svg" alt="NPM Version" /></a>
+  <a href="https://github.com/js-sdsl/js-sdsl/actions/workflows/build.yml"><img src="https://img.shields.io/github/actions/workflow/status/js-sdsl/js-sdsl/build.yml" alt="Build Status" /></a>
+  <a href='https://coveralls.io/github/js-sdsl/js-sdsl?branch=main'><img src='https://coveralls.io/repos/github/js-sdsl/js-sdsl/badge.svg?branch=main' alt='Coverage Status' /></a>
+  <a href="https://github.com/js-sdsl/js-sdsl"><img src="https://img.shields.io/github/stars/js-sdsl/js-sdsl.svg" alt="GITHUB Star" /></a>
+  <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
+  <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.shields.io/bundlejs/size/js-sdsl" alt="Gzip Size"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/js-sdsl.svg" alt="MIT-license" /></a>
+  <a href="https://github.com/js-sdsl/js-sdsl/"><img src="https://img.shields.io/github/languages/top/js-sdsl/js-sdsl.svg" alt="GITHUB-language" /></a>
+</p>
+
+<p align="center">English | <a href="https://github.com/js-sdsl/js-sdsl/blob/main/README.zh-CN.md">简体中文</a></p>
+
+
+<a href="#✨-included-data-structures" id="✨-included-data-structures" style="color: inherit; text-decoration: none;">
+  <h2>✨ Included data structures</h2>
+</a>
+<ul>
+<li><strong>Stack</strong> - first in last out stack.</li>
+<li><strong>Queue</strong> - first in first out queue.</li>
+<li><strong>PriorityQueue</strong> - heap-implemented priority queue.</li>
+<li><strong>Vector</strong> - protected array, cannot to operate properties like <code>length</code> directly.</li>
+<li><strong>LinkList</strong> - linked list of non-contiguous memory addresses.</li>
+<li><strong>Deque</strong> - double-ended-queue, O(1) time complexity to <code>unshift</code> or getting elements by index.</li>
+<li><strong>OrderedSet</strong> - sorted set which implemented by red black tree.</li>
+<li><strong>OrderedMap</strong> - sorted map which implemented by red black tree.</li>
+<li><strong>HashSet</strong> - refer to the <a href="https://github.com/rousan/collections-es6">polyfill of ES6 Set</a>.</li>
+<li><strong>HashMap</strong> - refer to the <a href="https://github.com/rousan/collections-es6">polyfill of ES6 Map</a>.</li>
+</ul>
+
+<a href="#⚔️-benchmark" id="⚔️-benchmark" style="color: inherit; text-decoration: none;">
+  <h2>⚔️ Benchmark</h2>
+</a>
+<p>We are benchmarking against other popular data structure libraries. In some ways we&#39;re better than the best library. See <a href="https://js-sdsl.org/#/test/benchmark-analyze">Benchmark</a>.</p>
+
+<a href="#🖥-supported-platforms" id="🖥-supported-platforms" style="color: inherit; text-decoration: none;">
+  <h2>🖥 Supported platforms</h2>
+</a>
+<table>
+<thead>
+<tr>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/edge.png" alt=""><br/>IE / Edge</th>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/firefox.png" alt=""><br/>Firefox</th>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/chrome.png" alt=""><br/>Chrome</th>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/safari.png" alt=""><br/>Safari</th>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/opera.png" alt=""><br/>Opera</th>
+<th align="center"><img src="https://js-sdsl.org/assets/image/platform/nodejs.png" alt=""><br/>NodeJs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Edge 12</td>
+<td align="center">36</td>
+<td align="center">49</td>
+<td align="center">10</td>
+<td align="center">36</td>
+<td align="center">10</td>
+</tr>
+</tbody></table>
+
+<a href="#📦-download" id="📦-download" style="color: inherit; text-decoration: none;">
+  <h2>📦 Download</h2>
+</a>
+<p>Download directly by cdn:</p>
+<ul>
+<li><a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.js">js-sdsl.js</a> (for development)</li>
+<li><a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js">js-sdsl.min.js</a> (for production)</li>
+</ul>
+<p>Or install js-sdsl using npm:</p>
+<pre><code class="language-bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">js-sdsl</span>
+</code></pre>
+<p>Or you can download the isolation packages containing only the containers you want:</p>
+<table>
+<thead>
+<tr>
+<th>package</th>
+<th>npm</th>
+<th>size</th>
+<th>docs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Stack.ts">@js-sdsl/stack</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/stack"><img src="https://img.shields.io/npm/v/@js-sdsl/stack" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/stack" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/Stack.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Queue.ts">@js-sdsl/queue</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/queue"><img src="https://img.shields.io/npm/v/@js-sdsl/queue" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/queue" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/Queue.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/PriorityQueue.ts">@js-sdsl/priority-queue</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/priority-queue"><img src="https://img.shields.io/npm/v/@js-sdsl/priority-queue" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/priority-queue" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/PriorityQueue.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Vector.ts">@js-sdsl/vector</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/vector"><img src="https://img.shields.io/npm/v/@js-sdsl/vector" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/vector" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/Vector.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/LinkList.ts">@js-sdsl/link-list</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/link-list"><img src="https://img.shields.io/npm/v/@js-sdsl/link-list" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/link-list" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/LinkList.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Deque.ts">@js-sdsl/deque</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/deque"><img src="https://img.shields.io/npm/v/@js-sdsl/deque" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/deque" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/Deque.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedSet.ts">@js-sdsl/ordered-set</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/ordered-set"><img src="https://img.shields.io/npm/v/@js-sdsl/ordered-set" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/ordered-set" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/OrderedSet.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedMap.ts">@js-sdsl/ordered-map</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/ordered-map"><img src="https://img.shields.io/npm/v/@js-sdsl/ordered-map" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/ordered-map" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/OrderedMap.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashSet.ts">@js-sdsl/hash-set</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/hash-set"><img src="https://img.shields.io/npm/v/@js-sdsl/hash-set" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/hash-set" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/HashSet.html">link</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashMap.ts">@js-sdsl/hash-map</a></td>
+<td><a href="https://www.npmjs.com/package/@js-sdsl/hash-map"><img src="https://img.shields.io/npm/v/@js-sdsl/hash-map" alt="NPM Package"></a></td>
+<td><a href="https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js"><img src="https://img.shields.io/bundlejs/size/@js-sdsl/hash-map" alt="GZIP Size"></a></td>
+<td><a href="https://js-sdsl.org/js-sdsl/classes/HashMap.html">link</a></td>
+</tr>
+</tbody></table>
+
+<a href="#🪒-usage" id="🪒-usage" style="color: inherit; text-decoration: none;">
+  <h2>🪒 Usage</h2>
+</a>
+<p>You can visit our <a href="https://js-sdsl.org/">official website</a> to get more information.</p>
+<p>To help you have a better use, we also provide this <a href="https://js-sdsl.org/js-sdsl/index.html">API document</a>.</p>
+<p>For previous versions of the documentation, please visit:</p>
+<p><code>https://js-sdsl.org/js-sdsl/previous/v${version}/index.html</code></p>
+<p>E.g.</p>
+<p><a href="https://js-sdsl.org/js-sdsl/previous/v4.1.5/index.html">https://js-sdsl.org/js-sdsl/previous/v4.1.5/index.html</a></p>
+
+<a href="#for-browser" id="for-browser" style="color: inherit; text-decoration: none;">
+  <h3>For browser</h3>
+</a>
+<pre><code class="language-html"><span class="hl-3">&lt;</span><span class="hl-4">script</span><span class="hl-5"> </span><span class="hl-6">src</span><span class="hl-5">=</span><span class="hl-7">&quot;https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js&quot;</span><span class="hl-3">&gt;&lt;/</span><span class="hl-4">script</span><span class="hl-3">&gt;</span><br/><span class="hl-3">&lt;</span><span class="hl-4">script</span><span class="hl-3">&gt;</span><br/><span class="hl-5">    </span><span class="hl-8">const</span><span class="hl-5"> {</span><br/><span class="hl-5">      </span><span class="hl-9">Vector</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">Stack</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">Queue</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">LinkList</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">Deque</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">PriorityQueue</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">OrderedSet</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">OrderedMap</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">HashSet</span><span class="hl-5">,</span><br/><span class="hl-5">      </span><span class="hl-9">HashMap</span><br/><span class="hl-5">    } </span><span class="hl-1">=</span><span class="hl-5"> </span><span class="hl-10">sdsl</span><span class="hl-5">;</span><br/><span class="hl-5">    </span><span class="hl-8">const</span><span class="hl-5"> </span><span class="hl-9">myOrderedMap</span><span class="hl-5"> </span><span class="hl-1">=</span><span class="hl-5"> </span><span class="hl-8">new</span><span class="hl-5"> </span><span class="hl-0">OrderedMap</span><span class="hl-5">();</span><br/><span class="hl-5">    </span><span class="hl-10">myOrderedMap</span><span class="hl-5">.</span><span class="hl-0">setElement</span><span class="hl-5">(</span><span class="hl-11">1</span><span class="hl-5">, </span><span class="hl-11">2</span><span class="hl-5">);</span><br/><span class="hl-5">    </span><span class="hl-10">console</span><span class="hl-5">.</span><span class="hl-0">log</span><span class="hl-5">(</span><span class="hl-10">myOrderedMap</span><span class="hl-5">.</span><span class="hl-0">getElementByKey</span><span class="hl-5">(</span><span class="hl-11">1</span><span class="hl-5">)); </span><span class="hl-12">// 2</span><br/><span class="hl-3">&lt;/</span><span class="hl-4">script</span><span class="hl-3">&gt;</span>
+</code></pre>
+
+<a href="#for-npm" id="for-npm" style="color: inherit; text-decoration: none;">
+  <h3>For npm</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-12">// esModule</span><br/><span class="hl-13">import</span><span class="hl-1"> { </span><span class="hl-10">OrderedMap</span><span class="hl-1"> } </span><span class="hl-13">from</span><span class="hl-1"> </span><span class="hl-2">&#39;js-sdsl&#39;</span><span class="hl-1">;</span><br/><span class="hl-12">// commonJs</span><br/><span class="hl-8">const</span><span class="hl-1"> { </span><span class="hl-9">OrderedMap</span><span class="hl-1"> } = </span><span class="hl-0">require</span><span class="hl-1">(</span><span class="hl-2">&#39;js-sdsl&#39;</span><span class="hl-1">);</span><br/><span class="hl-8">const</span><span class="hl-1"> </span><span class="hl-9">myOrderedMap</span><span class="hl-1"> = </span><span class="hl-8">new</span><span class="hl-1"> </span><span class="hl-0">OrderedMap</span><span class="hl-1">();</span><br/><span class="hl-10">myOrderedMap</span><span class="hl-1">.</span><span class="hl-0">setElement</span><span class="hl-1">(</span><span class="hl-11">1</span><span class="hl-1">, </span><span class="hl-11">2</span><span class="hl-1">);</span><br/><span class="hl-10">console</span><span class="hl-1">.</span><span class="hl-0">log</span><span class="hl-1">(</span><span class="hl-10">myOrderedMap</span><span class="hl-1">.</span><span class="hl-0">getElementByKey</span><span class="hl-1">(</span><span class="hl-11">1</span><span class="hl-1">)); </span><span class="hl-12">// 2</span>
+</code></pre>
+
+<a href="#🛠-test" id="🛠-test" style="color: inherit; text-decoration: none;">
+  <h2>🛠 Test</h2>
+</a>
+
+<a href="#unit-test" id="unit-test" style="color: inherit; text-decoration: none;">
+  <h3>Unit test</h3>
+</a>
+<p>We use <a href="https://karma-runner.github.io/">karma</a> and <a href="https://mochajs.org/">mocha</a> frame to do unit tests and synchronize to <a href="https://coveralls.io/github/js-sdsl/js-sdsl">coveralls</a>. You can run <code>yarn test:unit</code> command to reproduce it.</p>
+
+<a href="#for-performance" id="for-performance" style="color: inherit; text-decoration: none;">
+  <h3>For performance</h3>
+</a>
+<p>We tested most of the functions for efficiency. You can go to <a href="https://github.com/js-sdsl/js-sdsl/blob/gh-pages/performance.md"><code>gh-pages/performance.md</code></a> to see our running results or reproduce it with <code>yarn test:performance</code> command.</p>
+<p>You can also visit <a href="https://js-sdsl.org/#/test/performance-test">here</a> to get the result.</p>
+
+<a href="#⌨️-development" id="⌨️-development" style="color: inherit; text-decoration: none;">
+  <h2>⌨️ Development</h2>
+</a>
+<p>Use Gitpod, a free online dev environment for GitHub.</p>
+<p><a href="https://gitpod.io/#https://github.com/js-sdsl/js-sdsl"><img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Open in Gippod"></a></p>
+<p>Or clone locally:</p>
+<pre><code class="language-bash"><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">git</span><span class="hl-1"> </span><span class="hl-2">clone</span><span class="hl-1"> </span><span class="hl-2">https://github.com/js-sdsl/js-sdsl.git</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">cd</span><span class="hl-1"> </span><span class="hl-2">js-sdsl</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><br/><span class="hl-0">$</span><span class="hl-1"> </span><span class="hl-2">npm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">dev</span><span class="hl-1">   </span><span class="hl-12"># development mode</span>
+</code></pre>
+<p>Then you can see the output in <code>dist/cjs</code> folder.</p>
+
+<a href="#🤝-contributing" id="🤝-contributing" style="color: inherit; text-decoration: none;">
+  <h2>🤝 Contributing</h2>
+</a>
+<p>Feel free to dive in! Open an issue or submit PRs. It may be helpful to read the <a href="https://github.com/js-sdsl/js-sdsl/blob/main/.github/CONTRIBUTING.md">Contributor Guide</a>.</p>
+
+<a href="#contributors" id="contributors" style="color: inherit; text-decoration: none;">
+  <h3>Contributors</h3>
+</a>
+<p>Thanks goes to these wonderful people:</p>
+<p><a href="https://github.com/js-sdsl/js-sdsl/graphs/contributors"><img src="https://contrib.rocks/image?repo=js-sdsl/js-sdsl" alt="contributors"></a></p>
+<p>This project follows the <a href="https://github.com/all-contributors/all-contributors">all-contributors</a> specification. Contributions of any kind welcome!</p>
+
+<a href="#❤️-sponsors-and-backers" id="❤️-sponsors-and-backers" style="color: inherit; text-decoration: none;">
+  <h2>❤️ Sponsors and Backers</h2>
+</a>
+<p>The special thanks to these sponsors or backers because they provided support at a very early stage:</p>
+<p><a href="https://eslint.org/"><img src="https://js-sdsl.org/assets/image/sponsors/eslint-logo-color.png" alt="eslint logo" width="150"></a></p>
+<p>Thanks also give to these sponsors or backers:</p>
+<p><a href="https://opencollective.com/js-sdsl#support"><img src="https://opencollective.com/js-sdsl/tiers/sponsors.svg?avatarHeight=36" alt="sponsors"></a></p>
+<p><a href="https://opencollective.com/js-sdsl#support"><img src="https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36" alt="backers"></a></p>
+
+<a href="#🎫-license" id="🎫-license" style="color: inherit; text-decoration: none;">
+  <h2>🎫 License</h2>
+</a>
+<p><a href="https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE">MIT</a> © <a href="https://github.com/zly201">ZLY201</a></p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">js-<wbr/>sdsl -<wbr/> v4.4.2</a>
+<ul>
+<li class="tsd-kind-module"><a href="modules/_internal_.html">&lt;internal&gt;</a></li></ul></li></ul></div></details></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>
