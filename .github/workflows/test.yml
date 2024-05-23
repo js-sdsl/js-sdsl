@@ -63,7 +63,7 @@ jobs:
       - name: Run chrome test
         run: yarn test:chrome
   browser-firefox-test:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -74,11 +74,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Setup firefox
+        id: setup-firefox
         uses: browser-actions/setup-firefox@latest
         with:
           firefox-version: '36.0'
       - name: Run firefox test
-        run: FIREFOX_BIN=$(which firefox) yarn test:firefox
+        run: FIREFOX_BIN=${{ steps.setup-firefox.outputs.firefox-path }} yarn test:firefox
   browser-edge-test:
     runs-on: windows-latest
     steps:
