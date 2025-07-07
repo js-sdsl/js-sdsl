@@ -11,4 +11,4 @@ export function ceil(a: number, b: number) {
 /**
  * @internal
  */
-export const floor = Math.floor;
+export const { floor } = Math;

@@ -8,7 +8,7 @@ on:
     paths:
       - src/**/*.ts
       - test/**/*.ts
-      - performance/**/*.ts
+      - perf/**/*.ts
       - tools/*.ts
       - gulpfile.ts
       - karma.conf.ts
@@ -77,7 +77,7 @@ jobs:
         id: setup-firefox
         uses: browser-actions/setup-firefox@latest
         with:
-          firefox-version: '36.0'
+          firefox-version: '55.0'
       - name: Run firefox test
         run: FIREFOX_BIN=${{ steps.setup-firefox.outputs.firefox-path }} yarn test:firefox
   browser-edge-test:
@@ -133,4 +133,4 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Run performance test
-        run: yarn test:performance
+        run: yarn test:perf

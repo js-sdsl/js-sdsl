@@ -250,7 +250,7 @@ export function gulpIsolateFactory(
     isolateBuildConfig: {
       builds: {
         name: string,
-        sourceRoot: string
+        type: string
       }[]
     },
     buildName: string,
@@ -306,7 +306,9 @@ export function gulpIsolateFactory(
           indexOutputPath: `${initializedSettings.buildDataDir}/transformed-index.json`,
           indexFile: input.indexFile,
           builds: input.isolateBuildConfig.builds
-            .map(build => ({ name: build.name, sourceRoots: [build.sourceRoot] }))
+            .map(
+              build => ({ name: build.name, sourceRoots: [`src/${build.type}/${build.name}.ts`] })
+            )
         });
       }
     });

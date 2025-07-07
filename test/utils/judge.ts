@@ -3,10 +3,15 @@ import { SequentialContainer } from '@/index';
 
 export function judgeSequentialContainer(
   container: SequentialContainer<number>,
-  myVector: SequentialContainer<number>
+  arr: number[]
 ) {
-  expect(container.size()).to.equal(myVector.size());
-  container.forEach((element, index) => {
-    expect(element).to.equal(myVector.getElementByPos(index));
+  expect(container.length).to.equal(arr.length);
+  arr.forEach((element, index) => {
+    try {
+      expect(container.at(index)).to.equal(element);
+    } catch (e) {
+      console.error('Error index:', index);
+      throw e;
+    }
   });
 }

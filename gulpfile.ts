@@ -31,7 +31,6 @@ gulp.task(
     'dist/esm',
     {
       overrideSettings: {
-        target: 'ES5',
         module: 'ES2015',
         declaration: true
       }
@@ -40,18 +39,18 @@ gulp.task(
 );
 
 gulp.task(
-  'performance',
+  'perf',
   () => gulpFactory(
     {
       globs: [
         'src/**/*.ts',
-        'performance/**/*.ts'
+        'perf/**/*.ts'
       ],
       opts: {
         base: '.'
       }
     },
-    'dist/performance',
+    'dist/perf',
     {
       overrideSettings: {
         module: 'ES2015',

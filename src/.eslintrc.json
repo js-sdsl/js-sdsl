@@ -5,7 +5,11 @@
   ],
   "plugins": ["compat"],
   "rules": {
+    "no-console": "error",
     "compat/compat": "error",
-    "require-yield": "off"
+    "prefer-destructuring": ["error", {
+      "object": true,
+      "array": false
+    }]
   }
 }

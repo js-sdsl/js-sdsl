@@ -534,14 +534,6 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "args": "none",
-        "caughtErrors": "none",
-        "ignoreRestSiblings": true,
-        "vars": "all"
-      }
-    ]
+    "@typescript-eslint/no-unused-vars": "error"
   }
 }

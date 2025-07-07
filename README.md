@@ -40,7 +40,7 @@ We are benchmarking against other popular data structure libraries. In some ways
 
 | ![][Edge-Icon]<br/>IE / Edge | ![][Firefox-Icon]<br/>Firefox | ![][Chrome-Icon]<br/>Chrome | ![][Safari-Icon]<br/>Safari | ![][Opera-Icon]<br/>Opera | ![][NodeJs-Icon]<br/>NodeJs |
 |:----------------------------:|:-----------------------------:|:---------------------------:|:---------------------------:|:-------------------------:|:---------------------------:|
-|           Edge 12            |              36               |             49              |             10              |            36             |             10              |
+|           Edge 12            |              55               |             49              |             10              |            36             |             10              |
 
 ## 📦 Download
 
