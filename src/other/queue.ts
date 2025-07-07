@@ -5,7 +5,7 @@ const enum QUEUE_CONSTANT {
   MIN_ALLOCATE_SIZE = (1 << 12)
 }
 
-class Queue<T> extends Base {
+class Queue<T> extends Base<T> {
   /**
    * @internal
    */
@@ -32,18 +32,17 @@ class Queue<T> extends Base {
    */
   push(item: T) {
     const capacity = this._queue.length;
+    const firstIndex = this._first;
+    const lastIndex = this._first + this._length;
     if (
-      (this._first / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA &&
-      (this._first + this._length) >= capacity &&
-      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE
+      lastIndex >= capacity &&
+      capacity > QUEUE_CONSTANT.MIN_ALLOCATE_SIZE &&
+      (firstIndex / capacity) > QUEUE_CONSTANT.ALLOCATE_SIGMA
     ) {
-      const length = this._length;
-      for (let i = 0; i < length; ++i) {
-        this._queue[i] = this._queue[this._first + i];
-      }
+      this._queue.copyWithin(0, firstIndex, lastIndex);
       this._first = 0;
       this._queue[this._length] = item;
-    } else this._queue[this._first + this._length] = item;
+    } else this._queue[lastIndex] = item;
     return ++this._length;
   }
   /**
@@ -63,6 +62,9 @@ class Queue<T> extends Base {
   front(): T | undefined {
     if (this._length === 0) return;
     return this._queue[this._first];
+  }
+  toArray(): T[] {
+    return this._queue.slice(this._first, this._first + this._length);
   }
 }
 

@@ -14,5 +14,8 @@ describe('vector test', () => {
     expect(vector.find(0).pointer).to.equal(0);
     vector.erase(vector.begin());
     expect(vector.find(-1).equals(vector.end())).to.equal(true);
+    const v = new Vector();
+    expect(v.shift()).equal(undefined);
+    expect(v.length).equal(0);
   });
 });

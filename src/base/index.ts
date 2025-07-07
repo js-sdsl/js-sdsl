@@ -1,6 +1,6 @@
 import { Iterator } from '@/base/iterator';
 
-export abstract class Base {
+export abstract class Base<T> {
   /**
    * @description Container's size.
    * @internal
@@ -40,9 +40,10 @@ export abstract class Base {
    * console.log(container.empty());  // true
    */
   abstract clear(): void;
+  abstract toArray(): T[];
 }
 
-export abstract class Container<T> extends Base {
+export abstract class Container<T> extends Base<T> {
   /**
    * @returns Iterator pointing to the beginning item.
    * @example

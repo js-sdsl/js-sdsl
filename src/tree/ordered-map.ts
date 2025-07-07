@@ -168,8 +168,11 @@ class OrderedMap<K, V> extends TreeContainer<K, V> {
     this._set(key, value, hint);
     return this;
   }
-  _at(index: number) {
-    const node = this._inOrderTraversal(index);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
+    const node = this._getNodeByPos(index);
     return <[K, V]>[node._key, node._value];
   }
   find(key: K) {

@@ -162,4 +162,16 @@ describe('sequential common test', () => {
       testSequentialContainer(container);
     }
   });
+
+  it('empty splice test', () => {
+    const containerArr = [
+      new Vector(),
+      new LinkList(),
+      new Deque()
+    ];
+    for (const container of containerArr) {
+      expect(container.splice(0, arr.length, ...arr).toArray()).to.deep.equal([]);
+      expect(container.toArray()).to.deep.equal(arr);
+    }
+  });
 });

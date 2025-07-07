@@ -1,6 +1,6 @@
 import { Base, Entries } from '@/base';
 
-class Stack<T> extends Base {
+class Stack<T> extends Base<T> {
   /**
    * @internal
    */
@@ -41,6 +41,9 @@ class Stack<T> extends Base {
    */
   top(): T | undefined {
     return this._stack[this._length - 1];
+  }
+  toArray(): T[] {
+    return this._stack.slice();
   }
 }
 

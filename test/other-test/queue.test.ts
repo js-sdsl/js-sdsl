@@ -8,6 +8,7 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judge(myQueue: Queue<number>, myVector: Vector<number>) {
+  expect(myQueue.toArray()).to.deep.equal(myVector.toArray());
   while (!myQueue.empty()) {
     expect(myQueue.length).to.equal(myVector.length);
     const s = myQueue.front();

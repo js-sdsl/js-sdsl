@@ -147,8 +147,11 @@ class OrderedSet<K> extends TreeContainer<K, undefined> {
     this._set(key, undefined, hint);
     return this;
   }
-  _at(index: number) {
-    const node = this._inOrderTraversal(index);
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
+    const node = this._getNodeByPos(index);
     return node._key as K;
   }
   find(item: K) {

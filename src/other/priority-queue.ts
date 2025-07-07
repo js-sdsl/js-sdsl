@@ -1,7 +1,7 @@
 import { Base, Entries } from '@/base';
 import { CompareFn, compareFromL2S } from '@/utils/compareFn';
 
-class PriorityQueue<T> extends Base {
+class PriorityQueue<T> extends Base<T> {
   private readonly _cmp: CompareFn<T>;
   /**
    * @internal
@@ -28,7 +28,7 @@ class PriorityQueue<T> extends Base {
     const { cmp = compareFromL2S, copy = true } = options;
     this._cmp = cmp;
     if (Array.isArray(entries)) {
-      this._priorityQueue = copy ? [...entries] : entries;
+      this._priorityQueue = copy ? entries.slice() : entries;
     } else {
       const priorityQueue: T[] = [];
       entries.forEach(function (el) {
@@ -182,7 +182,7 @@ class PriorityQueue<T> extends Base {
    * const arr = queue.toArray();
    */
   toArray() {
-    return [...this._priorityQueue];
+    return this._priorityQueue.slice();
   }
 }
 

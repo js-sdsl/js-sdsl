@@ -99,15 +99,22 @@ class Vector<T> extends SequentialContainer<T> {
     this.splice(_node, 1);
     return iter;
   }
-  push(...items: T[]) {
-    this._vector.push(...items);
-    this._length += items.length;
-    return this._length;
+  push(item: T) {
+    this._vector.push(item);
+    return ++this._length;
   }
   pop() {
     if (this._length === 0) return;
     this._length -= 1;
     return this._vector.pop();
+  }
+  unshift(item: T) {
+    this._vector.unshift(item);
+    return ++this._length;
+  }
+  shift(): T | undefined {
+    if (this._length) --this._length;
+    return this._vector.shift();
   }
   /**
    * @internal

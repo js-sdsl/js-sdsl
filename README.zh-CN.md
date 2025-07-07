@@ -12,8 +12,7 @@
   <a href='https://coveralls.io/github/js-sdsl/js-sdsl?branch=main'><img src='https://coveralls.io/repos/github/js-sdsl/js-sdsl/badge.svg?branch=main' alt='Coverage Status' /></a>
   <a href="https://github.com/js-sdsl/js-sdsl"><img src="https://img.shields.io/github/stars/js-sdsl/js-sdsl.svg" alt="GITHUB Star" /></a>
   <a href="https://npmcharts.com/compare/js-sdsl?minimal=true"><img src="https://img.shields.io/npm/dm/js-sdsl.svg" alt="NPM Downloads" /></a>
-  <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.badgesize.io/https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js?compression=gzip&style=flat-square/" alt="Gzip Size"></a>
-  <a href="https://openbase.com/js/js-sdsl?utm_source=embedded&amp;utm_medium=badge&amp;utm_campaign=rate-badge"><img src="https://badges.openbase.com/js/rating/js-sdsl.svg?token=fh3LMNOV+JSWykSjtg1rA8kouSYkJoIDzGbvaByq5X0=" alt="Rate this package"/></a>
+  <a href="https://unpkg.com/js-sdsl/dist/umd/js-sdsl.min.js"><img src="https://img.shields.io/bundlejs/size/js-sdsl" alt="Gzip Size"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/js-sdsl.svg" alt="MIT-license" /></a>
   <a href="https://github.com/js-sdsl/js-sdsl/"><img src="https://img.shields.io/github/languages/top/js-sdsl/js-sdsl.svg" alt="GITHUB-language" /></a>
 </p>
@@ -37,7 +36,7 @@
 
 我们和其他数据结构库进行了基准测试，在某些场景我们甚至超过了当前最流行的库
 
-查看 [benchmark](https://js-sdsl.org/#/zh-cn/test/benchmark-analyze) 以获取更多信息
+查看 [Benchmark](https://js-sdsl.org/#/zh-cn/test/benchmark-analyze) 以获取更多信息
 
 ## 🖥 支持的平台
 
@@ -159,22 +158,7 @@ $ npm run dev   # development mode
 
 感谢对本项目做出贡献的开发者们：
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center"><a href="https://www.linkedin.com/in/takatoshi-kondo-02a91410/"><img src="https://avatars.githubusercontent.com/u/275959?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Takatoshi Kondo</b></sub></a><br /><a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Code">💻</a> <a href="https://github.com/js-sdsl/js-sdsl/commits?author=redboltz" title="Tests">⚠️</a></td>
-      <td align="center"><a href="https://www.youtube.com/c/noname0310"><img src="https://avatars.githubusercontent.com/u/48761044?v=4?s=100" width="100px;" alt=""/><br /><sub><b>noname</b></sub></a><br /><a href="https://github.com/js-sdsl/js-sdsl/commits?author=noname0310" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+[![contributors](https://contrib.rocks/image?repo=js-sdsl/js-sdsl)](https://github.com/js-sdsl/js-sdsl/graphs/contributors)
 
 本项目遵循 [all-contributors](https://github.com/all-contributors/all-contributors) 规范。 欢迎任何形式的贡献！
 
@@ -190,7 +174,7 @@ $ npm run dev   # development mode
 
 [![backers](https://opencollective.com/js-sdsl/tiers/backers.svg?avatarHeight=36)](https://opencollective.com/js-sdsl#support)
 
-## 🪪 许可证
+## 🎫 许可证
 
 [MIT](https://github.com/js-sdsl/js-sdsl/blob/main/LICENSE) © [ZLY201](https://github.com/zly201)
 
@@ -204,69 +188,69 @@ $ npm run dev   # development mode
 [stack-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Stack.ts
 [stack-npm-version]: https://img.shields.io/npm/v/@js-sdsl/stack
 [stack-npm-link]: https://www.npmjs.com/package/@js-sdsl/stack
-[stack-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js?compression=gzip&style=flat-square/
+[stack-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/stack
 [stack-umd-link]: https://unpkg.com/@js-sdsl/stack/dist/umd/stack.min.js
 [stack-docs]: https://js-sdsl.org/js-sdsl/classes/Stack.html
 
 [queue-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/Queue.ts
 [queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/queue
 [queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/queue
-[queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js?compression=gzip&style=flat-square/
+[queue-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/queue
 [queue-umd-link]: https://unpkg.com/@js-sdsl/queue/dist/umd/queue.min.js
 [queue-docs]: https://js-sdsl.org/js-sdsl/classes/Queue.html
 
 [priority-queue-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/OtherContainer/PriorityQueue.ts
 [priority-queue-npm-version]: https://img.shields.io/npm/v/@js-sdsl/priority-queue
 [priority-queue-npm-link]: https://www.npmjs.com/package/@js-sdsl/priority-queue
-[priority-queue-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js?compression=gzip&style=flat-square/
+[priority-queue-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/priority-queue
 [priority-queue-umd-link]: https://unpkg.com/@js-sdsl/priority-queue/dist/umd/priority-queue.min.js
 [priority-queue-docs]: https://js-sdsl.org/js-sdsl/classes/PriorityQueue.html
 
 [vector-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Vector.ts
 [vector-npm-version]: https://img.shields.io/npm/v/@js-sdsl/vector
 [vector-npm-link]: https://www.npmjs.com/package/@js-sdsl/vector
-[vector-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js?compression=gzip&style=flat-square/
+[vector-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/vector
 [vector-umd-link]: https://unpkg.com/@js-sdsl/vector/dist/umd/vector.min.js
 [vector-docs]: https://js-sdsl.org/js-sdsl/classes/Vector.html
 
 [link-list-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/LinkList.ts
 [link-list-npm-version]: https://img.shields.io/npm/v/@js-sdsl/link-list
 [link-list-npm-link]: https://www.npmjs.com/package/@js-sdsl/link-list
-[link-list-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js?compression=gzip&style=flat-square/
+[link-list-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/link-list
 [link-list-umd-link]: https://unpkg.com/@js-sdsl/link-list/dist/umd/link-list.min.js
 [link-list-docs]: https://js-sdsl.org/js-sdsl/classes/LinkList.html
 
 [deque-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/SequentialContainer/Deque.ts
 [deque-npm-version]: https://img.shields.io/npm/v/@js-sdsl/deque
 [deque-npm-link]: https://www.npmjs.com/package/@js-sdsl/deque
-[deque-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js?compression=gzip&style=flat-square/
+[deque-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/deque
 [deque-umd-link]: https://unpkg.com/@js-sdsl/deque/dist/umd/deque.min.js
 [deque-docs]: https://js-sdsl.org/js-sdsl/classes/Deque.html
 
 [ordered-set-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedSet.ts
 [ordered-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-set
 [ordered-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-set
-[ordered-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js?compression=gzip&style=flat-square/
+[ordered-set-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/ordered-set
 [ordered-set-umd-link]: https://unpkg.com/@js-sdsl/ordered-set/dist/umd/ordered-set.min.js
 [ordered-set-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedSet.html
 
 [ordered-map-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/TreeContainer/OrderedMap.ts
 [ordered-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/ordered-map
 [ordered-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/ordered-map
-[ordered-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js?compression=gzip&style=flat-square/
+[ordered-map-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/ordered-map
 [ordered-map-umd-link]: https://unpkg.com/@js-sdsl/ordered-map/dist/umd/ordered-map.min.js
 [ordered-map-docs]: https://js-sdsl.org/js-sdsl/classes/OrderedMap.html
 
 [hash-set-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashSet.ts
 [hash-set-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-set
 [hash-set-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-set
-[hash-set-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js?compression=gzip&style=flat-square/
+[hash-set-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/hash-set
 [hash-set-umd-link]: https://unpkg.com/@js-sdsl/hash-set/dist/umd/hash-set.min.js
 [hash-set-docs]: https://js-sdsl.org/js-sdsl/classes/HashSet.html
 
 [hash-map-package]: https://github.com/js-sdsl/js-sdsl/blob/main/src/container/HashContainer/HashMap.ts
 [hash-map-npm-version]: https://img.shields.io/npm/v/@js-sdsl/hash-map
 [hash-map-npm-link]: https://www.npmjs.com/package/@js-sdsl/hash-map
-[hash-map-umd-size]: https://img.badgesize.io/https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js?compression=gzip&style=flat-square/
+[hash-map-umd-size]: https://img.shields.io/bundlejs/size/@js-sdsl/hash-map
 [hash-map-umd-link]: https://unpkg.com/@js-sdsl/hash-map/dist/umd/hash-map.min.js
 [hash-map-docs]: https://js-sdsl.org/js-sdsl/classes/HashMap.html

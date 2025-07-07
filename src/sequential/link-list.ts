@@ -152,7 +152,7 @@ class LinkList<T> extends SequentialContainer<T> {
     if (next === this._header) {
       this._tail = node;
     }
-    this._length += 1;
+    return ++this._length;
   }
   clear() {
     this._length = 0;
@@ -194,7 +194,10 @@ class LinkList<T> extends SequentialContainer<T> {
   back(): T | undefined {
     return this._tail._value;
   }
-  _at(index: number) {
+  /**
+   * @internal
+   */
+  protected _at(index: number) {
     let curNode = this._head;
     while (index--) {
       curNode = curNode._next;
@@ -210,12 +213,8 @@ class LinkList<T> extends SequentialContainer<T> {
     this._eraseNode(node);
     return iter;
   }
-  push(...items: T[]) {
-    const num = items.length;
-    for (let i = 0; i < num; ++i) {
-      this._insertNode(items[i], this._tail);
-    }
-    return this._length;
+  push(item: T) {
+    return this._insertNode(item, this._tail);
   }
   pop() {
     if (this._length === 0) return;
@@ -223,12 +222,8 @@ class LinkList<T> extends SequentialContainer<T> {
     this._eraseNode(this._tail);
     return item;
   }
-  unshift(...items: T[]) {
-    const num = items.length;
-    for (let i = num - 1; i >= 0; --i) {
-      this._insertNode(items[i], this._header);
-    }
-    return this._length;
+  unshift(item: T) {
+    return this._insertNode(item, this._header);
   }
   /**
    * @description Removes the first item.
@@ -456,7 +451,10 @@ class LinkList<T> extends SequentialContainer<T> {
   splice(start: number, deleteCount?: number, ...items: T[]) {
     const length = this._length;
     if (typeof start !== 'number' || length <= 0) {
-      this.push(...items);
+      const self = this;
+      items.forEach(function (item) {
+        self.push(item);
+      });
       return new LinkList<T>();
     }
     if (start < 0) {

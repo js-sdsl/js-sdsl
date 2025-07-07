@@ -8,6 +8,7 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judge(myStack: Stack<number>, myVector: Vector<number>) {
+  expect(myStack.toArray()).to.deep.equal(myVector.toArray());
   while (!myStack.empty()) {
     if (myStack.length !== myVector.length) return false;
     const s = myStack.top();

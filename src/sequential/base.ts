@@ -4,16 +4,27 @@ import { CompareFn } from '@/utils/compareFn';
 
 abstract class SequentialContainer<T> extends Container<T> {
   /**
-   * @description Push items to the back.
-   * @param items - The items you want to push.
+   * @description Push item to the back.
+   * @param item - The item you want to push.
    * @returns The size of container after pushing.
    */
-  abstract push(...items: T[]): number;
+  abstract push(item: T): number;
   /**
    * @description Removes the last item.
    * @returns The item you popped.
    */
   abstract pop(): T | undefined;
+  /**
+   * @description Push item to the front.
+   * @param item - The item you want to unshift.
+   * @returns The size of container after unshift.
+   */
+  abstract unshift(item: T): number;
+  /**
+   * @description Removes the first item.
+   * @returns The item you popped.
+   */
+  abstract shift(): T | undefined;
   /**
    * @internal
    */

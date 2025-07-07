@@ -63,7 +63,7 @@ describe('link-list test', () => {
     judgeSequentialContainer(myLinkList, tmpArr);
   });
 
-  it('link-list run time error test', () => {
+  it('link-list RunTimeError test', () => {
     expect(myLinkList.at(myLinkList.length)).to.equal(undefined);
   });
 

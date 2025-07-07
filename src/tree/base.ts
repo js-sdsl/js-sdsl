@@ -253,6 +253,30 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
   /**
    * @internal
    */
+  protected _getNodeByPos(index: number) {
+    if (this.enableIndex) {
+      let node = this._root!;
+      while (true) {
+        if (node._left) {
+          if (index < node._left._subTreeSize) {
+            node = node._left;
+            continue;
+          }
+          index -= node._left._subTreeSize;
+        }
+        if (!index) return node;
+        --index;
+        // never touched, must have `right`
+        // if (!node._right) return;
+        // if (position >= node._right!._subTreeSize) return;
+        node = node._right!;
+      }
+    }
+    return this._inOrderTraversal(index);
+  }
+  /**
+   * @internal
+   */
   protected _insertNodeSelfBalance(curNode: TreeNodeEnableIndex<K, V>) {
     while (true) {
       const parentNode = curNode._parent!;
@@ -550,7 +574,7 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
     if (typeof param === 'number') {
       // istanbul ignore else
       if (param >= 0 && param < this._length) {
-        const node = this._inOrderTraversal(param);
+        const node = this._getNodeByPos(param);
         this._eraseNode(node);
       }
       return this._length;
@@ -577,14 +601,14 @@ abstract class TreeContainer<K, V> extends Container<K | [K, V]> {
    * @description Get the height of the tree.
    * @returns Number about the height of the RB-tree.
    */
-  getHeight() {
-    if (this._length === 0) return 0;
-    function traversal(curNode?: TreeNodeEnableIndex<K, V>): number {
-      if (!curNode) return 0;
-      return Math.max(traversal(curNode._left), traversal(curNode._right)) + 1;
-    }
-    return traversal(this._root);
-  }
+  // getHeight() {
+  //   if (this._length === 0) return 0;
+  //   function traversal(curNode?: TreeNodeEnableIndex<K, V>): number {
+  //     if (!curNode) return 0;
+  //     return Math.max(traversal(curNode._left), traversal(curNode._right)) + 1;
+  //   }
+  //   return traversal(this._root);
+  // }
   keys(): IterableIterator<K> {
     const self = this;
     let node = this._header._left;

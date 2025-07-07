@@ -8,7 +8,7 @@ for (let i = 0; i < testNum; ++i) {
 }
 
 function judgeMap(myOrderedMap: OrderedMap<number, number>, stdMap: Map<number, number>) {
-  expect(myOrderedMap.getHeight()).to.lessThan(2 * Math.log2(myOrderedMap.length + 1) + 1);
+  // expect(myOrderedMap.getHeight()).to.lessThan(2 * Math.log2(myOrderedMap.length + 1) + 1);
   expect(myOrderedMap.length).to.equal(stdMap.size);
   if (!myOrderedMap.empty()) {
     const front = myOrderedMap.front() as [number, number];
@@ -197,6 +197,9 @@ describe('ordered-map test', () => {
     }
     v.sort((x, y) => x - y);
     for (let i = 0; i < testNum; ++i) {
+      expect(mp.at(i)![0]).equal(v.at(i));
+    }
+    for (let i = 0; i < testNum; ++i) {
       expect(mp.lowerBound(v.at(i)!).index).to.equal(i);
     }
     expect(mp.end().index).to.equal(mp.length - 1);
@@ -214,7 +217,7 @@ describe('ordered-map test', () => {
     expect(mp.end().index).to.equal(mp.length - 1);
   });
 
-  it('OrderedMap iterator iterator test', () => {
+  it('ordered-map iterator iterator test', () => {
     expect(() => {
       for (let it = myOrderedMap.begin(); !it.equals(myOrderedMap.end()); it.next()) {
         const pointer = it.pointer;

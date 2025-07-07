@@ -13,15 +13,17 @@ describe('deque test', () => {
   const tmpArr = [...arr];
 
   it('deque unshift function test', () => {
+    const v = new Vector(tmpArr);
     for (let i = 0; i < testNum; ++i) {
-      expect(myDeque.unshift(i)).to.equal(tmpArr.unshift(i));
+      expect(myDeque.unshift(i)).to.equal(tmpArr.unshift(i)).to.equal(v.unshift(i));
     }
     judgeSequentialContainer(myDeque, tmpArr);
   });
 
   it('deque shift function test', () => {
+    const v = new Vector(tmpArr);
     for (let i = 0; i < testNum; ++i) {
-      expect(myDeque.shift()).to.equal(tmpArr.shift());
+      expect(myDeque.shift()).to.equal(tmpArr.shift()).to.equal(v.shift());
     }
     judgeSequentialContainer(myDeque, tmpArr);
   });
@@ -79,7 +81,7 @@ describe('deque test', () => {
     }
   });
 
-  it('deque run time error test', () => {
+  it('deque RunTimeError test', () => {
     expect(myDeque.at(myDeque.length)).to.equal(undefined);
   });
 
@@ -87,8 +89,8 @@ describe('deque test', () => {
     const arr0 = new Array((1 << 11) + 2).fill(1);
     const arr1 = new Array((1 << 11) - 2).fill(2);
     const q = new Deque<number>();
-    q.unshift(...arr0);
-    q.push(...arr1);
+    arr0.forEach(o => q.unshift(o));
+    arr1.forEach(o => q.push(o));
     q.push(3);
     expect(q.toArray()).to.deep.equal([...arr0, ...arr1, 3]);
   });
@@ -99,10 +101,10 @@ describe('deque test', () => {
     q.push(1);
     expect(q.at(q.length - 1)).to.equal(1);
     const restSize = (bucketSize >> 1) + bucketSize - 2;
-    q.push(...new Array(restSize).fill(1));
+    new Array(restSize).fill(1).forEach(o => q.push(o));
     q.push(2);
     expect(q.at(q.length - 1)).to.equal(2);
-    q.push(...new Array(bucketSize).fill(1));
+    new Array(bucketSize).fill(1).forEach(o => q.push(o));
     q.push(3);
     expect(q.at(q.length - 1)).to.equal(3);
   });
