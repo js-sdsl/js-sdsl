@@ -21,16 +21,16 @@
 
 ## ✨ Included data structures
 
-- **Stack** - first in last out stack.
-- **Queue** - first in first out queue.
-- **PriorityQueue** - heap-implemented priority queue.
-- **Vector** - protected array, cannot to operate properties like `length` directly.
-- **LinkList** - linked list of non-contiguous memory addresses.
-- **Deque** - double-ended-queue, O(1) time complexity to `unshift` or getting elements by index.
-- **OrderedSet** - sorted set which implemented by red black tree.
-- **OrderedMap** - sorted map which implemented by red black tree.
-- **HashSet** - refer to the [polyfill of ES6 Set](https://github.com/rousan/collections-es6).
-- **HashMap** - refer to the [polyfill of ES6 Map](https://github.com/rousan/collections-es6).
+- **Stack** - First-in, last-out stack.
+- **Queue** - First-in, first-out queue.
+- **PriorityQueue** - Priority queue implemented using heap.
+- **Vector** - Protected array, cannot directly operate on properties like `length`.
+- **LinkedList** - Linked list using non-contiguous memory addresses.
+- **Deque** - Double-ended queue, O(1) time complexity to `unshift` or getting elements by index.
+- **OrderedSet** - Sorted set implemented using red black tree.
+- **OrderedMap** - Sorted map implemented using red black tree.
+- **HashSet** - Refer to the [polyfill of ES6 Set](https://github.com/rousan/collections-es6).
+- **HashMap** - Refer to the [polyfill of ES6 Map](https://github.com/rousan/collections-es6).
 
 ## ⚔️ Benchmark
 
@@ -74,7 +74,7 @@ Or you can download the isolation packages containing only the containers you wa
 
 You can visit our [official website](https://js-sdsl.org/) to get more information.
 
-To help you have a better use, we also provide this [API document](https://js-sdsl.org/js-sdsl/index.html).
+To help you use the library more effectively, we also provide this [API document](https://js-sdsl.org/js-sdsl/index.html).
 
 For previous versions of the documentation, please visit:
 
@@ -123,11 +123,11 @@ console.log(myOrderedMap.getElementByKey(1)); // 2
 
 ### Unit test
 
-We use [karma](https://karma-runner.github.io/) and [mocha](https://mochajs.org/) frame to do unit tests and synchronize to [coveralls](https://coveralls.io/github/js-sdsl/js-sdsl). You can run `yarn test:unit` command to reproduce it.
+We use [Karma](https://karma-runner.github.io/) and [Mocha](https://mochajs.org/) to run unit tests and synchronize coverage to [Coveralls](https://coveralls.io/github/js-sdsl/js-sdsl). You can run `yarn test:unit` command to reproduce it.
 
 ### For performance
 
-We tested most of the functions for efficiency. You can go to [`gh-pages/performance.md`](https://github.com/js-sdsl/js-sdsl/blob/gh-pages/performance.md) to see our running results or reproduce it with `yarn test:performance` command.
+We benchmark most functions for performance. You can go to [`gh-pages/performance.md`](https://github.com/js-sdsl/js-sdsl/blob/gh-pages/performance.md) to see our running results or reproduce it with `yarn test:performance` command.
 
 You can also visit [here](https://js-sdsl.org/#/test/performance-test) to get the result.
 
